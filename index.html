@@ -266,6 +266,100 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 .mbox .m{width:84px;height:84px;margin:6px auto}
 .tempo-big{font-family:var(--display);font-size:48px;line-height:1.2;margin:8px 0 0}
 .mbtns{display:flex;gap:8px;justify-content:center}
+/* ---- v2: ステージ色・帯・ホームの今日・クイズ解説 ---- */
+section{--sc:var(--rose-soft);--sa:var(--rose)}
+.band{position:relative;background:var(--sc);border-radius:22px;padding:12px 16px 6px 18px;display:flex;align-items:center;gap:12px;margin-top:6px}
+.band .no{font-family:var(--display);font-size:44px;line-height:1;color:var(--sa);flex:none;min-width:56px}
+.band .staffslot{flex:1;min-width:0}
+.band::after{content:"";position:absolute;right:26px;top:-9px;width:66px;height:18px;transform:rotate(5deg);background:repeating-linear-gradient(45deg,rgba(255,255,255,.55) 0 5px,transparent 5px 10px),color-mix(in srgb,var(--sa) 45%,transparent);border-radius:2px}
+.sh h2{margin-top:14px}
+h3::before{background:var(--sa,var(--rose))}
+.chip.sel{background:var(--sc,var(--rose-soft));border-color:var(--sa,var(--rose))}
+.chip .got{color:var(--sa,var(--rose))}
+.tip{border-left-color:var(--sc,var(--rose-soft))}
+.tip b{color:var(--sa,var(--rose))}
+.missions{background-color:color-mix(in srgb,var(--sc) 50%,#fff);background-image:repeating-linear-gradient(transparent 0 33px,rgba(51,41,74,.07) 33px 34px)}
+.missions::before{background:color-mix(in srgb,var(--sa) 30%,transparent)}
+.mi.done .ck{background:var(--sa);border-color:var(--sa)}
+.mi.done .mt{text-decoration-color:var(--sa)}
+.mi .mp .bar i{background:var(--sa)}
+.mi.done .mp,.pt{color:var(--sa,var(--rose))}
+.nextlink{border-bottom-color:var(--sc)}
+.nextlink:hover{border-bottom-color:var(--sa)}
+.sc.on,.sc.ct.on,.sc.q.on{background:var(--sa);border-color:var(--sa)}
+.leds i.on{background:var(--sa)}
+.stamp{border-color:var(--sa,var(--rose));color:var(--sa,var(--rose));box-shadow:inset 0 0 0 3px var(--sheet),inset 0 0 0 4px var(--sa,var(--rose))}
+.stamp.lg{box-shadow:inset 0 0 0 5px var(--sheet),inset 0 0 0 7px var(--sa,var(--rose))}
+.stamp.locked{box-shadow:none}
+.btn{box-shadow:0 2px 0 rgba(51,41,74,.14)}
+.btn.primary{box-shadow:0 2px 0 #1F1830}
+.btn:active{box-shadow:none}
+nav.tabs a.tab.active{background:var(--tc);border-radius:999px}
+nav.tabs a.tab.active::after{display:none}
+nav.tabs a.tab .sw{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ta);margin-right:6px;vertical-align:1px}
+nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:700}
+/* home */
+.today{position:relative;margin-top:18px;border-radius:26px;padding:16px 18px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;background-color:#FCEAF0;background-image:linear-gradient(90deg,rgba(217,101,139,.09) 50%,transparent 50%),linear-gradient(rgba(217,101,139,.09) 50%,transparent 50%);background-size:26px 26px}
+.today .greetline{width:100%;display:flex;gap:10px;align-items:center}
+.today .greetline .m{width:46px;height:46px;flex:none}
+.today .greetline p{margin:0;font-size:14px;background:rgba(255,255,255,.75);border-radius:14px;padding:8px 12px}
+.rec{width:136px;height:136px;flex:none}
+.rec svg{width:100%;height:100%;display:block}
+.rec .disc{transform-box:fill-box;transform-origin:center}
+.rec.spin .disc{animation:spin 6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tinfo{flex:1;min-width:190px}
+.tinfo .tl{font-size:13px;color:var(--mute);margin:0}
+.tinfo .tn{font-family:var(--display);font-size:38px;line-height:1.15;margin:0 0 4px}
+.tinfo .tn small{font-family:var(--body);font-size:14px;color:var(--mute)}
+.week{display:flex;gap:7px;margin:6px 0}
+.week span{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;color:var(--mute)}
+.week i{width:16px;height:12px;border-radius:50%;border:1.5px solid rgba(51,41,74,.35);transform:rotate(-20deg);background:#fff}
+.week .on i{background:var(--rose);border-color:var(--rose)}
+.week .now{color:var(--ink);font-weight:700}
+.goalsel{display:flex;gap:4px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--mute);margin-top:8px}
+.goalsel button{border:1px solid rgba(51,41,74,.2);background:rgba(255,255,255,.8);border-radius:999px;padding:1px 10px;font-size:12px;cursor:pointer;color:var(--ink)}
+.goalsel button.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.hitokoto{background:var(--sheet);border:1.5px dashed var(--rule);border-radius:16px;padding:10px 16px;font-size:14px;margin:12px 0}
+.hitokoto b{display:block;font-size:12px;color:var(--rose)}
+.slist .num{color:var(--sa)}
+.slist a:hover{background:var(--sc)}
+.heads i.on{background:var(--sa);border-color:var(--sa)}
+/* quiz */
+.qtop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.rdots{display:flex;gap:6px;flex-wrap:wrap}
+.rdots i{width:14px;height:10.5px;border-radius:50%;border:1.5px solid #C9C0D6;transform:rotate(-20deg)}
+.rdots i.ok{background:var(--mint);border-color:var(--mint)}
+.rdots i.ng{background:var(--rose);border-color:var(--rose)}
+.rdots i.cur{border-color:var(--ink);border-width:2px}
+.qtag{display:inline-block;font-family:var(--body);font-size:11px;background:var(--sc);border-radius:999px;padding:0 9px;margin-right:8px;vertical-align:3px}
+.exp{margin-top:10px;border-radius:18px;background:var(--paper);padding:14px 16px 16px}
+.exp .verdict{display:flex;gap:12px;align-items:center;margin-bottom:4px}
+.exp .verdict .m{width:54px;height:54px;flex:none}
+.exp .verdict b{display:block;font-size:16px}
+.exp .verdict span{display:block;font-size:13.5px;color:var(--mute)}
+.exp .verdict b span{display:inline;margin-left:8px}
+.exp .verdict strong{color:var(--ink);font-size:15px}
+.exp h4{font-size:13px;color:var(--sa);margin:14px 0 2px;font-weight:700}
+.exp p{margin:2px 0;font-size:14.5px}
+.exp ol{margin:4px 0;padding-left:1.5em;font-size:14.5px}
+.exp li{margin:5px 0;padding-left:2px}
+.exp li::marker{color:var(--sa);font-weight:700}
+.exp .tipline{margin-top:12px;font-size:13.5px;background:var(--sheet);border-radius:12px;padding:8px 12px;border-left:3px solid var(--sc)}
+.result{text-align:center;padding:6px 0}
+.result .m{width:92px;height:92px;margin:0 auto}
+.rbig{font-family:var(--display);font-size:20px;margin:6px 0}
+.rbig b{font-size:46px;color:var(--sa)}
+.weakcols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:560px){.weakcols{grid-template-columns:1fr}.band .no{font-size:36px;min-width:44px}}
+.weak{display:grid;gap:6px}
+.weak .row{display:grid;grid-template-columns:7.2em 1fr 3.2em;gap:8px;align-items:center;font-size:13px}
+.weak .row b{text-align:right;font-weight:500;color:var(--mute);font-variant-numeric:tabular-nums}
+.weak .bar{height:7px}
+.weak .bar i{background:var(--mint)}
+.weak .row.bad .bar i{background:var(--rose)}
+.weak .row.bad span:first-child{color:var(--rose);font-weight:700}
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
 </style>
 </head>
@@ -281,7 +375,7 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 
 <!-- 01 基礎 -->
 <section id="basics">
-  <header class="sh"><div class="staffslot" data-sec="basics"></div><h2>音の名前と鍵盤</h2><p class="lead">音楽理論の話は、ほとんどが「鍵盤のどこにあるか」と「何個はなれているか」で説明できます。まずは鍵盤を弾いて、音の並びに慣れましょう。</p></header>
+  <header class="sh"><div class="band"><span class="no">01</span><div class="staffslot" data-sec="basics"></div></div><h2>音の名前と鍵盤</h2><p class="lead">音楽理論の話は、ほとんどが「鍵盤のどこにあるか」と「何個はなれているか」で説明できます。まずは鍵盤を弾いて、音の並びに慣れましょう。</p></header>
   <div class="missions" data-sec="basics"></div>
   <div class="card">
     <h3>鍵盤を弾いてみる</h3>
@@ -309,7 +403,7 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 
 <!-- 02 リズム -->
 <section id="rhythm">
-  <header class="sh"><div class="staffslot" data-sec="rhythm"></div><h2>リズムとビート</h2><p class="lead">音符の長さとテンポを確かめたら、ドラムを打ち込んでみましょう。1マスが16分音符、16マスで1小節です。</p></header>
+  <header class="sh"><div class="band"><span class="no">02</span><div class="staffslot" data-sec="rhythm"></div></div><h2>リズムとビート</h2><p class="lead">音符の長さとテンポを確かめたら、ドラムを打ち込んでみましょう。1マスが16分音符、16マスで1小節です。</p></header>
   <div class="missions" data-sec="rhythm"></div>
   <div class="card">
     <h3>音符の長さ（4/4拍子・1小節）</h3>
@@ -334,7 +428,7 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 
 <!-- 03 音程 -->
 <section id="intervals">
-  <header class="sh"><div class="staffslot" data-sec="intervals"></div><h2>音程（インターバル）</h2><p class="lead">2つの音の距離を「度」で表します。半音いくつぶんか、どんな響きか、をセットで覚えます。</p></header>
+  <header class="sh"><div class="band"><span class="no">03</span><div class="staffslot" data-sec="intervals"></div></div><h2>音程（インターバル）</h2><p class="lead">2つの音の距離を「度」で表します。半音いくつぶんか、どんな響きか、をセットで覚えます。</p></header>
   <div class="missions" data-sec="intervals"></div>
   <div class="card">
     <div class="ctrl"><label>基準音</label><select id="iRoot"></select></div>
@@ -355,7 +449,7 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 
 <!-- 04 スケール -->
 <section id="scales">
-  <header class="sh"><div class="staffslot" data-sec="scales"></div><h2>スケール（音階）</h2><p class="lead">曲で使う音のセットがスケールです。全音と半音の並び方が同じなら、どの音から始めても同じ種類になります。</p></header>
+  <header class="sh"><div class="band"><span class="no">04</span><div class="staffslot" data-sec="scales"></div></div><h2>スケール（音階）</h2><p class="lead">曲で使う音のセットがスケールです。全音と半音の並び方が同じなら、どの音から始めても同じ種類になります。</p></header>
   <div class="missions" data-sec="scales"></div>
   <div class="card">
     <div class="ctrl"><label>ルート</label><select id="sRoot"></select></div>
@@ -378,7 +472,7 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 
 <!-- 05 コード -->
 <section id="chords">
-  <header class="sh"><div class="staffslot" data-sec="chords"></div><h2>コード（和音）</h2><p class="lead">ルートから3度ずつ音を重ねたものがコードです。3度が長いか短いかで、明るさが決まります。</p></header>
+  <header class="sh"><div class="band"><span class="no">05</span><div class="staffslot" data-sec="chords"></div></div><h2>コード（和音）</h2><p class="lead">ルートから3度ずつ音を重ねたものがコードです。3度が長いか短いかで、明るさが決まります。</p></header>
   <div class="missions" data-sec="chords"></div>
   <div class="card">
     <div class="ctrl"><label>ルート</label><select id="cRoot"></select></div>
@@ -406,7 +500,7 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 
 <!-- 06 ダイアトニック -->
 <section id="diatonic">
-  <header class="sh"><div class="staffslot" data-sec="diatonic"></div><h2>ダイアトニックコード</h2><p class="lead">スケールの音だけで作れる7つのコードです。ローマ数字で覚えておくと、キーが変わっても同じ考え方で使えます。</p></header>
+  <header class="sh"><div class="band"><span class="no">06</span><div class="staffslot" data-sec="diatonic"></div></div><h2>ダイアトニックコード</h2><p class="lead">スケールの音だけで作れる7つのコードです。ローマ数字で覚えておくと、キーが変わっても同じ考え方で使えます。</p></header>
   <div class="missions" data-sec="diatonic"></div>
   <div class="card">
     <div class="ctrl">
@@ -430,7 +524,7 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 
 <!-- 07 コード進行 -->
 <section id="progressions">
-  <header class="sh"><div class="staffslot" data-sec="progressions"></div><h2>定番コード進行</h2><p class="lead">J-POPやボカロ曲でよく使われる進行を、好きなキーとテンポで聴けます。</p></header>
+  <header class="sh"><div class="band"><span class="no">07</span><div class="staffslot" data-sec="progressions"></div></div><h2>定番コード進行</h2><p class="lead">J-POPやボカロ曲でよく使われる進行を、好きなキーとテンポで聴けます。</p></header>
   <div class="missions" data-sec="progressions"></div>
   <div class="card">
     <div class="ctrl">
@@ -453,7 +547,7 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 
 <!-- 08 メロディ -->
 <section id="melody">
-  <header class="sh"><div class="staffslot" data-sec="melody"></div><h2>メロディを作ってみよう</h2><p class="lead">黄色のマスが、その小節のコードの構成音です。小節の頭にコードトーンを置き、間を自由につなげてみましょう。</p></header>
+  <header class="sh"><div class="band"><span class="no">08</span><div class="staffslot" data-sec="melody"></div></div><h2>メロディを作ってみよう</h2><p class="lead">黄色のマスが、その小節のコードの構成音です。小節の頭にコードトーンを置き、間を自由につなげてみましょう。</p></header>
   <div class="missions" data-sec="melody"></div>
   <div class="card">
     <div class="ctrl">
@@ -485,7 +579,7 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 
 <!-- 09 転調・応用 -->
 <section id="modulation">
-  <header class="sh"><div class="staffslot" data-sec="modulation"></div><h2>転調と応用コード</h2><p class="lead">ラスサビでキーを上げる転調と、ダイアトニックの外から借りてくるコードを聴き比べます。</p></header>
+  <header class="sh"><div class="band"><span class="no">09</span><div class="staffslot" data-sec="modulation"></div></div><h2>転調と応用コード</h2><p class="lead">ラスサビでキーを上げる転調と、ダイアトニックの外から借りてくるコードを聴き比べます。</p></header>
   <div class="missions" data-sec="modulation"></div>
   <div class="card">
     <div class="ctrl"><label>元のキー</label><select id="tKey"></select></div>
@@ -509,21 +603,22 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 
 <!-- 10 クイズ -->
 <section id="quiz">
-  <header class="sh"><div class="staffslot" data-sec="quiz"></div><h2>クイズで力だめし</h2><p class="lead">耳で聴く問題と、知識の問題があります。5問続けて正解するとボーナスがつきます。</p></header>
+  <header class="sh"><div class="band"><span class="no">10</span><div class="staffslot" data-sec="quiz"></div></div><h2>クイズで力だめし</h2><p class="lead">耳で聴く問題と、知識の問題があります。5問続けて正解するとボーナスがつきます。</p></header>
   <div class="missions" data-sec="quiz"></div>
   <div class="card">
     <div class="chips" id="qMode"></div>
-    <div class="ctrl"><label>レベル</label><select id="qLevel"><option value="0">やさしい</option><option value="1" selected>ふつう</option><option value="2">むずかしい</option></select></div>
-    <div class="score"><span><b id="qOk">0</b>問正解</span><span><b id="qTot">0</b>問回答</span><span><b id="qStreak">0</b>問連続</span></div>
+    <div class="ctrl"><label for="qLevel">レベル</label><select id="qLevel"><option value="0">やさしい</option><option value="1" selected>ふつう</option><option value="2">むずかしい</option></select><span class="sub">ラウンドは10問。間違えた問題は復習ノートに入ります。</span></div>
   </div>
   <div class="card">
+    <div class="qtop"><div class="rdots" id="qDots"></div><span class="sub" id="qCount"></span></div>
     <div class="qtext" id="qText"></div>
-    <div class="ctrl" id="qAudio"><button class="btn primary" id="qReplay">▶ もう一度聴く</button><button class="btn" id="qHarm">▶ 同時に</button></div>
+    <div class="ctrl" id="qAudio"><button class="btn primary" id="qReplay">▶ もう一度聴く</button><button class="btn" id="qHarm">▶ 同時に鳴らす</button></div>
     <div class="opts" id="qOpts"></div>
     <div id="qFb"></div>
-    <div class="kbwrap" id="qKbWrap" style="display:none"><div id="qKb"></div></div>
-    <div class="ctrl" style="justify-content:flex-end"><button class="btn primary" id="qNext">次の問題</button></div>
+    <div class="kbwrap" id="qKbWrap" hidden><div id="qKb"></div></div>
+    <div class="ctrl" style="justify-content:flex-end"><button class="btn primary" id="qNext">始める</button></div>
   </div>
+  <div class="card"><h3>苦手チェック</h3><div id="qWeak"></div></div>
 </section>
 
 </main>
@@ -607,16 +702,16 @@ const isMinorQ=s=>s.startsWith('m')&&!s.startsWith('M');
 
 /* ===== ステージ・ミッション・レベル ===== */
 const SECS=[
- {id:'basics',st:'基礎',n:'基礎',en:'BASICS',c:'#22e5ff',bn:'キーボード起動',sub:'音名・半音・全音'},
- {id:'rhythm',st:'リズム',n:'リズム',en:'RHYTHM',c:'#ff8a3d',bn:'ビートメイカー',sub:'音符の長さ・BPM・ドラム打ち込み'},
- {id:'intervals',st:'音程',n:'音程',en:'INTERVALS',c:'#ffe14d',bn:'インターバル解析',sub:'2つの音の距離と響き'},
- {id:'scales',st:'音階',n:'スケール',en:'SCALES',c:'#a8ff3d',bn:'スケールマスター',sub:'メジャー・マイナー・モード'},
- {id:'chords',st:'和音',n:'コード',en:'CHORDS',c:'#4d8bff',bn:'コードコレクター',sub:'3度を積み重ねた和音'},
- {id:'diatonic',st:'Ⅰ〜Ⅶ',n:'ダイアトニック',en:'DIATONIC',c:'#9b6bff',bn:'ダイアトニック博士',sub:'キーの7つのコードと機能'},
- {id:'progressions',st:'進行',n:'コード進行',en:'PROGRESSION',c:'#ff3df2',bn:'進行プロデューサー',sub:'王道・丸サ・カノン…'},
- {id:'melody',st:'旋律',n:'メロディ',en:'MELODY',c:'#ff5c8a',bn:'メロディメイカー',sub:'コードトーンで作曲体験'},
- {id:'modulation',st:'転調',n:'転調・応用',en:'MODULATION',c:'#3dffa8',bn:'転調マスター',sub:'ラスサビ転調・借用和音'},
- {id:'quiz',st:'クイズ',n:'クイズ',en:'QUIZ',c:'#ff4d5e',bn:'クイズチャンピオン',sub:'耳トレと知識問題'}
+ {id:'basics',soft:'#F9D9E4',acc:'#D9658B',st:'基礎',n:'基礎',en:'BASICS',c:'#22e5ff',bn:'キーボード起動',sub:'音名・半音・全音'},
+ {id:'rhythm',soft:'#FDE3D0',acc:'#D9783C',st:'リズム',n:'リズム',en:'RHYTHM',c:'#ff8a3d',bn:'ビートメイカー',sub:'音符の長さ・BPM・ドラム打ち込み'},
+ {id:'intervals',soft:'#FAEDBF',acc:'#B38A12',st:'音程',n:'音程',en:'INTERVALS',c:'#ffe14d',bn:'インターバル解析',sub:'2つの音の距離と響き'},
+ {id:'scales',soft:'#D6EFE4',acc:'#2F8F6B',st:'音階',n:'スケール',en:'SCALES',c:'#a8ff3d',bn:'スケールマスター',sub:'メジャー・マイナー・モード'},
+ {id:'chords',soft:'#DAE9F8',acc:'#3F7FBF',st:'和音',n:'コード',en:'CHORDS',c:'#4d8bff',bn:'コードコレクター',sub:'3度を積み重ねた和音'},
+ {id:'diatonic',soft:'#E6E0F7',acc:'#7259C2',st:'Ⅰ〜Ⅶ',n:'ダイアトニック',en:'DIATONIC',c:'#9b6bff',bn:'ダイアトニック博士',sub:'キーの7つのコードと機能'},
+ {id:'progressions',soft:'#F3DCF1',acc:'#A84A9F',st:'進行',n:'コード進行',en:'PROGRESSION',c:'#ff3df2',bn:'進行プロデューサー',sub:'王道・丸サ・カノン…'},
+ {id:'melody',soft:'#FBDDD7',acc:'#C9574A',st:'旋律',n:'メロディ',en:'MELODY',c:'#ff5c8a',bn:'メロディメイカー',sub:'コードトーンで作曲体験'},
+ {id:'modulation',soft:'#E0EBD3',acc:'#5E8A35',st:'転調',n:'転調・応用',en:'MODULATION',c:'#3dffa8',bn:'転調マスター',sub:'ラスサビ転調・借用和音'},
+ {id:'quiz',soft:'#DDE1F7',acc:'#4D5CC0',st:'クイズ',n:'クイズ',en:'QUIZ',c:'#ff4d5e',bn:'クイズチャンピオン',sub:'耳トレと知識問題'}
 ];
 const SEC=Object.fromEntries(SECS.map(s=>[s.id,s]));
 const NUM=id=>String(SECS.findIndex(s=>s.id===id)+1).padStart(2,'0');
@@ -667,7 +762,7 @@ const levelOf=xp=>{let l=0;LEVELS.forEach((L,i)=>{if(xp>=L[0])l=i});return l};
 
 /* ===== 保存 ===== */
 const SKEY='ongaku-riron-lab-v2';
-const fresh=()=>({xp:0,done:{},badges:{},c:{keys:0,pcs:[],chrom:0,demo:[],lens:[],four:0,eight:0,fastBars:0,iv:[],ivRoots:[],scale:[],scRoots:[],rel:[],chord:[],chRoots:[],cmp:0,diaMaj:{},diaMin:{},dia7:[],cad:[],prog:[],progKey:[],fastLoops:0,mel6:0,melBack:[],melGood:0,gen:0,mod:[],homo:[],app:[],appKeys:[],qok:0,qtot:0,qbest:0,qm:{interval:0,chord:0,theory:0},qIv:0,qCh:0,qHard:0}});
+const fresh=()=>({xp:0,done:{},badges:{},daily:{date:'',pts:0,goalHit:0},days:[],goal:30,best:0,wrong:[],qstat:{},c:{keys:0,pcs:[],chrom:0,demo:[],lens:[],four:0,eight:0,fastBars:0,iv:[],ivRoots:[],scale:[],scRoots:[],rel:[],chord:[],chRoots:[],cmp:0,diaMaj:{},diaMin:{},dia7:[],cad:[],prog:[],progKey:[],fastLoops:0,mel6:0,melBack:[],melGood:0,gen:0,mod:[],homo:[],app:[],appKeys:[],qok:0,qtot:0,qbest:0,qm:{interval:0,chord:0,theory:0},qIv:0,qCh:0,qHard:0}});
 function load(){try{const j=JSON.parse(localStorage.getItem(SKEY)||'null');if(j){const f=fresh();return {...f,...j,c:{...f.c,...(j.c||{}),qm:{...f.c.qm,...((j.c||{}).qm||{})}}}}}catch(e){}return fresh()}
 function save(){try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}}
 let S=load();
@@ -799,7 +894,7 @@ function track(type,v){
   checkMissions();save();renderProgress();
 }
 function gainXP(n){
-  const before=levelOf(S.xp);S.xp+=n;floatXP(n);const after=levelOf(S.xp);
+  const before=levelOf(S.xp);S.xp+=n;floatXP(n);dayTick(n);const after=levelOf(S.xp);
   if(after>before)queueModal({sound:'level',html:`<div class="mlabel">テンポが上がりました</div><div class="m">${mascot('wow')}</div><div class="tempo-big">${LEVELS[after][1]}</div><p>Lv.${after+1}　${LEVELS[after][2]}</p><button class="btn primary" data-close>続ける</button>`});
 }
 function checkMissions(){
@@ -821,26 +916,42 @@ function curRoute(){const h=location.hash.slice(1);return ROUTES.includes(h)?h:'
 function renderNav(){
   const L=lvInfo();const cur=curRoute();
   $('#nav').innerHTML=`<a class="lvchip" href="#home" aria-label="ホームとレベル"><b>Lv.${L.l+1} ${L.title}</b><span class="bar"><i style="width:${L.pct}%"></i></span></a>`+
-   `<a class="tab" href="#home" data-id="home">ホーム</a>`+
-   SECS.map((s,i)=>`<a class="tab" href="#${s.id}" data-id="${s.id}">${i+1}. ${s.n}${S.badges[s.id]?'<span class="dot" aria-label="クリア済み"></span>':''}</a>`).join('');
+   `<a class="tab" href="#home" data-id="home" style="--tc:var(--rose-soft);--ta:var(--rose)">ホーム</a>`+
+   SECS.map((s,i)=>`<a class="tab" href="#${s.id}" data-id="${s.id}" style="--tc:${s.soft};--ta:${s.acc}"><span class="sw"></span>${i+1}. ${s.n}${S.badges[s.id]?'<span class="ok" aria-label="クリア済み">✓</span>':''}</a>`).join('');
   $$('#nav a.tab').forEach(a=>a.classList.toggle('active',a.dataset.id===cur));
 }
-function stampHTML(s,size='',locked=false,press=false){return `<div class="stamp ${size}${locked?' locked':''}${press?' press':''}">${locked?'未':`${s.st}<small>よくできました</small>`}</div>`}
-function staffSVG(cur,big){
-  const W=big?380:340,x0=30,dx=big?33:29.5,H=big?92:72;
-  const lines=[20,28,36,44,52].map(y=>`<line x1="8" x2="${W-8}" y1="${y}" y2="${y}" stroke="#D9D1E4" stroke-width="1"/>`).join('');
-  const bars=`<line x1="8" x2="8" y1="20" y2="52" stroke="#D9D1E4"/><line x1="${W-13}" x2="${W-13}" y1="20" y2="52" stroke="#33294A" stroke-opacity=".35"/><line x1="${W-9}" x2="${W-9}" y1="20" y2="52" stroke="#33294A" stroke-opacity=".55" stroke-width="3"/>`;
+function stampHTML(s,size='',locked=false,press=false){return `<div class="stamp ${size}${locked?' locked':''}${press?' press':''}" style="--sa:${s.acc}">${locked?'未':`${s.st}<small>よくできました</small>`}</div>`}
+function staffSVG(cur,big,band){
+  const W=big?380:340,x0=30,dx=big?33:29.5,H=big?92:72,line=band?'rgba(51,41,74,.22)':'#D9D1E4';
+  const lines=[20,28,36,44,52].map(y=>`<line x1="8" x2="${W-8}" y1="${y}" y2="${y}" stroke="${line}" stroke-width="1"/>`).join('');
+  const bars=`<line x1="8" x2="8" y1="20" y2="52" stroke="${line}"/><line x1="${W-13}" x2="${W-13}" y1="20" y2="52" stroke="#33294A" stroke-opacity=".35"/><line x1="${W-9}" x2="${W-9}" y1="20" y2="52" stroke="#33294A" stroke-opacity=".55" stroke-width="3"/>`;
   const notes=SECS.map((s,i)=>{
     const x=x0+i*dx,y=60-i*4,done=!!S.badges[s.id],here=s.id===cur;
-    const col=here?'#D9658B':'#33294A',fill=here?'#D9658B':done?'#33294A':'#fff';
+    const col=here?(band?'#33294A':s.acc):'#33294A',fill=here?(band?'#fff':s.acc):done?'#33294A':'#fff';
     const stem=y>36?`<line x1="${x+5.3}" x2="${x+5.3}" y1="${y-1}" y2="${y-25}" stroke="${col}" stroke-width="1.4"/>`:`<line x1="${x-5.3}" x2="${x-5.3}" y1="${y+1}" y2="${y+25}" stroke="${col}" stroke-width="1.4"/>`;
-    const ledger=y>=60?`<line x1="${x-9}" x2="${x+9}" y1="60" y2="60" stroke="#B9AECB"/>`:'';
-    const lab=big?`<text x="${x}" y="${H-6}" text-anchor="middle" font-size="10.5" fill="${here?'#D9658B':'#7C7390'}">${i+1}</text>`:'';
-    return `<a href="#${s.id}" aria-label="${i+1}. ${s.n}"><rect x="${x-13}" y="0" width="26" height="${H}" fill="transparent"/>${ledger}<ellipse cx="${x}" cy="${y}" rx="${here?6.3:5.6}" ry="${here?4.5:4.1}" transform="rotate(-20 ${x} ${y})" fill="${fill}" stroke="${col}" stroke-width="1.5"/>${stem}${lab}</a>`;
+    const ledger=y>=60?`<line x1="${x-9}" x2="${x+9}" y1="60" y2="60" stroke="${band?'rgba(51,41,74,.35)':'#B9AECB'}"/>`:'';
+    const ring=here&&band?`<circle cx="${x}" cy="${y}" r="10" fill="none" stroke="#33294A" stroke-width="1.2" stroke-dasharray="2 2.4"/>`:'';
+    const lab=big?`<text x="${x}" y="${H-6}" text-anchor="middle" font-size="10.5" fill="${here?s.acc:'#7C7390'}">${i+1}</text>`:'';
+    return `<a href="#${s.id}" aria-label="${i+1}. ${s.n}"><rect x="${x-13}" y="0" width="26" height="${H}" fill="transparent"/>${ledger}${ring}<ellipse cx="${x}" cy="${y}" rx="${here?6.3:5.6}" ry="${here?4.5:4.1}" transform="rotate(-20 ${x} ${y})" fill="${fill}" stroke="${col}" stroke-width="1.5"/>${stem}${lab}</a>`;
   }).join('');
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="ステージの譜面">${lines}${bars}${notes}</svg>`;
 }
-function renderStaffs(){$$('.staffslot').forEach(el=>el.innerHTML=staffSVG(el.dataset.sec,false))}
+function renderStaffs(){$$('.staffslot').forEach(el=>el.innerHTML=staffSVG(el.dataset.sec,false,true))}
+/* ===== 毎日の記録 ===== */
+const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+function todayRec(){const t=ymd(new Date());if(S.daily.date!==t)S.daily={date:t,pts:0,goalHit:0};return S.daily}
+function dayTick(n){
+  const d=todayRec();d.pts+=n;
+  if(!S.days.includes(d.date)){S.days.push(d.date);if(S.days.length>400)S.days=S.days.slice(-400)}
+  S.best=Math.max(S.best||0,streakDays());
+  if(!d.goalHit&&d.pts>=S.goal){d.goalHit=1;setTimeout(()=>{toast('今日の目標を達成',`${S.goal}pt たまりました。ホームのレコードが回っています`,0);sfx('badge')},400)}
+}
+function streakDays(){const d=new Date();if(!S.days.includes(ymd(d)))d.setDate(d.getDate()-1);let n=0;while(S.days.includes(ymd(d))){n++;d.setDate(d.getDate()-1)}return n}
+function recordSVG(pct){
+  const C=2*Math.PI*64;
+  return `<svg viewBox="0 0 140 140" aria-hidden="true"><circle cx="70" cy="70" r="64" fill="none" stroke="rgba(51,41,74,.12)" stroke-width="7"/><circle cx="70" cy="70" r="64" fill="none" stroke="#D9658B" stroke-width="7" stroke-linecap="round" stroke-dasharray="${(C*Math.min(pct,100)/100).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 70 70)"/><g class="disc"><circle cx="70" cy="70" r="54" fill="#33294A"/>${[49,44,39,34].map(r=>`<circle cx="70" cy="70" r="${r}" fill="none" stroke="rgba(255,255,255,.08)"/>`).join('')}<path d="M45 32 a46 46 0 0 1 44 -6" stroke="rgba(255,255,255,.22)" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="70" cy="70" r="20" fill="#F8DCE6"/><path d="M66 63 v10" stroke="#33294A" stroke-width="1.6"/><ellipse cx="63.5" cy="73.5" rx="3" ry="2.2" fill="#33294A" transform="rotate(-20 63.5 73.5)"/><circle cx="70" cy="70" r="1.8" fill="#F7F5FA"/></g></svg>`;
+}
+const HITOKOTO=['コード進行の Ⅵm→Ⅳ→Ⅴ→Ⅰ は、キーCなら Am→F→G→C。','BPM120 のとき、4分音符1つはちょうど0.5秒。','長3度を2つ重ねるとオーギュメント、短3度を2つ重ねるとディミニッシュ。','平行調のマイナーは、メジャーキーのルートから短3度下にあります。','Ⅴ7 の中にある3度と7度は増4度の関係。この不安定さが Ⅰ への解決を生みます。','ペンタトニックには半音の並びがないので、どの音を伸ばしてもぶつかりにくい。','全音上げの転調では、新しいキーの Ⅴ7 を1つ挟むと自然につながります。','16分音符は1拍を4つに割った長さ。ハイハットを16分で刻むと細かい疾走感が出ます。','sus4 は3度の代わりに4度を使うので、明るいとも暗いとも言えない響きになります。','メジャースケールで半音なのは、3番目と4番目、7番目と8番目の間だけ。','完全5度ずつ12回進むと、12音すべてを通って元の音名に戻ります（五度圏）。','メロディの最後をキーの主音で終えると、「終わった」感じが強くなります。','マイナーキーで Ⅴ をメジャーにすると、主音へ戻る力が強くなります。','同じメロディでも、下に置くコードを変えると印象がまったく変わります。'];
 function renderMissions(){
   $$('.missions').forEach(box=>{
     const s=SEC[box.dataset.sec];const ms=MISSIONS.filter(m=>m.sec===s.id);const [a,b]=secProgress(s.id);const got=!!S.badges[s.id];
@@ -852,32 +963,50 @@ function renderMissions(){
 function renderHome(){
   const L=lvInfo();const total=MISSIONS.length,done=MISSIONS.filter(m=>S.done[m.id]).length;
   const nextM=MISSIONS.find(m=>!S.done[m.id]);const c=S.c;const cleared=SECS.filter(s=>S.badges[s.id]).length;
-  const greet=done===0?'はじめまして、おんぷっぴです。10のステージで、作曲に使う音楽理論をひとつずつ確かめていきましょう。':
-    !nextM?'すべての課題が終わりました。クイズで耳をなまらせないようにしておきましょう。':
-    `おかえりなさい。次のテンポまで、あと ${L.need}pt です。`;
+  const d=todayRec(),pct=Math.round(d.pts/S.goal*100),sk=streakDays();
+  const greet=done===0&&!S.days.length?'はじめまして、おんぷっぴです。1日少しずつで大丈夫。今日の目標のポイントをためて、レコードを1周させましょう。':
+    d.goalHit?'今日の目標は達成済みです。この先は好きなだけ、気になるところを練習しましょう。':
+    sk?`${sk}日続いています。今日も ${Math.max(0,S.goal-d.pts)}pt ためれば記録が伸びます。`:'おかえりなさい。今日の目標まで、クイズ1ラウンドくらいです。';
+  const wd=['日','月','火','水','木','金','土'];const week=Array.from({length:7},(_,i)=>{const x=new Date();x.setDate(x.getDate()-6+i);const k=ymd(x);return `<span class="${S.days.includes(k)?'on':''}${i===6?' now':''}"><i></i>${i===6?'今日':wd[x.getDay()]}</span>`}).join('');
   const row=(k,v)=>`<div><dt>${k}</dt><dd>${v}</dd></div>`;
+  const tip=HITOKOTO[Math.floor(Date.now()/864e5)%HITOKOTO.length];
   $('#homeBody').innerHTML=`
-  <div class="greet"><div class="m">${mascot(done===0?'happy':'wink')}</div><p>${greet}</p></div>
+  <div class="today">
+    <div class="greetline"><div class="m">${mascot(d.goalHit?'wow':done===0?'happy':'wink')}</div><p>${greet}</p></div>
+    <div class="rec${d.goalHit?' spin':''}">${recordSVG(pct)}</div>
+    <div class="tinfo"><p class="tl">今日の練習</p><p class="tn">${d.pts}<small> / ${S.goal}pt</small></p>
+      <div class="week">${week}</div>
+      <p class="sub" style="margin:0">${sk?`${sk}日連続`:'まだ連続記録はありません'}　最長 ${S.best||0}日</p>
+      <div class="goalsel">1日の目標 ${[30,60,100].map(g=>`<button data-g="${g}" class="${S.goal===g?'sel':''}">${g}pt</button>`).join('')}</div></div>
+  </div>
+  <div class="quick">
+    <button class="btn primary" id="qkRound">クイズを1ラウンド</button>
+    ${S.wrong.length?`<button class="btn" id="qkReview">復習ノート（${S.wrong.length}問）</button>`:''}
+    ${nextM?`<a class="btn" href="#${nextM.sec}">次の課題へ</a>`:''}
+  </div>
+  <div class="hitokoto"><b>今日のひとこと</b>${tip}</div>
   <div class="card"><div class="tempo"><span class="word">${L.title}</span><span class="gloss">Lv.${L.l+1}　${L.gloss}</span></div>
     <span class="bar thick"><i style="width:${L.pct}%"></i></span>
-    <p class="sub">${S.xp}pt　${L.need?`次の ${LEVELS[L.l+1][1]} まで ${L.need}pt`:'最も速いテンポに到達しました'}</p>
-    <p class="sub">ポイントがたまるとテンポ記号が上がります。課題は ${done}/${total} 完了。</p></div>
+    <p class="sub">${S.xp}pt　${L.need?`次の ${LEVELS[L.l+1][1]} まで ${L.need}pt`:'最も速いテンポに到達しました'}。課題は ${done}/${total} 完了。</p></div>
+  ${nextM?`<div class="card nextcard" style="--sa:${SEC[nextM.sec].acc}"><div><p class="sub" style="margin:0">次の課題（${SEC[nextM.sec].n}）</p><p class="nm">${nextM.t}<span class="pt">${nextM.xp}pt</span></p></div><a class="btn primary" href="#${nextM.sec}">開く</a></div>`:''}
   <div class="card"><h3>ステージの譜面</h3><p class="sub">ステージをクリアすると、その音符が塗られます。10個そろうとドから上のミまでの旋律になります。</p>
-    <div class="staffbig">${staffSVG(nextM?nextM.sec:null,true)}</div>
+    <div class="staffbig">${staffSVG(nextM?nextM.sec:null,true,false)}</div>
     ${cleared?'<button class="btn quiet" id="playStaff">▶ 書き込んだ旋律を聴く</button>':'<p class="sub">最初のステージをクリアすると、ここで旋律を聴けるようになります。</p>'}</div>
-  ${nextM?`<div class="card nextcard"><div><p class="sub" style="margin:0">次の課題</p><p class="nm">${nextM.t}<span class="pt">${nextM.xp}pt</span></p></div><a class="btn primary" href="#${nextM.sec}">「${SEC[nextM.sec].n}」を開く</a></div>`:''}
   <h3 class="home-h">ステージ一覧</h3>
-  <div class="slist">${SECS.map((s,i)=>`<a href="#${s.id}"><span class="num">${i+1}</span><span class="nm"><b>${s.n}</b><small>${s.sub}</small></span><span class="heads">${MISSIONS.filter(m=>m.sec===s.id).map(m=>`<i class="${S.done[m.id]?'on':''}"></i>`).join('')}</span></a>`).join('')}</div>
+  <div class="slist">${SECS.map((s,i)=>`<a href="#${s.id}" style="--sa:${s.acc};--sc:${s.soft}"><span class="num">${i+1}</span><span class="nm"><b>${s.n}</b><small>${s.sub}</small></span><span class="heads">${MISSIONS.filter(m=>m.sec===s.id).map(m=>`<i class="${S.done[m.id]?'on':''}"></i>`).join('')}</span></a>`).join('')}</div>
   <div class="card"><h3>スタンプ帳</h3><div class="stampbook">${SECS.map(s=>`<div>${stampHTML(s,'',!S.badges[s.id])}${s.n}</div>`).join('')}</div></div>
   <div class="card"><h3>記録</h3><dl class="stats">
-    ${row('鍵盤を弾いた回数',c.keys)}${row('聴いた音程',c.iv.length+' / 13')}${row('聴いたスケール',c.scale.length+' / 11')}${row('鳴らしたコード',c.chord.length+' / 13')}
-    ${row('再生した進行',c.prog.length+' / 8')}${row('クイズの正解数',c.qok)}${row('正答率',(c.qtot?Math.round(c.qok/c.qtot*100):0)+'%')}${row('最高連続正解',c.qbest)}
+    ${row('練習した日数',S.days.length+'日')}${row('最長連続',(S.best||0)+'日')}${row('クイズの正解数',c.qok)}${row('正答率',(c.qtot?Math.round(c.qok/c.qtot*100):0)+'%')}
+    ${row('最高連続正解',c.qbest)}${row('復習ノート',S.wrong.length+'問')}${row('聴いた音程',c.iv.length+' / 13')}${row('鳴らしたコード',c.chord.length+' / 13')}
   </dl></div>
   <p style="text-align:center;margin-top:24px"><button class="btn quiet" id="resetBtn">記録をリセット</button></p>`;
-  if(cleared)$('#playStaff').onclick=()=>{const mids=[60,62,64,65,67,69,71,72,74,76];const c2=ac();const t=c2.currentTime+0.05;SECS.forEach((s,i)=>{if(S.badges[s.id])tone(mids[i],t+i*0.34,0.3,1,'lead')});SECS.forEach((s,i)=>{if(S.badges[s.id])[48,55].forEach(b=>i%4===0&&tone(b+(i>=8?7:0),t+i*0.34,1.2,.5,'pad'))})};
-  $('#resetBtn').onclick=()=>queueModal({html:`<div class="m">${mascot('oops')}</div><h4>記録をリセットしますか</h4><p>ポイント、課題、スタンプがすべて消えます。元には戻せません。</p><div class="mbtns"><button class="btn quiet" data-close>やめる</button><button class="btn primary" id="doReset">リセットする</button></div>`,bind:el=>{el.querySelector('#doReset').onclick=()=>{S=fresh();save();nextModal();renderProgress()}}});
+  $$('.goalsel button').forEach(b=>b.onclick=()=>{S.goal=+b.dataset.g;const t=todayRec();if(!t.goalHit&&t.pts>=S.goal){t.goalHit=1;sfx('badge')}save();renderHome()});
+  $('#qkRound').onclick=()=>startQuiz(qModeV==='review'||qModeV==='focus'?'interval':qModeV);
+  if($('#qkReview'))$('#qkReview').onclick=()=>startQuiz('review');
+  if(cleared)$('#playStaff').onclick=()=>{const mids=[60,62,64,65,67,69,71,72,74,76];const c2=ac();const t=c2.currentTime+0.05;SECS.forEach((s,i)=>{if(S.badges[s.id])tone(mids[i],t+i*0.34,0.3,1,'lead')})};
+  $('#resetBtn').onclick=()=>queueModal({html:`<div class="m">${mascot('oops')}</div><h4>記録をリセットしますか</h4><p>ポイント、課題、スタンプ、毎日の記録、復習ノートがすべて消えます。元には戻せません。</p><div class="mbtns"><button class="btn quiet" data-close>やめる</button><button class="btn primary" id="doReset">リセットする</button></div>`,bind:el=>{el.querySelector('#doReset').onclick=()=>{S=fresh();save();nextModal();renderProgress()}}});
 }
-function renderProgress(){renderNav();renderMissions();renderStaffs();refreshChips();if(curRoute()==='home')renderHome();if(curRoute()==='diatonic')dRender(true);if(curRoute()==='modulation')tRenderApps()}
+function renderProgress(){renderNav();renderMissions();renderStaffs();refreshChips();if(curRoute()==='home')renderHome();if(curRoute()==='diatonic')dRender(true);if(curRoute()==='modulation')tRenderApps();if(curRoute()==='quiz')renderQModes()}
 /* ===== 鍵盤・UI部品 ===== */
 function kbRange(midis,minOct=2){const lo=Math.floor(Math.min(...midis)/12)*12;const hi=Math.max(lo+12*minOct-1,Math.ceil((Math.max(...midis)+1)/12)*12-1);return [lo,hi]}
 function keyboard(el,{lo,hi,marks={},onKey,flat=false}){
@@ -1054,7 +1183,7 @@ function cRender(){
 function cSound(){playChord(cMidis(),1.4,$('#cKb'));track('chord',{q:cQ,root:cRootV})}
 function cInit(){
   fillRoot($('#cRoot'));$('#cRoot').onchange=e=>{cRootV=+e.target.value;cRender();cSound()};
-  chips($('#cChips'),Object.keys(CHORDS).map(k=>[k,k===''?'メジャー':k]),cQ,k=>{cQ=k;cRender();cSound()},k=>S.c.chord.includes(k));
+  chips($('#cChips'),['','m','7','M7','m7','sus4','add9','6','dim','dim7','aug','m7-5','mM7'].map(k=>[k,k===''?'メジャー':k]),cQ,k=>{cQ=k;cRender();cSound()},k=>S.c.chord.includes(k));
   $('#cPlay').onclick=cSound;
   $('#cArp').onclick=()=>{const ms=cMidis();playSeq(ms.concat([ms[0]+12]),0.28,$('#cKb'));track('chord',{q:cQ,root:cRootV})};
   $('#cCmp').onclick=()=>{const b=(cRootV>=7?48:60)+cRootV;playChord([b,b+4,b+7],1.1);playChord([b,b+3,b+7],1.3,null,1.3);track('cmp')};
@@ -1229,79 +1358,212 @@ function tInit(){
 }
 
 /* ===== 10 クイズ ===== */
-let qModeV='interval',Q=null,qAns=false;const QS={ok:0,tot:0,st:0};
+let qModeV='interval',Q=null,qAns=false;const QS={st:0};
+const ROUND=10;let round={i:0,res:[],pts:0};
+const rnd=n=>Math.floor(Math.random()*n);
 const IV_POOL=[[2,4,5,7,12],[1,2,3,4,5,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12]];
 const CH_POOL=[['','m'],['','m','dim','aug','sus4'],['','m','7','M7','m7','dim','aug','sus4','m7-5']];
-const PRAISE=['正解です','よくできました','その調子です','正解、いい感じです'];
-function genTheory(lv){
-  const types=lv===0?[0,3,4]:[0,1,2,3,4,5];const t=rand(types);
+const PRAISE=['正解','よくできました','その調子','いい耳です'];
+const IV_GROUP={1:'こすれる',2:'こすれる',10:'こすれる',11:'こすれる',3:'暗い',8:'暗い',4:'明るい',9:'明るい',5:'空っぽ',7:'空っぽ',12:'空っぽ',6:'落ち着かない'};
+const IV_PAIR={1:2,2:1,3:4,4:3,5:7,7:5,6:7,8:9,9:8,10:11,11:10,12:11};
+const IV_SONG={1:'映画「ジョーズ」のテーマの最初の2音',2:'「ハッピーバースデー」の“ピー→バー”',3:'「グリーンスリーブス」の最初の2音',4:'「聖者の行進」の最初の2音',5:'ワーグナー「結婚行進曲」の最初の2音',6:'「ウエスト・サイド物語」の「マリア」の最初の2音',7:'「きらきら星」の“き→ら”',9:'「マイ・ボニー」の最初の2音',10:'「スター・トレック」（初代）のテーマの最初の2音',12:'「虹の彼方に」の最初の2音'};
+const IV_TIP={8:'短6度は、長3度を上下ひっくり返した音程です。C→A♭ を逆から聴くと A♭→C の長3度になります。',11:'長7度は、オクターブより半音だけ狭い音程。オクターブに届きそうで届かない、もどかしい感じで覚えます。'};
+const BRIGHT=['','7','M7','aug','6','add9'];
+const CH_FEEL={
+ '':'響きの種類をしぼる。余計な緊張がなく、明るくぴたっと止まって聴こえるのでメジャー。',
+ 'm':'響きの種類をしぼる。暗いけれど不安定さはなく、落ち着いて止まっているのでマイナー。',
+ '7':'響きの種類をしぼる。明るいのに少し濁っていて、次のコードへ進みたくなる。メジャーに短7度を足したセブンス。',
+ 'M7':'響きの種類をしぼる。明るく、ふわっと浮いたおしゃれな響き。ルートの半音下にある長7度が、やさしくこすれるのがメジャーセブンス。',
+ 'm7':'響きの種類をしぼる。暗いけれど柔らかく、なめらか。マイナーに短7度を足したマイナーセブンス。',
+ 'sus4':'響きの種類をしぼる。明るいとも暗いとも言えず、何かがつっかえている感じ。3度の代わりに完全4度を置いたサスフォー。',
+ 'dim':'響きの種類をしぼる。暗く、全体がぎゅっと縮こまったような怖さ。短3度だけを積み重ねたディミニッシュ。',
+ 'aug':'響きの種類をしぼる。明るいのに外へ膨らんでいくような、ぞわっとした不思議さ。長3度だけを積み重ねたオーギュメント。',
+ 'm7-5':'響きの種類をしぼる。暗くて不安定、でも dim より少しだけ柔らかい。dim に短7度を足したマイナーセブンフラットファイブ。'
+};
+const CH_PAIR={'':'aug','aug':'','m':'dim','dim':'m','7':'M7','M7':'7','m7':'m7-5','m7-5':'m7','sus4':''};
+const qn=q=>q===''?'メジャー':q;
+
+function makeIv(p){
+  const {r,iv,lv}=p,I=INTERVALS[iv],g=IV_GROUP[iv],pair=IV_PAIR[iv];
+  const third={
+    'こすれる':`近くでこすれるなら2度、オクターブの手前でこすれるなら7度。半音でこすれるほど痛く（短2度・長7度）、全音だとやわらぐ（長2度・短7度）。今回は${iv<7?'近く':'オクターブの手前'}で${[1,11].includes(iv)?'強く':'やわらかく'}こすれるので ${I[2]}。`,
+    '暗い':`3度か6度かは距離で決める。近ければ3度、遠ければ6度。そのうえで明るければ長、暗ければ短。今回は${iv<7?'近い':'遠い'}うえに暗いので ${I[2]}。`,
+    '明るい':`3度か6度かは距離で決める。近ければ3度、遠ければ6度。そのうえで明るければ長、暗ければ短。今回は${iv<7?'近い':'遠い'}うえに明るいので ${I[2]}。`,
+    '空っぽ':`同じ音名に聴こえるほど溶け合うならオクターブ。力強く安定していれば完全5度、少し浮いて「まだ続きそう」なら完全4度。今回は ${I[2]}。`,
+    '落ち着かない':'長・短・完全のどれにも当てはまらず、宙に浮いたまま解決したくなる響きは増4度（トライトーン）。オクターブのちょうど半分の距離です。'
+  }[g];
+  const steps=[
+    `距離をざっくりつかむ。目安は完全5度（半音7個）。今回は${iv<7?'それより近い':iv>7?'それより遠い':'ちょうどそのくらい'}。`,
+    `響きの性格を聴く。「こすれる」なら2度か7度、「明るい／暗い」なら3度か6度、「空っぽ」なら4度・5度・8度、「落ち着かない」なら増4度。今回は「${g}」。`,
+    third
+  ];
+  if(IV_SONG[iv])steps.push(`知っている曲で答え合わせ。${IV_SONG[iv]}と同じ距離か、頭の中で歌ってみる。`);
+  return {q:'この2つの音の音程は？',opts:IV_POOL[lv].map(i=>INTERVALS[i][2]),ans:I[2],notes:[r,r+iv],ear:true,key:'iv:'+iv,
+    why:`${octName(r)} → ${octName(r+iv)} は半音${iv}個ぶんで、${I[2]}（${I[1]}）。「${I[3]}」という響きが特徴です。`+(IV_POOL[lv].includes(pair)?`間違えやすいのは${INTERVALS[pair][2]}（半音${pair}個）で、こちらは「${INTERVALS[pair][3]}」という響きです。`:''),
+    steps,tip:IV_SONG[iv]?'':(IV_TIP[iv]||'')};
+}
+function makeCh(p){
+  const {r,s,lv}=p,C=CHORDS[s],flat=useFlat(mod(r),isMinorQ(s)),name=nm(r,flat)+s;
+  const sus=s==='sus4',bright=BRIGHT.includes(s),stable=s===''||s==='m',pair=CH_PAIR[s];
+  const steps=[
+    `明るいか暗いかを聴く。${sus?'今回は明るくも暗くもない → 3度がないコード。':bright?'今回は明るい → 3度が長3度のメジャー系。':'今回は暗い → 3度が短3度のマイナー系。'}`,
+    `落ち着いているか、どこかへ進みたがっているかを聴く。${stable?'今回は落ち着いている → 基本の3和音。':'今回は進みたがっている → 7th・dim・aug・sus4 の仲間。'}`,
+    CH_FEEL[s]
+  ];
+  if(pair!==undefined&&CH_POOL[lv].includes(pair)){
+    const a=C.iv,b=CHORDS[pair].iv,oa=a.filter(x=>!b.includes(x)).map(x=>TONE_LBL[x]),ob=b.filter(x=>!a.includes(x)).map(x=>TONE_LBL[x]);
+    steps.push(`迷いやすい${qn(pair)}との違いを確かめる。${qn(s)}は ${oa.join('・')||'なし'}、${qn(pair)}は ${ob.join('・')||'なし'}。違うのはこの音だけなので、そこに耳を向ける。`);
+  }
+  return {q:'このコードの種類は？',opts:CH_POOL[lv].map(qn),ans:qn(s),notes:C.iv.map(i=>r+i),ear:true,chord:true,key:'ch:'+s,
+    why:`${name}（${C.n}）の構成音は ${C.iv.map(i=>nm(r+i,flat)).join('・')}。ルートから見ると ${C.iv.map(i=>TONE_LBL[i]).join('＋')} です。${C.d}`,
+    steps,tip:''};
+}
+const NOTE_PAIRS=[['4分音符','8分音符',2],['4分音符','16分音符',4],['2分音符','8分音符',4],['全音符','4分音符',4],['全音符','8分音符',8],['2分音符','16分音符',8],['全音符','16分音符',16]];
+const BORROW=[['♭Ⅶ',10,'',6,true,'ミクソリディアンや同主調マイナーから借りたコードで、ロックっぽい解放感が出ます。'],['♭Ⅵ',8,'',5,true,'同主調マイナーから借りたコードで、壮大でドラマチックな響きになります。'],['Ⅳm',5,'m',3,false,'同主調マイナーから借りたサブドミナントマイナーで、切なさが増します。'],['Ⅲ7',4,'7',2,false,'次の Ⅵm へ向かうセカンダリードミナントです。'],['Ⅱ7',2,'7',1,false,'Ⅴ へ向かうドッペルドミナントで、明るく前へ進む力があります。']];
+function fill4(ans,gen){const o=new Set([ans]);let g=0;while(o.size<4&&g++<60)o.add(gen());return shuffle([...o])}
+function makeTh(p){
+  const t=p.t;
   if(t===0){
-    const k=Math.floor(Math.random()*12),flat=useFlat(k,false),d=2+Math.floor(Math.random()*6);
-    const ans=nm(k+MAJ[d-1],flat);const o=new Set([ans]);while(o.size<4)o.add(nm(k+Math.floor(Math.random()*12),flat));
-    return {q:`${KEY_NAMES[k]} メジャースケールの ${d} 番目の音は？`,opts:shuffle([...o]),ans,ex:`${KEY_NAMES[k]} メジャー：${MAJ.map(i=>nm(k+i,flat)).join(' ')}`,notes:MAJ.map(i=>60+k+i)};
+    const {k,d}=p,flat=useFlat(k,false),sc=MAJ.map(i=>nm(k+i,flat)),pat=['全','全','半','全','全','全'];
+    let path=sc[0];for(let j=1;j<d;j++)path+=` →${pat[j-1]}→ ${sc[j]}`;
+    const acc=sc.filter(n=>n.length>1),accTxt=acc.length?`${acc[0].includes('♯')?'♯':'♭'}が${acc.length}個（${acc.join('・')}）`:'♯も♭もない（白鍵だけ）';
+    const ans=sc[d-1];
+    return {q:`${KEY_NAMES[k]} メジャースケールの ${d} 番目の音は？`,opts:fill4(ans,()=>nm(k+rnd(12),flat)),ans,notes:MAJ.map(i=>60+k+i),key:'th:0',
+      why:`${KEY_NAMES[k]} メジャースケールは ${sc.join(' ')}。調号は${accTxt}です。`,
+      steps:['メジャースケールの並び「全・全・半・全・全・全・半」を思い出す。',`${KEY_NAMES[k]} から並びどおりに進む：${path}`,`${d}番目にあたるのは ${ans}。`],
+      tip:'♯は「ファ・ド・ソ・レ・ラ・ミ・シ」、♭は「シ・ミ・ラ・レ・ソ・ド・ファ」の順に1つずつ増えます。調号の数でキーがわかると、数えなくても答えられるようになります。'};
   }
   if(t===1){
-    const k=Math.floor(Math.random()*12),pool=['','m','7','M7','m7','dim','aug','sus4','m7-5'],suf=rand(pool);
-    const flat=useFlat(k,isMinorQ(suf));const str=s=>CHORDS[s].iv.map(i=>nm(k+i,flat)).join('・');
-    const ans=str(suf);const o=new Set([ans]);shuffle(pool).forEach(s=>{if(o.size<4)o.add(str(s))});
-    return {q:`${nm(k,flat)}${suf} の構成音は？`,opts:shuffle([...o]),ans,ex:`${nm(k,flat)}${suf}（${CHORDS[suf].n}）＝ ${CHORDS[suf].iv.map(i=>TONE_LBL[i]).join('＋')}`,notes:CHORDS[suf].iv.map(i=>60+k+i)};
+    const {k,suf}=p,C=CHORDS[suf],flat=useFlat(k,isMinorQ(suf)),str=s=>CHORDS[s].iv.map(i=>nm(k+i,flat)).join('・');
+    const ans=str(suf),pool=['','m','7','M7','m7','dim','aug','sus4','m7-5'];
+    const third=C.iv.includes(4)?'長3度（半音4つ）':C.iv.includes(3)?'短3度（半音3つ）':'3度なし、代わりに完全4度（半音5つ）';
+    const fifth=C.iv.includes(7)?'完全5度（半音7つ）':C.iv.includes(6)?'減5度（半音6つ）':'増5度（半音8つ）';
+    const sev=C.iv.includes(10)?'、7度は短7度（半音10）':C.iv.includes(11)?'、7度は長7度（半音11）':'';
+    return {q:`${nm(k,flat)}${suf} の構成音は？`,opts:fill4(ans,()=>str(rand(pool))),ans,notes:C.iv.map(i=>60+k+i),key:'th:1',
+      why:`${nm(k,flat)}${suf}（${C.n}）は ${C.iv.map(i=>TONE_LBL[i]).join('＋')}。${C.d}`,
+      steps:[`ルートは ${nm(k,flat)}。`,`コードネームから中身を読む：3度は${third}、5度は${fifth}${sev}。`,`${nm(k,flat)} から半音を数えて当てはめる：${C.iv.slice(1).map(i=>`半音${i}つ上 → ${nm(k+i,flat)}`).join('、')}。`],
+      tip:'「m があれば3度が半音3つ、なければ4つ」「5度はふつう半音7つ」「7 は半音10、M7 は半音11」。この3つを覚えておけば、ほとんどのコードは組み立てられます。'};
   }
   if(t===2){
-    const k=rand([0,2,4,5,7,9,10,3]),flat=useFlat(k,false),ds=diatonic(k,'major',false),i=Math.floor(Math.random()*7);
-    const names=ds.map(d=>nm(d.pc,flat)+d.suf);const ans=names[i];const o=new Set([ans]);shuffle(names).forEach(n=>{if(o.size<4)o.add(n)});
-    return {q:`キー ${KEY_NAMES[k]}（メジャー）で ${ROM[i]} 度のダイアトニックコードは？`,opts:shuffle([...o]),ans,ex:ds.map((d,j)=>`${d.roman}=${names[j]}`).join('　'),notes:voiceClose(ds[i].pc,ds[i].rel)};
+    const {k,i}=p,flat=useFlat(k,false),ds=diatonic(k,'major',false),sc=MAJ.map(x=>nm(k+x,flat)),names=ds.map(d=>nm(d.pc,flat)+d.suf),ans=names[i];
+    const stack=[0,2,4].map(j=>sc[(i+j)%7]).join('・'),d=ds[i];
+    return {q:`キー ${KEY_NAMES[k]}（メジャー）で ${ROM[i]} 度のダイアトニックコードは？`,opts:fill4(ans,()=>rand(names)),ans,notes:voiceClose(d.pc,d.rel),key:'th:2',
+      why:`キー ${KEY_NAMES[k]} のダイアトニックコードは ${ds.map((x,j)=>x.roman+'＝'+names[j]).join('、')}。`,
+      steps:[`キーのスケールを書き出す：${sc.join(' ')}`,`${ROM[i]}番目の音 ${sc[i]} から、スケールの音を1つ飛ばしで3つ重ねる：${stack}`,`${sc[i]} から見て3度が${d.rel[1]===4?'長3度':'短3度'}、5度が${d.rel[2]===6?'減5度':'完全5度'} → ${ans}。`],
+      tip:'メジャーキーなら「Ⅰ・Ⅳ・Ⅴはメジャー、Ⅱ・Ⅲ・Ⅵはマイナー、Ⅶはdim」。この型はどのキーでも同じなので、ルートの音名さえ出せれば答えが決まります。'};
   }
   if(t===3){
-    const a=Math.floor(Math.random()*12),iv=1+Math.floor(Math.random()*11);
-    const ans=INTERVALS[iv][2];const o=new Set([ans]);while(o.size<4)o.add(INTERVALS[1+Math.floor(Math.random()*11)][2]);
-    return {q:`${NAMES_S[a]} から上の ${NAMES_S[mod(a+iv)]} までの音程は？`,opts:shuffle([...o]),ans,ex:`${iv} 半音 ＝ ${ans}`,notes:[60+a,60+a+iv]};
+    const {a,iv}=p,ans=INTERVALS[iv][2];const path=Array.from({length:iv+1},(_,j)=>NAMES_S[mod(a+j)]).join(' → ');
+    return {q:`${NAMES_S[a]} から上の ${NAMES_S[mod(a+iv)]} までの音程は？`,opts:fill4(ans,()=>INTERVALS[1+rnd(11)][2]),ans,notes:[60+a,60+a+iv],key:'th:3',
+      why:`${NAMES_S[a]} → ${NAMES_S[mod(a+iv)]} は半音${iv}個で、${ans}。「${INTERVALS[iv][3]}」という響きです。`,
+      steps:[`${NAMES_S[a]} から半音ずつ上へ数える：${path}（${iv}個）`,`半音${iv}個の音程は ${ans}。`],
+      tip:'よく出る対応だけ先に覚えると速くなります。半音3＝短3度、4＝長3度、5＝完全4度、7＝完全5度、12＝オクターブ。'};
   }
   if(t===4){
-    const P=rand([['4分音符','8分音符',2],['4分音符','16分音符',4],['2分音符','8分音符',4],['全音符','4分音符',4],['全音符','8分音符',8],['2分音符','16分音符',8],['全音符','16分音符',16]]);
-    const ans=P[2]+'つ';const o=new Set([ans]);while(o.size<4)o.add(rand([1,2,3,4,6,8,12,16])+'つ');
-    return {q:`${P[0]}1つは、${P[1]}いくつぶん？`,opts:shuffle([...o]),ans,ex:`音符は半分ずつ細かくなる：全音符＝2分×2＝4分×4＝8分×8＝16分×16`};
+    const P=NOTE_PAIRS[p.i],n=Math.log2(P[2]),ans=P[2]+'つ';
+    return {q:`${P[0]}1つは、${P[1]}いくつぶん？`,opts:fill4(ans,()=>rand([1,2,3,4,6,8,12,16])+'つ'),ans,key:'th:4',
+      why:`${P[0]}1つの長さは、${P[1]}${P[2]}つぶん。4/4拍子の1小節は、4分音符4つ＝8分音符8つ＝16分音符16つです。`,
+      steps:['音符は1段階細かくなるたびに、長さが半分になる：全 → 2分 → 4分 → 8分 → 16分。',`${P[0]}から${P[1]}までは${n}段階。`,`${n}段階なら2を${n}回かける：${Array(n).fill(2).join('×')}＝${P[2]}。`],
+      tip:'BPMで数える「1拍」は4分音符1つぶん。8分音符は1拍の半分、16分音符は1拍の4分の1です。'};
   }
-  const k=rand([0,2,5,7,9,4]),flat=FLAT_MAJ.has(k);const A=rand([['♭Ⅶ',10,''],['♭Ⅵ',8,''],['Ⅳm',5,'m'],['Ⅲ7',4,'7'],['Ⅱ7',2,'7']]);
-  const fl=flat||[8,10].includes(A[1]);const ans=nm(k+A[1],fl)+A[2];const o=new Set([ans]);while(o.size<4)o.add(nm(k+Math.floor(Math.random()*12),fl)+rand(['','m','7']));
-  return {q:`キー ${KEY_NAMES[k]} で「${A[0]}」にあたるコードは？`,opts:shuffle([...o]),ans,ex:`${KEY_NAMES[k]} から ${A[1]} 半音上がルート → ${ans}`};
+  const {k,j}=p,A=BORROW[j],kf=FLAT_MAJ.has(k),flat=kf||A[4],base=nm(k+MAJ[A[3]],kf),root=nm(k+A[1],flat),ans=root+A[2];
+  return {q:`キー ${KEY_NAMES[k]} で「${A[0]}」にあたるコードは？`,opts:fill4(ans,()=>nm(k+rnd(12),flat)+rand(['','m','7'])),ans,key:'th:5',
+    why:`キー ${KEY_NAMES[k]} の ${A[0]} は ${ans}。${A[5]}`,
+    steps:['ローマ数字は「キーの何番目の音がルートか」を表す。♭が付いていたら、その音を半音下げる。',`キー ${KEY_NAMES[k]} の${A[3]+1}番目の音は ${base}${A[4]?`。♭なので半音下げて ${root}`:''}。`,`後ろの記号はそのまま付ける：${A[2]?`「${A[2]}」は${CHORDS[A[2]].n}`:'記号なしなのでメジャー'} → ${ans}。`],
+    tip:'♭Ⅵ・♭Ⅶ・Ⅳm は、同じルートのマイナーキーから借りてきたコード。「明るい曲に一瞬だけ暗い色を混ぜる」道具として覚えておくと、作曲で使いやすくなります。'};
 }
+function genTheory(lv){
+  const t=rand(lv===0?[0,3,4]:[0,1,2,3,4,5]);
+  const P={t};
+  if(t===0){P.k=rnd(12);P.d=2+rnd(6)}
+  if(t===1){P.k=rnd(12);P.suf=rand(['','m','7','M7','m7','dim','aug','sus4','m7-5'])}
+  if(t===2){P.k=rand([0,2,4,5,7,9,10,3]);P.i=rnd(7)}
+  if(t===3){P.a=rnd(12);P.iv=1+rnd(11)}
+  if(t===4){P.i=rnd(NOTE_PAIRS.length)}
+  if(t===5){P.k=rand([0,2,5,7,9,4]);P.j=rnd(BORROW.length)}
+  return P;
+}
+function buildQ(p){const q=p.kind==='iv'?makeIv(p):p.kind==='ch'?makeCh(p):makeTh(p);q.p=p;q.level=p.lv??+$('#qLevel').value;return q}
+function weakList(){return Object.entries(S.qstat).filter(([k,v])=>(k.startsWith('iv:')||k.startsWith('ch:'))&&v[1]>=2).map(([k,v])=>({k,ok:v[0],tot:v[1],rate:v[0]/v[1]})).sort((a,b)=>a.rate-b.rate)}
+function renderQModes(){
+  const el=$('#qMode');const items=[['interval','音程を聴き分ける'],['chord','コードを聴き分ける'],['theory','知識問題'],['review',`復習ノート（${S.wrong.length}）`],['focus','苦手を集中練習']];
+  el.innerHTML='';items.forEach(([k,l])=>{const b=document.createElement('button');b.className='chip'+(k===qModeV?' sel':'');b.textContent=l;b.onclick=()=>{qModeV=k;round={i:0,res:[],pts:0};renderQModes();qNew()};el.appendChild(b)});
+}
+function renderDots(){
+  $('#qDots').innerHTML=Array.from({length:ROUND},(_,j)=>`<i class="${j<round.res.length?(round.res[j]?'ok':'ng'):j===round.res.length&&!qAns?'cur':''}"></i>`).join('');
+  $('#qCount').textContent=`${Math.min(round.i+(qAns?0:1),ROUND)} / ${ROUND}問目　連続正解 ${QS.st}`;
+}
+function qEmpty(msg){Q=null;$('#qText').textContent=msg;$('#qOpts').innerHTML='';$('#qFb').innerHTML='';$('#qAudio').hidden=true;$('#qNext').hidden=true;$('#qKbWrap').hidden=true}
 function qNew(){
-  qAns=false;const lv=+$('#qLevel').value;$('#qFb').innerHTML='';$('#qKbWrap').style.display='none';
-  if(qModeV==='interval'){
-    const iv=rand(IV_POOL[lv]),r=55+Math.floor(Math.random()*12);
-    Q={q:'この2つの音の音程は？',opts:IV_POOL[lv].map(i=>INTERVALS[i][2]),ans:INTERVALS[iv][2],notes:[r,r+iv],ex:`${octName(r)} → ${octName(r+iv)}（${iv}半音）`,ear:true};
-  }else if(qModeV==='chord'){
-    const s=rand(CH_POOL[lv]),r=52+Math.floor(Math.random()*12);
-    Q={q:'このコードの種類は？',opts:CH_POOL[lv].map(k=>k===''?'メジャー':k),ans:s===''?'メジャー':s,notes:CHORDS[s].iv.map(i=>r+i),ex:`${nm(r,useFlat(mod(r),isMinorQ(s)))}${s}（${CHORDS[s].n}）`,ear:true,chord:true};
-  }else{Q=genTheory(lv);Q.ear=false}
-  Q.level=lv;
-  $('#qText').textContent=Q.q;$('#qAudio').style.display=Q.ear?'flex':'none';
+  if(round.i>=ROUND){qResult();return}
+  qAns=false;const lv=+$('#qLevel').value;$('#qFb').innerHTML='';$('#qKbWrap').hidden=true;$('#qNext').hidden=true;
+  let p,tag='';
+  if(qModeV==='review'){if(!S.wrong.length){qEmpty('復習ノートは空です。クイズで間違えた問題がここにたまり、2回続けて正解すると卒業します。');return}p=rand(S.wrong).p;tag='復習'}
+  else if(qModeV==='focus'){const weak=weakList().filter(x=>x.rate<.7);if(!weak.length){qEmpty('まだ苦手が見つかっていません。音程かコードの耳トレを何問か解くと、正答率の低いものだけを集中して練習できるようになります。');return}
+    const w=rand(weak.slice(0,4)),v=w.k.split(':')[1];p=w.k.startsWith('iv')?{kind:'iv',r:55+rnd(12),iv:+v,lv:2}:{kind:'ch',r:52+rnd(12),s:v,lv:2};tag='苦手'}
+  else if(qModeV==='interval')p={kind:'iv',r:55+rnd(12),iv:rand(IV_POOL[lv]),lv};
+  else if(qModeV==='chord')p={kind:'ch',r:52+rnd(12),s:rand(CH_POOL[lv]),lv};
+  else{p=genTheory(lv);p.kind='th';p.lv=lv}
+  Q=buildQ(p);
+  $('#qText').innerHTML=(tag?`<span class="qtag">${tag}</span>`:'')+Q.q;$('#qAudio').hidden=!Q.ear;
   $('#qOpts').innerHTML=Q.opts.map(o=>`<button class="opt">${o}</button>`).join('');
   $$('#qOpts .opt').forEach(b=>b.onclick=()=>qAnswer(b));
+  renderDots();
   if(Q.ear)qPlay();
 }
 function qPlay(){if(!Q)return;if(Q.chord)playChord(Q.notes,1.6);else playSeq(Q.notes,0.6)}
-function qAnswer(b){
-  if(qAns)return;qAns=true;const ok=b.textContent===Q.ans;
-  QS.tot++;if(ok){QS.ok++;QS.st++}else QS.st=0;
-  $('#qOk').textContent=QS.ok;$('#qTot').textContent=QS.tot;$('#qStreak').textContent=QS.st;
-  $$('#qOpts .opt').forEach(x=>{if(x.textContent===Q.ans)x.classList.add('ok');else if(x===b)x.classList.add('ng')});
-  const bonus=ok&&QS.st>0&&QS.st%5===0;const gain=(Q.level===2?8:5)+(bonus?10:0);
-  $('#qFb').innerHTML=`<div class="fb ${ok?'ok':'ng'}"><div class="m">${mascot(ok?(bonus?'wow':'happy'):'oops')}</div><div>${ok?`${rand(PRAISE)}<span class="pt">+${gain}pt</span>${bonus?`<span class="streak">${QS.st}問連続</span>`:''}`:`正解は「${Q.ans}」でした`}<small>${Q.ex}</small></div></div>`;
-  sfx(ok?'ok':'ng');
-  if(Q.notes){const marks={};Q.notes.forEach((m,i)=>marks[m]={label:nm(m),cls:i===0?'root':'on'});const [lo,hi]=kbRange(Q.notes);keyboard($('#qKb'),{lo,hi,marks});$('#qKbWrap').style.display='block'}
-  if(ok){gainXP(gain);if(bonus)confetti(70)}
-  track('qans',{ok,streak:QS.st,mode:qModeV,level:Q.level});
+function expHTML(ok,chosen,gain,bonus){
+  return `<div class="exp"><div class="verdict"><div class="m">${mascot(ok?(bonus?'wow':'happy'):'oops')}</div><div>`+
+   (ok?`<b>${rand(PRAISE)}<span class="pt">+${gain}pt</span>${bonus?`<span class="streak">${QS.st}問連続</span>`:''}</b>`:`<b>惜しい</b><span>あなたの答え：${chosen}</span>`)+
+   `<span>正解：<strong>${Q.ans}</strong></span></div></div>`+
+   `<h4>解説</h4><p>${Q.why}</p><h4>答えまでの考え方</h4><ol>${Q.steps.map(s=>`<li>${s}</li>`).join('')}</ol>`+
+   (Q.tip?`<p class="tipline">${Q.tip}</p>`:'')+`</div>`;
 }
+function qAnswer(b){
+  if(qAns||!Q)return;qAns=true;const ok=b.textContent===Q.ans;
+  round.res.push(ok);round.i++;
+  if(ok)QS.st++;else QS.st=0;
+  const st=S.qstat[Q.key]||[0,0];st[1]++;if(ok)st[0]++;S.qstat[Q.key]=st;
+  const id=JSON.stringify(Q.p),w=S.wrong.find(x=>x.id===id);
+  if(!ok){if(w)w.n=0;else S.wrong.push({id,p:Q.p,n:0});if(S.wrong.length>60)S.wrong.shift()}
+  else if(w){w.n++;if(w.n>=2)S.wrong=S.wrong.filter(x=>x!==w)}
+  $$('#qOpts .opt').forEach(x=>{if(x.textContent===Q.ans)x.classList.add('ok');else if(x===b)x.classList.add('ng')});
+  const bonus=ok&&QS.st%5===0;const gain=(Q.level===2?8:5)+(bonus?10:0);
+  if(ok)round.pts+=gain;
+  $('#qFb').innerHTML=expHTML(ok,b.textContent,gain,bonus);
+  sfx(ok?'ok':'ng');
+  if(Q.notes){const marks={};Q.notes.forEach((m,i)=>marks[m]={label:nm(m),cls:i===0?'root':'on'});const [lo,hi]=kbRange(Q.notes);keyboard($('#qKb'),{lo,hi,marks});$('#qKbWrap').hidden=false}
+  if(ok){gainXP(gain);if(bonus)confetti(40)}
+  track('qans',{ok,streak:QS.st,mode:Q.p.kind==='iv'?'interval':Q.p.kind==='ch'?'chord':'theory',level:Q.level});
+  $('#qNext').hidden=false;$('#qNext').textContent=round.i>=ROUND?'結果を見る':'次の問題';
+  renderDots();renderQModes();renderWeak();
+}
+function qResult(){
+  const ok=round.res.filter(x=>x).length;
+  const msg=ok===ROUND?'全問正解です。':ok>=8?'かなり身についています。':ok>=5?'あと少しで安定します。間違えた問題は復習ノートに入れました。':'間違えた問題は復習ノートに入れました。解説の「考え方」を読み直してから復習すると定着します。';
+  Q=null;$('#qText').textContent='ラウンド終了';$('#qOpts').innerHTML='';$('#qAudio').hidden=true;$('#qKbWrap').hidden=true;$('#qNext').hidden=true;
+  $('#qFb').innerHTML=`<div class="result"><div class="m">${mascot(ok>=8?'wow':ok>=5?'happy':'oops')}</div><p class="rbig"><b>${ok}</b> / ${ROUND}問正解</p><p class="sub">このラウンドで ${round.pts}pt。${msg}</p><div class="ctrl" style="justify-content:center"><button class="btn primary" id="qAgain">もう1ラウンド</button>${S.wrong.length?`<button class="btn" id="qRev">復習ノートを解く（${S.wrong.length}問）</button>`:''}</div></div>`;
+  $('#qAgain').onclick=()=>{round={i:0,res:[],pts:0};qNew()};
+  if($('#qRev'))$('#qRev').onclick=()=>{qModeV='review';round={i:0,res:[],pts:0};renderQModes();qNew()};
+  $('#qDots').innerHTML=round.res.map(x=>`<i class="${x?'ok':'ng'}"></i>`).join('');$('#qCount').textContent='';
+}
+function renderWeak(){
+  const L=weakList();const col=(pre,lab)=>{const xs=L.filter(x=>x.k.startsWith(pre)).slice(0,5);
+    return xs.length?xs.map(x=>`<div class="row${x.rate<.6?' bad':''}"><span>${lab(x.k.split(':')[1])}</span><span class="bar"><i style="width:${Math.round(x.rate*100)}%"></i></span><b>${x.ok}/${x.tot}</b></div>`).join(''):'<p class="sub">2回以上出題されると表示されます</p>'};
+  $('#qWeak').innerHTML=`<div class="weakcols"><div><p class="sub">音程（正答率の低い順）</p><div class="weak">${col('iv:',v=>INTERVALS[+v][2])}</div></div><div><p class="sub">コード（正答率の低い順）</p><div class="weak">${col('ch:',qn)}</div></div></div>`;
+}
+function startQuiz(mode){qModeV=mode;round={i:0,res:[],pts:0};renderQModes();if(location.hash!=='#quiz')location.hash='#quiz';qNew()}
 function qInit(){
-  chips($('#qMode'),[['interval','音程を聴き分ける'],['chord','コードを聴き分ける'],['theory','知識問題']],'interval',k=>{qModeV=k;qNew()});
-  $('#qLevel').onchange=qNew;$('#qNext').onclick=qNew;$('#qReplay').onclick=qPlay;
-  $('#qHarm').onclick=()=>Q&&playChord(Q.notes,1.6);
-  $('#qText').textContent='「次の問題」を押すと始まります。耳トレは音が鳴ります。';$('#qAudio').style.display='none';
+  renderQModes();
+  $('#qLevel').onchange=()=>{round={i:0,res:[],pts:0};qNew()};$('#qNext').onclick=qNew;$('#qReplay').onclick=qPlay;
+  $('#qHarm').onclick=()=>Q&&Q.notes&&playChord(Q.notes,1.6);
+  $('#qText').textContent='「始める」を押すと10問のラウンドが始まります。';$('#qAudio').hidden=true;$('#qNext').hidden=false;$('#qNext').textContent='始める';
+  renderDots();renderWeak();
 }
 
 /* ===== 起動 ===== */
 paintMascots();
+SECS.forEach(x=>{const el=document.getElementById(x.id);el.style.setProperty('--sc',x.soft);el.style.setProperty('--sa',x.acc)});
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();
 let lastW=innerWidth;
