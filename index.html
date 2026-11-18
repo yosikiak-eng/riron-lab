@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#F7F5FA">
+<meta name="description" content="鍵盤とクイズで覚える、曲づくりのための音楽理論">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="理論ラボ">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>音楽理論ラボ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* 楽譜ノート：淡いライラックの紙、プラムのインク、ローズの差し色。見出しは五線の上、課題は付箋に書く */
+  --paper:#F7F5FA; --sheet:#FFFFFF; --ink:#33294A; --mute:#7C7390; --rule:#E3DDEB;
+  --rose:#D9658B; --rose-soft:#F8DCE6; --butter:#F4D772; --butter-soft:#FBF3D5;
+  --soda:#7FB2DE; --soda-soft:#DDEBF7; --mint:#7CC4AC; --mint-ink:#2F8A6C;
+  --display:'Kiwi Maru','Zen Maru Gothic',serif; --body:'Zen Maru Gothic','Hiragino Maru Gothic ProN',system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.85;-webkit-font-smoothing:antialiased}
+button{font-family:inherit}
+.mono{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
+/* header / nav */
+header.top{max-width:880px;margin:0 auto;padding:18px 16px 10px;display:flex;align-items:center;gap:10px}
+header.top .m{width:42px;height:42px;flex:none}
+header.top h1{font-family:var(--display);font-weight:500;font-size:21px;margin:0;letter-spacing:.04em;line-height:1.3}
+header.top p{margin:0;font-size:12px;color:var(--mute);line-height:1.4}
+nav.tabs{position:sticky;top:0;z-index:30;background:rgba(247,245,250,.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+nav.tabs .in{max-width:880px;margin:0 auto;display:flex;gap:2px;overflow-x:auto;padding:8px 16px;scrollbar-width:none;align-items:center}
+nav.tabs .in::-webkit-scrollbar{display:none}
+.lvchip{flex:none;text-decoration:none;color:var(--ink);padding:4px 14px 6px;border-radius:999px;background:var(--sheet);border:1px solid var(--rule);margin-right:8px;display:flex;flex-direction:column;line-height:1.3}
+.lvchip b{font-family:var(--display);font-weight:500;font-size:13px;white-space:nowrap}
+.bar{display:block;height:3px;background:var(--rule);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--rose);border-radius:3px;transition:width .5s ease}
+.lvchip .bar{width:84px;margin-top:3px}
+nav.tabs a.tab{white-space:nowrap;padding:6px 10px;color:var(--mute);text-decoration:none;font-size:13.5px;border-radius:8px;position:relative}
+nav.tabs a.tab:hover{color:var(--ink)}
+nav.tabs a.tab.active{color:var(--ink);font-weight:700}
+nav.tabs a.tab.active::after{content:"";position:absolute;left:10px;right:10px;bottom:1px;height:2px;background:var(--rose);border-radius:2px}
+nav.tabs a.tab .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--rose);margin-left:5px;vertical-align:2px}
+/* layout */
+main{max-width:880px;margin:0 auto;padding:0 16px 100px}
+section{display:none}
+section.show{display:block}
+.sh{padding:22px 0 2px}
+.staffslot svg{display:block;width:100%;max-width:400px;height:auto}
+h2{font-family:var(--display);font-weight:500;font-size:28px;margin:4px 0 6px;line-height:1.4;text-wrap:balance}
+h3{font-size:16px;font-weight:700;margin:0 0 8px}
+h3::before{content:"";display:inline-block;width:10px;height:7.5px;border-radius:50%;background:var(--rose);transform:rotate(-20deg);margin-right:9px;vertical-align:1px}
+.lead{color:var(--mute);margin:0;max-width:40em}
+.card{background:var(--sheet);border:1px solid var(--rule);border-radius:18px;padding:20px;margin:16px 0}
+.card p{margin:6px 0;max-width:42em}
+.sub{font-size:13px;color:var(--mute)}
+.tip{border-left:3px solid var(--rose-soft);padding:2px 0 2px 14px;font-size:14px;margin-top:14px;color:#4B4163}
+.tip b{color:var(--rose)}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
+.ctrl label{font-size:13px;color:var(--mute)}
+select{font:inherit;font-weight:500;padding:6px 12px;border-radius:10px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink)}
+.btn{font-size:14px;font-weight:700;padding:8px 18px;border-radius:999px;border:1.5px solid var(--ink);background:var(--sheet);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;line-height:1.5}
+.btn:hover{background:var(--paper)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--ink);color:#fff}
+.btn.primary:hover{background:#4A3D66}
+.btn.quiet{border-color:var(--rule);font-weight:500}
+.btn:disabled{opacity:.45;cursor:default}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:13px;padding:5px 12px;border-radius:999px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);cursor:pointer}
+.chip:hover{border-color:var(--mute)}
+.chip.sel{background:var(--rose-soft);border-color:var(--rose);font-weight:700}
+.chip .got{color:var(--rose);font-size:11px;margin-left:4px}
+.big{font-family:var(--display);font-size:30px;font-weight:500;line-height:1.3}
+.big small{font-family:var(--body);font-size:13px;color:var(--mute);margin-left:10px}
+.notes{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.note{min-width:54px;text-align:center;border-radius:12px;background:var(--paper);padding:6px 8px;line-height:1.3}
+.note b{display:block;font-size:18px}
+.note i{font-style:normal;font-size:11px;color:var(--mute)}
+.note.r{background:var(--rose-soft)}
+.steps{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:13px;color:var(--mute);margin:4px 0}
+.steps span{padding:0 9px;border-radius:999px;background:var(--paper);color:var(--ink)}
+.steps span.h{background:var(--butter-soft)}
+/* keyboard */
+.kbwrap{overflow-x:auto;padding:8px 1px 12px;-webkit-overflow-scrolling:touch}
+.kb{position:relative;height:136px;margin:0 auto}
+.key{position:absolute;top:0;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;font:inherit;transition:background .1s}
+.key.white{background:#fff;border:1px solid #CFC6DB;border-radius:0 0 9px 9px;height:134px;z-index:1}
+.key.black{background:var(--ink);border:none;border-radius:0 0 6px 6px;height:82px;z-index:2}
+.key.on.white{background:var(--butter)}
+.key.on.black{background:#C7A228}
+.key.root.white{background:#F2AFC4}
+.key.root.black{background:var(--rose)}
+.key.bass.white{background:#BBD7EF}
+.key.bass.black{background:#5F98CB}
+.key.flash.white{background:#E2D7F3 !important}
+.key.flash.black{background:#8D79B6 !important}
+.key span{font-size:11px;font-weight:700;margin-bottom:8px;color:var(--ink);line-height:1.1;text-align:center}
+.key.black span{color:#fff}
+.key small{font-size:9px;margin-bottom:6px;color:#B4AAC4}
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:8px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+th{font-size:12px;color:var(--mute);font-weight:500}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--paper)}
+.tbl{overflow-x:auto}
+.tbl td{white-space:nowrap}
+.tbl th{min-width:6.5em}
+/* diatonic */
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:8px;margin:12px 0}
+.dcard{color:var(--ink);background:var(--sheet);border:1px solid var(--rule);border-top:4px solid var(--fc);border-radius:12px;padding:10px 6px;cursor:pointer;text-align:center;line-height:1.3;position:relative}
+.dcard:hover{border-color:var(--fc)}
+.dcard.sel{background:var(--paper);border-color:var(--fc)}
+.dcard .rm{font-size:12px;color:var(--mute)}
+.dcard .nm{font-family:var(--display);font-size:21px;margin:2px 0}
+.dcard .fn{font-size:11px;font-weight:700;border-radius:999px;padding:0 8px;display:inline-block;background:var(--fs)}
+.dcard .heard{position:absolute;top:4px;right:7px;font-size:10px;color:var(--rose)}
+.T{--fc:var(--soda);--fs:var(--soda-soft)}.SD{--fc:var(--mint);--fs:#DDF1EA}.D{--fc:var(--rose);--fs:var(--rose-soft)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--mute)}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px;background:var(--fc)}
+/* progressions */
+.plist{display:grid;margin:8px 0}
+.pitem{color:var(--ink);text-align:left;background:none;border:none;border-bottom:1px solid var(--rule);padding:10px 10px;cursor:pointer;display:flex;gap:10px;align-items:center;border-radius:0}
+.pitem:hover{background:var(--paper)}
+.pitem .pn{flex:1;min-width:0}
+.pitem b{font-size:15px}
+.pitem .mono{font-size:12.5px;color:var(--mute);display:block;line-height:1.55}
+.pitem.sel{background:var(--rose-soft);border-radius:10px;border-bottom-color:transparent}
+.pitem .pk{flex:none;font-size:12px;color:var(--rose)}
+.prow{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.pchord{border:1px solid var(--rule);border-radius:12px;padding:5px 12px;text-align:center;line-height:1.3;min-width:62px;background:var(--sheet);cursor:pointer;color:var(--ink)}
+.pchord b{font-family:var(--display);font-weight:500;font-size:17px;display:block}
+.pchord i{font-style:normal;font-size:11px;color:var(--mute)}
+.pchord.sep{border-style:dashed}
+.pchord.now{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pchord.now i{color:#D8D0E6}
+input[type=range],input[type=checkbox]{accent-color:var(--rose)}
+/* sequencer / melody */
+.gridwrap{overflow-x:auto;padding-bottom:6px}
+.seq{display:grid;grid-template-columns:44px repeat(16,minmax(15px,1fr));gap:2px}
+.seq .lb,.mel .lb{font-size:10.5px;color:var(--mute);display:flex;align-items:center}
+.sc{height:30px;border-radius:5px;background:var(--paper);border:1px solid var(--rule);cursor:pointer;padding:0}
+.sc.q{background:#EEE9F4}
+.sc.on{background:var(--rose);border-color:var(--rose)}
+.sc.head{outline:2px solid var(--ink);outline-offset:-1px}
+.sc.ct{background:var(--butter-soft);border-color:#EFE2AE}
+.sc.ct.on,.sc.q.on{background:var(--rose);border-color:var(--rose)}
+.mel{display:grid;grid-template-columns:34px repeat(16,minmax(15px,1fr));gap:2px}
+.mel .sc{height:24px}
+.mel .ch{grid-column:span 4;text-align:center;font-family:var(--display);font-size:14px;border-bottom:2px solid var(--rose-soft)}
+.mel .sc.b,.seq .sc.q{margin-left:2px}
+.leds{display:flex;gap:4px;margin:10px 0;flex-wrap:wrap}
+.leds i{width:20px;height:12px;border-radius:6px;background:var(--rule)}
+.leds i.on{background:var(--rose)}
+.meter{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--mute);margin-top:8px}
+.meter b{color:var(--ink);font-size:15px}
+.meter .good b{color:var(--mint-ink)}
+.acards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin:12px 0}
+.acard{text-align:left;color:var(--ink);background:var(--paper);border:1px solid transparent;border-radius:14px;padding:12px 14px;cursor:pointer;line-height:1.55}
+.acard:hover{border-color:var(--rule);background:var(--sheet)}
+.acard b{display:block;font-size:14.5px}
+.acard .mono{font-size:12.5px;color:var(--rose)}
+.acard small{display:block;color:var(--mute);font-size:12.5px;margin-top:2px}
+.acard .heard{float:right;font-size:11px;color:var(--rose)}
+/* missions: 付箋 */
+.missions{position:relative;background-color:var(--butter-soft);background-image:repeating-linear-gradient(transparent 0 33px,rgba(190,160,70,.18) 33px 34px);border-radius:3px 3px 16px 3px;padding:20px 18px 10px;margin:22px 0 16px;box-shadow:0 1px 2px rgba(51,41,74,.08)}
+.missions::before{content:"";position:absolute;top:-9px;left:50%;width:86px;height:20px;transform:translateX(-50%) rotate(-2.5deg);background:rgba(217,101,139,.26);border-radius:2px}
+.mhead{display:flex;gap:12px;align-items:center;margin-bottom:6px}
+.mhead .t{flex:1;font-weight:700;font-size:14.5px;line-height:1.5}
+.mhead .t small{display:block;font-weight:400;font-size:12px;color:var(--mute)}
+.mi{display:flex;gap:10px;align-items:center;min-height:34px;padding:2px 0}
+.ck{width:14px;height:10.5px;border:1.6px solid var(--ink);border-radius:50%;transform:rotate(-20deg);flex:none;margin:0 3px}
+.mi.done .ck{background:var(--rose);border-color:var(--rose)}
+.mi .mt{flex:1;font-size:14px;line-height:1.55}
+.mi.done .mt{color:var(--mute);text-decoration:line-through;text-decoration-color:var(--rose)}
+.mi .mp{font-size:12px;color:var(--mute);min-width:58px;text-align:right;font-variant-numeric:tabular-nums}
+.mi .mp .bar{margin-top:4px;background:rgba(51,41,74,.12)}
+.mi.done .mp{color:var(--rose);font-weight:700}
+.pt{font-size:11.5px;color:var(--rose);font-weight:700;margin-left:6px;white-space:nowrap}
+/* スタンプ */
+.stamp{width:66px;height:66px;border-radius:50%;border:2px solid var(--rose);display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--rose);font-family:var(--display);font-size:14px;line-height:1.15;text-align:center;transform:rotate(-12deg);flex:none;box-shadow:inset 0 0 0 3px var(--sheet),inset 0 0 0 4px var(--rose);background:var(--sheet)}
+.stamp small{font-size:7.5px;margin-top:2px;letter-spacing:.02em}
+.stamp.sm{width:46px;height:46px;font-size:11px}
+.stamp.sm small{display:none}
+.stamp.lg{width:128px;height:128px;font-size:26px;border-width:3px;box-shadow:inset 0 0 0 5px var(--sheet),inset 0 0 0 7px var(--rose)}
+.stamp.lg small{font-size:12px;margin-top:6px}
+.stamp.locked{border:1.5px dashed #C9C0D6;box-shadow:none;color:#BDB4CB;transform:none;background:transparent}
+.stamp.press{animation:press .6s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes press{0%{transform:scale(1.9) rotate(-12deg);opacity:0}55%{transform:scale(.93) rotate(-12deg);opacity:1}100%{transform:scale(1) rotate(-12deg)}}
+.stampbook{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:16px 8px;text-align:center}
+.stampbook > div{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:var(--mute)}
+/* home */
+.greet{display:flex;gap:12px;align-items:center;margin-top:22px}
+.greet .m{width:66px;height:66px;flex:none}
+.greet p{margin:0;max-width:34em}
+.tempo{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.tempo .word{font-family:var(--display);font-size:46px;line-height:1.1;color:var(--ink)}
+.tempo .gloss{color:var(--mute);font-size:14px}
+.bar.thick{height:6px;margin:14px 0 6px}
+.staffbig svg{display:block;width:100%;max-width:520px;height:auto;margin:6px 0 10px}
+.nextcard{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.nextcard .nm{margin:0;font-weight:700}
+.home-h{margin:26px 0 6px}
+.slist a{display:grid;grid-template-columns:30px 1fr auto;gap:10px;padding:11px 4px;border-bottom:1px solid var(--rule);text-decoration:none;color:var(--ink);align-items:center}
+.slist a:hover{background:var(--sheet)}
+.slist .num{font-family:var(--display);color:var(--rose);font-size:18px;text-align:center}
+.slist .nm b{display:block;font-size:15px}
+.slist .nm small{display:block;color:var(--mute);font-size:12.5px;line-height:1.4}
+.heads{display:flex;gap:5px}
+.heads i{width:11px;height:8px;border:1.4px solid var(--ink);border-radius:50%;transform:rotate(-20deg)}
+.heads i.on{background:var(--rose);border-color:var(--rose)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:0 20px;margin:0}
+.stats div{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px dashed var(--rule);font-size:13.5px}
+.stats dt{color:var(--mute)}
+.stats dd{margin:0;font-weight:700;font-variant-numeric:tabular-nums}
+@media(max-width:520px){.stats{grid-template-columns:1fr}.card{padding:16px 14px}}
+/* quiz */
+.score{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--mute);margin-top:6px}
+.score b{font-size:20px;color:var(--ink);margin-right:3px;font-variant-numeric:tabular-nums}
+.qtext{font-family:var(--display);font-size:20px;margin:4px 0 10px;line-height:1.5}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:12px 0}
+.opt{font-size:14.5px;font-weight:500;padding:11px 8px;border-radius:12px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--mute)}
+.opt.ok{background:#DDF1EA;border-color:var(--mint);color:var(--mint-ink);font-weight:700}
+.opt.ng{background:var(--rose-soft);border-color:var(--rose);animation:shake .35s}
+@keyframes shake{0%,100%{transform:translateX(0)}30%{transform:translateX(-5px)}70%{transform:translateX(5px)}}
+.fb{display:flex;gap:12px;align-items:center;border-radius:14px;padding:8px 14px 8px 8px;margin-top:6px;background:var(--paper)}
+.fb .m{width:52px;height:52px;flex:none}
+.fb small{display:block;font-size:13.5px;color:var(--mute)}
+.streak{color:var(--rose);font-weight:700;margin-left:6px}
+.next{display:flex;justify-content:flex-end;margin-top:20px}
+.nextlink{color:var(--ink);font-weight:700;text-decoration:none;border-bottom:2px solid var(--rose-soft);padding-bottom:2px}
+.nextlink:hover{border-bottom-color:var(--rose)}
+.readout{font-size:15px;min-height:28px}
+.readout b{font-family:var(--display);font-weight:500;font-size:22px}
+.install{max-width:880px;margin:0 auto;padding:0 16px 8px;text-align:center}
+footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
+/* overlays */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:120}
+.toasts{pointer-events:none;position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:110;display:grid;gap:8px;width:min(92vw,380px)}
+.toast{background:var(--sheet);border:1px solid var(--rule);border-radius:16px;box-shadow:0 8px 24px rgba(51,41,74,.14);padding:10px 14px;display:flex;gap:12px;align-items:center;animation:up .35s ease}
+.toast.out{animation:down .3s forwards}
+.toast .ic{width:14px;height:10.5px;border-radius:50%;background:var(--rose);transform:rotate(-20deg);flex:none}
+.toast .tx{flex:1;line-height:1.45;font-size:13px}
+.toast .tx b{display:block;font-size:12px;color:var(--rose)}
+@keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+@keyframes down{to{transform:translateY(20px);opacity:0}}
+.xpf{position:fixed;z-index:115;font-weight:700;font-size:13px;color:var(--rose);pointer-events:none;animation:floatup 1s ease-out forwards}
+@keyframes floatup{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-30px);opacity:0}}
+#modal{position:fixed;inset:0;background:rgba(51,41,74,.32);display:grid;place-items:center;z-index:100;padding:20px}
+#modal[hidden]{display:none}
+.mbox{background:var(--sheet);border-radius:22px;padding:26px 22px 22px;text-align:center;width:min(100%,340px);box-shadow:0 20px 50px rgba(51,41,74,.2)}
+.mbox .mlabel{font-size:13px;color:var(--mute)}
+.mbox h4{font-family:var(--display);font-weight:500;font-size:22px;margin:6px 0;line-height:1.45}
+.mbox p{margin:4px 0 18px;color:var(--mute);font-size:13.5px}
+.mbox .slot{display:grid;place-items:center;height:156px}
+.mbox .m{width:84px;height:84px;margin:6px auto}
+.tempo-big{font-family:var(--display);font-size:48px;line-height:1.2;margin:8px 0 0}
+.mbtns{display:flex;gap:8px;justify-content:center}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="m" data-mascot="idle"></div>
+  <div><h1>音楽理論ラボ</h1><p>鍵盤とクイズで覚える、曲づくりのための音楽理論</p></div>
+</header>
+<nav class="tabs"><div class="in" id="nav"></div></nav>
+<main>
+
+<section id="home"><div id="homeBody"></div></section>
+
+<!-- 01 基礎 -->
+<section id="basics">
+  <header class="sh"><div class="staffslot" data-sec="basics"></div><h2>音の名前と鍵盤</h2><p class="lead">音楽理論の話は、ほとんどが「鍵盤のどこにあるか」と「何個はなれているか」で説明できます。まずは鍵盤を弾いて、音の並びに慣れましょう。</p></header>
+  <div class="missions" data-sec="basics"></div>
+  <div class="card">
+    <h3>鍵盤を弾いてみる</h3>
+    <div class="readout" id="bRead">鍵盤をタップしてね</div>
+    <div class="kbwrap"><div id="bKb"></div></div>
+    <div class="tip">隣り合う鍵盤（黒鍵も含む）の距離が <b>半音</b>。半音2つぶんが <b>全音</b>。E–F と B–C の間には黒鍵がないので、ここだけ白鍵どうしで半音。</div>
+    <div class="ctrl"><button class="btn primary" id="bHalf">▶ 半音（E→F）</button><button class="btn primary" id="bWhole">▶ 全音（C→D）</button><button class="btn primary" id="bOct">▶ オクターブ</button></div>
+  </div>
+  <div class="card">
+    <h3>音名の対応表</h3>
+    <div class="tbl"><table>
+      <tr><th>英米（コード名）</th><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>A</td><td>B</td></tr>
+      <tr><th>イタリア（階名）</th><td>ド</td><td>レ</td><td>ミ</td><td>ファ</td><td>ソ</td><td>ラ</td><td>シ</td></tr>
+      <tr><th>日本</th><td>ハ</td><td>ニ</td><td>ホ</td><td>ヘ</td><td>ト</td><td>イ</td><td>ロ</td></tr>
+    </table></div>
+    <p style="font-size:14px">「ハ長調」＝Cメジャー、「イ短調」＝Aマイナー。DAW やコード表記では英語を使うので、C〜B に慣れておくと便利です。</p>
+  </div>
+  <div class="card">
+    <h3>♯（シャープ）と ♭（フラット）</h3>
+    <p>♯ は半音上げる、♭ は半音下げる記号。C♯ と D♭ は鍵盤上では同じ黒鍵（<b>異名同音</b>）。どちらで書くかはキー（調）で決まります。</p>
+    <p>「C4」の数字はオクターブ番号。ピアノ中央のドが C4、その上の C が C5。DAW によっては C3 と表示されることもあるので注意。</p>
+  </div>
+  <div class="next"><a class="nextlink" href="#rhythm">次は「リズム」</a></div>
+</section>
+
+<!-- 02 リズム -->
+<section id="rhythm">
+  <header class="sh"><div class="staffslot" data-sec="rhythm"></div><h2>リズムとビート</h2><p class="lead">音符の長さとテンポを確かめたら、ドラムを打ち込んでみましょう。1マスが16分音符、16マスで1小節です。</p></header>
+  <div class="missions" data-sec="rhythm"></div>
+  <div class="card">
+    <h3>音符の長さ（4/4拍子・1小節）</h3>
+    <p style="font-size:14px;margin-top:0">4/4拍子は「1小節に4分音符が4つ」。音符を細かくするほど、1小節に入る数が倍になります。</p>
+    <div class="chips" id="lenChips"></div>
+    <div class="leds" id="lenLeds"></div>
+    <div class="readout" id="lenRead"></div>
+  </div>
+  <div class="card">
+    <h3>ステップシーケンサー</h3>
+    <p style="font-size:14px;margin-top:0">1マス＝16分音符。4マスで1拍、16マスで1小節。マスをタップして打ち込もう。</p>
+    <div class="ctrl"><label>プリセット</label><div class="chips" id="rPre"></div></div>
+    <div class="gridwrap"><div class="seq" id="rGrid"></div></div>
+    <div class="ctrl">
+      <button class="btn primary" id="rPlay">▶ 再生</button><button class="btn" id="rStop">■ 停止</button><button class="btn" id="rClear">クリア</button>
+      <label>BPM <span class="mono" id="rBpmV">120</span></label><input type="range" id="rBpm" min="60" max="200" value="120">
+    </div>
+    <div class="tip"><b>4つ打ち</b>：キックを毎拍（1・5・9・13マス目）。ダンス系の基本。<br><b>8ビート</b>：ハイハットを8分（1つおき）、スネアを2・4拍目（5・13マス目）、キックは1拍目から。ロック・ポップスの基本。<br>速い曲は BPM 160〜200 くらいがよく使われます。</div>
+  </div>
+  <div class="next"><a class="nextlink" href="#intervals">次は「音程」</a></div>
+</section>
+
+<!-- 03 音程 -->
+<section id="intervals">
+  <header class="sh"><div class="staffslot" data-sec="intervals"></div><h2>音程（インターバル）</h2><p class="lead">2つの音の距離を「度」で表します。半音いくつぶんか、どんな響きか、をセットで覚えます。</p></header>
+  <div class="missions" data-sec="intervals"></div>
+  <div class="card">
+    <div class="ctrl"><label>基準音</label><select id="iRoot"></select></div>
+    <div class="chips" id="iChips"></div>
+    <div style="margin-top:12px" class="big" id="iName"></div>
+    <div id="iDesc" class="lead"></div>
+    <div class="kbwrap"><div id="iKb"></div></div>
+    <div class="ctrl"><button class="btn primary" id="iSeq">▶ 順番に</button><button class="btn" id="iHarm">▶ 同時に</button></div>
+  </div>
+  <div class="card">
+    <h3>音程一覧</h3>
+    <p style="font-size:14px;margin-top:0">行をタップすると、C からの音程が鳴ります。</p>
+    <div class="tbl"><table id="iTable"></table></div>
+    <div class="tip"><b>覚え方：</b>「長・短」は2・3・6・7度に、「完全」は1・4・5・8度に付く。長3度（明るい）と短3度（暗い）の違いが、メジャーとマイナーの違いそのもの。</div>
+  </div>
+  <div class="next"><a class="nextlink" href="#scales">次は「スケール」</a></div>
+</section>
+
+<!-- 04 スケール -->
+<section id="scales">
+  <header class="sh"><div class="staffslot" data-sec="scales"></div><h2>スケール（音階）</h2><p class="lead">曲で使う音のセットがスケールです。全音と半音の並び方が同じなら、どの音から始めても同じ種類になります。</p></header>
+  <div class="missions" data-sec="scales"></div>
+  <div class="card">
+    <div class="ctrl"><label>ルート</label><select id="sRoot"></select></div>
+    <div class="chips" id="sChips"></div>
+    <div style="margin-top:12px" class="big" id="sName"></div>
+    <div class="lead" id="sDesc"></div>
+    <div class="notes" id="sNotes"></div>
+    <div class="steps" id="sSteps"></div>
+    <div class="kbwrap"><div id="sKb"></div></div>
+    <div class="ctrl"><button class="btn primary" id="sUp">▶ 上がる</button><button class="btn" id="sUpDown">▶ 上がって下がる</button></div>
+  </div>
+  <div class="card">
+    <h3>メジャーとマイナーは親戚</h3>
+    <p>C メジャーと A マイナーは、使う音がまったく同じ（白鍵だけ）。始まる音が違うだけ。この関係を <b>平行調</b> と呼びます。</p>
+    <div class="ctrl"><button class="btn primary" id="sRelC">▶ C メジャー</button><button class="btn primary" id="sRelA">▶ A マイナー</button></div>
+    <div class="tip"><b>チャーチモード：</b>ドリアン・フリジアン・リディアン・ミクソリディアンは、メジャースケールを別の音から始めたもの。1音だけ違う「色」を感じてみよう。</div>
+  </div>
+  <div class="next"><a class="nextlink" href="#chords">次は「コード」</a></div>
+</section>
+
+<!-- 05 コード -->
+<section id="chords">
+  <header class="sh"><div class="staffslot" data-sec="chords"></div><h2>コード（和音）</h2><p class="lead">ルートから3度ずつ音を重ねたものがコードです。3度が長いか短いかで、明るさが決まります。</p></header>
+  <div class="missions" data-sec="chords"></div>
+  <div class="card">
+    <div class="ctrl"><label>ルート</label><select id="cRoot"></select></div>
+    <div class="chips" id="cChips"></div>
+    <div style="margin-top:12px" class="big" id="cName"></div>
+    <div class="lead" id="cDesc"></div>
+    <div class="notes" id="cNotes"></div>
+    <div class="kbwrap"><div id="cKb"></div></div>
+    <div class="ctrl"><button class="btn primary" id="cPlay">▶ 同時に</button><button class="btn" id="cArp">▶ アルペジオ</button><button class="btn" id="cCmp">▶ メジャー→マイナー比較</button></div>
+  </div>
+  <div class="card">
+    <h3>コードネームの読み方</h3>
+    <div class="tbl"><table>
+      <tr><th>表記</th><th>意味</th></tr>
+      <tr><td><b>C</b></td><td>大文字だけ → メジャー（R・長3度・完全5度）</td></tr>
+      <tr><td><b>Cm</b></td><td>m → マイナー（3度が短3度）</td></tr>
+      <tr><td><b>C7</b></td><td>7だけ → 短7度を追加（セブンス）</td></tr>
+      <tr><td><b>CM7</b> / Cmaj7</td><td>M7 → 長7度を追加（メジャーセブンス）</td></tr>
+      <tr><td><b>Cm7-5</b></td><td>マイナーセブンスの5度を半音下げる</td></tr>
+      <tr><td><b>C/E</b></td><td>分数コード：C のコードで、一番下（ベース）を E にする</td></tr>
+    </table></div>
+  </div>
+  <div class="next"><a class="nextlink" href="#diatonic">次は「ダイアトニック」</a></div>
+</section>
+
+<!-- 06 ダイアトニック -->
+<section id="diatonic">
+  <header class="sh"><div class="staffslot" data-sec="diatonic"></div><h2>ダイアトニックコード</h2><p class="lead">スケールの音だけで作れる7つのコードです。ローマ数字で覚えておくと、キーが変わっても同じ考え方で使えます。</p></header>
+  <div class="missions" data-sec="diatonic"></div>
+  <div class="card">
+    <div class="ctrl">
+      <label>キー</label><select id="dKey"></select>
+      <div class="chips" id="dMode"></div>
+      <div class="chips" id="d7"></div>
+    </div>
+    <div class="dgrid" id="dGrid"></div>
+    <div class="legend"><span class="T">T トニック（安定・ホーム）</span><span class="SD">SD サブドミナント（展開）</span><span class="D">D ドミナント（緊張→解決したい）</span></div>
+    <div class="readout" id="dRead" style="margin-top:10px"></div>
+    <div class="kbwrap"><div id="dKb"></div></div>
+  </div>
+  <div class="card">
+    <h3>機能（ファンクション）の流れ</h3>
+    <p><b style="color:#5F98CB">T</b> → <b style="color:var(--mint-ink)">SD</b> → <b style="color:var(--rose)">D</b> → <b style="color:#5F98CB">T</b> が基本の流れ。「安定 → 展開 → 緊張 → 解決」というストーリー。</p>
+    <div class="ctrl"><button class="btn primary" id="dCad1">▶ Ⅰ→Ⅳ→Ⅴ→Ⅰ</button><button class="btn primary" id="dCad2">▶ Ⅴ→Ⅰ（解決）</button><button class="btn primary" id="dCad3">▶ Ⅴ→Ⅵm（偽終止）</button></div>
+    <div class="tip"><b>代理コード：</b>同じ機能のコードは入れ替えOK。Ⅰ の代わりに Ⅵm、Ⅳ の代わりに Ⅱm を使うと、雰囲気だけ変えて流れはそのまま。</div>
+  </div>
+  <div class="next"><a class="nextlink" href="#progressions">次は「コード進行」</a></div>
+</section>
+
+<!-- 07 コード進行 -->
+<section id="progressions">
+  <header class="sh"><div class="staffslot" data-sec="progressions"></div><h2>定番コード進行</h2><p class="lead">J-POPやボカロ曲でよく使われる進行を、好きなキーとテンポで聴けます。</p></header>
+  <div class="missions" data-sec="progressions"></div>
+  <div class="card">
+    <div class="ctrl">
+      <label>キー</label><select id="pKey"></select>
+      <label>BPM <span id="pBpmV" class="mono">100</span></label><input type="range" id="pBpm" min="60" max="180" value="100">
+      <label><input type="checkbox" id="pLoop" checked> ループ</label>
+    </div>
+    <div class="plist" id="pList"></div>
+  </div>
+  <div class="card">
+    <div class="big" id="pName" style="font-size:22px"></div>
+    <div class="lead" id="pDesc"></div>
+    <div class="prow" id="pRow"></div>
+    <div class="ctrl"><button class="btn primary" id="pPlay">▶ 再生</button><button class="btn" id="pStop">■ 停止</button></div>
+    <div class="kbwrap"><div id="pKb"></div></div>
+    <div class="tip">青がベース音、黄色が上のコード音です。コードをタップすると単体で鳴ります。上の音がなるべく動かないように並べる（<b>ボイスリーディング</b>）と、なめらかに聴こえる。</div>
+  </div>
+  <div class="next"><a class="nextlink" href="#melody">次は「メロディ」</a></div>
+</section>
+
+<!-- 08 メロディ -->
+<section id="melody">
+  <header class="sh"><div class="staffslot" data-sec="melody"></div><h2>メロディを作ってみよう</h2><p class="lead">黄色のマスが、その小節のコードの構成音です。小節の頭にコードトーンを置き、間を自由につなげてみましょう。</p></header>
+  <div class="missions" data-sec="melody"></div>
+  <div class="card">
+    <div class="ctrl">
+      <label>キー</label><select id="mKey"></select>
+      <label>伴奏</label><div class="chips" id="mBack"></div>
+    </div>
+    <div class="gridwrap"><div class="mel" id="mGrid"></div></div>
+    <div class="meter" id="mMeter"></div>
+    <div class="ctrl">
+      <button class="btn primary" id="mPlay">▶ 再生</button><button class="btn" id="mStop">■ 停止</button>
+      <button class="btn" id="mGen">🎲 おまかせ生成</button><button class="btn" id="mClear">クリア</button>
+      <label><input type="checkbox" id="mHint" checked> コードトーンを表示</label>
+      <label><input type="checkbox" id="mLoop"> ループ</label>
+    </div>
+  </div>
+  <div class="card">
+    <h3>メロディ作りの基本</h3>
+    <div class="tbl"><table>
+      <tr><th>用語</th><th>意味</th></tr>
+      <tr><td><b>コードトーン</b></td><td>そのとき鳴っているコードの構成音。拍の頭に置くと安定して聴こえる。</td></tr>
+      <tr><td><b>経過音</b></td><td>コードトーンとコードトーンの間を順番につなぐ音。なめらかさが出る。</td></tr>
+      <tr><td><b>刺繍音</b></td><td>コードトーンから隣の音へ行って、すぐ戻る音。動きが出る。</td></tr>
+      <tr><td><b>跳躍</b></td><td>3度以上大きく飛ぶこと。サビの印象的な部分に使うと効果的。飛んだあとは逆方向に順次進行で戻ると自然。</td></tr>
+    </table></div>
+    <div class="tip"><b>ヒント：</b>同じリズムやフレーズを「くり返して」「少し変える」と覚えやすいメロディになります。</div>
+  </div>
+  <div class="next"><a class="nextlink" href="#modulation">次は「転調・応用」</a></div>
+</section>
+
+<!-- 09 転調・応用 -->
+<section id="modulation">
+  <header class="sh"><div class="staffslot" data-sec="modulation"></div><h2>転調と応用コード</h2><p class="lead">ラスサビでキーを上げる転調と、ダイアトニックの外から借りてくるコードを聴き比べます。</p></header>
+  <div class="missions" data-sec="modulation"></div>
+  <div class="card">
+    <div class="ctrl"><label>元のキー</label><select id="tKey"></select></div>
+    <h3>ラスサビ転調</h3>
+    <p style="font-size:14px;margin-top:0">Ⅳ→Ⅴ→Ⅲm→Ⅵm を1周したあと、キーを上げてもう1周します。</p>
+    <div class="chips" id="tMods"></div>
+    <div class="prow" id="tRow"></div>
+    <div class="tip"><b>Ⅴ7 経由：</b>新しいキーのⅤ7（ドミナント）を1つ挟むと、いきなり変わるより自然に転調できる。</div>
+  </div>
+  <div class="card">
+    <h3>同主調と平行調</h3>
+    <p style="font-size:14px;margin-top:0"><b>同主調</b>：ルートが同じでメジャー↔マイナー（C ↔ Cm）。<b>平行調</b>：使う音が同じ（C ↔ Am）。</p>
+    <div class="ctrl"><button class="btn primary" id="tSame">▶ 同主調（C→Cm）</button><button class="btn primary" id="tRel">▶ 平行調（C→Am）</button></div>
+  </div>
+  <div class="card">
+    <h3>応用コード（借用和音・セカンダリードミナント）</h3>
+    <div class="acards" id="tApps"></div>
+  </div>
+  <div class="next"><a class="nextlink" href="#quiz">次は「クイズ」</a></div>
+</section>
+
+<!-- 10 クイズ -->
+<section id="quiz">
+  <header class="sh"><div class="staffslot" data-sec="quiz"></div><h2>クイズで力だめし</h2><p class="lead">耳で聴く問題と、知識の問題があります。5問続けて正解するとボーナスがつきます。</p></header>
+  <div class="missions" data-sec="quiz"></div>
+  <div class="card">
+    <div class="chips" id="qMode"></div>
+    <div class="ctrl"><label>レベル</label><select id="qLevel"><option value="0">やさしい</option><option value="1" selected>ふつう</option><option value="2">むずかしい</option></select></div>
+    <div class="score"><span><b id="qOk">0</b>問正解</span><span><b id="qTot">0</b>問回答</span><span><b id="qStreak">0</b>問連続</span></div>
+  </div>
+  <div class="card">
+    <div class="qtext" id="qText"></div>
+    <div class="ctrl" id="qAudio"><button class="btn primary" id="qReplay">▶ もう一度聴く</button><button class="btn" id="qHarm">▶ 同時に</button></div>
+    <div class="opts" id="qOpts"></div>
+    <div id="qFb"></div>
+    <div class="kbwrap" id="qKbWrap" style="display:none"><div id="qKb"></div></div>
+    <div class="ctrl" style="justify-content:flex-end"><button class="btn primary" id="qNext">次の問題</button></div>
+  </div>
+</section>
+
+</main>
+<div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。</footer>
+
+<canvas id="fx"></canvas>
+<div class="toasts" id="toasts"></div>
+<div id="modal" hidden></div>
+
+<script>
+/* ===== マスコット（オリジナル） ===== */
+function mascot(mood='happy'){
+  const I='#33294A';
+  const ln=(d,w=2.6)=>`<path d="${d}" stroke="${I}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+  let eyes=`<circle cx="34" cy="62" r="3.2" fill="${I}"/><circle cx="54" cy="62" r="3.2" fill="${I}"/>`,mouth=ln('M40 70 q4 4 8 0',2.2),extra='';
+  if(mood==='happy')eyes=ln('M30 63 q4 -5 8 0')+ln('M50 63 q4 -5 8 0');
+  if(mood==='wink')eyes=`<circle cx="34" cy="62" r="3.2" fill="${I}"/>`+ln('M50 63 q4 -5 8 0');
+  if(mood==='wow'){eyes=`<circle cx="34" cy="61" r="3.7" fill="${I}"/><circle cx="54" cy="61" r="3.7" fill="${I}"/><circle cx="35.3" cy="59.7" r="1.2" fill="#fff"/><circle cx="55.3" cy="59.7" r="1.2" fill="#fff"/>`;mouth=`<ellipse cx="44" cy="71.5" rx="3.3" ry="3.8" fill="${I}"/>`}
+  if(mood==='oops'){eyes=ln('M30 61 l7 2.5')+ln('M58 61 l-7 2.5');mouth=ln('M39 72 q2.5 -2.5 5 0 q2.5 2.5 5 0',2);extra=`<path d="M74 46 q4 6 0 8.5 q-4 -2.5 0 -8.5z" fill="#7FB2DE"/>`}
+  return `<svg class="mascot" viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true"><rect x="66" y="12" width="4.5" height="50" rx="2.2" fill="${I}"/><path d="M70.5 13 c9 3 14 10 11 22 c-2.5 -7 -6 -9.5 -11 -10.5z" fill="${I}"/><ellipse cx="44" cy="65" rx="28" ry="23" fill="#fff" stroke="${I}" stroke-width="3"/><ellipse cx="26" cy="71" rx="5" ry="3" fill="#F6C1D1"/><ellipse cx="62" cy="71" rx="5" ry="3" fill="#F6C1D1"/>${eyes}${mouth}${extra}</svg>`;
+}
+function paintMascots(root=document){root.querySelectorAll('[data-mascot]').forEach(el=>el.innerHTML=mascot(el.dataset.mascot))}
+
+/* ===== 基本データ ===== */
+const NAMES_S=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+const NAMES_F=['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
+const KEY_NAMES=['C','D♭','D','E♭','E','F','F♯','G','A♭','A','B♭','B'];
+const SOLFA={0:'ド',2:'レ',4:'ミ',5:'ファ',7:'ソ',9:'ラ',11:'シ'};
+const FLAT_MAJ=new Set([5,10,3,8,1]);
+const ROM=['Ⅰ','Ⅱ','Ⅲ','Ⅳ','Ⅴ','Ⅵ','Ⅶ'];
+const MAJ=[0,2,4,5,7,9,11];
+const mod=(n,m=12)=>((n%m)+m)%m;
+const rand=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+const useFlat=(root,minor)=>FLAT_MAJ.has(minor?mod(root+3):mod(root));
+const nm=(pc,flat)=>(flat?NAMES_F:NAMES_S)[mod(pc)];
+const octName=(m,flat)=>nm(m,flat)+(Math.floor(m/12)-1);
+function romanOf(off){off=mod(off);let i=MAJ.indexOf(off);if(i>=0)return ROM[i];i=MAJ.indexOf(off+1);return '♭'+ROM[i]}
+
+const INTERVALS=[
+ [0,'P1','完全1度','同じ高さの音'],[1,'m2','短2度','ぶつかる・強い緊張感'],[2,'M2','長2度','一歩となりへ進む感じ'],
+ [3,'m3','短3度','切ない・マイナーの核'],[4,'M3','長3度','明るい・メジャーの核'],[5,'P4','完全4度','開けた・すっきり'],
+ [6,'TT','増4度／減5度','不安定・トライトーン'],[7,'P5','完全5度','力強い・パワーコード'],[8,'m6','短6度','哀愁・ドラマチック'],
+ [9,'M6','長6度','温かい・やさしい'],[10,'m7','短7度','ブルージー・解決したい'],[11,'M7','長7度','おしゃれ・浮遊感'],
+ [12,'P8','完全8度（オクターブ）','同じ音名の1段上']
+];
+const TONE_LBL={0:'R',2:'9',3:'m3',4:'M3',5:'P4',6:'♭5',7:'P5',8:'♯5',9:'6',10:'m7',11:'M7',14:'9'};
+const SCALES={
+ major:{n:'メジャー',iv:[0,2,4,5,7,9,11],d:'明るく安定した基本のスケール（長音階）。「全全半全全全半」の並び。'},
+ minor:{n:'ナチュラルマイナー',iv:[0,2,3,5,7,8,10],d:'暗く切ない短音階。平行調メジャーの6番目から始めたのと同じ音。'},
+ harm:{n:'ハーモニックマイナー',iv:[0,2,3,5,7,8,11],d:'7番目を半音上げてドミナント（Ⅴ）を強くしたもの。エキゾチックな響き。'},
+ mel:{n:'メロディックマイナー',iv:[0,2,3,5,7,9,11],d:'6・7番目を上げて滑らかにしたマイナー。ジャズでよく使う。'},
+ penta:{n:'メジャーペンタ',iv:[0,2,4,7,9],d:'4番目と7番目を抜いた5音。外しにくく、J-POPや民謡のメロディで大活躍。'},
+ mpenta:{n:'マイナーペンタ',iv:[0,3,5,7,10],d:'ロック・ブルースのギターソロの定番。'},
+ blues:{n:'ブルース',iv:[0,3,5,6,7,10],d:'マイナーペンタに♭5（ブルーノート）を足したもの。'},
+ dorian:{n:'ドリアン',iv:[0,2,3,5,7,9,10],d:'マイナーだけど6番目が明るい、おしゃれなマイナー。'},
+ phryg:{n:'フリジアン',iv:[0,1,3,5,7,8,10],d:'♭2でスパニッシュ／ダークな響き。'},
+ lydian:{n:'リディアン',iv:[0,2,4,6,7,9,11],d:'♯4で浮遊感。映画音楽やファンタジーっぽい。'},
+ mixo:{n:'ミクソリディアン',iv:[0,2,4,5,7,9,10],d:'♭7でロックっぽい明るさ。'}
+};
+const CHORDS={
+ '':{n:'メジャー',iv:[0,4,7],d:'明るく安定。R＋長3度＋完全5度。'},
+ 'm':{n:'マイナー',iv:[0,3,7],d:'暗く切ない。3度が短3度になる。'},
+ '7':{n:'セブンス',iv:[0,4,7,10],d:'次のコードへ解決したがる響き。Ⅴでよく使う。'},
+ 'M7':{n:'メジャーセブンス',iv:[0,4,7,11],d:'おしゃれ・都会的。シティポップの定番。'},
+ 'm7':{n:'マイナーセブンス',iv:[0,3,7,10],d:'柔らかく落ち着いたマイナー。'},
+ 'sus4':{n:'サスフォー',iv:[0,5,7],d:'3度を4度に吊り上げた宙ぶらりんな響き。メジャーに戻すと解決。'},
+ 'add9':{n:'アドナインス',iv:[0,4,7,14],d:'9度を足したキラキラした広がり。'},
+ '6':{n:'シックス',iv:[0,4,7,9],d:'柔らかく懐かしい響き。'},
+ 'dim':{n:'ディミニッシュ',iv:[0,3,6],d:'短3度を重ねた不安定な響き。経過的に使う。'},
+ 'dim7':{n:'ディミニッシュセブンス',iv:[0,3,6,9],d:'短3度を4つ重ねた緊張感たっぷりの響き。'},
+ 'aug':{n:'オーギュメント',iv:[0,4,8],d:'5度を半音上げた、ぞわっとする浮遊感。'},
+ 'm7-5':{n:'マイナーセブンフラットファイブ',iv:[0,3,6,10],d:'マイナーキーのⅡや、メジャーキーのⅦで出てくる。'},
+ 'mM7':{n:'マイナーメジャーセブンス',iv:[0,3,7,11],d:'ミステリアスでサスペンスっぽい。'}
+};
+const QMAP={'0,4,7':'','0,3,7':'m','0,3,6':'dim','0,4,8':'aug','0,4,7,11':'M7','0,3,7,10':'m7','0,4,7,10':'7','0,3,6,10':'m7-5','0,3,6,9':'dim7','0,3,7,11':'mM7'};
+const isMinorQ=s=>s.startsWith('m')&&!s.startsWith('M');
+
+/* ===== ステージ・ミッション・レベル ===== */
+const SECS=[
+ {id:'basics',st:'基礎',n:'基礎',en:'BASICS',c:'#22e5ff',bn:'キーボード起動',sub:'音名・半音・全音'},
+ {id:'rhythm',st:'リズム',n:'リズム',en:'RHYTHM',c:'#ff8a3d',bn:'ビートメイカー',sub:'音符の長さ・BPM・ドラム打ち込み'},
+ {id:'intervals',st:'音程',n:'音程',en:'INTERVALS',c:'#ffe14d',bn:'インターバル解析',sub:'2つの音の距離と響き'},
+ {id:'scales',st:'音階',n:'スケール',en:'SCALES',c:'#a8ff3d',bn:'スケールマスター',sub:'メジャー・マイナー・モード'},
+ {id:'chords',st:'和音',n:'コード',en:'CHORDS',c:'#4d8bff',bn:'コードコレクター',sub:'3度を積み重ねた和音'},
+ {id:'diatonic',st:'Ⅰ〜Ⅶ',n:'ダイアトニック',en:'DIATONIC',c:'#9b6bff',bn:'ダイアトニック博士',sub:'キーの7つのコードと機能'},
+ {id:'progressions',st:'進行',n:'コード進行',en:'PROGRESSION',c:'#ff3df2',bn:'進行プロデューサー',sub:'王道・丸サ・カノン…'},
+ {id:'melody',st:'旋律',n:'メロディ',en:'MELODY',c:'#ff5c8a',bn:'メロディメイカー',sub:'コードトーンで作曲体験'},
+ {id:'modulation',st:'転調',n:'転調・応用',en:'MODULATION',c:'#3dffa8',bn:'転調マスター',sub:'ラスサビ転調・借用和音'},
+ {id:'quiz',st:'クイズ',n:'クイズ',en:'QUIZ',c:'#ff4d5e',bn:'クイズチャンピオン',sub:'耳トレと知識問題'}
+];
+const SEC=Object.fromEntries(SECS.map(s=>[s.id,s]));
+const NUM=id=>String(SECS.findIndex(s=>s.id===id)+1).padStart(2,'0');
+const CHURCH=['dorian','phryg','lydian','mixo'];
+const MISSIONS=[
+ {id:'b1',sec:'basics',t:'鍵盤を50回弾こう',xp:20,p:c=>[c.keys,50]},
+ {id:'b2',sec:'basics',t:'12音（白鍵7＋黒鍵5）をぜんぶ弾こう',xp:30,p:c=>[c.pcs.length,12]},
+ {id:'b3',sec:'basics',t:'半音・全音・オクターブを聴きくらべ',xp:20,p:c=>[c.demo.length,3]},
+ {id:'b4',sec:'basics',t:'半音ずつ13音連続で上がろう（クロマチック）',xp:50,p:c=>[c.chrom,13]},
+ {id:'r1',sec:'rhythm',t:'音符の長さ6種類をすべて聴こう',xp:20,p:c=>[c.lens.length,6]},
+ {id:'r2',sec:'rhythm',t:'プリセットを使わず「4つ打ち」を打ち込んで再生',xp:30,p:c=>[c.four,1]},
+ {id:'r3',sec:'rhythm',t:'プリセットを使わず「8ビート」を打ち込んで再生',xp:40,p:c=>[c.eight,1]},
+ {id:'r4',sec:'rhythm',t:'BPM170以上で合計8小節演奏しよう',xp:40,p:c=>[c.fastBars,8]},
+ {id:'i1',sec:'intervals',t:'長3度と短3度を両方聴こう',xp:20,p:c=>[[3,4].filter(x=>c.iv.includes(x)).length,2]},
+ {id:'i2',sec:'intervals',t:'13種類の音程をコンプリート',xp:40,p:c=>[c.iv.length,13]},
+ {id:'i3',sec:'intervals',t:'ちがう基準音4つで音程を聴こう',xp:30,p:c=>[c.ivRoots.length,4]},
+ {id:'i4',sec:'intervals',t:'音程の耳トレ（ふつう以上）で8問正解',xp:50,p:c=>[c.qIv,8]},
+ {id:'s1',sec:'scales',t:'平行調（C と Am）を聴きくらべ',xp:20,p:c=>[c.rel.length,2]},
+ {id:'s2',sec:'scales',t:'チャーチモード4種類をすべて聴こう',xp:30,p:c=>[CHURCH.filter(x=>c.scale.includes(x)).length,4]},
+ {id:'s3',sec:'scales',t:'ちがうルート5つでスケールを聴こう',xp:30,p:c=>[c.scRoots.length,5]},
+ {id:'s4',sec:'scales',t:'11種類のスケールをコンプリート',xp:40,p:c=>[c.scale.length,11]},
+ {id:'c1',sec:'chords',t:'メジャー→マイナー比較を聴こう',xp:20,p:c=>[c.cmp?1:0,1]},
+ {id:'c2',sec:'chords',t:'13種類のコードをコンプリート',xp:40,p:c=>[c.chord.length,13]},
+ {id:'c3',sec:'chords',t:'12のルートすべてでコードを鳴らそう',xp:40,p:c=>[c.chRoots.length,12]},
+ {id:'c4',sec:'chords',t:'コードの耳トレ（ふつう以上）で8問正解',xp:50,p:c=>[c.qCh,8]},
+ {id:'d1',sec:'diatonic',t:'2つのキーでメジャーの7コードをぜんぶ鳴らそう',xp:40,p:c=>[Object.values(c.diaMaj).filter(a=>a.length>=7).length,2]},
+ {id:'d2',sec:'diatonic',t:'マイナーキーの7コードをぜんぶ鳴らそう',xp:30,p:c=>[Math.max(0,...Object.values(c.diaMin).map(a=>a.length)),7]},
+ {id:'d3',sec:'diatonic',t:'4和音（7th）で7コードをぜんぶ鳴らそう',xp:30,p:c=>[c.dia7.length,7]},
+ {id:'d4',sec:'diatonic',t:'3つの終止（カデンツ）を聴こう',xp:20,p:c=>[c.cad.length,3]},
+ {id:'p1',sec:'progressions',t:'8つの進行をコンプリート',xp:40,p:c=>[c.prog.length,8]},
+ {id:'p2',sec:'progressions',t:'ちがうキー5つで再生しよう',xp:30,p:c=>[c.progKey.length,5]},
+ {id:'p3',sec:'progressions',t:'BPM140以上でループを合計3周聴こう',xp:40,p:c=>[c.fastLoops,3]},
+ {id:'m1',sec:'melody',t:'6音以上のメロディを作って再生',xp:30,p:c=>[c.mel6,1]},
+ {id:'m2',sec:'melody',t:'3種類以上の伴奏でメロディを再生',xp:30,p:c=>[c.melBack.length,3]},
+ {id:'m3',sec:'melody',t:'自作で12音以上＆各小節の頭がすべてコードトーンのメロディを再生',xp:60,p:c=>[c.melGood,1]},
+ {id:'m4',sec:'melody',t:'おまかせ生成を5回試そう',xp:20,p:c=>[c.gen,5]},
+ {id:'t1',sec:'modulation',t:'3種類以上のラスサビ転調を聴こう',xp:30,p:c=>[c.mod.length,3]},
+ {id:'t2',sec:'modulation',t:'同主調と平行調を聴きくらべ',xp:20,p:c=>[c.homo.length,2]},
+ {id:'t3',sec:'modulation',t:'応用コード5つをぜんぶ聴こう',xp:40,p:c=>[c.app.length,5]},
+ {id:'t4',sec:'modulation',t:'ちがうキー3つで応用コードを聴こう',xp:30,p:c=>[c.appKeys.length,3]},
+ {id:'q1',sec:'quiz',t:'クイズに合計30問正解',xp:40,p:c=>[c.qok,30]},
+ {id:'q2',sec:'quiz',t:'10問連続で正解',xp:60,p:c=>[c.qbest,10]},
+ {id:'q3',sec:'quiz',t:'3つのモードでそれぞれ5問以上正解',xp:40,p:c=>[Object.values(c.qm).filter(v=>v>=5).length,3]},
+ {id:'q4',sec:'quiz',t:'「むずかしい」で10問正解',xp:60,p:c=>[c.qHard,10]}
+];
+const LEVELS=[[0,'Grave','とても遅く、重々しく'],[80,'Largo','幅広く、ゆるやかに'],[200,'Adagio','ゆるやかに'],[360,'Andante','歩くような速さで'],[560,'Moderato','中くらいの速さで'],[800,'Allegretto','やや速く'],[1080,'Allegro','速く'],[1400,'Vivace','いきいきと速く'],[1720,'Presto','急速に'],[2000,'Prestissimo','できるかぎり速く']];
+const levelOf=xp=>{let l=0;LEVELS.forEach((L,i)=>{if(xp>=L[0])l=i});return l};
+
+/* ===== 保存 ===== */
+const SKEY='ongaku-riron-lab-v2';
+const fresh=()=>({xp:0,done:{},badges:{},c:{keys:0,pcs:[],chrom:0,demo:[],lens:[],four:0,eight:0,fastBars:0,iv:[],ivRoots:[],scale:[],scRoots:[],rel:[],chord:[],chRoots:[],cmp:0,diaMaj:{},diaMin:{},dia7:[],cad:[],prog:[],progKey:[],fastLoops:0,mel6:0,melBack:[],melGood:0,gen:0,mod:[],homo:[],app:[],appKeys:[],qok:0,qtot:0,qbest:0,qm:{interval:0,chord:0,theory:0},qIv:0,qCh:0,qHard:0}});
+function load(){try{const j=JSON.parse(localStorage.getItem(SKEY)||'null');if(j){const f=fresh();return {...f,...j,c:{...f.c,...(j.c||{}),qm:{...f.c.qm,...((j.c||{}).qm||{})}}}}}catch(e){}return fresh()}
+function save(){try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}}
+let S=load();
+
+/* ===== オーディオ（シンセ） ===== */
+let ctx,master,noiseBuf;
+function ac(){
+  if(!ctx){ctx=new (window.AudioContext||window.webkitAudioContext)();const comp=ctx.createDynamicsCompressor();master=ctx.createGain();master.gain.value=0.32;master.connect(comp);comp.connect(ctx.destination)}
+  if(ctx.state==='suspended')ctx.resume();return ctx;
+}
+const freq=m=>440*Math.pow(2,(m-69)/12);
+function tone(m,t,dur,vel=1,type='pluck'){
+  const c=ac();const f0=freq(m);
+  const g=c.createGain(),f=c.createBiquadFilter();f.type='lowpass';f.Q.value=type==='lead'?2:5;
+  const oscs=[];
+  if(type==='lead'){
+    const o=c.createOscillator();o.type='square';o.frequency.value=f0;
+    const lfo=c.createOscillator(),lg=c.createGain();lfo.frequency.value=5.5;lg.gain.value=f0*0.006;lfo.connect(lg);lg.connect(o.frequency);lfo.start(t+0.15);lfo.stop(t+dur+0.6);
+    oscs.push(o);f.frequency.setValueAtTime(3200,t);f.frequency.exponentialRampToValueAtTime(1800,t+0.3);
+  }else{
+    [-7,7].forEach(dt=>{const o=c.createOscillator();o.type=type==='pad'?'sawtooth':'triangle';o.frequency.value=f0;o.detune.value=dt;oscs.push(o)});
+    const top=Math.min(9000,900+f0*5);const base=type==='pad'?1100:Math.min(2600,500+f0*1.8);
+    f.frequency.setValueAtTime(type==='pad'?base:top,t);
+    if(type!=='pad')f.frequency.exponentialRampToValueAtTime(base,t+0.28);
+  }
+  oscs.forEach(o=>{o.connect(f);o.start(t);o.stop(t+dur+0.7)});
+  f.connect(g);g.connect(master);
+  const pk=(type==='lead'?0.16:0.2)*vel;const atk=type==='pad'?0.06:0.008;
+  g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(pk,t+atk);
+  if(type==='pluck')g.gain.exponentialRampToValueAtTime(pk*0.5,t+0.3);
+  g.gain.setTargetAtTime(0.0001,t+Math.max(dur,0.05),type==='pad'?0.18:0.1);
+}
+function noise(){if(!noiseBuf){const c=ac();noiseBuf=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}return noiseBuf}
+function drum(type,t){
+  const c=ac();
+  if(type===0){const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(165,t);o.frequency.exponentialRampToValueAtTime(42,t+0.16);g.gain.setValueAtTime(1.1,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.42);o.connect(g);g.connect(master);o.start(t);o.stop(t+0.45);return}
+  if(type==='click'||type==='accent'){const o=c.createOscillator(),g=c.createGain();o.frequency.value=type==='accent'?2000:1400;g.gain.setValueAtTime(0.5,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.06);o.connect(g);g.connect(master);o.start(t);o.stop(t+0.08);return}
+  const s=c.createBufferSource();s.buffer=noise();const f=c.createBiquadFilter(),g=c.createGain();
+  if(type===1){f.type='bandpass';f.frequency.value=1900;f.Q.value=.7;g.gain.setValueAtTime(.8,t);g.gain.exponentialRampToValueAtTime(.001,t+.2);
+    const o=c.createOscillator(),og=c.createGain();o.type='triangle';o.frequency.setValueAtTime(220,t);o.frequency.exponentialRampToValueAtTime(160,t+.08);og.gain.setValueAtTime(.5,t);og.gain.exponentialRampToValueAtTime(.001,t+.12);o.connect(og);og.connect(master);o.start(t);o.stop(t+.15)}
+  if(type===2){f.type='highpass';f.frequency.value=7500;g.gain.setValueAtTime(.4,t);g.gain.exponentialRampToValueAtTime(.001,t+.05)}
+  if(type===3){f.type='bandpass';f.frequency.value=1300;f.Q.value=1.4;[0,.012,.024].forEach(d=>{g.gain.setValueAtTime(.9,t+d);g.gain.exponentialRampToValueAtTime(.08,t+d+.01)});g.gain.setValueAtTime(.7,t+.036);g.gain.exponentialRampToValueAtTime(.001,t+.25)}
+  s.connect(f);f.connect(g);g.connect(master);s.start(t);s.stop(t+.3);
+}
+function flashKey(kb,m,ms){if(!kb)return;const k=kb.querySelector(`[data-m="${m}"]`);if(k){k.classList.add('flash');setTimeout(()=>k.classList.remove('flash'),ms)}}
+function playChord(midis,dur=1.4,kb=null,delay=0,type='pluck'){
+  const c=ac();const t=c.currentTime+0.03+delay;const v=midis.length>2?0.6:midis.length>1?0.8:1;
+  midis.forEach(m=>{tone(m,t,dur,v,type);setTimeout(()=>flashKey(kb,m,Math.min(dur*1000,700)),delay*1000)});
+}
+function playSeq(midis,step=0.38,kb=null,delay=0){
+  const c=ac();const t=c.currentTime+0.03+delay;
+  midis.forEach((m,i)=>{tone(m,t+i*step,step*0.95);setTimeout(()=>flashKey(kb,m,step*900),(delay+i*step)*1000)});
+}
+function sfx(kind){
+  const c=ac(),t=c.currentTime+0.02;
+  const seq={ok:[[84,0],[91,.07]],ng:[[50,0],[49,.13]],mission:[[79,0],[84,.07],[88,.14],[91,.21],[96,.28]],level:[[72,0],[76,.07],[79,.14],[84,.21],[88,.28],[91,.35],[96,.45]],badge:[[67,0],[72,.09],[76,.18],[79,.27],[84,.4]]}[kind];
+  seq.forEach(([m,d])=>tone(m,t+d,kind==='ng'?.22:.14,kind==='ng'?.7:.6,kind==='ng'?'pluck':'lead'));
+  if(kind==='level'||kind==='badge')[60,67,72,76].forEach(m=>tone(m,t+.55,1.4,.5,'pad'));
+}
+
+/* ===== 演出 ===== */
+const fx=$('#fx'),fctx=fx.getContext('2d');let parts=[],fxRun=false;
+function sizeFx(){fx.width=innerWidth*devicePixelRatio;fx.height=innerHeight*devicePixelRatio}
+sizeFx();addEventListener('resize',sizeFx);
+function confetti(n=60){
+  const cols=['#D9658B','#F4D772','#7FB2DE','#7CC4AC','#F2AFC4'];const W=innerWidth;
+  for(let i=0;i<n;i++)parts.push({x:W/2+(Math.random()-.5)*W*.6,y:innerHeight*.4,vx:(Math.random()-.5)*9,vy:-Math.random()*10-3,r:Math.random()*4+3,c:rand(cols),a:Math.random()*6,va:(Math.random()-.5)*.2,s:Math.random()<.3?'note':'petal',life:0});
+  if(!fxRun){fxRun=true;requestAnimationFrame(tick)}
+}
+function tick(){
+  const d=devicePixelRatio;fctx.setTransform(d,0,0,d,0,0);fctx.clearRect(0,0,innerWidth,innerHeight);
+  parts.forEach(p=>{p.vy+=.22;p.vx*=.985;p.x+=p.vx+Math.sin(p.life/12)*.6;p.y+=p.vy;p.a+=p.va;p.life++;
+    fctx.save();fctx.translate(p.x,p.y);fctx.rotate(p.a);fctx.fillStyle=p.c;fctx.globalAlpha=Math.max(0,1-p.life/220);
+    if(p.s==='note'){fctx.font=`700 ${p.r*3.4}px sans-serif`;fctx.fillText('♪',-p.r,p.r)}
+    else{fctx.beginPath();fctx.ellipse(0,0,p.r,p.r*.55,0,0,7);fctx.fill()}
+    fctx.restore()});
+  parts=parts.filter(p=>p.y<innerHeight+40&&p.life<220);
+  if(parts.length)requestAnimationFrame(tick);else{fxRun=false;fctx.clearRect(0,0,innerWidth,innerHeight)}
+}
+function toast(title,text,xp){
+  const el=document.createElement('div');el.className='toast';
+  el.innerHTML=`<span class="ic"></span><div class="tx"><b>${title}</b>${text}</div>${xp?`<span class="pt">+${xp}pt</span>`:''}`;
+  $('#toasts').appendChild(el);
+  setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),320)},3200);
+}
+function floatXP(n){
+  const chip=$('.lvchip');if(!chip)return;const r=chip.getBoundingClientRect();
+  const el=document.createElement('div');el.className='xpf';el.textContent=`+${n}pt`;
+  el.style.left=(r.left+r.width/2-18)+'px';el.style.top=(Math.max(r.top,4)+22)+'px';
+  document.body.appendChild(el);setTimeout(()=>el.remove(),1100);
+}
+const MQ=[];let mOpen=false;
+function queueModal(m){MQ.push(m);if(!mOpen)nextModal()}
+function nextModal(){
+  const m=MQ.shift();const el=$('#modal');
+  if(!m){el.hidden=true;mOpen=false;return}
+  mOpen=true;el.innerHTML=`<div class="mbox" style="${m.style||''}">${m.html}</div>`;el.hidden=false;
+  if(m.sound)sfx(m.sound);if(m.conf)confetti(m.conf);
+  el.querySelectorAll('[data-close]').forEach(b=>b.onclick=nextModal);
+  if(m.bind)m.bind(el);
+}
+
+/* ===== 進捗の記録 ===== */
+function track(type,v){
+  const c=S.c;const add=(k,x)=>{if(!c[k].includes(x))c[k].push(x)};
+  switch(type){
+    case 'key':c.keys++;add('pcs',mod(v));break;
+    case 'chrom':c.chrom=Math.max(c.chrom,v);break;
+    case 'demo':add('demo',v);break;
+    case 'len':add('lens',v);break;
+    case 'pattern':if(v.four)c.four=1;if(v.eight)c.eight=1;break;
+    case 'fastbar':c.fastBars++;break;
+    case 'iv':add('iv',v.iv);add('ivRoots',v.root);break;
+    case 'scale':add('scale',v.t);add('scRoots',v.root);break;
+    case 'rel':add('rel',v);break;
+    case 'chord':add('chord',v.q);add('chRoots',v.root);break;
+    case 'cmp':c.cmp=1;break;
+    case 'dia':{if(v.sev&&!c.dia7.includes(v.i))c.dia7.push(v.i);const o=v.mode==='major'?c.diaMaj:c.diaMin;o[v.key]=o[v.key]||[];if(!o[v.key].includes(v.i))o[v.key].push(v.i);break}
+    case 'cad':add('cad',v);break;
+    case 'prog':add('prog',v.i);add('progKey',v.k);break;
+    case 'fastloop':c.fastLoops++;break;
+    case 'mel':if(v.n>=6){c.mel6=1;add('melBack',v.back)}if(v.good)c.melGood=1;break;
+    case 'gen':c.gen++;break;
+    case 'mod':add('mod',v);break;
+    case 'homo':add('homo',v);break;
+    case 'app':add('app',v.i);add('appKeys',v.k);break;
+    case 'qans':c.qtot++;if(v.ok){c.qok++;c.qbest=Math.max(c.qbest,v.streak);c.qm[v.mode]=(c.qm[v.mode]||0)+1;if(v.level>=1&&v.mode==='interval')c.qIv++;if(v.level>=1&&v.mode==='chord')c.qCh++;if(v.level===2)c.qHard++}break;
+  }
+  checkMissions();save();renderProgress();
+}
+function gainXP(n){
+  const before=levelOf(S.xp);S.xp+=n;floatXP(n);const after=levelOf(S.xp);
+  if(after>before)queueModal({sound:'level',html:`<div class="mlabel">テンポが上がりました</div><div class="m">${mascot('wow')}</div><div class="tempo-big">${LEVELS[after][1]}</div><p>Lv.${after+1}　${LEVELS[after][2]}</p><button class="btn primary" data-close>続ける</button>`});
+}
+function checkMissions(){
+  MISSIONS.forEach(m=>{if(S.done[m.id])return;const [a,b]=m.p(S.c);if(a>=b){S.done[m.id]=1;gainXP(m.xp);toast('課題クリア',m.t,m.xp);sfx('mission')}});
+  SECS.forEach(s=>{
+    if(S.badges[s.id])return;
+    if(MISSIONS.filter(m=>m.sec===s.id).every(m=>S.done[m.id])){
+      S.badges[s.id]=1;
+      queueModal({sound:'badge',conf:70,html:`<div class="mlabel">ステージ${NUM(s.id)}「${s.n}」</div><div class="slot">${stampHTML(s,'lg',false,true)}</div><h4>課題をすべて終えました</h4><p>スタンプを押しました。譜面に音符がひとつ書き込まれます。ボーナス 50pt</p><button class="btn primary" data-close>閉じる</button>`});
+      gainXP(50);
+    }
+  });
+  if(!S.badges.all&&SECS.every(s=>S.badges[s.id])){S.badges.all=1;queueModal({sound:'level',conf:140,html:`<div class="mlabel">全ステージ修了</div><div class="m">${mascot('wow')}</div><h4>譜面がすべて埋まりました</h4><p>ホームで、書き上げた旋律を最後まで聴けます。</p><button class="btn primary" data-close>閉じる</button>`})}
+}
+/* ===== 進捗の描画 ===== */
+function lvInfo(){const l=levelOf(S.xp);const cur=LEVELS[l][0],nx=LEVELS[l+1]?.[0];const pct=nx?Math.round((S.xp-cur)/(nx-cur)*100):100;return {l,pct,need:nx?nx-S.xp:0,title:LEVELS[l][1],gloss:LEVELS[l][2]}}
+function secProgress(id){const ms=MISSIONS.filter(m=>m.sec===id);return [ms.filter(m=>S.done[m.id]).length,ms.length]}
+function curRoute(){const h=location.hash.slice(1);return ROUTES.includes(h)?h:'home'}
+function renderNav(){
+  const L=lvInfo();const cur=curRoute();
+  $('#nav').innerHTML=`<a class="lvchip" href="#home" aria-label="ホームとレベル"><b>Lv.${L.l+1} ${L.title}</b><span class="bar"><i style="width:${L.pct}%"></i></span></a>`+
+   `<a class="tab" href="#home" data-id="home">ホーム</a>`+
+   SECS.map((s,i)=>`<a class="tab" href="#${s.id}" data-id="${s.id}">${i+1}. ${s.n}${S.badges[s.id]?'<span class="dot" aria-label="クリア済み"></span>':''}</a>`).join('');
+  $$('#nav a.tab').forEach(a=>a.classList.toggle('active',a.dataset.id===cur));
+}
+function stampHTML(s,size='',locked=false,press=false){return `<div class="stamp ${size}${locked?' locked':''}${press?' press':''}">${locked?'未':`${s.st}<small>よくできました</small>`}</div>`}
+function staffSVG(cur,big){
+  const W=big?380:340,x0=30,dx=big?33:29.5,H=big?92:72;
+  const lines=[20,28,36,44,52].map(y=>`<line x1="8" x2="${W-8}" y1="${y}" y2="${y}" stroke="#D9D1E4" stroke-width="1"/>`).join('');
+  const bars=`<line x1="8" x2="8" y1="20" y2="52" stroke="#D9D1E4"/><line x1="${W-13}" x2="${W-13}" y1="20" y2="52" stroke="#33294A" stroke-opacity=".35"/><line x1="${W-9}" x2="${W-9}" y1="20" y2="52" stroke="#33294A" stroke-opacity=".55" stroke-width="3"/>`;
+  const notes=SECS.map((s,i)=>{
+    const x=x0+i*dx,y=60-i*4,done=!!S.badges[s.id],here=s.id===cur;
+    const col=here?'#D9658B':'#33294A',fill=here?'#D9658B':done?'#33294A':'#fff';
+    const stem=y>36?`<line x1="${x+5.3}" x2="${x+5.3}" y1="${y-1}" y2="${y-25}" stroke="${col}" stroke-width="1.4"/>`:`<line x1="${x-5.3}" x2="${x-5.3}" y1="${y+1}" y2="${y+25}" stroke="${col}" stroke-width="1.4"/>`;
+    const ledger=y>=60?`<line x1="${x-9}" x2="${x+9}" y1="60" y2="60" stroke="#B9AECB"/>`:'';
+    const lab=big?`<text x="${x}" y="${H-6}" text-anchor="middle" font-size="10.5" fill="${here?'#D9658B':'#7C7390'}">${i+1}</text>`:'';
+    return `<a href="#${s.id}" aria-label="${i+1}. ${s.n}"><rect x="${x-13}" y="0" width="26" height="${H}" fill="transparent"/>${ledger}<ellipse cx="${x}" cy="${y}" rx="${here?6.3:5.6}" ry="${here?4.5:4.1}" transform="rotate(-20 ${x} ${y})" fill="${fill}" stroke="${col}" stroke-width="1.5"/>${stem}${lab}</a>`;
+  }).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="ステージの譜面">${lines}${bars}${notes}</svg>`;
+}
+function renderStaffs(){$$('.staffslot').forEach(el=>el.innerHTML=staffSVG(el.dataset.sec,false))}
+function renderMissions(){
+  $$('.missions').forEach(box=>{
+    const s=SEC[box.dataset.sec];const ms=MISSIONS.filter(m=>m.sec===s.id);const [a,b]=secProgress(s.id);const got=!!S.badges[s.id];
+    box.innerHTML=`<div class="mhead"><div class="t">このステージの課題　${a}/${b}<small>${got?'スタンプを押しました':'すべて終えるとスタンプがもらえます'}</small></div>${stampHTML(s,'sm',!got)}</div>`+
+      ms.map(m=>{const [x,y]=m.p(S.c);const d=!!S.done[m.id];const v=Math.min(x,y);
+        return `<div class="mi${d?' done':''}"><span class="ck" aria-hidden="true"></span><div class="mt">${m.t}<span class="pt">${m.xp}pt</span></div><div class="mp">${d?'済':`${v}/${y}<span class="bar"><i style="width:${v/y*100}%"></i></span>`}</div></div>`}).join('');
+  });
+}
+function renderHome(){
+  const L=lvInfo();const total=MISSIONS.length,done=MISSIONS.filter(m=>S.done[m.id]).length;
+  const nextM=MISSIONS.find(m=>!S.done[m.id]);const c=S.c;const cleared=SECS.filter(s=>S.badges[s.id]).length;
+  const greet=done===0?'はじめまして、おんぷっぴです。10のステージで、作曲に使う音楽理論をひとつずつ確かめていきましょう。':
+    !nextM?'すべての課題が終わりました。クイズで耳をなまらせないようにしておきましょう。':
+    `おかえりなさい。次のテンポまで、あと ${L.need}pt です。`;
+  const row=(k,v)=>`<div><dt>${k}</dt><dd>${v}</dd></div>`;
+  $('#homeBody').innerHTML=`
+  <div class="greet"><div class="m">${mascot(done===0?'happy':'wink')}</div><p>${greet}</p></div>
+  <div class="card"><div class="tempo"><span class="word">${L.title}</span><span class="gloss">Lv.${L.l+1}　${L.gloss}</span></div>
+    <span class="bar thick"><i style="width:${L.pct}%"></i></span>
+    <p class="sub">${S.xp}pt　${L.need?`次の ${LEVELS[L.l+1][1]} まで ${L.need}pt`:'最も速いテンポに到達しました'}</p>
+    <p class="sub">ポイントがたまるとテンポ記号が上がります。課題は ${done}/${total} 完了。</p></div>
+  <div class="card"><h3>ステージの譜面</h3><p class="sub">ステージをクリアすると、その音符が塗られます。10個そろうとドから上のミまでの旋律になります。</p>
+    <div class="staffbig">${staffSVG(nextM?nextM.sec:null,true)}</div>
+    ${cleared?'<button class="btn quiet" id="playStaff">▶ 書き込んだ旋律を聴く</button>':'<p class="sub">最初のステージをクリアすると、ここで旋律を聴けるようになります。</p>'}</div>
+  ${nextM?`<div class="card nextcard"><div><p class="sub" style="margin:0">次の課題</p><p class="nm">${nextM.t}<span class="pt">${nextM.xp}pt</span></p></div><a class="btn primary" href="#${nextM.sec}">「${SEC[nextM.sec].n}」を開く</a></div>`:''}
+  <h3 class="home-h">ステージ一覧</h3>
+  <div class="slist">${SECS.map((s,i)=>`<a href="#${s.id}"><span class="num">${i+1}</span><span class="nm"><b>${s.n}</b><small>${s.sub}</small></span><span class="heads">${MISSIONS.filter(m=>m.sec===s.id).map(m=>`<i class="${S.done[m.id]?'on':''}"></i>`).join('')}</span></a>`).join('')}</div>
+  <div class="card"><h3>スタンプ帳</h3><div class="stampbook">${SECS.map(s=>`<div>${stampHTML(s,'',!S.badges[s.id])}${s.n}</div>`).join('')}</div></div>
+  <div class="card"><h3>記録</h3><dl class="stats">
+    ${row('鍵盤を弾いた回数',c.keys)}${row('聴いた音程',c.iv.length+' / 13')}${row('聴いたスケール',c.scale.length+' / 11')}${row('鳴らしたコード',c.chord.length+' / 13')}
+    ${row('再生した進行',c.prog.length+' / 8')}${row('クイズの正解数',c.qok)}${row('正答率',(c.qtot?Math.round(c.qok/c.qtot*100):0)+'%')}${row('最高連続正解',c.qbest)}
+  </dl></div>
+  <p style="text-align:center;margin-top:24px"><button class="btn quiet" id="resetBtn">記録をリセット</button></p>`;
+  if(cleared)$('#playStaff').onclick=()=>{const mids=[60,62,64,65,67,69,71,72,74,76];const c2=ac();const t=c2.currentTime+0.05;SECS.forEach((s,i)=>{if(S.badges[s.id])tone(mids[i],t+i*0.34,0.3,1,'lead')});SECS.forEach((s,i)=>{if(S.badges[s.id])[48,55].forEach(b=>i%4===0&&tone(b+(i>=8?7:0),t+i*0.34,1.2,.5,'pad'))})};
+  $('#resetBtn').onclick=()=>queueModal({html:`<div class="m">${mascot('oops')}</div><h4>記録をリセットしますか</h4><p>ポイント、課題、スタンプがすべて消えます。元には戻せません。</p><div class="mbtns"><button class="btn quiet" data-close>やめる</button><button class="btn primary" id="doReset">リセットする</button></div>`,bind:el=>{el.querySelector('#doReset').onclick=()=>{S=fresh();save();nextModal();renderProgress()}}});
+}
+function renderProgress(){renderNav();renderMissions();renderStaffs();refreshChips();if(curRoute()==='home')renderHome();if(curRoute()==='diatonic')dRender(true);if(curRoute()==='modulation')tRenderApps()}
+/* ===== 鍵盤・UI部品 ===== */
+function kbRange(midis,minOct=2){const lo=Math.floor(Math.min(...midis)/12)*12;const hi=Math.max(lo+12*minOct-1,Math.ceil((Math.max(...midis)+1)/12)*12-1);return [lo,hi]}
+function keyboard(el,{lo,hi,marks={},onKey,flat=false}){
+  el.innerHTML='';el.className='kb';
+  const W=innerWidth<600?30:36,BW=Math.round(W*0.62);let wi=0;const whites=[],blacks=[];
+  for(let m=lo;m<=hi;m++){
+    const pc=m%12,black=[1,3,6,8,10].includes(pc);
+    const k=document.createElement('button');k.className='key '+(black?'black':'white');k.dataset.m=m;k.setAttribute('aria-label',octName(m,flat));
+    const mk=marks[m];
+    if(mk){k.classList.add(mk.cls||'on');k.innerHTML=`<span>${mk.label??''}</span>`}else if(pc===0)k.innerHTML=`<small>C${Math.floor(m/12)-1}</small>`;
+    if(black){k.style.left=(wi*W-BW/2)+'px';k.style.width=BW+'px';blacks.push(k)}else{k.style.left=(wi*W)+'px';k.style.width=(W-1)+'px';wi++;whites.push(k)}
+    k.addEventListener('click',()=>{playChord([m],0.8,el);onKey&&onKey(m)});
+  }
+  el.style.width=(wi*W)+'px';whites.forEach(k=>el.appendChild(k));blacks.forEach(k=>el.appendChild(k));
+}
+function fillRoot(sel,def=0){sel.innerHTML=KEY_NAMES.map((n,i)=>`<option value="${i}">${n}</option>`).join('');sel.value=def}
+function chips(el,items,selKey,onSel,gotFn){
+  el.innerHTML='';
+  items.forEach(([k,label])=>{
+    const b=document.createElement('button');b.className='chip'+(k===selKey?' sel':'');b._k=k;
+    b.innerHTML=label+(gotFn?`<span class="got"></span>`:'');
+    b.onclick=()=>{[...el.children].forEach(c=>c.classList.remove('sel'));b.classList.add('sel');onSel(k)};
+    el.appendChild(b);
+  });
+  el._got=gotFn||null;refreshChips();
+}
+function refreshChips(){$$('.chips').forEach(el=>{if(!el._got)return;[...el.children].forEach(b=>{const g=b.querySelector('.got');if(g)g.textContent=el._got(b._k)?'✓':''})})}
+
+/* ===== ルーティング ===== */
+const ROUTES=['home',...SECS.map(s=>s.id)];
+function route(){
+  const id=curRoute();
+  ROUTES.forEach(r=>document.getElementById(r).classList.toggle('show',r===id));
+  renderStaffs();
+  if(id!=='progressions')progStop();if(id!=='rhythm')rStop();if(id!=='melody')mStop();if(id!=='modulation')tClear();
+  if(id==='home')renderHome();
+  renderNav();
+  const a=$(`#nav a.tab[data-id="${id}"]`);if(a)a.scrollIntoView({block:'nearest',inline:'center'});
+  scrollTo(0,0);
+}
+addEventListener('hashchange',route);
+
+/* ===== 01 基礎 ===== */
+let bPrev=null,bRun=1;
+function bInit(){
+  keyboard($('#bKb'),{lo:60,hi:83,onKey:m=>{
+    const pc=m%12;const black=[1,3,6,8,10].includes(pc);
+    let s=`<b>${black?NAMES_S[pc]+' / '+NAMES_F[pc]:NAMES_S[pc]}</b> <span class="mono">${Math.floor(m/12)-1}</span>`;
+    s+=black?`　（${SOLFA[pc-1]}♯ ＝ ${SOLFA[pc+1]}♭）`:`　（${SOLFA[pc]}）`;
+    if(bPrev!==null&&bPrev!==m){const d=Math.abs(m-bPrev);s+=`<br><span style="font-size:13px;color:var(--muted)">前の音から ${d} 半音${d<=12?' ＝ '+INTERVALS[d][2]:''}</span>`}
+    bRun=(bPrev!==null&&m===bPrev+1)?bRun+1:1;
+    if(bRun>=3)s+=`<span style="font-size:12px;color:var(--rose)">　半音ずつ${bRun}音連続</span>`;
+    $('#bRead').innerHTML=s;bPrev=m;
+    if(bRun>S.c.chrom)S.c.chrom=bRun;
+    track('key',m);
+  }});
+  $('#bHalf').onclick=()=>{playSeq([64,65],0.5,$('#bKb'));track('demo','half')};
+  $('#bWhole').onclick=()=>{playSeq([60,62],0.5,$('#bKb'));track('demo','whole')};
+  $('#bOct').onclick=()=>{playSeq([60,72],0.5,$('#bKb'));track('demo','oct')};
+}
+
+/* ===== 02 リズム ===== */
+const LENS=[['whole','全音符',1],['half','2分音符',2],['quarter','4分音符',4],['eighth','8分音符',8],['six','16分音符',16],['trip','3連符（8分）',12]];
+let lenTimers=[];
+function lenPlay(id){
+  lenTimers.forEach(clearTimeout);lenTimers=[];
+  const L=LENS.find(x=>x[0]===id);const n=L[2];const bar=2.4;const c=ac();const t0=c.currentTime+0.05;
+  $('#lenLeds').innerHTML=Array.from({length:n},()=>'<i></i>').join('');
+  $('#lenRead').innerHTML=`<b>${L[1]}</b>　1小節に <b class="mono">${n}</b> 個（BPM100）`;
+  for(let i=0;i<4;i++)drum(i===0?'accent':'click',t0+i*bar/4);
+  for(let i=0;i<n;i++){tone(72,t0+i*bar/n,Math.min(bar/n*0.8,1.6),0.8,'lead');lenTimers.push(setTimeout(()=>{const leds=$$('#lenLeds i');leds.forEach((x,j)=>x.classList.toggle('on',j===i))},(0.05+i*bar/n)*1000))}
+  lenTimers.push(setTimeout(()=>$$('#lenLeds i').forEach(x=>x.classList.remove('on')),(bar+0.2)*1000));
+  track('len',id);
+}
+const RROWS=['キック','スネア','ハット','クラップ'];
+const RPRE={
+ four:{n:'4つ打ち',bpm:128,g:['x...x...x...x...','................','..x...x...x...x.','....x.......x...']},
+ eight:{n:'8ビート',bpm:120,g:['x.......x.x.....','....x.......x...','x.x.x.x.x.x.x.x.','................']},
+ sixteen:{n:'16ビート',bpm:100,g:['x......x..x.....','....x.......x..x','xxxxxxxxxxxxxxxx','................']},
+ half:{n:'ハーフタイム',bpm:140,g:['x.........x.....','........x.......','x.x.x.x.x.x.x.x.','................']},
+ rock:{n:'疾走ロック',bpm:190,g:['x.x...x.x.x...x.','....x.......x...','x.x.x.x.x.x.x.x.','................']}
+};
+let rGridV=RROWS.map(()=>Array(16).fill(0)),rBpm=120,rTimer=null,rStep=0,rNext=0,rManual=true,rHeadTimers=[];
+function rRender(){
+  const g=$('#rGrid');g.innerHTML='';
+  rGridV.forEach((row,ri)=>{
+    const lb=document.createElement('div');lb.className='lb';lb.textContent=RROWS[ri];g.appendChild(lb);
+    row.forEach((v,ci)=>{const b=document.createElement('button');b.className='sc'+(ci%4===0?' q':'')+(v?' on':'');b.dataset.c=ci;
+      b.onclick=()=>{rGridV[ri][ci]=v?0:1;rManual=true;if(!v)drum(ri,ac().currentTime+0.01);rRender();if(rTimer)rCheck()};g.appendChild(b)});
+  });
+}
+function rCheck(){
+  if(!rManual)return;const g=rGridV;
+  const four=[0,4,8,12].every(i=>g[0][i]);
+  const eight=g[0][0]&&g[1][4]&&g[1][12]&&[0,2,4,6,8,10,12,14].every(i=>g[2][i]);
+  if((four&&!S.c.four)||(eight&&!S.c.eight))track('pattern',{four,eight});
+}
+function rHead(st){$$('#rGrid .sc').forEach(b=>b.classList.toggle('head',+b.dataset.c===st))}
+function rSched(){
+  const c=ac();
+  while(rNext<c.currentTime+0.12){
+    const st=rStep,t=rNext;
+    rGridV.forEach((row,ri)=>{if(row[st])drum(ri,t)});
+    rHeadTimers.push(setTimeout(()=>rHead(st),Math.max(0,(t-c.currentTime)*1000)));
+    rNext+=60/rBpm/4;rStep=(rStep+1)%16;
+    if(rStep===0&&rBpm>=170&&rGridV.some(r=>r.some(x=>x)))track('fastbar');
+  }
+  if(rHeadTimers.length>64)rHeadTimers=rHeadTimers.slice(-32);
+}
+function rPlay(){rStop();const c=ac();rStep=0;rNext=c.currentTime+0.06;rTimer=setInterval(rSched,25);rSched();rCheck()}
+function rStop(){if(rTimer){clearInterval(rTimer);rTimer=null}rHeadTimers.forEach(clearTimeout);rHeadTimers=[];rHead(-1)}
+function rInit(){
+  chips($('#lenChips'),LENS.map(L=>[L[0],L[1]]),null,lenPlay,k=>S.c.lens.includes(k));
+  chips($('#rPre'),Object.entries(RPRE).map(([k,v])=>[k,v.n]),null,k=>{const P=RPRE[k];rGridV=P.g.map(s=>[...s].map(ch=>ch==='x'?1:0));rManual=false;rBpm=P.bpm;$('#rBpm').value=rBpm;$('#rBpmV').textContent=rBpm;rRender();rPlay()});
+  $('#rPlay').onclick=rPlay;$('#rStop').onclick=rStop;
+  $('#rClear').onclick=()=>{rGridV=RROWS.map(()=>Array(16).fill(0));rManual=true;$$('#rPre .chip').forEach(c=>c.classList.remove('sel'));rRender()};
+  $('#rBpm').oninput=e=>{rBpm=+e.target.value;$('#rBpmV').textContent=rBpm};
+  rRender();
+}
+
+/* ===== 03 音程 ===== */
+let iRootV=0,iIv=4;
+function iRender(){
+  const r=60+iRootV,t=r+iIv,flat=FLAT_MAJ.has(iRootV);const I=INTERVALS[iIv];
+  $('#iName').innerHTML=`${I[2]}<small>${I[1]}　半音${iIv}個</small>`;
+  $('#iDesc').textContent=`${nm(r,flat)} → ${nm(t,flat)}　${I[3]}`;
+  const marks={};marks[r]={label:nm(r,flat),cls:'root'};if(t!==r)marks[t]={label:nm(t,flat)};
+  keyboard($('#iKb'),{lo:60,hi:83,marks,flat});
+}
+function iPlaySeq(){playSeq([60+iRootV,60+iRootV+iIv],0.5,$('#iKb'));track('iv',{iv:iIv,root:iRootV})}
+function iInit(){
+  fillRoot($('#iRoot'));$('#iRoot').onchange=e=>{iRootV=+e.target.value;iRender()};
+  chips($('#iChips'),INTERVALS.map(I=>[I[0],I[2].replace(/（.*）/,'')]),iIv,k=>{iIv=k;iRender();iPlaySeq()},k=>S.c.iv.includes(k));
+  $('#iSeq').onclick=iPlaySeq;
+  $('#iHarm').onclick=()=>{playChord([60+iRootV,60+iRootV+iIv],1.5,$('#iKb'));track('iv',{iv:iIv,root:iRootV})};
+  $('#iTable').innerHTML='<tr><th>半音</th><th>名前</th><th>例</th><th>響き</th></tr>'+INTERVALS.map(I=>`<tr class="click" data-i="${I[0]}"><td class="mono"><b>${I[0]}</b></td><td><b>${I[2]}</b> <span class="mono" style="color:var(--muted);font-size:12px">${I[1]}</span></td><td>C→${NAMES_S[I[0]%12]}</td><td>${I[3]}</td></tr>`).join('');
+  $$('#iTable tr.click').forEach(tr=>tr.onclick=()=>{const i=+tr.dataset.i;playSeq([60,60+i],0.45);playChord([60,60+i],1.2,null,0.95);track('iv',{iv:i,root:0})});
+  iRender();
+}
+
+/* ===== 04 スケール ===== */
+let sRootV=0,sType='major';
+function sMidis(){const r=60+sRootV;return SCALES[sType].iv.map(i=>r+i).concat([r+12])}
+function sRender(){
+  const Sc=SCALES[sType];const flat=useFlat(sRootV,Sc.iv.includes(3));
+  $('#sName').innerHTML=`${nm(sRootV,flat)} ${Sc.n}`;$('#sDesc').textContent=Sc.d;
+  $('#sNotes').innerHTML=Sc.iv.map((iv,i)=>`<div class="note${i===0?' r':''}"><b>${nm(sRootV+iv,flat)}</b><i>${i+1} · ${TONE_LBL[iv]??iv}</i></div>`).join('');
+  const steps=Sc.iv.map((iv,i)=>(i<Sc.iv.length-1?Sc.iv[i+1]:12)-iv);
+  $('#sSteps').innerHTML='並び：'+steps.map(s=>`<span class="${s===1?'h':''}">${s===1?'半':s===2?'全':s===3?'全半':s+'半音'}</span>`).join('');
+  const ms=sMidis();const marks={};ms.forEach((m,i)=>marks[m]={label:nm(m,flat),cls:i===0||i===ms.length-1?'root':'on'});
+  const [lo,hi]=kbRange(ms);keyboard($('#sKb'),{lo,hi,marks,flat});
+}
+const sTrack=()=>track('scale',{t:sType,root:sRootV});
+function sInit(){
+  fillRoot($('#sRoot'));$('#sRoot').onchange=e=>{sRootV=+e.target.value;sRender()};
+  chips($('#sChips'),Object.entries(SCALES).map(([k,v])=>[k,v.n]),sType,k=>{sType=k;sRender();playSeq(sMidis(),0.26,$('#sKb'));sTrack()},k=>S.c.scale.includes(k));
+  $('#sUp').onclick=()=>{playSeq(sMidis(),0.3,$('#sKb'));sTrack()};
+  $('#sUpDown').onclick=()=>{const u=sMidis();playSeq(u.concat(u.slice(0,-1).reverse()),0.24,$('#sKb'));sTrack()};
+  $('#sRelC').onclick=()=>{playSeq([60,62,64,65,67,69,71,72],0.26);track('rel','C')};
+  $('#sRelA').onclick=()=>{playSeq([57,59,60,62,64,65,67,69],0.26);track('rel','A')};
+  sRender();
+}
+
+/* ===== 05 コード ===== */
+let cRootV=0,cQ='';
+const cMidis=()=>CHORDS[cQ].iv.map(i=>(cRootV>=7?48:60)+cRootV+i);
+function cRender(){
+  const C=CHORDS[cQ];const flat=useFlat(cRootV,isMinorQ(cQ));
+  $('#cName').innerHTML=`${nm(cRootV,flat)}${cQ}<small>${C.n}</small>`;$('#cDesc').textContent=C.d;
+  $('#cNotes').innerHTML=C.iv.map((iv,i)=>`<div class="note${i===0?' r':''}"><b>${nm(cRootV+iv,flat)}</b><i>${TONE_LBL[iv]}</i></div>`).join('');
+  const ms=cMidis();const marks={};ms.forEach((m,i)=>marks[m]={label:nm(m,flat),cls:i===0?'root':'on'});
+  const [lo,hi]=kbRange(ms);keyboard($('#cKb'),{lo,hi,marks,flat});
+}
+function cSound(){playChord(cMidis(),1.4,$('#cKb'));track('chord',{q:cQ,root:cRootV})}
+function cInit(){
+  fillRoot($('#cRoot'));$('#cRoot').onchange=e=>{cRootV=+e.target.value;cRender();cSound()};
+  chips($('#cChips'),Object.keys(CHORDS).map(k=>[k,k===''?'メジャー':k]),cQ,k=>{cQ=k;cRender();cSound()},k=>S.c.chord.includes(k));
+  $('#cPlay').onclick=cSound;
+  $('#cArp').onclick=()=>{const ms=cMidis();playSeq(ms.concat([ms[0]+12]),0.28,$('#cKb'));track('chord',{q:cQ,root:cRootV})};
+  $('#cCmp').onclick=()=>{const b=(cRootV>=7?48:60)+cRootV;playChord([b,b+4,b+7],1.1);playChord([b,b+3,b+7],1.3,null,1.3);track('cmp')};
+  cRender();
+}
+
+/* ===== 06 ダイアトニック ===== */
+let dKeyV=0,dModeV='major',d7V=false,dSel=0;
+const FN={major:['T','SD','T','SD','D','T','D'],minor:['T','SD','T','SD','D','SD','D']};
+function diatonic(root,mode,sev){
+  const sc=SCALES[mode].iv;
+  return sc.map((off,i)=>{
+    const tones=[0,2,4].concat(sev?[6]:[]).map(k=>{const j=i+k;return sc[j%7]+12*Math.floor(j/7)});
+    const rel=tones.map(t=>t-tones[0]);const suf=QMAP[rel.join(',')]??'';
+    return {off,pc:mod(root+off),suf,rel,roman:romanOf(off)+suf,fn:FN[mode][i]};
+  });
+}
+function voiceClose(root,rel){const b=(mod(root)>=7?48:60)+mod(root);return rel.map(r=>b+r)}
+function dHeard(i){const o=dModeV==='major'?S.c.diaMaj:S.c.diaMin;return (o[dKeyV]||[]).includes(i)}
+function dRender(skipKb){
+  const flat=useFlat(dKeyV,dModeV==='minor');const ds=diatonic(dKeyV,dModeV,d7V);
+  $('#dGrid').innerHTML=ds.map((d,i)=>`<button class="dcard ${d.fn}${i===dSel?' sel':''}" data-i="${i}">${dHeard(i)?'<span class="heard">✓</span>':''}<div class="rm">${d.roman}</div><div class="nm">${nm(d.pc,flat)}${d.suf}</div><span class="fn">${d.fn}</span></button>`).join('');
+  $$('#dGrid .dcard').forEach(b=>b.onclick=()=>{dSel=+b.dataset.i;dPlay();dShow();track('dia',{mode:dModeV,i:dSel,key:dKeyV,sev:d7V})});
+  if(!skipKb)dShow();
+}
+function dShow(){
+  const flat=useFlat(dKeyV,dModeV==='minor');const d=diatonic(dKeyV,dModeV,d7V)[dSel];
+  const ms=voiceClose(d.pc,d.rel);const marks={};ms.forEach((m,i)=>marks[m]={label:nm(m,flat),cls:i===0?'root':'on'});
+  const sc=SCALES[dModeV].iv.map(i=>60+dKeyV+i);const [lo,hi]=kbRange(ms.concat(sc));keyboard($('#dKb'),{lo,hi,marks,flat});
+  $('#dRead').innerHTML=`<b>${nm(d.pc,flat)}${d.suf}</b>（${d.roman}）　構成音：${ms.map(m=>nm(m,flat)).join('・')}`;
+}
+function dPlay(){const d=diatonic(dKeyV,dModeV,d7V)[dSel];playChord(voiceClose(d.pc,d.rel),1.5,$('#dKb'))}
+function dCad(idxs,n){const ds=diatonic(dKeyV,'major',false);idxs.forEach((i,k)=>{const d=ds[i];const v=voice(d.pc,d.suf);playChord([v.bass,...v.up],0.9,null,k*0.9)});track('cad',n)}
+function dInit(){
+  fillRoot($('#dKey'));$('#dKey').onchange=e=>{dKeyV=+e.target.value;dRender()};
+  chips($('#dMode'),[['major','メジャー'],['minor','マイナー']],'major',k=>{dModeV=k;dRender()});
+  chips($('#d7'),[[false,'3和音'],[true,'4和音（7th）']],false,k=>{d7V=k;dRender()});
+  $('#dCad1').onclick=()=>dCad([0,3,4,0],1);$('#dCad2').onclick=()=>dCad([4,0],2);$('#dCad3').onclick=()=>dCad([4,5],3);
+  dRender();
+}
+
+/* ===== 07 コード進行 ===== */
+const PROGS=[
+ {n:'王道進行',c:[[5,'M7'],[7,'7'],[4,'m7'],[9,'m']],d:'J-POP・ボカロ曲で最もよく聴く進行のひとつ。サブドミナントから始まり、切なく盛り上がる。サビの定番。'},
+ {n:'王道進行（Ⅲ7版）',c:[[5,'M7'],[7,''],[4,'7'],[9,'m']],d:'Ⅲm を Ⅲ7 に変えると Ⅵm へ強く引っぱられ、よりドラマチックに。Ⅲ7 は Ⅵm に対するドミナント（セカンダリードミナント）。'},
+ {n:'丸サ進行',c:[[5,'M7'],[4,'7'],[9,'m7'],[7,'m7',2],[0,'7',2]],d:'おしゃれでジャジーな循環進行。Ⅲ7→Ⅵm7、Ⅰ7→ⅣM7 とセカンダリードミナントで繋いでいる。'},
+ {n:'カノン進行',c:[[0,''],[7,''],[9,'m'],[4,'m'],[5,''],[0,''],[5,''],[7,'']],d:'パッヘルベルのカノン由来。ベースが順番に下がっていく安心感のある進行。'},
+ {n:'小室進行',c:[[9,'m'],[5,''],[7,''],[0,'']],d:'マイナーで始まり明るく抜ける。疾走感があり、ロック系の曲で定番。'},
+ {n:'アクシス進行',c:[[0,''],[7,''],[9,'m'],[5,'']],d:'洋楽ポップスの超定番。回転させて Ⅵm→Ⅳ→Ⅰ→Ⅴ にすると切ない版になる。'},
+ {n:'イチロクニーゴー',c:[[0,''],[9,'m'],[2,'m'],[7,'']],d:'古くからある循環コード。T→T→SD→D の流れで何度でも繰り返せる。'},
+ {n:'ツーファイブワン',c:[[2,'m7'],[7,'7'],[0,'M7',8]],d:'ジャズの基本。SD→D→T という最も強い解決の流れ。'}
+];
+let pKeyV=0,pSel=0,pIdx=0,pTimer=null,pBpm=100;
+function voice(pc,suf){const bass=40+mod(pc-4);const up=[...new Set(CHORDS[suf].iv.map(i=>{const p=mod(pc+i);return 58+mod(p-58)}))].sort((a,b)=>a-b);return {bass,up}}
+function playVoiced(pc,suf,dur,kb,delay=0){const v=voice(mod(pc),suf);playChord([v.bass],dur,kb,delay,'pluck');playChord(v.up,dur,kb,delay,'pad')}
+function pRenderList(){
+  const flat=FLAT_MAJ.has(pKeyV);
+  $('#pList').innerHTML=PROGS.map((p,i)=>`<button class="pitem${i===pSel?' sel':''}" data-i="${i}"><div class="pn"><b>${p.n}</b><span class="mono">${p.c.map(c=>romanOf(c[0])+c[1]).join(' → ')}<br>${p.c.map(c=>nm(pKeyV+c[0],flat)+c[1]).join(' → ')}</span></div><span class="pk">${S.c.prog.includes(i)?'✓':'▶'}</span></button>`).join('');
+  $$('#pList .pitem').forEach(b=>b.onclick=()=>{progStop();pSel=+b.dataset.i;pRender();progPlay()});
+}
+function pRender(){
+  const p=PROGS[pSel],flat=FLAT_MAJ.has(pKeyV);
+  $('#pName').textContent=p.n;$('#pDesc').textContent=p.d;
+  $('#pRow').innerHTML=p.c.map((c,i)=>`<button class="pchord" data-i="${i}"><b>${nm(pKeyV+c[0],flat)}${c[1]}</b><i>${romanOf(c[0])}${c[1]}</i></button>`).join('');
+  $$('#pRow .pchord').forEach(b=>b.onclick=()=>{const c=p.c[+b.dataset.i];pShowChord(+b.dataset.i);playVoiced(pKeyV+c[0],c[1],1.4,$('#pKb'))});
+  pShowChord(0,true);pRenderList();
+}
+function pShowChord(i,quiet){
+  const p=PROGS[pSel],c=p.c[i],flat=FLAT_MAJ.has(pKeyV);
+  const v=voice(mod(pKeyV+c[0]),c[1]);const marks={};marks[v.bass]={label:nm(v.bass,flat),cls:'bass'};v.up.forEach(m=>marks[m]={label:nm(m,flat)});
+  keyboard($('#pKb'),{lo:36,hi:71,marks,flat});
+  $$('#pRow .pchord').forEach((b,j)=>b.classList.toggle('now',!quiet&&j===i));
+}
+function progStep(){
+  const p=PROGS[pSel];
+  if(pIdx>=p.c.length){if(pBpm>=140)track('fastloop');if($('#pLoop').checked)pIdx=0;else{progStop();return}}
+  const c=p.c[pIdx];const beats=c[2]??4;const beat=60/pBpm;
+  pShowChord(pIdx);const kb=$('#pKb');const v=voice(mod(pKeyV+c[0]),c[1]);
+  for(let b=0;b<beats;b++){playChord([v.bass],beat*0.9,kb,b*beat,'pluck');if(b%2===0)playChord(v.up,beat*1.8,kb,b*beat,'pad');drum(b%2?1:0,ac().currentTime+0.03+b*beat);drum(2,ac().currentTime+0.03+b*beat+beat/2)}
+  pIdx++;pTimer=setTimeout(progStep,beats*beat*1000);
+}
+function progPlay(){progStop();ac();pIdx=0;progStep();track('prog',{i:pSel,k:pKeyV});pRenderList()}
+function progStop(){if(pTimer){clearTimeout(pTimer);pTimer=null}$$('#pRow .pchord').forEach(b=>b.classList.remove('now'))}
+function pInit(){
+  fillRoot($('#pKey'));$('#pKey').onchange=e=>{pKeyV=+e.target.value;const playing=!!pTimer;progStop();pRender();if(playing)progPlay()};
+  $('#pBpm').oninput=e=>{pBpm=+e.target.value;$('#pBpmV').textContent=pBpm};
+  $('#pPlay').onclick=progPlay;$('#pStop').onclick=progStop;
+  pRender();
+}
+
+/* ===== 08 メロディ ===== */
+const MBACK=[{n:'王道進行',c:[[5,'M7'],[7,'7'],[4,'m7'],[9,'m']]},{n:'小室進行',c:[[9,'m'],[5,''],[7,''],[0,'']]},{n:'カノン前半',c:[[0,''],[7,''],[9,'m'],[4,'m']]},{n:'アクシス進行',c:[[0,''],[7,''],[9,'m'],[5,'']]}];
+let mKey=0,mBackV=0,mel=Array(16).fill(-1),mManual=true,mTimer=null,mPos=0;const MROWS=10,MBPM=104;
+const mRowMidi=r=>60+mKey+MAJ[r%7]+12*Math.floor(r/7);
+const mChord=step=>{const c=MBACK[mBackV].c[Math.floor(step/4)];return {pc:mod(mKey+c[0]),suf:c[1]}};
+const isCT=(step,r)=>{const {pc,suf}=mChord(step);return CHORDS[suf].iv.map(i=>mod(pc+i)).includes(mod(mRowMidi(r)))};
+function mStats(){const n=mel.filter(x=>x>=0).length;const ct=mel.filter((r,s)=>r>=0&&isCT(s,r)).length;const strong=[0,4,8,12].every(s=>mel[s]>=0&&isCT(s,mel[s]));return {n,rate:n?Math.round(ct/n*100):0,strong}}
+function mRender(){
+  const g=$('#mGrid'),flat=FLAT_MAJ.has(mKey),hint=$('#mHint').checked;g.innerHTML='<div></div>';
+  MBACK[mBackV].c.forEach(c=>{const d=document.createElement('div');d.className='ch';d.textContent=nm(mKey+c[0],flat)+c[1];g.appendChild(d)});
+  for(let r=MROWS-1;r>=0;r--){
+    const lb=document.createElement('div');lb.className='lb mono';lb.textContent=octName(mRowMidi(r),flat);g.appendChild(lb);
+    for(let s=0;s<16;s++){const b=document.createElement('button');b.className='sc'+(s%4===0?' b':'')+(hint&&isCT(s,r)?' ct':'')+(mel[s]===r?' on':'');b.dataset.c=s;
+      b.onclick=()=>{mel[s]=mel[s]===r?-1:r;mManual=true;if(mel[s]>=0)tone(mRowMidi(r),ac().currentTime+0.01,0.35,0.9,'lead');mRender()};g.appendChild(b)}
+  }
+  const st=mStats();
+  $('#mMeter').innerHTML=`<span>音の数 <b>${st.n}</b>/16</span><span class="${st.rate>=60?'good':''}">コードトーン <b>${st.rate}%</b></span><span class="${st.strong?'good':''}">小節の頭 <b>${st.strong?'すべてコードトーン':'まだ'}</b></span><span>${mManual?'自作':'おまかせ生成'}</span>`;
+}
+function mHead(s){$$('#mGrid .sc').forEach(b=>b.classList.toggle('head',+b.dataset.c===s))}
+function mStep(){
+  if(mPos>=16){if($('#mLoop').checked)mPos=0;else{mStop();return}}
+  const beat=60/MBPM;
+  if(mPos%4===0){const {pc,suf}=mChord(mPos);const v=voice(pc,suf);playChord([v.bass-12+12],beat*3.8,null,0,'pluck');playChord(v.up.map(m=>m-12),beat*3.8,null,0,'pad')}
+  drum(mPos%2?1:0,ac().currentTime+0.03);
+  if(mel[mPos]>=0){let len=1;while(mPos+len<16&&mel[mPos+len]<0&&(mPos+len)%4!==0)len++;tone(mRowMidi(mel[mPos]),ac().currentTime+0.03,len*beat*0.9,1,'lead')}
+  mHead(mPos);mPos++;mTimer=setTimeout(mStep,beat*1000);
+}
+function mPlay(){mStop();ac();mPos=0;const st=mStats();track('mel',{n:st.n,back:mBackV,good:mManual&&st.n>=12&&st.strong});mStep()}
+function mStop(){if(mTimer){clearTimeout(mTimer);mTimer=null}mHead(-1)}
+function mGenerate(){
+  mel=Array(16).fill(-1);let prev=4+Math.floor(Math.random()*3);
+  for(let s=0;s<16;s++){
+    if(s%4===0){const cts=[...Array(MROWS).keys()].filter(r=>isCT(s,r));cts.sort((a,b)=>Math.abs(a-prev)-Math.abs(b-prev));prev=cts[Math.random()<.7?0:Math.min(1,cts.length-1)];mel[s]=prev}
+    else if(Math.random()<(s%4===3?.45:.8)){prev=Math.max(0,Math.min(MROWS-1,prev+rand([-2,-1,-1,1,1,2])));mel[s]=prev}
+  }
+  mManual=false;mRender();track('gen');mPlay();
+}
+function mInit(){
+  fillRoot($('#mKey'));$('#mKey').onchange=e=>{mKey=+e.target.value;mRender()};
+  chips($('#mBack'),MBACK.map((b,i)=>[i,b.n]),0,k=>{mBackV=k;mRender()},k=>S.c.melBack.includes(k));
+  $('#mHint').onchange=mRender;$('#mPlay').onclick=mPlay;$('#mStop').onclick=mStop;$('#mGen').onclick=mGenerate;
+  $('#mClear').onclick=()=>{mel=Array(16).fill(-1);mManual=true;mRender()};
+  mRender();
+}
+
+/* ===== 09 転調・応用 ===== */
+const MODS=[{id:'half',n:'半音上げ',to:1},{id:'whole',n:'全音上げ',to:2},{id:'pivot',n:'Ⅴ7経由で全音上げ',to:2,pivot:true},{id:'m3',n:'短3度上げ',to:3}];
+const APPS=[
+ {n:'Ⅳm（サブドミナントマイナー）',seq:[[5,''],[5,'m'],[0,'']],d:'Ⅳ のあとに Ⅳm を挟むと、ぐっと切なくなる。同主調マイナーから借りたコード。'},
+ {n:'♭ⅥM7 → ♭Ⅶ → Ⅰ',seq:[[8,'M7'],[10,''],[0,'']],d:'壮大でドラマチック。サビ終わりやエンディングの定番。'},
+ {n:'Ⅲ7（セカンダリードミナント）',seq:[[0,''],[4,'7'],[9,'m']],d:'Ⅵm の直前に置くと強く引っぱられる。'},
+ {n:'Ⅱ7（ドッペルドミナント）',seq:[[0,''],[2,'7'],[7,''],[0,'']],d:'Ⅴ のさらにドミナント。明るく前に進む推進力。'},
+ {n:'♭Ⅶ（ロック感）',seq:[[0,''],[10,''],[5,''],[0,'']],d:'ミクソリディアン由来。解放感のあるロックっぽい響き。'}
+];
+let tKeyV=0,tTimers=[];
+function tClear(){tTimers.forEach(clearTimeout);tTimers=[]}
+function tPlaySeq(seq,dur=0.8){
+  tClear();const row=$('#tRow');
+  row.innerHTML=seq.map(([pc,suf,lab,sep])=>`<div class="pchord${sep?' sep':''}"><b>${nm(pc,useFlat(mod(pc),isMinorQ(suf)))}${suf}</b><i>${lab}</i></div>`).join('');
+  seq.forEach(([pc,suf],i)=>{playVoiced(pc,suf,dur*0.95,null,i*dur);tTimers.push(setTimeout(()=>$$('#tRow .pchord').forEach((b,j)=>b.classList.toggle('now',j===i)),i*dur*1000))});
+  tTimers.push(setTimeout(()=>$$('#tRow .pchord').forEach(b=>b.classList.remove('now')),seq.length*dur*1000));
+}
+function tMod(M){
+  const prog=[[5,''],[7,''],[4,'m'],[9,'m']],k=tKeyV,k2=tKeyV+M.to;const seq=[];
+  prog.forEach(c=>seq.push([k+c[0],c[1],KEY_NAMES[mod(k)]+':'+romanOf(c[0])+c[1]]));
+  if(M.pivot)seq.push([k2+7,'7','→新Ⅴ7',true]);
+  prog.forEach(c=>seq.push([k2+c[0],c[1],KEY_NAMES[mod(k2)]+':'+romanOf(c[0])+c[1]]));
+  tPlaySeq(seq,0.7);track('mod',M.id);
+}
+function tRenderApps(){
+  const flat=FLAT_MAJ.has(tKeyV);
+  $('#tApps').innerHTML=APPS.map((a,i)=>`<button class="acard" data-i="${i}">${S.c.app.includes(i)?'<span class="heard">✓</span>':''}<b>${a.n}</b><span class="mono">${a.seq.map(c=>nm(tKeyV+c[0],flat||[1,3,8,10].includes(c[0]))+c[1]).join(' → ')}</span><small>${a.d}</small></button>`).join('');
+  $$('#tApps .acard').forEach(b=>b.onclick=()=>{const a=APPS[+b.dataset.i];tPlaySeq(a.seq.map(c=>[tKeyV+c[0],c[1],romanOf(c[0])+c[1]]),0.9);track('app',{i:+b.dataset.i,k:tKeyV})});
+}
+function tLabels(){const f=FLAT_MAJ.has(tKeyV);$('#tSame').textContent=`▶ 同主調（${nm(tKeyV,f)}→${nm(tKeyV,f)}m）`;$('#tRel').textContent=`▶ 平行調（${nm(tKeyV,f)}→${nm(tKeyV+9,f)}m）`}
+function tInit(){
+  fillRoot($('#tKey'));$('#tKey').onchange=e=>{tKeyV=+e.target.value;tLabels();tRenderApps()};
+  chips($('#tMods'),MODS.map(M=>[M.id,'▶ '+M.n]),null,k=>tMod(MODS.find(M=>M.id===k)),k=>S.c.mod.includes(k));
+  $('#tSame').onclick=()=>{const k=tKeyV;tPlaySeq([[k,'','Ⅰ'],[k+5,'','Ⅳ'],[k+7,'','Ⅴ'],[k,'','Ⅰ'],[k,'m','Ⅰm',true],[k+5,'m','Ⅳm'],[k+7,'','Ⅴ'],[k,'m','Ⅰm']],0.7);track('homo','same')};
+  $('#tRel').onclick=()=>{const k=tKeyV;tPlaySeq([[k,'','Ⅰ'],[k+5,'','Ⅳ'],[k+7,'','Ⅴ'],[k,'','Ⅰ'],[k+9,'m','Ⅵm',true],[k+2,'m','Ⅱm'],[k+4,'','Ⅲ'],[k+9,'m','Ⅵm']],0.7);track('homo','rel')};
+  tLabels();tRenderApps();
+}
+
+/* ===== 10 クイズ ===== */
+let qModeV='interval',Q=null,qAns=false;const QS={ok:0,tot:0,st:0};
+const IV_POOL=[[2,4,5,7,12],[1,2,3,4,5,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12]];
+const CH_POOL=[['','m'],['','m','dim','aug','sus4'],['','m','7','M7','m7','dim','aug','sus4','m7-5']];
+const PRAISE=['正解です','よくできました','その調子です','正解、いい感じです'];
+function genTheory(lv){
+  const types=lv===0?[0,3,4]:[0,1,2,3,4,5];const t=rand(types);
+  if(t===0){
+    const k=Math.floor(Math.random()*12),flat=useFlat(k,false),d=2+Math.floor(Math.random()*6);
+    const ans=nm(k+MAJ[d-1],flat);const o=new Set([ans]);while(o.size<4)o.add(nm(k+Math.floor(Math.random()*12),flat));
+    return {q:`${KEY_NAMES[k]} メジャースケールの ${d} 番目の音は？`,opts:shuffle([...o]),ans,ex:`${KEY_NAMES[k]} メジャー：${MAJ.map(i=>nm(k+i,flat)).join(' ')}`,notes:MAJ.map(i=>60+k+i)};
+  }
+  if(t===1){
+    const k=Math.floor(Math.random()*12),pool=['','m','7','M7','m7','dim','aug','sus4','m7-5'],suf=rand(pool);
+    const flat=useFlat(k,isMinorQ(suf));const str=s=>CHORDS[s].iv.map(i=>nm(k+i,flat)).join('・');
+    const ans=str(suf);const o=new Set([ans]);shuffle(pool).forEach(s=>{if(o.size<4)o.add(str(s))});
+    return {q:`${nm(k,flat)}${suf} の構成音は？`,opts:shuffle([...o]),ans,ex:`${nm(k,flat)}${suf}（${CHORDS[suf].n}）＝ ${CHORDS[suf].iv.map(i=>TONE_LBL[i]).join('＋')}`,notes:CHORDS[suf].iv.map(i=>60+k+i)};
+  }
+  if(t===2){
+    const k=rand([0,2,4,5,7,9,10,3]),flat=useFlat(k,false),ds=diatonic(k,'major',false),i=Math.floor(Math.random()*7);
+    const names=ds.map(d=>nm(d.pc,flat)+d.suf);const ans=names[i];const o=new Set([ans]);shuffle(names).forEach(n=>{if(o.size<4)o.add(n)});
+    return {q:`キー ${KEY_NAMES[k]}（メジャー）で ${ROM[i]} 度のダイアトニックコードは？`,opts:shuffle([...o]),ans,ex:ds.map((d,j)=>`${d.roman}=${names[j]}`).join('　'),notes:voiceClose(ds[i].pc,ds[i].rel)};
+  }
+  if(t===3){
+    const a=Math.floor(Math.random()*12),iv=1+Math.floor(Math.random()*11);
+    const ans=INTERVALS[iv][2];const o=new Set([ans]);while(o.size<4)o.add(INTERVALS[1+Math.floor(Math.random()*11)][2]);
+    return {q:`${NAMES_S[a]} から上の ${NAMES_S[mod(a+iv)]} までの音程は？`,opts:shuffle([...o]),ans,ex:`${iv} 半音 ＝ ${ans}`,notes:[60+a,60+a+iv]};
+  }
+  if(t===4){
+    const P=rand([['4分音符','8分音符',2],['4分音符','16分音符',4],['2分音符','8分音符',4],['全音符','4分音符',4],['全音符','8分音符',8],['2分音符','16分音符',8],['全音符','16分音符',16]]);
+    const ans=P[2]+'つ';const o=new Set([ans]);while(o.size<4)o.add(rand([1,2,3,4,6,8,12,16])+'つ');
+    return {q:`${P[0]}1つは、${P[1]}いくつぶん？`,opts:shuffle([...o]),ans,ex:`音符は半分ずつ細かくなる：全音符＝2分×2＝4分×4＝8分×8＝16分×16`};
+  }
+  const k=rand([0,2,5,7,9,4]),flat=FLAT_MAJ.has(k);const A=rand([['♭Ⅶ',10,''],['♭Ⅵ',8,''],['Ⅳm',5,'m'],['Ⅲ7',4,'7'],['Ⅱ7',2,'7']]);
+  const fl=flat||[8,10].includes(A[1]);const ans=nm(k+A[1],fl)+A[2];const o=new Set([ans]);while(o.size<4)o.add(nm(k+Math.floor(Math.random()*12),fl)+rand(['','m','7']));
+  return {q:`キー ${KEY_NAMES[k]} で「${A[0]}」にあたるコードは？`,opts:shuffle([...o]),ans,ex:`${KEY_NAMES[k]} から ${A[1]} 半音上がルート → ${ans}`};
+}
+function qNew(){
+  qAns=false;const lv=+$('#qLevel').value;$('#qFb').innerHTML='';$('#qKbWrap').style.display='none';
+  if(qModeV==='interval'){
+    const iv=rand(IV_POOL[lv]),r=55+Math.floor(Math.random()*12);
+    Q={q:'この2つの音の音程は？',opts:IV_POOL[lv].map(i=>INTERVALS[i][2]),ans:INTERVALS[iv][2],notes:[r,r+iv],ex:`${octName(r)} → ${octName(r+iv)}（${iv}半音）`,ear:true};
+  }else if(qModeV==='chord'){
+    const s=rand(CH_POOL[lv]),r=52+Math.floor(Math.random()*12);
+    Q={q:'このコードの種類は？',opts:CH_POOL[lv].map(k=>k===''?'メジャー':k),ans:s===''?'メジャー':s,notes:CHORDS[s].iv.map(i=>r+i),ex:`${nm(r,useFlat(mod(r),isMinorQ(s)))}${s}（${CHORDS[s].n}）`,ear:true,chord:true};
+  }else{Q=genTheory(lv);Q.ear=false}
+  Q.level=lv;
+  $('#qText').textContent=Q.q;$('#qAudio').style.display=Q.ear?'flex':'none';
+  $('#qOpts').innerHTML=Q.opts.map(o=>`<button class="opt">${o}</button>`).join('');
+  $$('#qOpts .opt').forEach(b=>b.onclick=()=>qAnswer(b));
+  if(Q.ear)qPlay();
+}
+function qPlay(){if(!Q)return;if(Q.chord)playChord(Q.notes,1.6);else playSeq(Q.notes,0.6)}
+function qAnswer(b){
+  if(qAns)return;qAns=true;const ok=b.textContent===Q.ans;
+  QS.tot++;if(ok){QS.ok++;QS.st++}else QS.st=0;
+  $('#qOk').textContent=QS.ok;$('#qTot').textContent=QS.tot;$('#qStreak').textContent=QS.st;
+  $$('#qOpts .opt').forEach(x=>{if(x.textContent===Q.ans)x.classList.add('ok');else if(x===b)x.classList.add('ng')});
+  const bonus=ok&&QS.st>0&&QS.st%5===0;const gain=(Q.level===2?8:5)+(bonus?10:0);
+  $('#qFb').innerHTML=`<div class="fb ${ok?'ok':'ng'}"><div class="m">${mascot(ok?(bonus?'wow':'happy'):'oops')}</div><div>${ok?`${rand(PRAISE)}<span class="pt">+${gain}pt</span>${bonus?`<span class="streak">${QS.st}問連続</span>`:''}`:`正解は「${Q.ans}」でした`}<small>${Q.ex}</small></div></div>`;
+  sfx(ok?'ok':'ng');
+  if(Q.notes){const marks={};Q.notes.forEach((m,i)=>marks[m]={label:nm(m),cls:i===0?'root':'on'});const [lo,hi]=kbRange(Q.notes);keyboard($('#qKb'),{lo,hi,marks});$('#qKbWrap').style.display='block'}
+  if(ok){gainXP(gain);if(bonus)confetti(70)}
+  track('qans',{ok,streak:QS.st,mode:qModeV,level:Q.level});
+}
+function qInit(){
+  chips($('#qMode'),[['interval','音程を聴き分ける'],['chord','コードを聴き分ける'],['theory','知識問題']],'interval',k=>{qModeV=k;qNew()});
+  $('#qLevel').onchange=qNew;$('#qNext').onclick=qNew;$('#qReplay').onclick=qPlay;
+  $('#qHarm').onclick=()=>Q&&playChord(Q.notes,1.6);
+  $('#qText').textContent='「次の問題」を押すと始まります。耳トレは音が鳴ります。';$('#qAudio').style.display='none';
+}
+
+/* ===== 起動 ===== */
+paintMascots();
+bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
+renderMissions();route();
+let lastW=innerWidth;
+addEventListener('resize',()=>{if((innerWidth<600)!==(lastW<600)){lastW=innerWidth;iRender();sRender();cRender();dShow();pShowChord(Math.max(0,pIdx-1),!pTimer)}});
+
+/* ===== PWA ===== */
+if('serviceWorker' in navigator&&location.protocol!=='file:'){addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(()=>{})})}
+(function(){
+  const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  if(standalone)return;
+  const box=$('#installBox'),btn=$('#installBtn'),txt=$('#installText');let deferred=null;
+  addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;txt.textContent='アプリとして追加すると、ホーム画面から開けてオフラインでも使えます。';btn.hidden=false;box.hidden=false});
+  btn.onclick=async()=>{if(!deferred)return;deferred.prompt();await deferred.userChoice.catch(()=>{});deferred=null;box.hidden=true};
+  addEventListener('appinstalled',()=>{box.hidden=true});
+  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  if(ios){txt.textContent='Safari の共有ボタンから「ホーム画面に追加」を選ぶと、アプリとして使えます。';box.hidden=false}
+})();
+</script>
+</body>
+</html>
