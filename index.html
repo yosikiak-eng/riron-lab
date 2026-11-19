@@ -556,6 +556,31 @@ html .th.sel{outline-color:var(--rose)}
 .gbtn small{font-size:11px;color:var(--mute)}
 .gbtn:hover{border-color:var(--rule);background:var(--sheet)}
 .gbtn.sel{background:var(--sc);border-color:var(--sa)}
+/* reharm */
+.rhgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 4px}
+@media(min-width:640px){.rhgrid{grid-template-columns:repeat(4,1fr)}}
+.rhbar{text-align:left;background:var(--paper);border:1.5px solid var(--rule);border-radius:14px;padding:8px 10px;cursor:pointer;color:var(--ink);display:flex;flex-direction:column;gap:1px;position:relative;line-height:1.4;min-height:96px}
+.rhbar.sel{border-color:var(--sa);background:var(--sheet)}
+.rhbar.now{box-shadow:0 0 0 3px color-mix(in srgb,var(--sa) 40%,transparent)}
+.rhn{font-size:11px;color:var(--mute)}
+.rhm{font-size:12px;color:var(--mute)}
+.rhc{font-family:var(--display);font-size:16px;font-weight:500;margin-top:2px}
+.rht{font-size:11px;color:var(--sa)}
+.mk{position:absolute;top:7px;right:7px;font-size:10px;font-weight:700;border-radius:999px;padding:0 7px}
+.mk.ct{background:#DDF1EA;color:#2F7A60}.mk.ten{background:#FBF0C8;color:#806200}.mk.av{background:#FBE1E6;color:#B8456A}
+.cmk{display:inline-block;width:8px;height:8px;border-radius:50%;margin:0 4px 0 6px;vertical-align:0}
+.cmk.ct{background:#5DBB98}.cmk.ten{background:#E2BC3C}.cmk.av{background:#D9658B}
+.rhleg{font-size:11.5px;color:var(--mute);margin:4px 0 10px}
+.rhleg .cmk:first-child{margin-left:0}
+.chip small{color:var(--mute);font-weight:400;font-size:11px}
+#rhInfo{margin-top:10px;font-size:13.5px;background:var(--paper);border-radius:12px;padding:10px 12px}
+#rhInfo:empty{display:none}
+.rhnotes{margin:6px 0 0;padding-left:1.2em}
+.rhnotes li{margin:2px 0}
+.rhnotes li.av{color:#B8456A}
+.steps2{margin:6px 0;padding-left:1.4em}
+.steps2 li{margin:5px 0;font-size:14px}
+table.wrap td{white-space:normal}
 @media (prefers-reduced-motion:reduce){*:not(.turnpage):not(.shade):not(.turnwrap):not(.wipe):not(.wipe *):not(section){animation:none !important;transition:none !important}.turnwrap::before{animation:none !important}}
 </style>
 </head>
@@ -854,8 +879,66 @@ html .th.sel{outline-color:var(--rose)}
 </section>
 
 <!-- 10 クイズ -->
+<section id="reharm">
+  <header class="sh"><div class="band"><span class="no">10</span><div class="staffslot" data-sec="reharm"></div></div><h2>リハモ（実戦コード理論）</h2><p class="lead">メロディはそのままで、下のコードを付け替えるのがリハーモナイズ（リハモ）です。候補を選んで聴き比べながら、実際の曲づくりで使える差し替えのパターンを身につけましょう。</p></header>
+  <div class="missions" data-sec="reharm" data-pane="tasks"></div>
+  <div class="card" data-pane="play">
+    <h3>リハモ・ラボ</h3>
+    <p class="sub" style="margin-top:0">小節をタップして、下の候補からコードを選びます。選ぶとその小節だけ鳴ります。</p>
+    <div class="chips" id="rhPre"></div>
+    <div class="rhgrid" id="rhGrid"></div>
+    <p class="rhleg"><span class="cmk ct"></span>合う（コードトーン）<span class="cmk ten"></span>色づけ（テンション）<span class="cmk av"></span>ぶつかる（アボイド）</p>
+    <div id="rhOpts"></div>
+    <div class="ctrl"><button class="btn primary" id="rhPlay">▶ 4小節を再生</button><button class="btn" id="rhOrig">▶ 原曲で聴く</button><button class="btn quiet" id="rhStop">■ 止める</button></div>
+    <div id="rhInfo"></div>
+  </div>
+  <div class="card" data-pane="learn">
+    <h3>リハーモナイズとは</h3>
+    <p>メロディはそのままで、下で鳴るコードを別のものに付け替えることです。同じメロディでも、コードが変わるだけで明るさや切なさ、おしゃれさが大きく変わります。2番やラスサビで変化をつけたり、ありがちな進行から抜け出したりするのに使います。</p>
+    <h3 style="margin-top:14px">付け替えの手順</h3>
+    <ol class="steps2">
+      <li><b>メロディの大事な音を見つける</b>：拍の頭の音と、長く伸ばす音。</li>
+      <li><b>その音を含むコードを候補にする</b>：その音がコードトーンかテンションになるコード。</li>
+      <li><b>機能を確かめる</b>：元のコードと同じ機能（T・SD・D）なら、流れを保ったまま置き換えられる。</li>
+      <li><b>向かう力を足す</b>：次のコードの前に、セカンダリードミナント・ツーファイブ・裏コードを置く。</li>
+      <li><b>色を変える</b>：4和音・テンション・借用和音・サブドミナントマイナーで雰囲気を整える。</li>
+      <li><b>ベースラインを確かめる</b>：ベースが跳びすぎず、なめらかに動いているか。</li>
+    </ol>
+  </div>
+  <div class="card" data-pane="learn">
+    <h3>技法の早見表（キー C）</h3>
+    <div class="tbl"><table class="wrap">
+      <tr><th>技法</th><th>やり方</th><th>効果・例</th></tr>
+      <tr><td><b>4和音化・テンション</b></td><td>3和音に 7th や 9th を足す</td><td>大人っぽく、おしゃれに。C → CM7(9)</td></tr>
+      <tr><td><b>代理コード</b></td><td>同じ機能で、構成音を多く共有するコードに置き換える</td><td>雰囲気だけ変わる。C → Am7、F → Dm7、G7 → Bm7-5</td></tr>
+      <tr><td><b>セカンダリードミナント</b></td><td>次のコードの5度上の 7th を直前に置く</td><td>次のコードへ強く引っぱる。Dm7 の前に A7</td></tr>
+      <tr><td><b>ツーファイブ化</b></td><td>Ⅴ7 の前に Ⅱm7 を置く</td><td>流れがなめらかに。G7 → Dm7 G7</td></tr>
+      <tr><td><b>裏コード</b></td><td>Ⅴ7 を、増4度離れた 7th に置き換える</td><td>ベースが半音で下がる解決。G7 → D♭7</td></tr>
+      <tr><td><b>サブドミナントマイナー</b></td><td>Ⅳ のあとに（または代わりに）Ⅳm</td><td>一瞬の切なさ。F → Fm</td></tr>
+      <tr><td><b>借用和音</b></td><td>同じルートのマイナーキーのコードを借りる</td><td>ドラマチック。♭ⅥM7（A♭M7）、♭Ⅶ（B♭）</td></tr>
+      <tr><td><b>パッシングディミニッシュ</b></td><td>全音離れた2つのコードの間に、半音でつなぐ dim7</td><td>なめらかな上昇。C → C♯dim7 → Dm7</td></tr>
+      <tr><td><b>ペダルポイント</b></td><td>ベースを固定して、上のコードだけ変える</td><td>緊張感・浮遊感。C → F/C → G/C</td></tr>
+      <tr><td><b>偽終止</b></td><td>Ⅴ のあと Ⅰ ではなく Ⅵm へ</td><td>終わらずに続く。G7 → Am7</td></tr>
+    </table></div>
+  </div>
+  <div class="card" data-pane="learn">
+    <h3>テンションとアボイドの見分け方</h3>
+    <p>コードトーン以外にも、メロディに使える音があります。目安は「コードトーンの<b>全音上</b>ならテンション（色づけ）、<b>半音上</b>ならアボイド（長く伸ばすとぶつかる）」です。</p>
+    <div class="tbl"><table class="wrap">
+      <tr><th>コード</th><th>使えるテンション</th><th>注意する音</th></tr>
+      <tr><td><b>M7</b>（CM7）</td><td>9th（D）、♯11（F♯）、13th（A）</td><td>11th（F）：3度 E の半音上</td></tr>
+      <tr><td><b>m7</b>（Dm7）</td><td>9th（E）、11th（G）</td><td>♭13（B♭）：5度 A の半音上</td></tr>
+      <tr><td><b>7</b>（G7）</td><td>9th、♭9、♯9、♯11、13th、♭13</td><td>11th（C）：3度 B の半音上（sus4 にするなら使える）</td></tr>
+      <tr><td><b>m7-5</b>（Bm7-5）</td><td>11th（E）、♭13（G）</td><td>♭9（C）：ルートの半音上</td></tr>
+    </table></div>
+    <div class="tip"><b>ラボの表示：</b>「色づけ」はテンション、「ぶつかる」はアボイドです。ドミナント 7th だけは例外で、♭9 や ♭13 も緊張感のある色として使えます。</div>
+  </div>
+  <div class="card tips" data-sec="reharm" data-pane="tips"></div>
+  <nav class="pager" data-sec="reharm" aria-label="ステージの移動"></nav>
+</section>
+
 <section id="quiz">
-  <header class="sh"><div class="band"><span class="no">10</span><div class="staffslot" data-sec="quiz"></div></div><h2>クイズで力だめし</h2><p class="lead">耳で聴く問題と、知識の問題があります。5問続けて正解するとボーナスがつきます。</p></header>
+  <header class="sh"><div class="band"><span class="no">11</span><div class="staffslot" data-sec="quiz"></div></div><h2>クイズで力だめし</h2><p class="lead">耳で聴く問題と、知識の問題があります。5問続けて正解するとボーナスがつきます。</p></header>
   <div class="missions" data-sec="quiz" data-pane="tasks"></div>
   <div class="card" data-pane="play">
     <div class="chips" id="qMode"></div>
@@ -877,7 +960,7 @@ html .th.sel{outline-color:var(--rose)}
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 12</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 13</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -965,6 +1048,7 @@ const SECS=[
  {id:'progressions',soft:'#F3DCF1',acc:'#A84A9F',st:'進行',n:'コード進行',en:'PROGRESSION',c:'#ff3df2',bn:'進行プロデューサー',sub:'王道・丸サ・カノン…'},
  {id:'melody',soft:'#FBDDD7',acc:'#C9574A',st:'旋律',n:'メロディ',en:'MELODY',c:'#ff5c8a',bn:'メロディメイカー',sub:'コードトーンで作曲体験'},
  {id:'modulation',soft:'#E0EBD3',acc:'#5E8A35',st:'転調',n:'転調・応用',en:'MODULATION',c:'#3dffa8',bn:'転調マスター',sub:'ラスサビ転調・借用和音'},
+ {id:'reharm',soft:'#DDEFEE',acc:'#2C7C83',st:'リハモ',n:'リハモ',en:'REHARM',bn:'リハーモナイザー',sub:'コードの差し替えと実戦テクニック'},
  {id:'quiz',soft:'#DDE1F7',acc:'#4D5CC0',st:'クイズ',n:'クイズ',en:'QUIZ',c:'#ff4d5e',bn:'クイズチャンピオン',sub:'耳トレと知識問題'}
 ];
 const SEC=Object.fromEntries(SECS.map(s=>[s.id,s]));
@@ -1006,6 +1090,10 @@ const MISSIONS=[
  {id:'t2',sec:'modulation',t:'同主調と平行調を聴きくらべ',xp:20,p:c=>[c.homo.length,2]},
  {id:'t3',sec:'modulation',t:'応用コード5つをぜんぶ聴こう',xp:40,p:c=>[c.app.length,5]},
  {id:'t4',sec:'modulation',t:'ちがうキー3つで応用コードを聴こう',xp:30,p:c=>[c.appKeys.length,3]},
+ {id:'h1',sec:'reharm',t:'プリセットを3つ聴き比べよう',xp:20,p:c=>[c.rhPre.length,3]},
+ {id:'h2',sec:'reharm',t:'ちがう技法を6種類使って再生しよう',xp:40,p:c=>[c.rhTech.length,6]},
+ {id:'h3',sec:'reharm',t:'メロディとぶつかるコードを見つけて再生しよう',xp:30,p:c=>[c.rhClash?1:0,1]},
+ {id:'h4',sec:'reharm',t:'4小節すべて原曲と違うコードにして、ぶつかりなしで再生しよう',xp:60,p:c=>[c.rhGood?1:0,1]},
  {id:'q1',sec:'quiz',t:'クイズに合計30問正解',xp:40,p:c=>[c.qok,30]},
  {id:'q2',sec:'quiz',t:'10問連続で正解',xp:60,p:c=>[c.qbest,10]},
  {id:'q3',sec:'quiz',t:'3つのモードでそれぞれ5問以上正解',xp:40,p:c=>[Object.values(c.qm).filter(v=>v>=5).length,3]},
@@ -1016,7 +1104,7 @@ const levelOf=xp=>{let l=0;LEVELS.forEach((L,i)=>{if(xp>=L[0])l=i});return l};
 
 /* ===== 保存 ===== */
 const SKEY='ongaku-riron-lab-v2';
-const fresh=()=>({xp:0,done:{},badges:{},daily:{date:'',pts:0,goalHit:0},days:[],goal:30,best:0,wrong:[],qstat:{},c:{keys:0,pcs:[],chrom:0,demo:[],lens:[],four:0,eight:0,fastBars:0,iv:[],ivRoots:[],scale:[],scRoots:[],rel:[],chord:[],chRoots:[],cmp:0,diaMaj:{},diaMin:{},dia7:[],cad:[],prog:[],progKey:[],fastLoops:0,mel6:0,melBack:[],melGood:0,gen:0,mod:[],homo:[],app:[],appKeys:[],qok:0,qtot:0,qbest:0,qm:{interval:0,chord:0,theory:0},qIv:0,qCh:0,qHard:0}});
+const fresh=()=>({xp:0,done:{},badges:{},daily:{date:'',pts:0,goalHit:0},days:[],goal:30,best:0,wrong:[],qstat:{},c:{keys:0,pcs:[],chrom:0,demo:[],lens:[],four:0,eight:0,fastBars:0,iv:[],ivRoots:[],scale:[],scRoots:[],rel:[],chord:[],chRoots:[],cmp:0,diaMaj:{},diaMin:{},dia7:[],cad:[],prog:[],progKey:[],fastLoops:0,mel6:0,melBack:[],melGood:0,gen:0,mod:[],homo:[],app:[],appKeys:[],qok:0,qtot:0,qbest:0,qm:{interval:0,chord:0,theory:0},qIv:0,qCh:0,qHard:0,rhPre:[],rhTech:[],rhClash:0,rhGood:0}});
 function load(){try{const j=JSON.parse(localStorage.getItem(SKEY)||'null');if(j){const f=fresh();return {...f,...j,c:{...f.c,...(j.c||{}),qm:{...f.c.qm,...((j.c||{}).qm||{})}}}}}catch(e){}return fresh()}
 function save(){try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}}
 let S=load();
@@ -1143,6 +1231,7 @@ function track(type,v){
     case 'mod':add('mod',v);break;
     case 'homo':add('homo',v);break;
     case 'app':add('app',v.i);add('appKeys',v.k);break;
+    case 'reharm':if(v.pre>=0)add('rhPre',v.pre);v.techs.forEach(x=>add('rhTech',x));if(v.clash)c.rhClash=1;if(v.good)c.rhGood=1;break;
     case 'qans':c.qtot++;if(v.ok){c.qok++;c.qbest=Math.max(c.qbest,v.streak);c.qm[v.mode]=(c.qm[v.mode]||0)+1;if(v.level>=1&&v.mode==='interval')c.qIv++;if(v.level>=1&&v.mode==='chord')c.qCh++;if(v.level===2)c.qHard++}break;
   }
   checkMissions();save();renderProgress();
@@ -1177,7 +1266,7 @@ function renderNav(){
 }
 function stampHTML(s,size='',locked=false,press=false){return `<div class="stamp ${size}${locked?' locked':''}${press?' press':''}" style="--sa:${secAcc(s)}">${locked?'未':`${s.st}<small>よくできました</small>`}</div>`}
 function staffSVG(cur,big,band){
-  const W=big?380:340,x0=30,dx=big?33:29.5,H=big?92:72,line=band?'color-mix(in srgb,currentColor 24%,transparent)':'var(--rule)';
+  const W=big?380:340,x0=30,dx=(W-62)/(SECS.length-1),H=big?92:72,line=band?'color-mix(in srgb,currentColor 24%,transparent)':'var(--rule)';
   const L=(x1,x2,y1,y2,st,w=1,extra='')=>`<line x1="${x1}" x2="${x2}" y1="${y1}" y2="${y2}" style="stroke:${st}" stroke-width="${w}"${extra}/>`;
   const lines=[20,28,36,44,52].map(y=>L(8,W-8,y,y,line)).join('');
   const bars=L(8,8,20,52,line)+L(W-13,W-13,20,52,'currentColor',1,' stroke-opacity=".35"')+L(W-9,W-9,20,52,'currentColor',3,' stroke-opacity=".55"');
@@ -1246,7 +1335,7 @@ function renderHome(){
   ${nextM?`<div class="card nextcard" style="--sa:${secAcc(SEC[nextM.sec])}"><div><p class="sub" style="margin:0">次の課題（${SEC[nextM.sec].n}）</p><p class="nm">${nextM.t}<span class="pt">${nextM.xp}pt</span></p></div><a class="btn primary" href="#${nextM.sec}">開く</a></div>`:''}
   </div>
   <div class="pw" data-pane="stages">
-  <div class="card"><h3>ステージの譜面</h3><p class="sub">ステージをクリアすると、その音符が塗られます。10個そろうとドから上のミまでの旋律になります。</p>
+  <div class="card"><h3>ステージの譜面</h3><p class="sub">ステージをクリアすると、その音符が塗られます。11個そろうと、ドから上のファまでの旋律になります。</p>
     <div class="staffbig">${staffSVG(nextM?nextM.sec:null,true,false)}</div>
     ${cleared?'<button class="btn quiet" id="playStaff">▶ 書き込んだ旋律を聴く</button>':'<p class="sub">最初のステージをクリアすると、ここで旋律を聴けるようになります。</p>'}</div>
   <h3 class="home-h">ステージ一覧</h3>
@@ -1343,7 +1432,7 @@ function route(){
     if(tok!==navTok)return;
     ROUTES.forEach(r=>document.getElementById(r).classList.toggle('show',r===id));
     renderStaffs();
-    if(id!=='progressions')progStop();if(id!=='rhythm')rStop();if(id!=='melody')mStop();if(id!=='modulation')tClear();if(id!=='sounds'&&typeof instStop==='function'&&ctx)instStop();
+    if(id!=='progressions')progStop();if(id!=='rhythm')rStop();if(id!=='melody')mStop();if(id!=='modulation')tClear();if(id!=='sounds'&&typeof instStop==='function'&&ctx)instStop();if(id!=='reharm'&&typeof rhStop==='function')rhTimers.forEach(clearTimeout);
     if(id==='home')renderHome();
     renderNav();
     const a=$(`#nav a.tab[data-id="${id}"]`);if(a)a.scrollIntoView({block:'nearest',inline:'center'});
@@ -1671,6 +1760,8 @@ function tInit(){
 
 /* ===== 質問・用語 ===== */
 const FAQ={
+ ura:['裏コードはなぜ使えるの？','ドミナント7th で大事なのは、3度と7度がつくる不安定な増4度（トライトーン）です。ルートを増4度ずらした 7th コードも同じ2音を持っているので、同じように解決できます。G7→C の代わりに D♭7→C にすると、ベースが半音で下がるおしゃれな響きになります。'],
+ dairi:['代理コードはどう選ぶの？','同じ機能（トニック・サブドミナント・ドミナント）のコードどうしは、構成音を多く共有しています。たとえば C（ド・ミ・ソ）と Am（ラ・ド・ミ）はドとミが同じ。だから流れを崩さずに置き換えられます。'],
  hanon:['なぜ半音で数えるの？','鍵盤では、隣り合う鍵盤（黒鍵も含む）はすべて半音の距離です。白鍵だけで数えると E–F と B–C のところで間隔がずれますが、半音なら必ず同じ幅なので、どのキーでも同じ計算ができます。'],
  do:['「度」はどう数えるの？','度は音名（C・D・E…）の数で数えます。出発の音を「1」と数えるのがポイントで、C→E は C・D・E の3つなので3度です。同じ3度でも、半音の数で「長」か「短」かが決まります。'],
  chotan:['長・短・完全の違いは？','1・4・5・8度は、上下をひっくり返しても完全な形のままのきれいな響きなので「完全」と呼びます。2・3・6・7度には広いものと狭いものがあり、広いほうが「長」、半音狭いほうが「短」です。'],
@@ -1688,8 +1779,12 @@ const FAQ={
  borrow:['借用和音って何？','同じルートの別のキー（多くは同主調のマイナー）から一時的に借りてくるコードです。C メジャーの曲に C マイナーの Fm や A♭ を混ぜると、一瞬だけ切ない色や壮大な色がつきます。'],
  flat7:['なぜ ♭Ⅶ と書くの？','メジャースケールの7番目（C メジャーなら B）から半音下がった音がルートだからです。Ⅶ を基準に ♭ を付けて書くことで、どのキーでも位置がすぐわかります。']
 };
-const FAQ_BY=k=>k.startsWith('iv:')?['do','chotan','ear','hanon']:k.startsWith('ch:')?['Mm','sev','sus','dim']:({'th:0':['zen','chogo','hanon'],'th:1':['Mm','sev','sus','dim'],'th:2':['tobashi','roman'],'th:3':['do','chotan','hanon'],'th:4':['bpm','futen'],'th:5':['borrow','flat7','roman']})[k]||['hanon'];
+const FAQ_BY=k=>k.startsWith('iv:')?['do','chotan','ear','hanon']:k.startsWith('ch:')?['Mm','sev','sus','dim']:({'th:0':['zen','chogo','hanon'],'th:1':['Mm','sev','sus','dim'],'th:2':['tobashi','roman'],'th:3':['do','chotan','hanon'],'th:4':['bpm','futen'],'th:5':['borrow','flat7','roman'],'th:6':['ura','dairi'],'th:7':['dairi','roman']})[k]||['hanon'];
 const TERMS={
+ '裏コード':'ドミナント7th のルートを増4度ずらした 7th コード。同じトライトーンを持つので代わりに使える。',
+ '代理コード':'同じ機能を持ち、構成音を多く共有するコード。置き換えても流れが崩れない。',
+ 'テンション':'コードトーン以外で、響きに色をつける音（9th・11th・13th など）。',
+ 'アボイド':'コードトーンの半音上にあり、長く伸ばすとぶつかる音。',
  'セカンダリードミナント':'Ⅰ 以外のコードへ向かうために一時的に置くドミナント。例：Ⅲ7 → Ⅵm。',
  'ドッペルドミナント':'Ⅴ へ向かうためのドミナント。メジャーキーの Ⅱ7。',
  'サブドミナント':'展開・広がりの役割のコード（Ⅳ・Ⅱm）。トニックから離れて動き出す感じ。',
@@ -1842,6 +1937,21 @@ function makeTh(p){
       steps:['音符は1段階細かくなるたびに、長さが半分になる：全 → 2分 → 4分 → 8分 → 16分。',`${P[0]}から${P[1]}までは${n}段階。`,`${n}段階なら2を${n}回かける：${Array(n).fill(2).join('×')}＝${P[2]}。`],
       tip:'BPMで数える「1拍」は4分音符1つぶん。8分音符は1拍の半分、16分音符は1拍の4分の1です。'};
   }
+  if(t===6){
+    const {x}=p,fl=FLAT_MAJ.has(x)||[1,3,6,8,10].includes(x),y=mod(x+6),X=nm(x,fl),Y=nm(y,true),th3=nm(x+4,fl),th7=nm(x+10,true),ans=Y+'7';
+    return {q:`${X}7 の裏コードは？`,opts:fill4(ans,()=>nm(rnd(12),true)+'7'),ans,key:'th:6',notes:[48+x,52+x,55+x,58+x],
+      why:`${X}7 の3度 ${th3} と7度 ${th7} は、${Y}7 の7度と3度と同じ音（書き方が違うだけの異名同音）です。この不安定な2音が共通なので、${Y}7 で ${X}7 の代わりができます。`,
+      steps:['裏コードは、ルートを増4度（半音6つ）ずらした 7th コード。',`${X} から半音6つ上は ${Y}。`,`${X}7 の3度と7度（${th3}・${th7}）が ${Y}7 にも入っているか確かめる → ${ans}。`],
+      tip:'G7 の裏は D♭7、D7 の裏は A♭7、のようにペアで覚えると速い。裏コードに置き換えると、ベースが半音で下がって解決します。'};
+  }
+  if(t===7){
+    const {k,f}=p,flat=FLAT_MAJ.has(k),ds=diatonic(k,'major',true),names=ds.map(d=>nm(d.pc,flat)+d.suf),F=[['Ⅰ',0,5,'トニック'],['Ⅳ',3,1,'サブドミナント'],['Ⅴ',4,6,'ドミナント']][f];
+    const ans=names[F[2]],pool=names.filter((n,i)=>i!==F[1]&&i!==F[2]&&!(f===0&&i===2));
+    return {q:`キー ${KEY_NAMES[k]} で、${F[0]}（${names[F[1]]}）の代理として使えるコードは？`,opts:fill4(ans,()=>rand(pool)),ans,key:'th:7',notes:voiceClose(ds[F[2]].pc,ds[F[2]].rel),
+      why:`${names[F[1]]} と ${ans} はどちらも${F[3]}の機能で、構成音を3つ共有しています。`,
+      steps:[`${F[0]} の機能は${F[3]}。`,'同じ機能のダイアトニックコードを探す：トニック＝Ⅰ・Ⅲm・Ⅵm、サブドミナント＝Ⅳ・Ⅱm、ドミナント＝Ⅴ・Ⅶm7-5。',`その中から、構成音を多く共有するものを選ぶ → ${ans}。`],
+      tip:'代理コードは「3度下のコード」と覚えると見つけやすい。CM7 の3度下は Am7、FM7 の3度下は Dm7。G7 だけは3度上の Bm7-5 が代理になります。'};
+  }
   const {k,j}=p,A=BORROW[j],kf=FLAT_MAJ.has(k),flat=kf||A[4],base=nm(k+MAJ[A[3]],kf),root=nm(k+A[1],flat),ans=root+A[2];
   return {q:`キー ${KEY_NAMES[k]} で「${A[0]}」にあたるコードは？`,opts:fill4(ans,()=>nm(k+rnd(12),flat)+rand(['','m','7'])),ans,key:'th:5',
     why:`キー ${KEY_NAMES[k]} の ${A[0]} は ${ans}。${A[5]}`,
@@ -1849,7 +1959,7 @@ function makeTh(p){
     tip:'♭Ⅵ・♭Ⅶ・Ⅳm は、同じルートのマイナーキーから借りてきたコード。「明るい曲に一瞬だけ暗い色を混ぜる」道具として覚えておくと、作曲で使いやすくなります。'};
 }
 function genTheory(lv){
-  const t=rand(lv===0?[0,3,4]:[0,1,2,3,4,5]);
+  const t=rand(lv===0?[0,3,4]:[0,1,2,3,4,5,6,7]);
   const P={t};
   if(t===0){P.k=rnd(12);P.d=2+rnd(6)}
   if(t===1){P.k=rnd(12);P.suf=rand(['','m','7','M7','m7','dim','aug','sus4','m7-5'])}
@@ -1857,6 +1967,8 @@ function genTheory(lv){
   if(t===3){P.a=rnd(12);P.iv=1+rnd(11)}
   if(t===4){P.i=rnd(NOTE_PAIRS.length)}
   if(t===5){P.k=rand([0,2,5,7,9,4]);P.j=rnd(BORROW.length)}
+  if(t===6){P.x=rand([7,2,9,4,11,0,5])}
+  if(t===7){P.k=rand([0,2,5,7,9,10,3]);P.f=rnd(3)}
   return P;
 }
 function buildQ(p){const q=p.kind==='iv'?makeIv(p):p.kind==='ch'?makeCh(p):makeTh(p);q.p=p;q.level=p.lv??+$('#qLevel').value;return q}
@@ -2476,7 +2588,7 @@ TIPS.sounds={
 function pageSound(toIdx){
   if(S.pageSound===false||!ctx)return;const c=ac(),t=c.currentTime+.02;
   const s=sN(),b=sF('bandpass',900,.9),g=sG(0);b.frequency.setValueAtTime(700,t);b.frequency.exponentialRampToValueAtTime(3800,t+.26);g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.05,t+.07);g.gain.exponentialRampToValueAtTime(.0004,t+.34);s.connect(b);b.connect(g);g.connect(master);s.start(t);s.stop(t+.36);
-  const SC=[72,79,60,62,64,65,67,69,71,72,74,76];const m=SC[toIdx]??72;INST.bell.play(m+12,t+.16,.28).stop(t+1);
+  const SC=[72,79,60,62,64,65,67,69,71,72,74,76,77];const m=SC[toIdx]??72;INST.bell.play(m+12,t+.16,.28).stop(t+1);
 }
 
 /* ===== デザインテーマ ===== */
@@ -2523,12 +2635,107 @@ function moveInd(bar){const on=bar.querySelector('button.on'),ind=bar.querySelec
 function refreshPaneCounts(){SECS.forEach(s=>{const b=document.querySelector(`#${s.id} .panes button[data-p="tasks"] .pc`);if(b)b.textContent=secProgress(s.id).join('/')})}
 function setNavH(){document.documentElement.style.setProperty('--navh',($('nav.tabs').offsetHeight||52)+'px')}
 addEventListener('resize',()=>{setNavH();$$('.panes').forEach(moveInd)});
+/* ===== リハモ（実戦コード理論） ===== */
+const RH_MEL=[[[76,0,2],[79,2,1],[76,3,1]],[[77,0,2],[76,2,1],[74,3,1]],[[74,0,2],[71,2,1],[74,3,1]],[[72,0,4]]];
+const RH_OPT=[
+ [{c:[[0,'',4]],t:'原曲',d:'ダイアトニックのⅠ。いちばん素直な響き。'},
+  {c:[[0,'M7',4]],t:'4和音化',d:'Ⅰに長7度を足した CM7。メロディの E・G はコードトーンのまま、大人っぽい響きに。'},
+  {c:[[9,'m7',4]],t:'代理コード',d:'Ⅰの代わりに、同じトニック機能の Ⅵm7。C と Am7 はド・ミ・ソを共有しているので置き換えられる。少し切なくなる。'},
+  {c:[[4,'m7',4]],t:'代理コード',d:'Ⅲm7 もトニックの代理。メロディの E がルートになり、浮遊感が出る。'},
+  {c:[[0,'M7',2],[9,'7',2]],t:'セカンダリードミナント',d:'次の Dm7 へ強く向かうために、その5度上の A7（Ⅵ7）を後半に挟む。'}],
+ [{c:[[5,'',4]],t:'原曲',d:'サブドミナントのⅣ。'},
+  {c:[[5,'M7',4]],t:'4和音化',d:'FM7 にすると、メロディの E が長7度になり、きらきらした響きになる。'},
+  {c:[[2,'m7',4]],t:'代理コード',d:'Ⅳ の代わりに Ⅱm7。メロディの E が9th（テンション）になり、おしゃれに聴こえる。'},
+  {c:[[5,'m',4]],t:'サブドミナントマイナー',d:'同じルートのマイナーキーから借りた Ⅳm。一瞬だけ切なさが差し込む。'},
+  {c:[[9,'m7',4]],t:'代理コード',d:'Am7 も F と2音（ラ・ド）を共有するけれど、メロディの F が ♭13 になり、Am7 の5度 E と半音でぶつかる。共有音が多くても、メロディとの相性は別に確かめる必要がある例。'}],
+ [{c:[[7,'',4]],t:'原曲',d:'ドミナントのⅤ。'},
+  {c:[[7,'7',4]],t:'4和音化',d:'G7 にすると、Ⅰ へ戻る力が強くなる。'},
+  {c:[[2,'m7',2],[7,'7',2]],t:'ツーファイブ',d:'Ⅴ の前に Ⅱm7 を置いて、Dm7→G7 の流れにする。ジャズでもポップスでも定番。'},
+  {c:[[7,'sus4',2],[7,'7',2]],t:'sus4',d:'Gsus4 でいったんためてから G7 へ。解決のワクワク感が増す。'},
+  {c:[[1,'7',4]],t:'裏コード',d:'G7 と同じ不安定な2音（F と B）を持つ D♭7 で代用。ベースが D♭→C と半音で下がる、おしゃれな解決。メロディの D は ♭9 のテンションになる。'},
+  {c:[[11,'m7-5',4]],t:'代理コード',d:'Ⅶm7-5（Bm7-5）は、G7 の上の4音とほぼ同じなのでドミナントの代理になる。'}],
+ [{c:[[0,'',4]],t:'原曲',d:'Ⅰ で終わる、いちばん安定した終わり方。'},
+  {c:[[0,'M7',4]],t:'4和音化',d:'CM7 で、しっとりした余韻のある終わり方。'},
+  {c:[[9,'m7',4]],t:'偽終止',d:'Ⅴ のあとに Ⅰ ではなく Ⅵm7 へ。メロディの C は短3度になり、「まだ続く」感じが残る。'},
+  {c:[[5,'m',2],[0,'',2]],t:'サブドミナントマイナー終止',d:'Fm→C と進む、感動的な終わり方。バラードのラストの定番。'},
+  {c:[[8,'M7',4]],t:'借用和音',d:'♭ⅥM7（A♭M7）で終えると、ドラマチックで、どこか別の場所へ行ったような余韻になる。'}]
+];
+const RH_PRE=[['原曲',[0,0,0,0]],['4和音にする',[1,1,1,1]],['代理コード',[2,2,5,2]],['ジャズ風',[4,2,4,1]],['切ない',[0,3,1,3]],['ドラマチック',[2,1,2,4]]];
+let rhSel=[0,0,0,0],rhBar=0,rhTimers=[];
+const TENS={1:'♭9',2:'9th',3:'♯9',4:'3rd',5:'11th',6:'♯11',8:'♭13',9:'13th',10:'7th',11:'△7'};
+function rhClass(note,root,suf){
+  const iv=mod(note-root),tones=CHORDS[suf].iv.map(x=>x%12);
+  if(tones.includes(iv))return {k:'ct',l:TONE_LBL[CHORDS[suf].iv.find(x=>x%12===iv)]||'R'};
+  if(suf==='7'&&[1,3,8].includes(iv))return {k:'ten',l:TENS[iv]};
+  if(tones.some(t=>mod(iv-t)===1))return {k:'av',l:TENS[iv]||'半音上'};
+  return {k:'ten',l:TENS[iv]||'—'};
+}
+function rhCheck(bar,opt){
+  const O=RH_OPT[bar][opt],res=[];
+  RH_MEL[bar].forEach(([m,st,len])=>{let acc=0,ch=O.c[0];for(const c of O.c){if(st>=acc&&st<acc+c[2]){ch=c;break}acc+=c[2]}const r=rhClass(m,ch[0],ch[1]);res.push({m,len,ch,...r})});
+  const bad=res.some(x=>x.k==='av'&&x.len>=1),ten=res.some(x=>x.k==='ten');
+  return {res,mark:bad?'av':ten?'ten':'ct'};
+}
+const rhName=c=>nm(c[0],[1,3,8,10].includes(c[0]))+c[1];
+const MARK={ct:['合う','コードトーン'],ten:['色づけ','テンション'],av:['ぶつかる','アボイド']};
+function rhRender(){
+  $('#rhGrid').innerHTML=RH_MEL.map((mel,b)=>{const O=RH_OPT[b][rhSel[b]],ck=rhCheck(b,rhSel[b]);
+    return `<button class="rhbar${b===rhBar?' sel':''}" data-b="${b}"><span class="rhn">${b+1}小節目</span><span class="rhm">♪ ${mel.map(x=>NAMES_S[x[0]%12]).join(' ')}</span><b class="rhc">${O.c.map(rhName).join(' → ')}</b><span class="rht">${O.t}</span><span class="mk ${ck.mark}">${MARK[ck.mark][0]}</span></button>`}).join('');
+  $$('#rhGrid .rhbar').forEach(el=>el.onclick=()=>{rhBar=+el.dataset.b;rhRender()});
+  const b=rhBar;
+  $('#rhOpts').innerHTML=`<p class="sub" style="margin:0 0 6px">${b+1}小節目のコードを選ぶ</p><div class="chips">${RH_OPT[b].map((O,i)=>{const ck=rhCheck(b,i);return `<button class="chip${i===rhSel[b]?' sel':''}" data-i="${i}">${O.c.map(rhName).join('→')}<span class="cmk ${ck.mark}"></span><small> ${O.t}</small></button>`}).join('')}</div>`;
+  $$('#rhOpts .chip').forEach(el=>el.onclick=()=>{rhSel[b]=+el.dataset.i;rhRender();rhPreview(b)});
+  const O=RH_OPT[b][rhSel[b]],ck=rhCheck(b,rhSel[b]);
+  $('#rhInfo').innerHTML=`<b>${O.t}</b>：${O.d}<ul class="rhnotes">${ck.res.map(x=>`<li class="${x.k}">${NAMES_S[x.m%12]} は ${rhName(x.ch)} の <b>${x.l}</b>（${MARK[x.k][1]}）</li>`).join('')}</ul>`;
+  $$('#rhPre .chip').forEach((el,i)=>el.classList.toggle('sel',RH_PRE[i][1].every((v,j)=>v===rhSel[j])));
+}
+function rhStop(){rhTimers.forEach(clearTimeout);rhTimers=[];if(typeof instStop==='function'&&ctx)instStop();$$('#rhGrid .rhbar').forEach(e=>e.classList.remove('now'))}
+function rhPlayBars(sel,bars=[0,1,2,3]){
+  rhStop();const beat=60/88;
+  bars.forEach((b,k)=>rhTimers.push(setTimeout(()=>{
+    const t=ac().currentTime+.05;$$('#rhGrid .rhbar').forEach((e,j)=>e.classList.toggle('now',j===b));
+    let acc=0;RH_OPT[b][sel[b]].c.forEach(([r,suf,len])=>{const rr=r>6?r-12:r;CHORDS[suf].iv.slice(0,4).forEach(i=>nOn('epiano',60+rr+i,t+acc*beat,len*beat*.95,.7));nOn('ebass',36+(r>6?r-12:r),t+acc*beat,len*beat*.9,.9);acc+=len});
+    RH_MEL[b].forEach(([m,st,len])=>nOn('flute',m,t+st*beat,len*beat*.92,.9));
+  },k*4*beat*1000)));
+  rhTimers.push(setTimeout(()=>$$('#rhGrid .rhbar').forEach(e=>e.classList.remove('now')),bars.length*4*beat*1000+200));
+}
+function rhPreview(b){rhPlayBars(rhSel,[b])}
+function rhPlay(){
+  rhPlayBars(rhSel);
+  const checks=rhSel.map((o,b)=>rhCheck(b,o)),techs=rhSel.map((o,b)=>RH_OPT[b][o].t).filter(t=>t!=='原曲');
+  const pre=RH_PRE.findIndex(p=>p[1].every((v,j)=>v===rhSel[j]));
+  track('reharm',{pre,techs,clash:checks.some(c=>c.mark==='av'),good:rhSel.every(o=>o!==0)&&!checks.some(c=>c.mark==='av')});
+}
+function rhInit(){
+  $('#rhPre').innerHTML=RH_PRE.map(([n],i)=>`<button class="chip" data-p="${i}">${n}</button>`).join('');
+  $$('#rhPre .chip').forEach(el=>el.onclick=()=>{rhSel=[...RH_PRE[+el.dataset.p][1]];rhRender();rhPlay()});
+  $('#rhPlay').onclick=rhPlay;$('#rhStop').onclick=rhStop;$('#rhOrig').onclick=()=>rhPlayBars([0,0,0,0]);
+  rhRender();
+}
+Object.assign(DEMO,{
+  passNo:()=>seqChords([[0,'M7'],[2,'m7'],[7,'7'],[0,'M7']]),
+  passDim:()=>seqChords([[0,'M7'],[1,'dim7'],[2,'m7'],[7,'7'],[0,'M7']],.8),
+  pedal:()=>{[[60,64,67],[60,65,69],[62,65,71],[60,64,67]].forEach((up,i)=>{playChord([36],1.8,null,i*0.9,'pluck');playChord(up,.85,null,i*.9,'pad')})},
+  noPedal:()=>seqChords([[0,''],[5,''],[7,''],[0,'']]),
+  domV:()=>seqChords([[2,'m7'],[7,'7'],[0,'M7']],1),
+  domTri:()=>seqChords([[2,'m7'],[1,'7'],[0,'M7']],1),
+  secOk:()=>seqChords([[0,''],[9,'7'],[2,'m7'],[7,'7'],[0,'']],.85),
+  secNg:()=>seqChords([[0,''],[9,'7'],[5,''],[7,'7'],[0,'']],.85),
+  lowTen:()=>playChord([38,40,43,48],1.8),
+  highTen:()=>playChord([36,52,55,59,62],1.8)
+});
+TIPS.reharm={
+  kotsu:[['メロディの長い音から決める','拍の頭や長く伸ばす音が、コードトーンかテンションになるコードを選びます。短い経過音は多少ぶつかっても気になりません。'],['機能をそろえれば流れは崩れない','トニック・サブドミナント・ドミナントの流れを保ったまま中身を入れ替えると、聴き手は違和感なく新しい響きを受け取れます。'],['先にベースラインを描く','ベースが順番に下がる・上がるように選ぶと、どんな差し替えも自然に聴こえます。分数コードも積極的に使えます。']],
+  tech:[['パッシングディミニッシュ','全音離れた2つのコードの間に、半音でつなぐ dim7 を挟みます（C→C♯dim7→Dm7）。ベースが半音で上がり、なめらかになります。',[['▶ そのまま','passNo'],['▶ dim7 を挟む','passDim']]],['ペダルポイント','ベースを同じ音に固定したまま、上のコードだけを変えます。イントロやサビ前で、緊張感や浮遊感が出ます。',[['▶ ベースも動く','noPedal'],['▶ ベースを C に固定','pedal']]],['裏コード','Ⅴ7 を、増4度離れた7th コードに置き換えます。G7→C の代わりに D♭7→C。',[['▶ Dm7→G7→CM7','domV'],['▶ Dm7→D♭7→CM7','domTri']]],['2番やラスサビだけ変える','同じメロディに別のコードを付けると、聴き慣れた部分が新鮮に聴こえます。1番は素直に、2番で代理コード、ラスサビで借用和音、のように段階をつけます。']],
+  taboo:[['メロディと半音でぶつかるコード','メロディの長い音がコードトーンの半音上にあると濁ります（アボイドノート）。リハモ・ラボの「ぶつかる」表示で確かめましょう。'],['セカンダリードミナントの行き先を無視する','A7 は Dm へ向かうためのコード。A7 のあとに Dm 以外が来ると、引っぱられた先が裏切られて不自然になります。',[['▶ A7→Dm7（正しく解決）','secOk'],['▶ A7→F（行き先が違う）','secNg']]],['低い音域でテンションを鳴らす','9th や 13th を低音で鳴らすと濁ります。テンションは中〜高音域に置き、低音はルートにまかせます。',[['▶ 低音でテンション','lowTen'],['▶ テンションを上に','highTen']]],['全部の小節をいじりすぎる','すべてを複雑にすると、メロディのよさが埋もれます。差し替えは「ここぞ」という場所に絞るのが効果的です。']]
+};
+
 /* ===== 起動 ===== */
 paintMascots();
 applyTheme();
 renderTips();renderPagers();
 
-sInitSounds();renderGenres();
+sInitSounds();renderGenres();rhInit();
 setNavH();['sounds',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();
