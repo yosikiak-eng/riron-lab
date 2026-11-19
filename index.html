@@ -265,9 +265,10 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 @keyframes boing{0%{transform:scale(1)}35%{transform:scale(1.18,.86)}70%{transform:scale(.94,1.08)}100%{transform:scale(1)}}
 .vwho{margin:8px 0 0;font-size:12.5px}
 @media (prefers-reduced-motion:reduce){.boing{animation:none}}
-.qfab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom));z-index:40;padding:14px 28px;font-size:16px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.qfab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(28px + env(safe-area-inset-bottom));z-index:90;touch-action:manipulation;padding:14px 28px;font-size:16px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
 body:not([data-route="quiz"]) .qfab{display:none !important}
-body[data-route="quiz"] main{padding-bottom:96px}
+body[data-route="quiz"] main{padding-bottom:110px}
+#qOpts .opt,#qNext{touch-action:manipulation}
 .th .tic{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.18)}.th .tic svg{display:block}
 .th .smp em{margin-right:30px}
 .vprev{display:flex;gap:10px;align-items:center;margin-top:10px}
@@ -1050,7 +1051,7 @@ table.wrap td{white-space:normal}
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 22</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 23</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -2324,6 +2325,16 @@ function renderDots(){
   $('#qDots').innerHTML=Array.from({length:ROUND},(_,j)=>`<i class="${j<round.res.length?(round.res[j]?'ok':'ng'):j===round.res.length&&!qAns?'cur':''}"></i>`).join('');
   $('#qCount').textContent=`${Math.min(round.i+(qAns?0:1),ROUND)} / ${ROUND}問目　連続正解 ${QS.st}`;
 }
+/* iPhone ではスクロールの慣性中のタップが click にならないため、指を離した時点で確実に反応させる */
+function fastTap(el,fn){if(!el||el.__ft)return;el.__ft=1;let sx=0,sy=0,act=false,last=0;
+  el.addEventListener('touchstart',e=>{const t=e.touches[0];sx=t.clientX;sy=t.clientY;act=true},{passive:true});
+  el.addEventListener('touchmove',e=>{const t=e.touches[0];if(Math.hypot(t.clientX-sx,t.clientY-sy)>14)act=false},{passive:true});
+  el.addEventListener('touchcancel',()=>{act=false},{passive:true});
+  el.addEventListener('touchend',e=>{if(!act)return;act=false;if(e.cancelable)e.preventDefault();last=Date.now();if(ctx)stopAll();fn(e)});
+  el.addEventListener('click',e=>{if(Date.now()-last<700)return;fn(e)});
+}
+function qGoNext(){if(qFabLock)return;qFabLock=true;setTimeout(()=>qFabLock=false,350);qNew();const c=$('#qText');if(c){const top=c.getBoundingClientRect().top;const nav=$('nav.tabs'),nb=nav?nav.getBoundingClientRect().bottom:0;if(top<nb+40||top>innerHeight*.6)scrollTo({top:Math.max(0,scrollY+top-nb-90),behavior:'auto'})}}
+let qFabLock=false;
 function qEmpty(msg){Q=null;$('#qFab').hidden=true;$('#qText').textContent=msg;$('#qOpts').innerHTML='';$('#qFb').innerHTML='';$('#qAudio').hidden=true;$('#qNext').hidden=true;$('#qKbWrap').hidden=true}
 function qNew(){
   if(round.i>=ROUND){qResult();return}
@@ -2340,7 +2351,7 @@ function qNew(){
   Q=buildQ(p);
   $('#qText').innerHTML=(tag?`<span class="qtag">${tag}</span>`:'')+Q.q;$('#qAudio').hidden=!Q.ear;$('#qHarm').hidden=!!Q.play;
   $('#qOpts').innerHTML=Q.opts.map(o=>`<button class="opt">${o}</button>`).join('');
-  $$('#qOpts .opt').forEach(b=>b.onclick=()=>qAnswer(b));
+  $$('#qOpts .opt').forEach(b=>fastTap(b,()=>qAnswer(b)));
   renderDots();
   if(Q.ear)qPlay();
 }
@@ -2396,7 +2407,7 @@ function renderWeak(){
 function startQuiz(mode){qModeV=mode;round={i:0,res:[],pts:0};renderQModes();if(location.hash!=='#quiz')location.hash='#quiz';qNew()}
 function qInit(){
   renderQModes();
-  $('#qLevel').onchange=()=>{round={i:0,res:[],pts:0};qNew()};$('#qNext').onclick=qNew;$('#qFab').onclick=()=>{qNew();const c=$('#qText');if(c){const top=c.getBoundingClientRect().top;const nb=($('nav.tabs')||{getBoundingClientRect:()=>({bottom:0})}).getBoundingClientRect().bottom;if(top<nb+60||top>innerHeight*.6)scrollTo({top:scrollY+top-nb-90,behavior:'smooth'})}};$('#qReplay').onclick=qPlay;
+  $('#qLevel').onchange=()=>{round={i:0,res:[],pts:0};qNew()};fastTap($('#qNext'),()=>{if(qFabLock)return;qFabLock=true;setTimeout(()=>qFabLock=false,350);qNew()});fastTap($('#qFab'),qGoNext);$('#qReplay').onclick=qPlay;
   $('#qHarm').onclick=()=>Q&&Q.notes&&playChord(Q.notes,1.6);
   $('#qText').textContent=V('qStart');$('#qAudio').hidden=true;$('#qNext').hidden=false;$('#qNext').textContent='始める';
   renderDots();renderWeak();
