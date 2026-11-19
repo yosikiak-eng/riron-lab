@@ -452,7 +452,25 @@ section.fadein{animation:fadein .25s ease}
 .switch i{position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(51,41,74,.25);transition:transform .15s}
 .switch.on{background:var(--rose)}
 .switch.on i{transform:translateX(20px)}
-@media (prefers-reduced-motion:reduce){*:not(.turnpage):not(.shade):not(.turnwrap){animation:none !important;transition:none !important}.turnwrap::before{animation:none !important}}
+/* wipe */
+.wipe{position:fixed;left:0;right:0;bottom:0;z-index:28;pointer-events:none;background:var(--wc);overflow:hidden;clip-path:inset(0 0 0 100%);animation:wipe .62s cubic-bezier(.7,0,.3,1) forwards}
+.wipe.back{clip-path:inset(0 100% 0 0);animation-name:wipe-b}
+@keyframes wipe{0%{clip-path:inset(0 0 0 100%)}38%{clip-path:inset(0 0 0 0)}55%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 100% 0 0)}}
+@keyframes wipe-b{0%{clip-path:inset(0 100% 0 0)}38%{clip-path:inset(0 0 0 0)}55%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 0 0 100%)}}
+.wipe .lines{position:absolute;left:0;right:0;top:52%;height:65px;transform:translateY(-50%);background:repeating-linear-gradient(to bottom,rgba(51,41,74,.18) 0 1px,transparent 1px 16px)}
+.wipe .wnote{position:absolute;right:22%;width:30px;height:80px;animation:wnote .62s cubic-bezier(.3,1.4,.5,1) both}
+.wipe.back .wnote{animation-name:wnote-b}
+@keyframes wnote{0%{transform:translateX(70px);opacity:0}45%{transform:translateX(0);opacity:1}100%{transform:translateX(-10px);opacity:1}}
+@keyframes wnote-b{0%{transform:translateX(-70px);opacity:0}45%{transform:translateX(0);opacity:1}100%{transform:translateX(10px);opacity:1}}
+.wipe .wtxt{position:absolute;left:28px;top:52%;transform:translateY(-50%);display:flex;flex-direction:column;gap:2px;animation:wtxt .62s cubic-bezier(.2,.8,.3,1) both}
+.wipe .wno{font-family:var(--display);font-size:58px;line-height:1;color:var(--wa)}
+.wipe .wnm{font-family:var(--display);font-size:20px;color:var(--ink);background:var(--wc);padding-right:8px;align-self:flex-start}
+@keyframes wtxt{0%{opacity:0;transform:translate(0,-38%)}40%{opacity:1;transform:translate(0,-50%)}100%{opacity:1;transform:translate(0,-50%)}}
+section.settle{animation:settle .38s cubic-bezier(.2,.8,.3,1)}
+@keyframes settle{from{opacity:.6;transform:translateY(6px)}}
+section.fadein{animation:fadein2 .3s ease}
+@keyframes fadein2{from{opacity:0;transform:translateY(8px)}}
+@media (prefers-reduced-motion:reduce){*:not(.turnpage):not(.shade):not(.turnwrap):not(.wipe):not(.wipe *):not(section){animation:none !important;transition:none !important}.turnwrap::before{animation:none !important}}
 </style>
 </head>
 <body>
@@ -744,7 +762,7 @@ section.fadein{animation:fadein .25s ease}
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 8</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 9</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -1122,11 +1140,11 @@ function renderHome(){
     ${row('練習した日数',S.days.length+'日')}${row('最長連続',(S.best||0)+'日')}${row('クイズの正解数',c.qok)}${row('正答率',(c.qtot?Math.round(c.qok/c.qtot*100):0)+'%')}
     ${row('最高連続正解',c.qbest)}${row('復習ノート',S.wrong.length+'問')}${row('聴いた音程',c.iv.length+' / 13')}${row('鳴らしたコード',c.chord.length+' / 13')}
   </dl></div>
-  <div class="card setrow"><div><b>ページをめくる演出</b><p class="sub" style="margin:0">ステージを移動するときに、楽譜のページをめくる動きを入れます${matchMedia('(prefers-reduced-motion: reduce)').matches?'<br><span style="color:var(--rose)">この端末は「視差効果を減らす」がオンなので、最初はオフにしています</span>':''}</p></div><button class="switch${(S.pageTurn??!matchMedia('(prefers-reduced-motion: reduce)').matches)?' on':''}" id="ptToggle" role="switch" aria-checked="${!!(S.pageTurn??!matchMedia('(prefers-reduced-motion: reduce)').matches)}" aria-label="ページをめくる演出"><i></i></button></div>
-  <div class="card setrow"><div><b>ページをめくる音</b><p class="sub" style="margin:0">ステージを移動するときに、紙の音と小さなチャイムを鳴らします</p></div><button class="switch${S.pageSound===false?'':' on'}" id="psToggle" role="switch" aria-checked="${S.pageSound!==false}" aria-label="ページをめくる音"><i></i></button></div>
+  <div class="card"><b>画面の切り替え</b><p class="sub" style="margin:0 0 8px">ステージを移動するときの演出を選べます${RM()?'（この端末は「視差効果を減らす」がオンです）':''}</p><div class="chips" id="transSel">${[['wipe','五線ワイプ'],['fade','ふんわり'],['turn','ページめくり'],['none','なし']].map(([k,l])=>`<button class="chip${transMode()===k?' sel':''}" data-t="${k}">${l}</button>`).join('')}</div></div>
+  <div class="card setrow"><div><b>切り替えの音</b><p class="sub" style="margin:0">ステージを移動するときに、小さな効果音とチャイムを鳴らします</p></div><button class="switch${S.pageSound===false?'':' on'}" id="psToggle" role="switch" aria-checked="${S.pageSound!==false}" aria-label="切り替えの音"><i></i></button></div>
   <p style="text-align:center;margin-top:24px"><button class="btn quiet" id="resetBtn">記録をリセット</button></p>`;
   $$('.goalsel button').forEach(b=>b.onclick=()=>{S.goal=+b.dataset.g;const t=todayRec();if(!t.goalHit&&t.pts>=S.goal){t.goalHit=1;sfx('badge')}save();renderHome()});
-  $('#ptToggle').onclick=()=>{S.pageTurn=!(S.pageTurn??!matchMedia('(prefers-reduced-motion: reduce)').matches);save();renderHome()};
+  $$('#transSel .chip').forEach(b=>b.onclick=()=>{S.trans=b.dataset.t;save();renderHome()});
   $('#psToggle').onclick=()=>{S.pageSound=S.pageSound===false;save();renderHome()};
   $('#qkRound').onclick=()=>startQuiz(qModeV==='review'||qModeV==='focus'?'interval':qModeV);
   if($('#qkReview'))$('#qkReview').onclick=()=>startQuiz('review');
@@ -1178,9 +1196,24 @@ function makeTurn(fromId,dir){
   page.appendChild(cl);page.appendChild(sh);wrap.appendChild(page);document.body.appendChild(wrap);
   return ()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{wrap.classList.add('go');setTimeout(()=>wrap.remove(),760)}));
 }
+let navTok=0;
+const RM=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+const transMode=()=>S.trans||(RM()?'fade':'wipe');
+function makeWipe(toId,dir){
+  const s=SEC[toId],i=SECS.findIndex(x=>x.id===toId);
+  const soft=s?s.soft:toId==='sounds'?'#F1E6D8':'#F8DCE6',acc=s?s.acc:toId==='sounds'?'#9A6A3A':'#D9658B';
+  const lab=s?String(i+1).padStart(2,'0'):toId==='sounds'?'♪':'Home',name=s?s.n:toId==='sounds'?'楽器の音':'ホーム';
+  const off=s?48-i*8:0;
+  const w=document.createElement('div');w.className='wipe '+dir;w.style.setProperty('--wc',soft);w.style.setProperty('--wa',acc);
+  w.style.top='0px';
+  w.innerHTML=`<div class="lines"></div><svg class="wnote" viewBox="0 0 30 80" style="top:calc(52% + ${off}px - 62px)" aria-hidden="true">${s&&i===0?'<line x1="2" x2="28" y1="62" y2="62" stroke="rgba(51,41,74,.4)" stroke-width="1.4"/>':''}<ellipse cx="15" cy="62" rx="8.5" ry="6.2" transform="rotate(-20 15 62)" fill="${acc}"/><line x1="22.6" x2="22.6" y1="60" y2="20" stroke="${acc}" stroke-width="2.2"/></svg><div class="wtxt"><span class="wno">${lab}</span><span class="wnm">${name}</span></div>`;
+  document.body.appendChild(w);return w;
+}
 function route(){
   const id=curRoute(),idx=ROUTES.indexOf(id),dir=idx>=prevIdx?'fwd':'back',first=prevIdx<0,fromId=prevId;prevIdx=idx;prevId=id;
+  const tok=++navTok;
   const apply=()=>{
+    if(tok!==navTok)return;
     ROUTES.forEach(r=>document.getElementById(r).classList.toggle('show',r===id));
     renderStaffs();
     if(id!=='progressions')progStop();if(id!=='rhythm')rStop();if(id!=='melody')mStop();if(id!=='modulation')tClear();if(id!=='sounds'&&typeof instStop==='function'&&ctx)instStop();
@@ -1191,11 +1224,12 @@ function route(){
   };
   if(first||fromId===id){apply();return}
   pageSound(idx);
-  const calm=!(S.pageTurn??!matchMedia('(prefers-reduced-motion: reduce)').matches);
-  if(calm){apply();const sec=document.getElementById(id);sec.classList.remove('fadein');void sec.offsetWidth;sec.classList.add('fadein');return}
-  const go=makeTurn(fromId,dir);apply();
-  const sec=document.getElementById(id);sec.classList.remove('under');void sec.offsetWidth;sec.classList.add('under');
-  if(go)go();
+  const mode=transMode(),sec=()=>document.getElementById(id);
+  $$('.wipe,.turnwrap').forEach(x=>x.remove());
+  if(mode==='none'){apply();return}
+  if(mode==='fade'){apply();const el=sec();el.classList.remove('fadein');void el.offsetWidth;el.classList.add('fadein');return}
+  if(mode==='turn'){const go=makeTurn(fromId,dir);apply();const el=sec();el.classList.remove('under');void el.offsetWidth;el.classList.add('under');if(go)go();return}
+  const w=makeWipe(id,dir);setTimeout(()=>{apply();const el=sec();el.classList.remove('settle');void el.offsetWidth;el.classList.add('settle')},250);setTimeout(()=>w.remove(),640);
 }
 addEventListener('hashchange',route);
 
