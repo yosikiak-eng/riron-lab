@@ -260,6 +260,16 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 @keyframes floatup{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-30px);opacity:0}}
 #modal{position:fixed;inset:0;background:rgba(51,41,74,.32);display:grid;place-items:center;z-index:100;padding:20px}
 #modal[hidden]{display:none}
+.th .tic{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.18)}.th .tic svg{display:block}
+.th .smp em{margin-right:30px}
+.vprev{display:flex;gap:10px;align-items:center;margin-top:10px}
+.vprev .m{width:46px;height:46px;flex:none}
+.vprev p{margin:0;font-size:14px;background:var(--paper);border-radius:14px;padding:8px 12px}
+:root{--mk-ink:var(--ink);--mk-face:#fff;--mk-cheek:#F6C1D1}
+[data-theme="midnight"],[data-theme="jazz"],[data-theme="neon"],[data-theme="retro"],[data-theme="chalk"],[data-theme="blueprint"]{--mk-face:var(--sheet);--mk-cheek:color-mix(in srgb,var(--rose) 60%,transparent)}
+[data-theme="washi"]{--mk-cheek:color-mix(in srgb,var(--rose) 35%,#fff)}
+[data-theme="mono"]{--mk-cheek:#EBC2C2}
+.mascot .mk{fill:var(--mk-ink)}.mascot .ms{stroke:var(--mk-ink)}.mascot .mf{fill:var(--mk-face);stroke:var(--mk-ink)}.mascot .mc{fill:var(--mk-cheek)}
 [hidden]{display:none !important}
 .mbox{background:var(--sheet);border-radius:22px;padding:26px 22px 22px;text-align:center;width:min(100%,340px);box-shadow:0 20px 50px rgba(51,41,74,.2)}
 .mbox .mlabel{font-size:13px;color:var(--mute)}
@@ -973,7 +983,7 @@ table.wrap td{white-space:normal}
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 16</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 17</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -983,13 +993,13 @@ table.wrap td{white-space:normal}
 /* ===== マスコット（オリジナル） ===== */
 function mascot(mood='happy'){
   const I='#33294A';
-  const ln=(d,w=2.6)=>`<path d="${d}" stroke="${I}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
-  let eyes=`<circle cx="34" cy="62" r="3.2" fill="${I}"/><circle cx="54" cy="62" r="3.2" fill="${I}"/>`,mouth=ln('M40 70 q4 4 8 0',2.2),extra='';
+  const ln=(d,w=2.6)=>`<path d="${d}" class="ms" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+  let eyes=`<circle cx="34" cy="62" r="3.2" class="mk"/><circle cx="54" cy="62" r="3.2" class="mk"/>`,mouth=ln('M40 70 q4 4 8 0',2.2),extra='';
   if(mood==='happy')eyes=ln('M30 63 q4 -5 8 0')+ln('M50 63 q4 -5 8 0');
-  if(mood==='wink')eyes=`<circle cx="34" cy="62" r="3.2" fill="${I}"/>`+ln('M50 63 q4 -5 8 0');
-  if(mood==='wow'){eyes=`<circle cx="34" cy="61" r="3.7" fill="${I}"/><circle cx="54" cy="61" r="3.7" fill="${I}"/><circle cx="35.3" cy="59.7" r="1.2" fill="#fff"/><circle cx="55.3" cy="59.7" r="1.2" fill="#fff"/>`;mouth=`<ellipse cx="44" cy="71.5" rx="3.3" ry="3.8" fill="${I}"/>`}
+  if(mood==='wink')eyes=`<circle cx="34" cy="62" r="3.2" class="mk"/>`+ln('M50 63 q4 -5 8 0');
+  if(mood==='wow'){eyes=`<circle cx="34" cy="61" r="3.7" class="mk"/><circle cx="54" cy="61" r="3.7" class="mk"/><circle cx="35.3" cy="59.7" r="1.2" fill="#fff"/><circle cx="55.3" cy="59.7" r="1.2" fill="#fff"/>`;mouth=`<ellipse cx="44" cy="71.5" rx="3.3" ry="3.8" class="mk"/>`}
   if(mood==='oops'){eyes=ln('M30 61 l7 2.5')+ln('M58 61 l-7 2.5');mouth=ln('M39 72 q2.5 -2.5 5 0 q2.5 2.5 5 0',2);extra=`<path d="M74 46 q4 6 0 8.5 q-4 -2.5 0 -8.5z" fill="#7FB2DE"/>`}
-  return `<svg class="mascot" viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true"><rect x="66" y="12" width="4.5" height="50" rx="2.2" fill="${I}"/><path d="M70.5 13 c9 3 14 10 11 22 c-2.5 -7 -6 -9.5 -11 -10.5z" fill="${I}"/><ellipse cx="44" cy="65" rx="28" ry="23" fill="#fff" stroke="${I}" stroke-width="3"/><ellipse cx="26" cy="71" rx="5" ry="3" fill="#F6C1D1"/><ellipse cx="62" cy="71" rx="5" ry="3" fill="#F6C1D1"/>${eyes}${mouth}${extra}</svg>`;
+  return `<svg class="mascot" viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true"><rect x="66" y="12" width="4.5" height="50" rx="2.2" class="mk"/><path d="M70.5 13 c9 3 14 10 11 22 c-2.5 -7 -6 -9.5 -11 -10.5z" class="mk"/><ellipse class="mf" cx="44" cy="65" rx="28" ry="23" stroke-width="3"/><ellipse cx="26" cy="71" rx="5" ry="3" class="mc"/><ellipse cx="62" cy="71" rx="5" ry="3" class="mc"/>${eyes}${mouth}${extra}</svg>`;
 }
 function paintMascots(root=document){root.querySelectorAll('[data-mascot]').forEach(el=>el.innerHTML=mascot(el.dataset.mascot))}
 
@@ -1102,6 +1112,41 @@ const MISSIONS=[
 const LEVELS=[[0,'Grave','とても遅く、重々しく'],[80,'Largo','幅広く、ゆるやかに'],[200,'Adagio','ゆるやかに'],[360,'Andante','歩くような速さで'],[560,'Moderato','中くらいの速さで'],[800,'Allegretto','やや速く'],[1080,'Allegro','速く'],[1400,'Vivace','いきいきと速く'],[1720,'Presto','急速に'],[2000,'Prestissimo','できるかぎり速く']];
 const levelOf=xp=>{let l=0;LEVELS.forEach((L,i)=>{if(xp>=L[0])l=i});return l};
 
+/* ===== 話し方 ===== */
+const VOICES=[['cute','かわいい'],['polite','ていねい'],['friend','フレンドリー'],['cool','クール'],['kansai','関西弁']];
+const VO={
+ cute:{sample:'正解だよ♪ その調子〜！',praise:['正解だよ♪','すごい、ばっちり！','その調子だよ〜','いい耳してるね♪','天才かも…！'],miss:'おしい〜！',
+  greetFirst:'はじめまして、おんぷっぴだよ♪ 1日ちょっとずつで大丈夫。今日の目標ぶんポイントをためて、レコードを1周させよっ！',greetGoal:'今日の目標、もう達成してるよ！えらいっ♪ ここからは気になるところを好きなだけ練習しよ〜',greetStreak:(n,r)=>`${n}日連続だよ、すごい！今日もあと ${r}pt で記録がのびるよ♪`,greetBack:'おかえり〜！今日の目標まで、クイズ1ラウンドくらいだよ♪',
+  mission:'課題クリア♪',goalT:'今日の目標たっせい！',goalP:g=>`${g}pt たまったよ♪ ホームのレコードが回ってるよ〜`,levelL:'テンポが上がったよ♪',cont:'つづける',close:'とじる',
+  stampH:'このステージの課題、ぜんぶクリア！',stampP:'スタンプをぽんっ♪ 譜面に音符がひとつ増えたよ。ボーナス 50pt',allL:'全ステージ修了！',allH:'譜面がぜんぶ埋まったよ〜！',allP:'ホームで、書き上げた旋律を最後まで聴けるよ♪',
+  r10:'全問正解！ほんとにすごいっ♪',r8:'かなり身についてるね！',r5:'あと少しで安定しそう！まちがえた問題は復習ノートに入れておいたよ',r0:'まちがえた問題は復習ノートに入れておいたよ。解説の「考え方」を読んでから復習すると、ちゃんと覚えられるよ♪',
+  revEmpty:'復習ノートはからっぽだよ♪ クイズでまちがえた問題がここにたまって、2回続けて正解すると卒業するよ',focusEmpty:'まだ苦手は見つかってないよ。音程かコードの耳トレを何問か解くと、苦手だけを集中して練習できるようになるよ',roundEnd:'ラウンド終了♪',streak:n=>`${n}問連続！`},
+ polite:{sample:'正解です。その調子で進めましょう。',praise:['正解','よくできました','その調子','いい耳です'],miss:'惜しい',
+  greetFirst:'はじめまして、おんぷっぴです。1日少しずつで大丈夫。今日の目標のポイントをためて、レコードを1周させましょう。',greetGoal:'今日の目標は達成済みです。この先は好きなだけ、気になるところを練習しましょう。',greetStreak:(n,r)=>`${n}日続いています。今日も ${r}pt ためれば記録が伸びます。`,greetBack:'おかえりなさい。今日の目標まで、クイズ1ラウンドくらいです。',
+  mission:'課題クリア',goalT:'今日の目標を達成',goalP:g=>`${g}pt たまりました。ホームのレコードが回っています`,levelL:'テンポが上がりました',cont:'続ける',close:'閉じる',
+  stampH:'課題をすべて終えました',stampP:'スタンプを押しました。譜面に音符がひとつ書き込まれます。ボーナス 50pt',allL:'全ステージ修了',allH:'譜面がすべて埋まりました',allP:'ホームで、書き上げた旋律を最後まで聴けます。',
+  r10:'全問正解です。',r8:'かなり身についています。',r5:'あと少しで安定します。間違えた問題は復習ノートに入れました。',r0:'間違えた問題は復習ノートに入れました。解説の「考え方」を読み直してから復習すると定着します。',
+  revEmpty:'復習ノートは空です。クイズで間違えた問題がここにたまり、2回続けて正解すると卒業します。',focusEmpty:'まだ苦手が見つかっていません。音程かコードの耳トレを何問か解くと、正答率の低いものだけを集中して練習できるようになります。',roundEnd:'ラウンド終了',streak:n=>`${n}問連続`},
+ friend:{sample:'正解！やるじゃん、その調子！',praise:['正解！','やるじゃん！','いいね、その調子！','耳いいね！','さすが！'],miss:'あー、惜しい！',
+  greetFirst:'はじめまして、おんぷっぴ！1日ちょっとずつでいいからね。今日の目標ぶんポイントためて、レコード1周させよう！',greetGoal:'今日の目標はもうクリア！あとは好きなところを好きなだけやっちゃおう',greetStreak:(n,r)=>`${n}日連続！今日もあと ${r}pt で記録更新だよ`,greetBack:'おかえり！今日の目標まで、クイズ1ラウンドくらいだよ',
+  mission:'課題クリア！',goalT:'今日の目標クリア！',goalP:g=>`${g}pt たまった！ホームのレコードが回ってるよ`,levelL:'テンポアップ！',cont:'続ける',close:'閉じる',
+  stampH:'このステージ、課題ぜんぶクリア！',stampP:'スタンプゲット！譜面に音符がひとつ増えたよ。ボーナス 50pt',allL:'全ステージ修了！',allH:'譜面がぜんぶ埋まった！',allP:'ホームで、完成した旋律を最後まで聴けるよ。',
+  r10:'全問正解！完璧！',r8:'かなり身についてるじゃん！',r5:'もうちょいで安定しそう！間違えた問題は復習ノートに入れといたよ',r0:'間違えた問題は復習ノートに入れといたよ。解説の「考え方」を読んでから復習すると覚えやすいよ',
+  revEmpty:'復習ノートは空っぽ！クイズで間違えた問題がここにたまって、2回連続で正解したら卒業だよ',focusEmpty:'まだ苦手は見つかってないよ。音程かコードの耳トレを何問か解くと、苦手だけ集中練習できるようになるよ',roundEnd:'ラウンド終了！',streak:n=>`${n}問連続！`},
+ cool:{sample:'正解。悪くない。',praise:['正解。','悪くない。','その調子。','いい耳だ。'],miss:'違う。',
+  greetFirst:'おんぷっぴだ。毎日少しずつでいい。目標のポイントをためて、レコードを1周させよう。',greetGoal:'今日の目標は達成済み。ここから先は自由に練習しよう。',greetStreak:(n,r)=>`${n}日連続。あと ${r}pt で記録が伸びる。`,greetBack:'来たか。今日の目標まで、クイズ1ラウンドほどだ。',
+  mission:'課題クリア',goalT:'今日の目標、達成。',goalP:g=>`${g}pt 到達。レコードが回っている。`,levelL:'テンポが上がった。',cont:'続ける',close:'閉じる',
+  stampH:'課題、すべて完了。',stampP:'スタンプを押した。譜面に音符がひとつ増える。ボーナス 50pt',allL:'全ステージ修了',allH:'譜面が埋まった。',allP:'ホームで、完成した旋律を最後まで聴ける。',
+  r10:'全問正解。見事だ。',r8:'かなり身についている。',r5:'あと少しで安定する。間違えた問題は復習ノートに入れた。',r0:'間違えた問題は復習ノートに入れた。解説の「考え方」を読み直してから復習するといい。',
+  revEmpty:'復習ノートは空だ。間違えた問題がここにたまり、2回続けて正解すると卒業する。',focusEmpty:'苦手はまだ見つかっていない。音程かコードの耳トレを何問か解くと、苦手だけを練習できる。',roundEnd:'ラウンド終了',streak:n=>`${n}問連続`},
+ kansai:{sample:'正解や！ええやん、その調子やで！',praise:['正解や！','ええやん！','その調子やで！','ええ耳しとるなあ！','さすがやわ！'],miss:'あー、惜しいわ〜',
+  greetFirst:'はじめまして、おんぷっぴやで！1日ちょっとずつでええからな。今日の目標ぶんポイントためて、レコード1周させよか！',greetGoal:'今日の目標はもう達成しとるで！あとは好きなとこ、好きなだけ練習しよか',greetStreak:(n,r)=>`${n}日連続やん、すごいわ！今日もあと ${r}pt で記録のびるで`,greetBack:'おかえり〜！今日の目標まで、クイズ1ラウンドくらいやで',
+  mission:'課題クリアや！',goalT:'今日の目標、達成や！',goalP:g=>`${g}pt たまったで！ホームのレコード回っとるわ`,levelL:'テンポ上がったで！',cont:'続ける',close:'閉じる',
+  stampH:'このステージの課題、ぜんぶ終わったで！',stampP:'スタンプ押しといたで。譜面に音符がひとつ増えたわ。ボーナス 50pt',allL:'全ステージ修了や！',allH:'譜面ぜんぶ埋まったで！',allP:'ホームで、書き上げた旋律を最後まで聴けるで。',
+  r10:'全問正解！ほんまにすごいわ！',r8:'かなり身についとるやん！',r5:'あとちょっとで安定しそうやな。間違えた問題は復習ノートに入れといたで',r0:'間違えた問題は復習ノートに入れといたで。解説の「考え方」読んでから復習したら、ちゃんと覚えられるわ',
+  revEmpty:'復習ノートは空っぽやで。クイズで間違えた問題がここにたまって、2回続けて正解したら卒業や',focusEmpty:'まだ苦手は見つかってへんで。音程かコードの耳トレを何問か解いたら、苦手だけ集中して練習できるようになるわ',roundEnd:'ラウンド終了や！',streak:n=>`${n}問連続や！`}
+};
+const V=k=>{const v=(VO[S.voice]||VO.cute)[k];return v===undefined?VO.polite[k]:v};
 /* ===== 保存 ===== */
 const SKEY='ongaku-riron-lab-v2';
 const fresh=()=>({xp:0,done:{},badges:{},daily:{date:'',pts:0,goalHit:0},days:[],goal:30,best:0,wrong:[],qstat:{},c:{keys:0,pcs:[],ds:{},bsc:[],perfect:0,chrom:0,demo:[],lens:[],four:0,eight:0,fastBars:0,iv:[],ivRoots:[],scale:[],scRoots:[],rel:[],chord:[],chRoots:[],cmp:0,diaMaj:{},diaMin:{},dia7:[],cad:[],prog:[],progKey:[],fastLoops:0,mel6:0,melBack:[],melGood:0,gen:0,mod:[],homo:[],app:[],appKeys:[],qok:0,qtot:0,qbest:0,qm:{interval:0,chord:0,theory:0},qIv:0,qCh:0,qHard:0,rhPre:[],rhTech:[],rhClash:0,rhGood:0}});
@@ -1153,10 +1198,7 @@ function tone(m,t,dur,vel=1,type='pluck',toMaster=false){
 function noise(){if(!noiseBuf){const c=ac();noiseBuf=c.createBuffer(1,c.sampleRate*0.5,c.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}return noiseBuf}
 function drum(type,t){
   const c=ac();
-  if(type===0){/* キック：胴鳴り＋アタックのクリック */
-    const o=c.createOscillator(),g=c.createGain(),ws=c.createWaveShaper(),pg=c.createGain();o.type='sine';o.frequency.setValueAtTime(190,t);o.frequency.exponentialRampToValueAtTime(52,t+.07);o.frequency.exponentialRampToValueAtTime(43,t+.3);
-    pg.gain.value=1.6;ws.curve=dist();g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.62,t+.002);g.gain.setTargetAtTime(.0001,t+.06,.09);o.connect(pg);pg.connect(ws);ws.connect(g);g.connect(dest());o.start(t);o.stop(t+.55);
-    const n=c.createBufferSource(),hp=c.createBiquadFilter(),ng=c.createGain();n.buffer=noise();hp.type='highpass';hp.frequency.value=2500;ng.gain.setValueAtTime(.35,t);ng.gain.exponentialRampToValueAtTime(.001,t+.012);n.connect(hp);hp.connect(ng);ng.connect(dest());n.start(t);n.stop(t+.03);return}
+  if(type===0){kick(t,{f0:260,f1:54,f2:47,sw:.04,hold:.04,dec:.085,click:1,sat:1.8,lvl:.95});return}
   if(type==='click'||type==='accent'){const o=c.createOscillator(),g=c.createGain();o.frequency.value=type==='accent'?2000:1400;g.gain.setValueAtTime(0.5,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.06);o.connect(g);g.connect(dest());o.start(t);o.stop(t+0.08);return}
   if(type===2){metal(t,.055,.4);const s=sN(),h=sF('highpass',8500),g=sG(0);g.gain.setValueAtTime(.22,t);g.gain.exponentialRampToValueAtTime(.001,t+.04);s.connect(h);h.connect(g);g.connect(vout(0,.18));s.start(t);s.stop(t+.06);return}
   const s=c.createBufferSource();s.buffer=noise();const f=c.createBiquadFilter(),g=c.createGain(),out=vout(type===1?.22:.3);
@@ -1259,19 +1301,19 @@ function track(type,v){
 }
 function gainXP(n){
   const before=levelOf(S.xp);S.xp+=n;floatXP(n);dayTick(n);const after=levelOf(S.xp);
-  if(after>before)queueModal({sound:'level',html:`<div class="mlabel">テンポが上がりました</div><div class="m">${mascot('wow')}</div><div class="tempo-big">${LEVELS[after][1]}</div><p>Lv.${after+1}　${LEVELS[after][2]}</p><button class="btn primary" data-close>続ける</button>`});
+  if(after>before)queueModal({sound:'level',html:`<div class="mlabel">${V('levelL')}</div><div class="m">${mascot('wow')}</div><div class="tempo-big">${LEVELS[after][1]}</div><p>Lv.${after+1}　${LEVELS[after][2]}</p><button class="btn primary" data-close>${V('cont')}</button>`});
 }
 function checkMissions(){
-  MISSIONS.forEach(m=>{if(S.done[m.id])return;const [a,b]=m.p(S.c);if(a>=b){S.done[m.id]=1;gainXP(m.xp);toast('課題クリア',m.t,m.xp);sfx('mission')}});
+  MISSIONS.forEach(m=>{if(S.done[m.id])return;const [a,b]=m.p(S.c);if(a>=b){S.done[m.id]=1;gainXP(m.xp);toast(V('mission'),m.t,m.xp);sfx('mission')}});
   SECS.forEach(s=>{
     if(S.badges[s.id])return;
     if(MISSIONS.filter(m=>m.sec===s.id).every(m=>S.done[m.id])){
       S.badges[s.id]=1;
-      queueModal({sound:'badge',conf:70,html:`<div class="mlabel">ステージ${NUM(s.id)}「${s.n}」</div><div class="slot">${stampHTML(s,'lg',false,true)}</div><h4>課題をすべて終えました</h4><p>スタンプを押しました。譜面に音符がひとつ書き込まれます。ボーナス 50pt</p><button class="btn primary" data-close>閉じる</button>`});
+      queueModal({sound:'badge',conf:70,html:`<div class="mlabel">ステージ${NUM(s.id)}「${s.n}」</div><div class="slot">${stampHTML(s,'lg',false,true)}</div><h4>${V('stampH')}</h4><p>${V('stampP')}</p><button class="btn primary" data-close>${V('close')}</button>`});
       gainXP(50);
     }
   });
-  if(!S.badges.all&&SECS.every(s=>S.badges[s.id])){S.badges.all=1;queueModal({sound:'level',conf:140,html:`<div class="mlabel">全ステージ修了</div><div class="m">${mascot('wow')}</div><h4>譜面がすべて埋まりました</h4><p>ホームで、書き上げた旋律を最後まで聴けます。</p><button class="btn primary" data-close>閉じる</button>`})}
+  if(!S.badges.all&&SECS.every(s=>S.badges[s.id])){S.badges.all=1;queueModal({sound:'level',conf:140,html:`<div class="mlabel">${V('allL')}</div><div class="m">${mascot('wow')}</div><h4>${V('allH')}</h4><p>${V('allP')}</p><button class="btn primary" data-close>${V('close')}</button>`})}
 }
 /* ===== 進捗の描画 ===== */
 function lvInfo(){const l=levelOf(S.xp);const cur=LEVELS[l][0],nx=LEVELS[l+1]?.[0];const pct=nx?Math.round((S.xp-cur)/(nx-cur)*100):100;return {l,pct,need:nx?nx-S.xp:0,title:LEVELS[l][1],gloss:LEVELS[l][2]}}
@@ -1312,7 +1354,7 @@ function dayTick(n){
   const d=todayRec();d.pts+=n;
   if(!S.days.includes(d.date)){S.days.push(d.date);if(S.days.length>400)S.days=S.days.slice(-400)}
   S.best=Math.max(S.best||0,streakDays());
-  if(!d.goalHit&&d.pts>=S.goal){d.goalHit=1;setTimeout(()=>{toast('今日の目標を達成',`${S.goal}pt たまりました。ホームのレコードが回っています`,0);sfx('badge')},400)}
+  if(!d.goalHit&&d.pts>=S.goal){d.goalHit=1;setTimeout(()=>{toast(V('goalT'),V('goalP')(S.goal),0);sfx('badge')},400)}
 }
 function streakDays(){const d=new Date();if(!S.days.includes(ymd(d)))d.setDate(d.getDate()-1);let n=0;while(S.days.includes(ymd(d))){n++;d.setDate(d.getDate()-1)}return n}
 function recordSVG(pct){
@@ -1333,9 +1375,7 @@ function renderHome(){
   const L=lvInfo();const total=MISSIONS.length,done=MISSIONS.filter(m=>S.done[m.id]).length;
   const nextM=MISSIONS.find(m=>!S.done[m.id]);const c=S.c;const cleared=SECS.filter(s=>S.badges[s.id]).length;
   const d=todayRec(),pct=Math.round(d.pts/S.goal*100),sk=streakDays();
-  const greet=done===0&&!S.days.length?'はじめまして、おんぷっぴです。1日少しずつで大丈夫。今日の目標のポイントをためて、レコードを1周させましょう。':
-    d.goalHit?'今日の目標は達成済みです。この先は好きなだけ、気になるところを練習しましょう。':
-    sk?`${sk}日続いています。今日も ${Math.max(0,S.goal-d.pts)}pt ためれば記録が伸びます。`:'おかえりなさい。今日の目標まで、クイズ1ラウンドくらいです。';
+  const greet=done===0&&!S.days.length?V('greetFirst'):d.goalHit?V('greetGoal'):sk?V('greetStreak')(sk,Math.max(0,S.goal-d.pts)):V('greetBack');
   const wd=['日','月','火','水','木','金','土'];const week=Array.from({length:7},(_,i)=>{const x=new Date();x.setDate(x.getDate()-6+i);const k=ymd(x);return `<span class="${S.days.includes(k)?'on':''}${i===6?' now':''}"><i></i>${i===6?'今日':wd[x.getDay()]}</span>`}).join('');
   const row=(k,v)=>`<div><dt>${k}</dt><dd>${v}</dd></div>`;
   const tip=HITOKOTO[Math.floor(Date.now()/864e5)%HITOKOTO.length];
@@ -1376,13 +1416,15 @@ function renderHome(){
   </dl></div>
   </div>
   <div class="pw" data-pane="settings">
-  <div class="card"><b>デザイン</b><p class="sub" style="margin:0">画面の色と文字の雰囲気を選べます</p>${[...new Set(THEMES.map(t=>t.g))].map(g=>`<p class="tgen">${g}</p><div class="themes">${THEMES.filter(t=>t.g===g).map(t=>`<button class="th${curTheme().id===t.id?' sel':''}" data-th="${t.id}" data-theme="${t.id}"><span class="smp"><span>ドレミ</span><i></i><em></em></span><b>${t.n}</b><small>${t.d}</small></button>`).join('')}</div>`).join('')}</div>
+  <div class="card"><b>話し方</b><p class="sub" style="margin:0 0 8px">おんぷっぴの話し方を選べます。解説の文章はそのままです</p><div class="chips" id="voiceSel">${VOICES.map(([k,l])=>`<button class="chip${(S.voice||'cute')===k?' sel':''}" data-v="${k}">${l}</button>`).join('')}</div><div class="greetline vprev"><div class="m">${mascot('happy')}</div><p>${V('sample')}</p></div></div>
+  <div class="card"><b>デザイン</b><p class="sub" style="margin:0">画面の色と文字の雰囲気を選べます。アプリのアイコンもテーマに合わせて変わります</p><p class="sub" style="margin:4px 0 0;font-size:12px">ホーム画面に追加済みのアイコンは、iPhone の仕組み上あとから自動では変わりません。新しいテーマのアイコンにしたいときは、テーマを選んでから一度削除して追加し直してください。</p>${[...new Set(THEMES.map(t=>t.g))].map(g=>`<p class="tgen">${g}</p><div class="themes">${THEMES.filter(t=>t.g===g).map(t=>`<button class="th${curTheme().id===t.id?' sel':''}" data-th="${t.id}" data-theme="${t.id}"><span class="tic">${iconSVG(t,k=>`var(${k})`)}</span><span class="smp"><span>ドレミ</span><i></i><em></em></span><b>${t.n}</b><small>${t.d}</small></button>`).join('')}</div>`).join('')}</div>
   <div class="card"><b>画面の切り替え</b><p class="sub" style="margin:0 0 8px">ステージを移動するときの演出を選べます${RM()?'（この端末は「視差効果を減らす」がオンです）':''}</p><div class="chips" id="transSel">${[['wipe','五線ワイプ'],['fade','ふんわり'],['turn','ページめくり'],['none','なし']].map(([k,l])=>`<button class="chip${transMode()===k?' sel':''}" data-t="${k}">${l}</button>`).join('')}</div></div>
   <div class="card setrow"><div><b>切り替えの音</b><p class="sub" style="margin:0">ステージを移動するときに、小さな効果音とチャイムを鳴らします</p></div><button class="switch${S.pageSound===false?'':' on'}" id="psToggle" role="switch" aria-checked="${S.pageSound!==false}" aria-label="切り替えの音"><i></i></button></div>
   <p style="text-align:center;margin-top:24px"><button class="btn quiet" id="resetBtn">記録をリセット</button></p>
   </div>`;
   $$('.goalsel button').forEach(b=>b.onclick=()=>{S.goal=+b.dataset.g;const t=todayRec();if(!t.goalHit&&t.pts>=S.goal){t.goalHit=1;sfx('badge')}save();renderHome()});
   $$('.themes .th').forEach(b=>b.onclick=()=>{S.theme=b.dataset.th;save();applyTheme();renderProgress();renderTips&&0});
+  $$('#voiceSel .chip').forEach(b=>b.onclick=()=>{S.voice=b.dataset.v;save();renderHome()});
   $$('#transSel .chip').forEach(b=>b.onclick=()=>{S.trans=b.dataset.t;save();renderHome()});
   $('#psToggle').onclick=()=>{S.pageSound=S.pageSound===false;save();renderHome()};
   $('#qkRound').onclick=()=>startQuiz(qModeV==='review'||qModeV==='focus'?'interval':qModeV);
@@ -1860,7 +1902,7 @@ const ROUND=10;let round={i:0,res:[],pts:0};
 const rnd=n=>Math.floor(Math.random()*n);
 const IV_POOL=[[2,4,5,7,12],[1,2,3,4,5,7,8,9,10,11,12],[1,2,3,4,5,6,7,8,9,10,11,12]];
 const CH_POOL=[['','m'],['','m','dim','aug','sus4'],['','m','7','M7','m7','dim','aug','sus4','m7-5']];
-const PRAISE=['正解','よくできました','その調子','いい耳です'];
+
 const IV_GROUP={1:'こすれる',2:'こすれる',10:'こすれる',11:'こすれる',3:'暗い',8:'暗い',4:'明るい',9:'明るい',5:'空っぽ',7:'空っぽ',12:'空っぽ',6:'落ち着かない'};
 const IV_PAIR={1:2,2:1,3:4,4:3,5:7,7:5,6:7,8:9,9:8,10:11,11:10,12:11};
 const IV_SONG={1:'映画「ジョーズ」のテーマの最初の2音',2:'「ハッピーバースデー」の“ピー→バー”',3:'「グリーンスリーブス」の最初の2音',4:'「聖者の行進」の最初の2音',5:'ワーグナー「結婚行進曲」の最初の2音',6:'「ウエスト・サイド物語」の「マリア」の最初の2音',7:'「きらきら星」の“き→ら”',9:'「マイ・ボニー」の最初の2音',10:'「スター・トレック」（初代）のテーマの最初の2音',12:'「虹の彼方に」の最初の2音'};
@@ -2012,8 +2054,8 @@ function qNew(){
   if(round.i>=ROUND){qResult();return}
   qAns=false;const lv=+$('#qLevel').value;$('#qFb').innerHTML='';$('#qKbWrap').hidden=true;$('#qNext').hidden=true;
   let p,tag='';
-  if(qModeV==='review'){if(!S.wrong.length){qEmpty('復習ノートは空です。クイズで間違えた問題がここにたまり、2回続けて正解すると卒業します。');return}p=rand(S.wrong).p;tag='復習'}
-  else if(qModeV==='focus'){const weak=weakList().filter(x=>x.rate<.7);if(!weak.length){qEmpty('まだ苦手が見つかっていません。音程かコードの耳トレを何問か解くと、正答率の低いものだけを集中して練習できるようになります。');return}
+  if(qModeV==='review'){if(!S.wrong.length){qEmpty(V('revEmpty'));return}p=rand(S.wrong).p;tag='復習'}
+  else if(qModeV==='focus'){const weak=weakList().filter(x=>x.rate<.7);if(!weak.length){qEmpty(V('focusEmpty'));return}
     const w=rand(weak.slice(0,4)),v=w.k.split(':')[1];p=w.k.startsWith('iv')?{kind:'iv',r:55+rnd(12),iv:+v,lv:2}:{kind:'ch',r:52+rnd(12),s:v,lv:2};tag='苦手'}
   else if(qModeV==='interval')p={kind:'iv',r:55+rnd(12),iv:rand(IV_POOL[lv]),lv};
   else if(qModeV==='chord')p={kind:'ch',r:52+rnd(12),s:rand(CH_POOL[lv]),lv};
@@ -2031,7 +2073,7 @@ function qPlay(){if(!Q)return;if(Q.play){stopAll();Q.play();return}if(Q.chord)pl
 function expHTML(ok,chosen,gain,bonus){
   const used=new Set();
   return `<div class="exp"><div class="verdict"><div class="m">${mascot(ok?(bonus?'wow':'happy'):'oops')}</div><div>`+
-   (ok?`<b>${rand(PRAISE)}<span class="pt">+${gain}pt</span>${bonus?`<span class="streak">${QS.st}問連続</span>`:''}</b>`:`<b>惜しい</b><span>あなたの答え：${chosen}</span>`)+
+   (ok?`<b>${rand(V('praise'))}<span class="pt">+${gain}pt</span>${bonus?`<span class="streak">${V('streak')(QS.st)}</span>`:''}</b>`:`<b>${V('miss')}</b><span>あなたの答え：${chosen}</span>`)+
    `<span>正解：<strong>${Q.ans}</strong></span></div></div>`+
    `<h4>解説</h4><p>${linkTerms(Q.why,used)}</p><h4>答えまでの考え方</h4><ol>${Q.steps.map(s=>`<li>${linkTerms(s,used)}</li>`).join('')}</ol>`+
    (Q.tip?`<p class="tipline">${linkTerms(Q.tip,used)}</p>`:'')+
@@ -2063,8 +2105,8 @@ function qAnswer(b){
 }
 function qResult(){
   const ok=round.res.filter(x=>x).length;if(ok===ROUND)track('perfect',1);
-  const msg=ok===ROUND?'全問正解です。':ok>=8?'かなり身についています。':ok>=5?'あと少しで安定します。間違えた問題は復習ノートに入れました。':'間違えた問題は復習ノートに入れました。解説の「考え方」を読み直してから復習すると定着します。';
-  Q=null;$('#qText').textContent='ラウンド終了';$('#qOpts').innerHTML='';$('#qAudio').hidden=true;$('#qKbWrap').hidden=true;$('#qNext').hidden=true;
+  const msg=V(ok===ROUND?'r10':ok>=8?'r8':ok>=5?'r5':'r0');
+  Q=null;$('#qText').textContent=V('roundEnd');$('#qOpts').innerHTML='';$('#qAudio').hidden=true;$('#qKbWrap').hidden=true;$('#qNext').hidden=true;
   $('#qFb').innerHTML=`<div class="result"><div class="m">${mascot(ok>=8?'wow':ok>=5?'happy':'oops')}</div><p class="rbig"><b>${ok}</b> / ${ROUND}問正解</p><p class="sub">このラウンドで ${round.pts}pt。${msg}</p><div class="ctrl" style="justify-content:center"><button class="btn primary" id="qAgain">もう1ラウンド</button>${S.wrong.length?`<button class="btn" id="qRev">復習ノートを解く（${S.wrong.length}問）</button>`:''}</div></div>`;
   $('#qAgain').onclick=()=>{round={i:0,res:[],pts:0};qNew()};
   if($('#qRev'))$('#qRev').onclick=()=>{qModeV='review';round={i:0,res:[],pts:0};renderQModes();qNew()};
@@ -2192,6 +2234,17 @@ function sVoice(srcs,amp,t,{a=.005,peak=.3,s=1,d=.3,dec=0},rel=.2){
 }
 const ksCache={};
 function ksBuf(m,fb,br){const key=m+'_'+fb+'_'+br;if(ksCache[key])return ksCache[key];const c=ac(),sr=c.sampleRate,N=Math.max(2,Math.round(sr/freq(m)-.5)),len=Math.floor(sr*(fb>.997?3.2:2.4));const buf=c.createBuffer(1,len,sr),d=buf.getChannelData(0),r=new Float32Array(N);let p=0;for(let i=0;i<N;i++){const x=Math.random()*2-1;r[i]=br*x+(1-br)*p;p=r[i]}let j=0;for(let i=0;i<len;i++){const n=(j+1)%N,v=r[j];d[i]=v;r[j]=fb*.5*(v+r[n]);j=n}return ksCache[key]=buf}
+/* キック：アタック（クリック）・胴鳴り（ピッチが落ちるサイン波）・軽い歪みの3層 */
+let satCurves={};function satCurve(k){if(satCurves[k])return satCurves[k];const n=2048,a=new Float32Array(n),nm_=Math.tanh(k);for(let i=0;i<n;i++){const x=i*2/n-1;a[i]=Math.tanh(k*x)/nm_}return satCurves[k]=a}
+function kick(t,{f0=240,f1=52,f2=46,sw=.045,hold=.05,dec:dk=.13,click=1,sat=1.6,lvl=.95}={}){
+  const c=ac(),out=dest(),o=c.createOscillator(),g=c.createGain(),ws=c.createWaveShaper(),lp=c.createBiquadFilter();
+  o.type='sine';o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+sw);o.frequency.exponentialRampToValueAtTime(f2,t+sw+.25);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(1,t+.0015);g.gain.setValueAtTime(1,t+hold);g.gain.setTargetAtTime(0,t+hold,dk);
+  ws.curve=satCurve(sat);ws.oversample='4x';lp.type='lowpass';lp.frequency.value=5200;
+  const og=c.createGain();og.gain.value=lvl;o.connect(g);g.connect(ws);ws.connect(lp);lp.connect(og);og.connect(out);o.start(t);o.stop(t+hold+dk*7);
+  if(click){const b=c.createOscillator(),bg=c.createGain();b.type='triangle';b.frequency.setValueAtTime(1800,t);b.frequency.exponentialRampToValueAtTime(380,t+.008);bg.gain.setValueAtTime(.32*click,t);bg.gain.exponentialRampToValueAtTime(.001,t+.012);b.connect(bg);bg.connect(out);b.start(t);b.stop(t+.02);
+    const n=c.createBufferSource(),bp=c.createBiquadFilter(),ng=c.createGain();n.buffer=noise();bp.type='bandpass';bp.frequency.value=4200;bp.Q.value=.8;ng.gain.setValueAtTime(.22*click,t);ng.gain.exponentialRampToValueAtTime(.001,t+.006);n.connect(bp);bp.connect(ng);ng.connect(out);n.start(t);n.stop(t+.012)}
+}
 const pp=(o,p)=>{if(!ac().createStereoPanner)return o;const n=ac().createStereoPanner();n.pan.value=p;o.connect(n);return n};
 const kpan=m=>Math.max(-.3,Math.min(.3,(m-62)/42));
 /* 808系の金物：6つの矩形波を重ねた金属的な響き */
@@ -2201,7 +2254,8 @@ function drum2(type,t){
   const c=ac();
   if(type==='rd'){const g=sG(0),h=sF('highpass',5000);[3150,4790,6200].forEach(f=>{const o=sO('square',f);o.connect(h);o.start(t);o.stop(t+.75)});g.gain.setValueAtTime(.05,t);g.gain.exponentialRampToValueAtTime(.001,t+.7);h.connect(g);g.connect(dest());return}
   if(type==='cb'){const b=sF('bandpass',800,3),g=sG(0);[540,800].forEach(f=>{const o=sO('square',f);o.connect(b);o.start(t);o.stop(t+.35)});g.gain.setValueAtTime(.3,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);b.connect(g);g.connect(dest());return}
-  if(type==='8k'){const o=sO('sine',120),g=sG(0),pg=sG(.7),ws=c.createWaveShaper();ws.curve=dist();o.frequency.setValueAtTime(120,t);o.frequency.exponentialRampToValueAtTime(48,t+.09);g.gain.setValueAtTime(.9,t);g.gain.exponentialRampToValueAtTime(.001,t+1.1);o.connect(pg);pg.connect(ws);ws.connect(g);g.connect(dest());o.start(t);o.stop(t+1.2);return}
+  if(type==='8k'){kick(t,{f0:170,f1:50,f2:47,sw:.07,hold:.08,dec:.3,click:.55,sat:2.4,lvl:.85});return}
+  if(type==='8kold'){const o=sO('sine',120),g=sG(0),pg=sG(.7),ws=c.createWaveShaper();ws.curve=dist();o.frequency.setValueAtTime(120,t);o.frequency.exponentialRampToValueAtTime(48,t+.09);g.gain.setValueAtTime(.9,t);g.gain.exponentialRampToValueAtTime(.001,t+1.1);o.connect(pg);pg.connect(ws);ws.connect(g);g.connect(dest());o.start(t);o.stop(t+1.2);return}
   if(type==='8s'){const s=sN(),b=sF('bandpass',2600,.8),g=sG(0);g.gain.setValueAtTime(.55,t);g.gain.exponentialRampToValueAtTime(.001,t+.18);s.connect(b);b.connect(g);g.connect(dest());s.start(t);s.stop(t+.2);[185,330].forEach(f=>{const o=sO('triangle',f),og=sG(0);og.gain.setValueAtTime(.3,t);og.gain.exponentialRampToValueAtTime(.001,t+.1);o.connect(og);og.connect(dest());o.start(t);o.stop(t+.12)});return}
   if(type==='8h'){metal(t,.04,.38,8000,vout(0,.15));return}
   if(type==='th'||type==='tl'){const hi=type==='th',o=sO('sine',hi?240:150),g=sG(0);o.frequency.setValueAtTime(hi?240:150,t);o.frequency.exponentialRampToValueAtTime(hi?120:72,t+.3);g.gain.setValueAtTime(.85,t);g.gain.exponentialRampToValueAtTime(.001,t+.45);o.connect(g);g.connect(dest());o.start(t);o.stop(t+.5);return}
@@ -2658,7 +2712,31 @@ const SOUNDS_SEC={soft:'#F1E6D8',acc:'#9A6A3A'};
 function secSoft(s){const T=curTheme();if(T.mono)return '#ECEBE8';if(T.muted)return `color-mix(in srgb,${s.soft} 55%,var(--paper))`;if(T.dark)return `color-mix(in srgb,${s.acc} 26%,var(--sheet))`;return s.soft}
 function secAcc(s){const T=curTheme();if(T.mono)return '#1C1C1C';if(T.id==='neon')return `color-mix(in srgb,${s.acc} 45%,#ffffff)`;if(T.dark)return `color-mix(in srgb,${s.acc} 65%,#ffffff)`;return s.acc}
 function applySecColors(){SECS.concat([{id:'sounds',...SOUNDS_SEC}]).forEach(x=>{const el=document.getElementById(x.id);if(el){el.style.setProperty('--sc',secSoft(x));el.style.setProperty('--sa',secAcc(x))}})}
-function applyTheme(){const T=curTheme();document.documentElement.dataset.theme=T.id;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=getComputedStyle(document.documentElement).getPropertyValue('--paper').trim()||'#F7F5FA';applySecColors()}
+function applyTheme(){const T=curTheme();document.documentElement.dataset.theme=T.id;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=getComputedStyle(document.documentElement).getPropertyValue('--paper').trim()||'#F7F5FA';applySecColors();updateIcons()}
+
+/* ===== テーマに合わせたアプリアイコン ===== */
+function iconSVG(T,c){
+  const id='ic'+T.id,F=x=>`style="fill:${x}"`,ST=(x,w)=>`style="stroke:${x};stroke-width:${w};fill:none"`,ink=T.id==='jazz'?c('--butter'):c('--ink'),face=T.dark?c('--sheet'):'#FFFFFF',cheek=T.dark?c('--rose'):T.mono?'#EBC2C2':c('--rose-soft');
+  let defs='',bg=`<rect width="100" height="100" ${F(c('--paper'))}/>`,deco='',glow='';
+  if(T.id==='yume'){defs+=`<linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:${c('--rose-soft')}"/><stop offset="1" style="stop-color:${c('--soda-soft')}"/></linearGradient>`;bg=`<rect width="100" height="100" fill="url(#${id}g)"/>`}
+  if(T.id==='ichigo'||T.id==='pop'){const col=T.id==='pop'?c('--butter'):c('--rose-soft');for(let y=6;y<100;y+=12)for(let x=(y/12%2)*6+6;x<100;x+=12)deco+=`<circle cx="${x}" cy="${y}" r="${T.id==='pop'?2.2:1.8}" ${F(col)}/>`}
+  if(T.id==='soda')[[14,20,5],[24,10,3],[84,74,6],[90,58,3.4],[12,84,3]].forEach(([x,y,r])=>deco+=`<circle cx="${x}" cy="${y}" r="${r}" ${ST(c('--soda'),1.4)}/>`);
+  if(T.id==='blueprint'||T.id==='retro')for(let k=10;k<100;k+=10)deco+=`<path d="M${k} 0V100M0 ${k}H100" ${ST(c('--rule'),.5)}/>`;
+  if(T.id==='midnight'||T.id==='jazz'||T.id==='neon')[[14,18,1.6],[26,30,1],[88,78,1.4],[20,86,1.1],[86,52,.9]].forEach(([x,y,r])=>deco+=`<circle cx="${x}" cy="${y}" r="${r}" ${F(T.id==='neon'?c('--soda'):c('--butter'))}/>`);
+  if(T.id==='washi')deco+=`<rect x="78" y="76" width="13" height="13" rx="2" ${F(c('--rose'))}/><path d="M81 80h7M81 84h7M84.5 79v8" ${ST('#fff',1.1)}/>`;
+  if(T.id==='neon'){defs+=`<filter id="${id}f" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;glow=`filter="url(#${id}f)"`}
+  const staff=T.id==='blueprint'||T.id==='retro'?'':[30,40,50,60,70].map(y=>`<path d="M0 ${y}H100" ${ST(c('--rule'),.8)}/>`).join('');
+  const m=`<g ${glow}><rect x="66" y="12" width="4.5" height="50" rx="2.2" ${F(ink)}/><path d="M70.5 13 c9 3 14 10 11 22 c-2.5 -7 -6 -9.5 -11 -10.5z" ${F(ink)}/><ellipse cx="44" cy="65" rx="28" ry="23" style="fill:${face};stroke:${ink};stroke-width:3"/><ellipse cx="26" cy="71" rx="5" ry="3" ${F(cheek)}/><ellipse cx="62" cy="71" rx="5" ry="3" ${F(cheek)}/><path d="M30 63 q4 -5 8 0M50 63 q4 -5 8 0" style="stroke:${ink};stroke-width:2.6;fill:none;stroke-linecap:round"/><path d="M40 70 q4 4 8 0" style="stroke:${ink};stroke-width:2.2;fill:none;stroke-linecap:round"/></g>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%"><defs>${defs}</defs>${bg}${deco}${staff}${m}</svg>`;
+}
+let iconTok=0;
+function updateIcons(){
+  const T=curTheme(),cs=getComputedStyle(document.documentElement),svg=iconSVG(T,k=>cs.getPropertyValue(k).trim()||'#888'),url='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
+  const setL=(sel,href,type)=>{let l=document.querySelector(sel);if(!l)return;l.href=href;if(type)l.type=type};
+  setL('link[rel="icon"][type="image/svg+xml"]',url);
+  const tok=++iconTok,img=new Image();img.onload=()=>{if(tok!==iconTok)return;try{const cv=document.createElement('canvas');cv.width=cv.height=180;const g=cv.getContext('2d');g.drawImage(img,0,0,180,180);const png=cv.toDataURL('image/png');setL('link[rel="apple-touch-icon"]',png);
+    const c2=document.createElement('canvas');c2.width=c2.height=32;c2.getContext('2d').drawImage(img,0,0,32,32);setL('link[rel="icon"][sizes="32x32"]',c2.toDataURL('image/png'));window.__iconPng=png}catch(e){}};img.src=url;
+}
 /* ===== ページ内タブ ===== */
 const PANE_L={dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
 const PANE_O=['today','stages','record','settings','play','genre','ens','dtm','learn','weak','tips','tasks'];
@@ -3515,7 +3593,7 @@ bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();
 stopFns=[progStop,rStop,mStop,tClear,()=>{lenTimers.forEach(clearTimeout);lenTimers=[];$$('#lenLeds i').forEach(x=>x.classList.remove('on'))},rhStop,()=>{if(ctx)instStop()}];
 /* 音の出るボタンを押したら、まず鳴っている音を止める（鍵盤・パッド・設定・編集用のボタンは除く） */
-const KEEP_PLAYING='.key,.pad,.sc,.panes *,nav *,#nav *,.switch,.th,#transSel *,.goalsel *,.mbox *,summary,.term,.pager *,#octDn,#octUp,.rhbar,select,input,label,a';
+const KEEP_PLAYING='#voiceSel *,.key,.pad,.sc,.panes *,nav *,#nav *,.switch,.th,#transSel *,.goalsel *,.mbox *,summary,.term,.pager *,#octDn,#octUp,.rhbar,select,input,label,a';
 document.addEventListener('pointerdown',e=>{const b=e.target.closest('button');if(!b||!ctx||b.closest(KEEP_PLAYING))return;stopAll()},true);
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&ctx){const b=e.target.closest&&e.target.closest('button');if(b&&!b.closest(KEEP_PLAYING))stopAll()}},true);
 let lastW=innerWidth;
