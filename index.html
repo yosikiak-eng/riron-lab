@@ -360,6 +360,23 @@ nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:70
 .weak .bar i{background:var(--mint)}
 .weak .row.bad .bar i{background:var(--rose)}
 .weak .row.bad span:first-child{color:var(--rose);font-weight:700}
+.term{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer;border-bottom:1.5px dotted var(--sa);line-height:inherit}
+.term.on{background:var(--sc);border-radius:4px}
+.termhint{font-size:12px;color:var(--mute);margin-top:8px}
+.gloss{margin-top:8px;background:var(--sheet);border:1px solid var(--sc);border-radius:12px;padding:8px 12px;font-size:13.5px}
+.gloss b{display:block;font-size:12.5px;color:var(--sa)}
+.ask{margin-top:16px;padding-top:12px;border-top:1px dashed var(--rule)}
+.faq{display:grid;gap:6px;margin:6px 0 12px}
+.faq details{background:var(--sheet);border-radius:12px;padding:8px 12px}
+.faq summary{cursor:pointer;font-size:14px;font-weight:700;list-style:none;display:flex;align-items:center;gap:8px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:"Q";font-family:var(--display);color:var(--sa);font-size:15px}
+.faq details[open] summary{margin-bottom:4px}
+.faq details p{font-size:13.5px;margin:0}
+.ask label{display:block;font-size:13px;font-weight:700;margin-bottom:4px}
+.ask textarea{width:100%;font:inherit;font-size:14px;border:1px solid var(--rule);border-radius:12px;padding:8px 12px;background:var(--sheet);color:var(--ink);resize:vertical}
+.ask textarea:focus{outline:2px solid var(--sc);border-color:var(--sa)}
+.askrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:8px}
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
 </style>
 </head>
@@ -1357,6 +1374,70 @@ function tInit(){
   tLabels();tRenderApps();
 }
 
+/* ===== 質問・用語 ===== */
+const FAQ={
+ hanon:['なぜ半音で数えるの？','鍵盤では、隣り合う鍵盤（黒鍵も含む）はすべて半音の距離です。白鍵だけで数えると E–F と B–C のところで間隔がずれますが、半音なら必ず同じ幅なので、どのキーでも同じ計算ができます。'],
+ do:['「度」はどう数えるの？','度は音名（C・D・E…）の数で数えます。出発の音を「1」と数えるのがポイントで、C→E は C・D・E の3つなので3度です。同じ3度でも、半音の数で「長」か「短」かが決まります。'],
+ chotan:['長・短・完全の違いは？','1・4・5・8度は、上下をひっくり返しても完全な形のままのきれいな響きなので「完全」と呼びます。2・3・6・7度には広いものと狭いものがあり、広いほうが「長」、半音狭いほうが「短」です。'],
+ ear:['耳で聴き分けるコツは？','まず距離（近い・遠い）、次に響きの性格（こすれる・明るい・暗い・空っぽ）の順に絞ります。最初は順番に鳴らして聴き、慣れたら同時に鳴らして練習するのがおすすめです。1日数問でも、毎日聴くほうが身につきます。'],
+ Mm:['コードネームの M と m の違いは？','小文字の m は「マイナー」で、3度が短3度になります。大文字の M は 7 の前に付いて「長7度」を表します。CM7 は「C メジャーに長7度」、Cm7 は「C マイナーに短7度」です。'],
+ sev:['7th が入ると何が変わる？','音が4つになって響きが厚くなり、「次へ進みたい」力が生まれます。特にセブンス（7）は、中に不安定なトライトーン（増4度）を含むので、強く解決したがります。'],
+ sus:['sus4 の「sus」って何？','suspended（吊るされた）の略です。3度を4度に吊り上げているので、明るいとも暗いとも言えない宙ぶらりんな響きになり、3度に戻ると解決した感じがします。'],
+ dim:['dim と m7-5 はどう違う？','どちらも短3度を重ねた、暗く不安定な響きです。dim は3音（R・m3・♭5）、m7-5 はそこに短7度を足した4音です。m7-5 のほうが少し柔らかく聴こえます。'],
+ zen:['「全・全・半…」はどこから来たの？','メジャースケールを白鍵だけで C から弾くと、E–F と B–C の間にだけ黒鍵がありません。そこが半音、それ以外が全音なので「全全半全全全半」という並びになります。ほかのキーでも、この並びを守るために♯や♭が付きます。'],
+ chogo:['調号って何？','曲の最初に書く♯や♭のことです。そのキーで常に半音上げ下げする音をまとめて示しています。G メジャーなら F♯ が1つ、F メジャーなら B♭ が1つです。'],
+ tobashi:['なぜ1つ飛ばしで重ねるの？','スケールの音を1つ飛ばしにすると、隣どうしの間隔がちょうど3度になります。コードは3度を積み重ねて作るので、スケールの中だけで自然にコードができあがります。'],
+ roman:['ローマ数字で書く理由は？','キーが変わっても「何番目の音から作ったコードか」は変わらないからです。Ⅳ→Ⅴ→Ⅲm→Ⅵm と覚えておけば、どのキーでもすぐに同じ進行が弾けます。'],
+ bpm:['BPM と音符の関係は？','BPM は1分間に4分音符（1拍）がいくつ入るかを表します。BPM120 なら1拍は0.5秒、8分音符は0.25秒、16分音符は0.125秒です。'],
+ futen:['付点音符は？','音符に点が付くと、長さが1.5倍になります。付点4分音符は、4分音符＋8分音符の長さです。'],
+ borrow:['借用和音って何？','同じルートの別のキー（多くは同主調のマイナー）から一時的に借りてくるコードです。C メジャーの曲に C マイナーの Fm や A♭ を混ぜると、一瞬だけ切ない色や壮大な色がつきます。'],
+ flat7:['なぜ ♭Ⅶ と書くの？','メジャースケールの7番目（C メジャーなら B）から半音下がった音がルートだからです。Ⅶ を基準に ♭ を付けて書くことで、どのキーでも位置がすぐわかります。']
+};
+const FAQ_BY=k=>k.startsWith('iv:')?['do','chotan','ear','hanon']:k.startsWith('ch:')?['Mm','sev','sus','dim']:({'th:0':['zen','chogo','hanon'],'th:1':['Mm','sev','sus','dim'],'th:2':['tobashi','roman'],'th:3':['do','chotan','hanon'],'th:4':['bpm','futen'],'th:5':['borrow','flat7','roman']})[k]||['hanon'];
+const TERMS={
+ 'セカンダリードミナント':'Ⅰ 以外のコードへ向かうために一時的に置くドミナント。例：Ⅲ7 → Ⅵm。',
+ 'ドッペルドミナント':'Ⅴ へ向かうためのドミナント。メジャーキーの Ⅱ7。',
+ 'サブドミナント':'展開・広がりの役割のコード（Ⅳ・Ⅱm）。トニックから離れて動き出す感じ。',
+ 'ダイアトニック':'キーのスケールの音だけで作れる7つのコード。',
+ 'ドミナント':'緊張して、トニックへ戻りたくなる役割のコード（Ⅴ・Ⅶ）。',
+ 'トニック':'安定して「帰ってきた」と感じる役割のコード（Ⅰ・Ⅲm・Ⅵm）。',
+ 'トライトーン':'半音6個の音程（増4度・減5度）。オクターブのちょうど半分で、不安定に聴こえる。',
+ 'コードトーン':'いま鳴っているコードの構成音。',
+ 'オクターブ':'同じ音名の1段上（または下）の音。半音12個の距離。',
+ '借りた':'同じルートの別のキーからコードを持ってくること（借用和音）。',
+ '同主調':'ルートが同じメジャーとマイナー（C と Cm）。',
+ '平行調':'使う音が同じメジャーとマイナー（C と Am）。',
+ '長3度':'半音4つの音程。明るい響きで、メジャーコードの土台。',
+ '短3度':'半音3つの音程。暗い響きで、マイナーコードの土台。',
+ '完全5度':'半音7つの音程。安定した力強い響き。',
+ '完全4度':'半音5つの音程。開けた、すっきりした響き。',
+ '増4度':'半音6つの音程。トライトーンとも呼ぶ不安定な響き。',
+ '長7度':'半音11の音程。オクターブの半音手前。',
+ '短7度':'半音10の音程。セブンスコードに入る音。',
+ '調号':'曲の最初に書く♯や♭。そのキーで常に変化させる音を示す。',
+ '3和音':'3つの音を3度ずつ重ねたコード（メジャー・マイナー・dim・aug）。',
+ 'ルート':'コードの土台になる音。コード名の最初のアルファベット。',
+ '半音':'鍵盤で隣どうし（黒鍵も含む）の距離。いちばん小さな音の間隔。',
+ '全音':'半音2つぶんの距離。',
+ '解決':'不安定な響きから、安定した響きへ進むこと。',
+ '主音':'キーの1番目の音。曲の中心になる音。'
+};
+const TERM_RE=new RegExp(Object.keys(TERMS).sort((a,b)=>b.length-a.length).map(t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|'),'g');
+function linkTerms(txt,used){return txt.replace(TERM_RE,m=>{if(used.has(m))return m;used.add(m);return `<button type="button" class="term" data-t="${m}">${m}</button>`})}
+function askPrompt(userQ){
+  const lines=['音楽理論の学習アプリでクイズを解いています。',`問題：${Q.q}`,`正解：${Q.ans}`,`アプリの解説：${Q.why}`,'アプリが示した考え方：',...Q.steps.map((s,i)=>`${i+1}. ${s}`),'',`質問：${userQ||'この解説でわからないところを、もっとかみくだいて教えてください。'}`,'','作曲を勉強している初心者にもわかるように、具体例を交えて、なるべく短く教えてください。'];
+  return lines.join('\n');
+}
+function bindAsk(root){
+  root.querySelectorAll('.term').forEach(b=>b.onclick=()=>{const g=root.querySelector('.gloss');g.innerHTML=`<b>${b.dataset.t}</b>${TERMS[b.dataset.t]}`;g.hidden=false;root.querySelectorAll('.term').forEach(x=>x.classList.toggle('on',x===b))});
+  const a=root.querySelector('#askBtn'),ta=root.querySelector('#askText'),note=root.querySelector('#askNote');
+  const upd=()=>{a.href='https://claude.ai/new?q='+encodeURIComponent(askPrompt(ta.value.trim()))};
+  ta.addEventListener('input',upd);upd();
+  a.addEventListener('click',()=>{upd();const txt=askPrompt(ta.value.trim());
+    try{navigator.clipboard.writeText(txt).then(()=>{note.textContent='質問文をコピーしました。Claude が開いたら、入力欄の内容を確かめて送信してください。入力欄が空なら、コピーした文を貼り付けてください。'}).catch(()=>{note.textContent='Claude が開いたら、入力欄の内容を確かめて送信してください。'})}catch(e){note.textContent='Claude が開いたら、入力欄の内容を確かめて送信してください。'}
+  });
+}
+
 /* ===== 10 クイズ ===== */
 let qModeV='interval',Q=null,qAns=false;const QS={st:0};
 const ROUND=10;let round={i:0,res:[],pts:0};
@@ -1513,11 +1594,18 @@ function qNew(){
 }
 function qPlay(){if(!Q)return;if(Q.chord)playChord(Q.notes,1.6);else playSeq(Q.notes,0.6)}
 function expHTML(ok,chosen,gain,bonus){
+  const used=new Set();
   return `<div class="exp"><div class="verdict"><div class="m">${mascot(ok?(bonus?'wow':'happy'):'oops')}</div><div>`+
    (ok?`<b>${rand(PRAISE)}<span class="pt">+${gain}pt</span>${bonus?`<span class="streak">${QS.st}問連続</span>`:''}</b>`:`<b>惜しい</b><span>あなたの答え：${chosen}</span>`)+
    `<span>正解：<strong>${Q.ans}</strong></span></div></div>`+
-   `<h4>解説</h4><p>${Q.why}</p><h4>答えまでの考え方</h4><ol>${Q.steps.map(s=>`<li>${s}</li>`).join('')}</ol>`+
-   (Q.tip?`<p class="tipline">${Q.tip}</p>`:'')+`</div>`;
+   `<h4>解説</h4><p>${linkTerms(Q.why,used)}</p><h4>答えまでの考え方</h4><ol>${Q.steps.map(s=>`<li>${linkTerms(s,used)}</li>`).join('')}</ol>`+
+   (Q.tip?`<p class="tipline">${linkTerms(Q.tip,used)}</p>`:'')+
+   (used.size?`<p class="termhint">点線の言葉をタップすると、意味が表示されます。</p>`:'')+
+   `<div class="gloss" hidden></div>`+
+   `<div class="ask"><h4>まだわからないときは</h4><div class="faq">${FAQ_BY(Q.key).map(k=>`<details><summary>${FAQ[k][0]}</summary><p>${FAQ[k][1]}</p></details>`).join('')}</div>`+
+   `<label for="askText">Claude に質問する</label><textarea id="askText" rows="2" placeholder="例：なぜ長3度は明るく聴こえるの？"></textarea>`+
+   `<div class="askrow"><a class="btn primary" id="askBtn" href="https://claude.ai/new" target="_blank" rel="noopener">Claude に聞く</a><span class="sub">問題・正解・解説も一緒に送ります</span></div><p class="sub" id="askNote"></p></div>`+
+   `</div>`;
 }
 function qAnswer(b){
   if(qAns||!Q)return;qAns=true;const ok=b.textContent===Q.ans;
@@ -1530,7 +1618,7 @@ function qAnswer(b){
   $$('#qOpts .opt').forEach(x=>{if(x.textContent===Q.ans)x.classList.add('ok');else if(x===b)x.classList.add('ng')});
   const bonus=ok&&QS.st%5===0;const gain=(Q.level===2?8:5)+(bonus?10:0);
   if(ok)round.pts+=gain;
-  $('#qFb').innerHTML=expHTML(ok,b.textContent,gain,bonus);
+  $('#qFb').innerHTML=expHTML(ok,b.textContent,gain,bonus);bindAsk($('#qFb'));
   sfx(ok?'ok':'ng');
   if(Q.notes){const marks={};Q.notes.forEach((m,i)=>marks[m]={label:nm(m),cls:i===0?'root':'on'});const [lo,hi]=kbRange(Q.notes);keyboard($('#qKb'),{lo,hi,marks});$('#qKbWrap').hidden=false}
   if(ok){gainXP(gain);if(bonus)confetti(40)}
