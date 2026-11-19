@@ -1329,7 +1329,7 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 31</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 32</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -1377,7 +1377,7 @@ function mascot(mood='happy',voice){
       if(mood==='idle')F.extra=`<text x="78" y="44" font-size="9" font-weight="700" class="mk">z</text><text x="84" y="36" font-size="7" font-weight="700" class="mk">z</text>`;
       if(mood==='happy')F.mouth=ln('M41 70 q3 2.5 6 0',2);
       if(mood==='wow'){F.eyes=dot(34,61,3.4)+dot(54,61,3.4);F.mouth=`<ellipse cx="44" cy="71" rx="2.2" ry="2.6" class="mk"/>`;F.extra=''}},
-    strict:()=>{F.acc=`<rect x="26" y="55.5" width="15" height="12" rx="4" fill="rgba(255,255,255,.35)" class="ms" stroke-width="2"/><rect x="47" y="55.5" width="15" height="12" rx="4" fill="rgba(255,255,255,.35)" class="ms" stroke-width="2"/><path d="M41 60 h6" class="ms" stroke-width="2"/>`;
+    strict:()=>{F.acc=`<path d="M21 53 l9 -4.5M23 57 l9 -4.5" stroke="#D9658B" stroke-width="2.6" stroke-linecap="round"/>`;
       F.brow=ln('M28 52 l9 1.5',2)+ln('M60 52 l-9 1.5',2);
       if(mood==='idle')F.mouth=ln('M40 71 q4 2.5 8 -1',2.2);
       if(mood==='oops'){F.eyes=dot(34,62,2.8)+dot(54,62,2.8);F.brow=ln('M28 50 l9 4',2.2)+ln('M60 50 l-9 4',2.2);F.mouth=ln('M40 72 h8',2.4);F.extra=''}
