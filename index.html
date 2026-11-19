@@ -848,6 +848,26 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 .nums small{display:block;font-size:11.5px;color:var(--text2);line-height:1.4}.nums b{display:block;font-size:15px;line-height:1.45;margin-top:2px}
 .mdon{fill:var(--sa,var(--rose));stroke:var(--sa,var(--rose))}.lvb{white-space:nowrap;flex-shrink:0}.tbw{fill:color-mix(in srgb,var(--mute) 35%,var(--sheet))}
 .cn.blk{fill:var(--keyb);stroke:var(--keyb)}.ct.w{fill:var(--keyw);font-size:9.5px}
+/* 歌詞 */
+#lyrIn,#rhIn{width:100%;font:inherit;font-size:16px;line-height:1.7;padding:10px 12px;border-radius:12px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink);resize:vertical}
+.lrow{display:flex;gap:8px}.lrow input{flex:1}
+.lyrout{display:grid;gap:8px;margin-top:12px}
+.lrline{position:relative;padding:8px 12px 10px;border-radius:12px;background:var(--sheet);border:1px solid var(--rule);border-left:4px solid var(--rc,var(--rule))}
+.lrt{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.lrt b{font-size:15px}
+.lrn{font-size:12.5px;font-weight:700;color:var(--sa,var(--rose));white-space:nowrap}.lrn em{font-style:normal;font-weight:400;color:var(--text2);font-size:11px}
+.lrv{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px}
+.lrv span{min-width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-size:12px;font-weight:700;background:color-mix(in srgb,var(--mute) 12%,var(--sheet));color:var(--text2)}
+.lrv .v-a{background:color-mix(in srgb,var(--rose) 22%,var(--sheet));color:var(--ink)}.lrv .v-i{background:color-mix(in srgb,var(--soda) 26%,var(--sheet));color:var(--ink)}.lrv .v-u{background:color-mix(in srgb,var(--mint) 28%,var(--sheet));color:var(--ink)}.lrv .v-e{background:color-mix(in srgb,var(--butter) 45%,var(--sheet));color:var(--ink)}.lrv .v-o{background:color-mix(in srgb,#B48AD8 28%,var(--sheet));color:var(--ink)}
+.lrrh{position:absolute;top:8px;right:-6px;transform:translateX(0);font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:99px;background:var(--rc);color:#fff;display:none}
+.rhout .chip.rh{cursor:default;background:color-mix(in srgb,var(--sa,var(--rose)) 10%,var(--sheet))}.rhout .chip.rh.strong{background:color-mix(in srgb,var(--sa,var(--rose)) 30%,var(--sheet));font-weight:700}
+.odai{display:grid;gap:8px;margin-bottom:12px}
+.od{display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:8px;padding:10px 12px;border-radius:14px;background:color-mix(in srgb,var(--sa,var(--rose)) 6%,var(--sheet));border:1px solid color-mix(in srgb,var(--sa,var(--rose)) 14%,var(--rule))}
+.od small{grid-column:1;font-size:11.5px;color:var(--text2)}.od b{grid-column:1;font-size:15.5px}
+.od button{grid-column:2;grid-row:1/span 2;width:38px;height:38px;border-radius:50%;border:1px solid var(--rule);background:var(--sheet);color:var(--sa,var(--rose));font-size:18px;cursor:pointer}
+.lcheck{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.lcheck label{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-radius:12px;background:var(--sheet);border:1px solid var(--rule);cursor:pointer;font-size:14px;line-height:1.6}
+.lcheck input{width:20px;height:20px;flex:none;margin-top:2px;accent-color:var(--sa,var(--rose))}
+.lcheck input:checked+span{color:var(--text2);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--sa,var(--rose)) 60%,transparent)}
 </style>
 </head>
 <body>
@@ -916,6 +936,10 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
   <div class="card" data-pane="bpm" id="tBpm"></div>
   <div class="card" data-pane="form" id="tForm"></div>
   <div class="card" data-pane="range" id="tRange"></div>
+</section>
+
+<section id="lyrics">
+  <header class="sh"><div class="band"><span class="no">✎</span><p class="bandtxt">言葉をメロディにのせるために</p></div><h2>歌詞の考え方</h2><p class="lead">テーマの決め方から、言葉の選び方、韻、歌声合成で聴き取りやすくするコツまでまとめました。「ツール」では音数を数えたり、韻を探したりできます。</p></header>
 </section>
 
 <!-- 01 基礎 -->
@@ -1392,7 +1416,7 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 36</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 37</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -1904,7 +1928,7 @@ function vconv(text,voice){
   return t.replace(/([！♪])。/g,'$1').replace(/〜。/g,()=>Math.random()<.5?'〜！':'〜♪');
 }
 /* 画面の文章に適用（元の文章は覚えておき、話し方を変えたら戻して言い換え直す） */
-const VC_SKIP='script,style,textarea,input,button,select,option,.mbox,#qOpts,.vprev,.greetline,#toasts,.toast,.chips,nav,.panes,svg,.vo-raw';
+const VC_SKIP='.lyrout,.odai,.rhout,script,style,textarea,input,button,select,option,.mbox,#qOpts,.vprev,.greetline,#toasts,.toast,.chips,nav,.panes,svg,.vo-raw';
 const vcOrig=new WeakMap();
 function vcNode(n,voice){if(!vcOrig.has(n))vcOrig.set(n,n.data);const o=vcOrig.get(n),nv=vconv(o,voice);if(n.data!==nv)n.data=nv}
 function vcWalk(root,voice){
@@ -2108,6 +2132,7 @@ function renderNav(){
    `<a class="tab" href="#home" data-id="home" style="--tc:var(--rose-soft);--ta:var(--rose)">ホーム</a>`+
    `<a class="tab" href="#sounds" data-id="sounds" style="--tc:${secSoft(SOUNDS_SEC)};--ta:${secAcc(SOUNDS_SEC)}"><span class="sw"></span>楽器の音</a>`+
    `<a class="tab" href="#tools" data-id="tools" style="--tc:${secSoft(TOOLS_SEC)};--ta:${secAcc(TOOLS_SEC)}"><span class="sw"></span>ツール</a>`+
+   `<a class="tab" href="#lyrics" data-id="lyrics" style="--tc:${secSoft(LYRICS_SEC)};--ta:${secAcc(LYRICS_SEC)}"><span class="sw"></span>歌詞</a>`+
    SECS.map((s,i)=>`<a class="tab" href="#${s.id}" data-id="${s.id}" style="--tc:${secSoft(s)};--ta:${secAcc(s)}"><span class="sw"></span>${i+1}. ${s.n}${S.badges[s.id]?'<span class="ok" aria-label="クリア済み">✓</span>':''}</a>`).join('');
   $$('#nav a.tab').forEach(a=>a.classList.toggle('active',a.dataset.id===cur));
 }
@@ -2249,7 +2274,7 @@ function chips(el,items,selKey,onSel,gotFn){
 function refreshChips(){$$('.chips').forEach(el=>{if(!el._got)return;[...el.children].forEach(b=>{const g=b.querySelector('.got');if(g)g.textContent=el._got(b._k)?'✓':''})})}
 
 /* ===== ルーティング ===== */
-const ROUTES=['home','sounds','tools',...SECS.map(s=>s.id)];
+const ROUTES=['home','sounds','tools','lyrics',...SECS.map(s=>s.id)];
 let prevIdx=-1,prevId=null;
 function makeTurn(fromId,dir){
   const old=document.getElementById(fromId);if(!old||!old.classList.contains('show'))return null;
@@ -2268,9 +2293,9 @@ const RM=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const transMode=()=>S.trans||(RM()?'fade':'wipe');
 function makeWipe(toId,dir){
   const s=SEC[toId],i=SECS.findIndex(x=>x.id===toId);
-  const XS=toId==='sounds'?SOUNDS_SEC:toId==='tools'?TOOLS_SEC:null;
+  const XS=toId==='sounds'?SOUNDS_SEC:toId==='tools'?TOOLS_SEC:toId==='lyrics'?LYRICS_SEC:null;
   const soft=s?secSoft(s):XS?secSoft(XS):'var(--rose-soft)',acc=s?secAcc(s):XS?secAcc(XS):'var(--rose)';
-  const lab=s?String(i+1).padStart(2,'0'):toId==='sounds'?'♪':toId==='tools'?'⚙':'Home',name=s?s.n:toId==='sounds'?'楽器の音':toId==='tools'?'ツール':'ホーム';
+  const lab=s?String(i+1).padStart(2,'0'):toId==='sounds'?'♪':toId==='tools'?'⚙':toId==='lyrics'?'✎':'Home',name=s?s.n:toId==='sounds'?'楽器の音':toId==='tools'?'ツール':toId==='lyrics'?'歌詞':'ホーム';
   const off=s?48-i*8:0;
   const w=document.createElement('div');w.className='wipe '+dir;w.style.setProperty('--wc',soft);w.style.setProperty('--wa',acc);
   w.style.top='0px';
@@ -3539,7 +3564,7 @@ const curTheme=()=>THEMES.find(t=>t.id===S.theme)||THEMES[0];
 const SOUNDS_SEC={soft:'#F1E6D8',acc:'#9A6A3A'};
 function secSoft(s){const T=curTheme();if(T.mono)return '#ECEBE8';if(T.id==='gb')return '#B3C682';if(T.id==='cyber')return `color-mix(in srgb,${s.acc} 22%,#141418)`;if(T.muted)return `color-mix(in srgb,${s.soft} 55%,var(--paper))`;if(T.dark)return `color-mix(in srgb,${s.acc} 26%,var(--sheet))`;return s.soft}
 function secAcc(s){const T=curTheme();if(T.mono)return '#1C1C1C';if(T.id==='gb')return '#0F380F';if(T.id==='neon')return `color-mix(in srgb,${s.acc} 45%,#ffffff)`;if(T.dark)return `color-mix(in srgb,${s.acc} 65%,#ffffff)`;return s.acc}
-function applySecColors(){SECS.concat([{id:'sounds',...SOUNDS_SEC},{id:'tools',...TOOLS_SEC}]).forEach(x=>{const el=document.getElementById(x.id);if(el){el.style.setProperty('--sc',secSoft(x));el.style.setProperty('--sa',secAcc(x))}})}
+function applySecColors(){SECS.concat([{id:'sounds',...SOUNDS_SEC},{id:'tools',...TOOLS_SEC},{id:'lyrics',...LYRICS_SEC}]).forEach(x=>{const el=document.getElementById(x.id);if(el){el.style.setProperty('--sc',secSoft(x));el.style.setProperty('--sa',secAcc(x))}})}
 function applyTheme(){const T=curTheme();document.documentElement.dataset.theme=T.id;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=getComputedStyle(document.documentElement).getPropertyValue('--paper').trim()||'#F7F5FA';applySecColors();updateIcons()}
 
 /* ===== テーマに合わせたアプリアイコン ===== */
@@ -3571,8 +3596,8 @@ function updateIcons(){
     const c2=document.createElement('canvas');c2.width=c2.height=32;c2.getContext('2d').drawImage(img,0,0,32,32);setL('link[rel="icon"][sizes="32x32"]',c2.toDataURL('image/png'));window.__iconPng=png}catch(e){}};img.src=url;
 }
 /* ===== ページ内タブ ===== */
-const PANE_L={prog:'進行メーカー',key:'キー早見',trans:'移調',bpm:'BPM計算',form:'曲の構成',range:'音域',fx:'エフェクト',howto:'作り方',jissen:'実戦',deep:'深掘り',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
-const PANE_O=['today','stages','record','settings','prog','key','trans','bpm','form','range','play','genre','ens','fx','dtm','learn','howto','jissen','deep','weak','tips','tasks'];
+const PANE_L={prog:'進行メーカー',key:'キー早見',trans:'移調',bpm:'BPM計算',form:'曲の構成',range:'音域',fx:'エフェクト',howto:'作り方',jissen:'実戦',deep:'深掘り',lbase:'基本',lmake:'書き方',ltech:'テクニック',lvoc:'ボカロ',ltool:'ツール',lcheck:'チェック',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
+const PANE_O=['lbase','lmake','ltech','lvoc','ltool','lcheck','today','stages','record','settings','prog','key','trans','bpm','form','range','play','genre','ens','fx','dtm','learn','howto','jissen','deep','weak','tips','tasks'];
 const paneSel={};
 function setupPanes(root){
   const key=root.id||'x',items=[...root.querySelectorAll(':scope > [data-pane]')];
@@ -5555,8 +5580,8 @@ function renderDeep(){
   const snd=document.getElementById('sounds');if(snd)Object.entries(DEEP_SOUNDS).forEach(([pane,cards])=>{const last=[...snd.querySelectorAll(`:scope > [data-pane="${pane}"]`)].pop();if(!last)return;
     let h='';cards.forEach(([t,f,l])=>{const out=f();h+=`<div class="card" data-pane="${pane}"><h3>${t}${lvb(l)}</h3>${out}</div>`});last.insertAdjacentHTML('afterend',h)})}
 /* ===== 長いタブを見やすく：折りたたみ・目次・上へ ===== */
-const FOLD_SKIP=new Set(['play','tasks','today','stages','record','settings','prog','key','trans','bpm','form','range','weak']);
-function foldPanes(){['sounds','tools',...SECS.map(s=>s.id)].forEach(id=>{const sec=document.getElementById(id);if(!sec)return;
+const FOLD_SKIP=new Set(['ltool','play','tasks','today','stages','record','settings','prog','key','trans','bpm','form','range','weak']);
+function foldPanes(){['sounds','tools','lyrics',...SECS.map(s=>s.id)].forEach(id=>{const sec=document.getElementById(id);if(!sec)return;
   const panes=[...new Set([...sec.querySelectorAll(':scope > [data-pane]')].map(e=>e.dataset.pane))];
   panes.forEach(p=>{if(FOLD_SKIP.has(p))return;const cards=[...sec.querySelectorAll(`:scope > .card[data-pane="${p}"]`)].filter(c=>c.querySelector(':scope > h3')&&!c.classList.contains('lvempty'));if(cards.length<3)return;
     cards.forEach((c,i)=>{if(c.classList.contains('fold'))return;const h=c.querySelector(':scope > h3');const body=document.createElement('div');body.className='fbody';
@@ -5573,13 +5598,115 @@ function foldPanes(){['sounds','tools',...SECS.map(s=>s.id)].forEach(id=>{const 
     b.onclick=()=>{const sec=document.getElementById(curRoute());const bar=sec&&sec.querySelector(':scope > .panes');const top=bar?bar.getBoundingClientRect().top+scrollY-($('nav.tabs')?.offsetHeight||0)-4:0;scrollTo({top:Math.max(0,top),behavior:RM()?'auto':'smooth'})};
     let tk=0;addEventListener('scroll',()=>{if(tk)return;tk=requestAnimationFrame(()=>{tk=0;b.classList.toggle('on',scrollY>1400&&!$('#qFab:not([hidden])'))})},{passive:true})}}
 
+/* ===== 歌詞 ===== */
+const LYRICS_SEC={soft:'#F6E2EA',acc:'#B9567C'};
+/* --- かなの読み取り：音の数（モーラ）と母音 --- */
+const KV={a:'あかさたなはまやらわがざだばぱ',i:'いきしちにひみりぎじぢびぴゐ',u:'うくすつぬふむゆるぐずづぶぷゔ',e:'えけせてねへめれげぜでべぺゑ',o:'おこそとのほもよろをごぞどぼぽ'};
+const K2V={};Object.entries(KV).forEach(([v,s])=>[...s].forEach(c=>K2V[c]=v));
+const SMALLV={'ゃ':'a','ゅ':'u','ょ':'o','ぁ':'a','ぃ':'i','ぅ':'u','ぇ':'e','ぉ':'o','ゎ':'a'};
+function toHira(s){return s.replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60))}
+function moraOf(line){const s=toHira(line);const out=[];let unk=0;
+  for(const c of s){if(K2V[c])out.push({k:c,v:K2V[c]});else if(SMALLV[c]&&out.length){const p=out[out.length-1];p.k+=c;p.v=SMALLV[c]}else if(c==='ん')out.push({k:c,v:'n'});else if(c==='っ')out.push({k:c,v:'-'});else if(c==='ー'&&out.length)out.push({k:c,v:out[out.length-1].v});else if(/[一-鿿々]/.test(c))unk++}
+  return {m:out,unk}}
+const VJ={a:'あ',i:'い',u:'う',e:'え',o:'お',n:'ん','-':'っ'};
+function rhymeKey(m){const vs=m.filter(x=>'aiueo'.includes(x.v)).map(x=>x.v);return vs.slice(-2).join('')}
+/* --- 韻さがし用の言葉（オリジナルの一覧） --- */
+const RHYME_WORDS='そら ひかり こころ なみだ ゆめ あした きのう きみ ぼく わたし よる あさ ゆうぐれ かぜ ほし つき うた こえ はな あめ ゆき まち みち えき へや まど かぎ てがみ しゃしん きおく やくそく ひみつ うそ ほんとう えがお きず いたみ ぬくもり ためいき まばたき ささやき とびら かがみ ちず とけい めざまし はやさ しずけさ さびしさ やさしさ つよさ よわさ あいまい まっすぐ ぐらぐら きらきら ひらひら ゆらゆら どきどき からっぽ いっぱい まいにち いつか どこか だれか なにか さよなら ありがとう ごめんね おはよう おやすみ はじまり おわり つづき はんぶん ぜんぶ ふたり ひとり みんな せかい みらい かこ いま しゅんかん えいえん きせき うんめい ぐうぜん ひつぜん まぼろし かげ あお あか しろ くろ にじ ひだまり こかげ なつ ふゆ はる あき さくら ほたる はなび うみ なみ すな いし くも そらいろ ゆうやけ よぞら あかり ともしび ねつ こおり ほのお みず あわ しずく しるし ことば こたえ もんだい ねがい いのり のぞみ ゆうき きぼう ぜつぼう こどく じゆう とうめい てのひら ゆびさき まつげ くちびる ほお せなか かた あしあと はしる とぶ おちる うかぶ しずむ ひかる きえる ねむる めざめる わらう なく さけぶ うたう おどる まつ よぶ ふれる ほどく むすぶ こわす まもる さがす みつける わすれる おもいだす しんじる うたがう あいたい さみしい くるしい うれしい かなしい こわい まぶしい つめたい あたたかい はやい おそい とおい ちかい たかい ひくい ふかい あさい ながい みじかい'.split(' ');
+function rhymeFind(word){const {m}=moraOf(word);const key=m.filter(x=>'aiueo'.includes(x.v)).map(x=>x.v);if(!key.length)return [];
+  const score=w=>{const k=moraOf(w).m.filter(x=>'aiueo'.includes(x.v)).map(x=>x.v);let n=0;while(n<k.length&&n<key.length&&k[k.length-1-n]===key[key.length-1-n])n++;return n};
+  return RHYME_WORDS.filter(w=>w!==toHira(word)).map(w=>[w,score(w)]).filter(x=>x[1]>=Math.min(2,key.length)).sort((a,b)=>b[1]-a[1]).slice(0,24)}
+/* --- お題ガチャ --- */
+const ODAI={who:['転校してきた子','夜勤明けの人','引っ越し前日のふたり','部屋に置かれた古いロボット','電車で毎朝すれちがう人','卒業式を休んだ子','歌えなくなった歌い手','最後の1本を待つ駅員','ねむれない猫','記憶をなくした自分'],
+  where:['屋上','終電の車内','雨のコンビニ前','誰もいない教室','深夜のファミレス','水たまりに映る街','観覧車のてっぺん','夏祭りの帰り道','ベランダ','知らない町のバス停'],
+  when:['午前2時','夏の終わり','初雪の朝','誕生日の前の夜','テスト前日','停電した夜','引っ越しの朝','花火が終わった瞬間','春休み最後の日','日付が変わる1分前'],
+  thing:['片方だけのイヤホン','既読のつかないメッセージ','止まった腕時計','飲みかけのラムネ','色あせた写真','鍵のかかった日記','電池が切れたライト','借りたままの傘','空のまま届いた手紙','消せない留守電'],
+  feel:['言えなかった「ありがとう」','うれしいのに泣きそう','忘れたいのに忘れたくない','強がりの裏の本音','はじめての勇気','取り戻せない時間への後悔','明日が少しだけ楽しみ','ひとりでも平気なふり','許せない、でも会いたい','名前のない気持ち']};
+/* --- 図 --- */
+function lyrPyramidFig(){const W=320;let o='';[['テーマ','何をいちばん伝えたいか（1文で）',0],['ストーリー・視点','誰が、誰に、どこで、いつ',1],['言葉','具体的な場面、五感、言い回し',2]].forEach(([t,d,i])=>{const w=210+i*50,x=(W-w)/2,y=6+i*46;
+  o+=`<rect x="${x}" y="${y}" width="${w}" height="38" rx="12" class="fbx ${['fD','fSD','fT'][i]}"/><text x="${W/2}" y="${y+16}" text-anchor="middle" class="ft sm">${t}</text><text x="${W/2}" y="${y+30}" text-anchor="middle" class="fs">${d}</text>`});
+  return fsvg(W,148,o)}
+function lyrSectionFig(){return flowFig({steps:[['Aメロ','情景・状況','fT'],['Bメロ','心の動き','fSD'],['サビ','いちばん言いたいこと','fD'],['2番','時間や視点を進める','fT'],['落ちサビ','本音・ひとりごと','fSD'],['ラスサビ','変化した結論','fD']],per:3})}
+function lyrRhymeFig(){const W=320,A=[['ひ','i'],['か','a'],['り','i']],B=[['し','i'],['か','a'],['い','i']];let o='';
+  [[A,'光',14],[B,'視界',74]].forEach(([w,k,y])=>{o+=`<text x="34" y="${y+22}" text-anchor="end" class="gl">${k}</text>`;w.forEach(([c,v],i)=>{const x=60+i*70;o+=`<rect x="${x}" y="${y}" width="56" height="36" rx="10" class="fbx"/><text x="${x+28}" y="${y+16}" text-anchor="middle" class="ft">${c}</text><text x="${x+28}" y="${y+30}" text-anchor="middle" class="fs hotT">${v.toUpperCase()}</text>`})});
+  [0,1,2].forEach(i=>o+=`<path d="M${88+i*70} 52V72" class="fa soft"/>`);o+=`<text x="300" y="58" text-anchor="end" class="al hot">母音がそろう＝韻</text>`;
+  return fsvg(W,116,o)}
+function lyrShowFig(){const W=320;let o='';
+  o+=`<rect x="0" y="4" width="140" height="74" rx="14" class="fbx"/><text x="70" y="24" text-anchor="middle" class="fs">言ってしまう</text><text x="70" y="52" text-anchor="middle" class="ft">「さみしい」</text>`;
+  o+=farrow(146,41,172,41);
+  o+=`<rect x="178" y="4" width="142" height="74" rx="14" class="fbx fD"/><text x="249" y="24" text-anchor="middle" class="fs">見せる</text><text x="249" y="46" text-anchor="middle" class="ft sm">マグカップを</text><text x="249" y="64" text-anchor="middle" class="ft sm">2つ出してしまう</text>`;
+  return fsvg(W,84,o)}
+/* --- 内容 --- */
+const LYR={
+ base:[
+  ['歌詞は「メロディにのる言葉」',`<p>詩や作文とのちがいは、<b>音の数・リズム・母音</b>に縛られることと、<b>一度聴いただけで伝わる</b>必要があることです。読み返せない分、わかりやすさとくり返しが大切になります。</p>`+fig(lyrPyramidFig(),'上ほど大きな決めごと。テーマがぶれなければ、言葉はいくらでも直せます。')],
+  ['セクションごとの役割',fig(lyrSectionFig(),'Aメロで場面を見せ、Bメロで気持ちを動かし、サビで言い切ります。2番は「同じ場面のくり返し」ではなく、時間や視点を一歩進めます。')],
+  ['たとえで覚える',`<dl class="ifacts ana-dl"><div><dt>歌詞は映画の脚本</dt><dd>説明のナレーションより、登場人物の行動とセリフで見せる方が心に残ります。</dd></div><div><dt>サビは看板</dt><dd>お店の看板のように、遠くからでも一瞬で読めて覚えられる言葉にします。</dd></div><div><dt>韻はリズムの飾り</dt><dd>母音をそろえると、言葉が音楽の一部になって、耳に気持ちよく残ります。</dd></div></dl>`],
+  ['数字で覚える',`<div class="nums"><div><small>基本</small><b>1音に1文字（1モーラ）</b></div><div><small>サビの長さ</small><b>8〜16小節</b></div><div><small>タイトルの登場</small><b>サビで2回以上</b></div><div><small>1行の目安</small><b>7〜12音</b></div><div><small>テーマ</small><b>1曲に1つ</b></div><div><small>場面</small><b>1番と2番で少し進める</b></div></div>`]
+ ],
+ make:[
+  ['書き始めから完成までの手順',`<ol class="vochain">${[['テーマを1文にする','「〇〇が△△する歌」と言える形にします。これが言えないうちは、言葉を書き始めないのがコツです。'],['主人公と相手を決める','誰が、誰に向けて歌うのか。場所と時間も決めると、言葉が具体的になります。'],['タイトル（サビの核）を決める','いちばん言いたいことを、短く口に出しやすい言葉にします。'],['場面のメモを集める','見えたもの、聞こえた音、におい、手ざわり。五感のメモを10個くらい書き出します。'],['セクションに配置する','メモを Aメロ（場面）、Bメロ（気持ち）、サビ（結論）に振り分けます。'],['メロディに当てて音数を合わせる','「ツール」の音数カウンターで、メロディの音の数と合わせます。'],['声に出して歌う','歌いにくい、聴き取りにくいところを直します。ここで直した分だけ、よくなります。']].map(([t,d],i)=>`<li><b>${['①','②','③','④','⑤','⑥','⑦'][i]} ${t}</b><p>${d}</p></li>`).join('')}</ol>`],
+  ['曲先と詞先',`<div class="fxgen"><div><b>曲先（メロディが先）</b><ul><li>ボカロ曲で多いやり方</li><li>音の数とリズムが決まっているので、言葉をはめていく</li><li>仮歌詞（「ラララ」や意味のない言葉）で歌ってから、音の響きに合う言葉を探す</li></ul></div><div><b>詞先（歌詞が先）</b><ul><li>言いたいことを自由に書ける</li><li>メロディをつけるときに、言葉のアクセントに合わせやすい</li><li>音数がばらばらになりやすいので、くり返す部分は行の長さをそろえておく</li></ul></div></div>`],
+  ['テーマの見つけ方',`<ul class="itips"><li><b>最近いちばん心が動いたこと</b>：小さな出来事のほうが、具体的に書けます。</li><li><b>言えなかった一言</b>：誰かに言えなかった言葉は、そのままサビの種になります。</li><li><b>モノから始める</b>：部屋にある物を1つ選び、その物が見てきたことを想像します。</li><li><b>反対の気持ちを組み合わせる</b>：「うれしいのにさみしい」のような矛盾が、歌詞に深さを生みます。</li></ul>`]
+ ],
+ tech:[
+  ['見せる、言わない',fig(lyrShowFig(),'気持ちの名前（さみしい・うれしい）を言うより、その気持ちのときの行動や場面を描くと、聴き手が自分で気持ちを感じ取ってくれます。')],
+  ['韻（ライム）をふむ',fig(lyrRhymeFig(),'日本語の韻は、母音（a・i・u・e・o）をそろえること。行の最後や、サビの頭の言葉でそろえると効果的です。')+`<p class="sub">「ツール」の韻さがしで、母音が同じ言葉を探せます。</p>`],
+  ['いろいろな技',`<dl class="ifacts"><div><dt>五感を使う</dt><dd>見たものだけでなく、音・におい・温度・味を入れると、場面が立体的になります。</dd></div><div><dt>対比</dt><dd>光と影、昨日と明日、大きいものと小さいもの。並べると両方が際立ちます。</dd></div><div><dt>くり返し</dt><dd>大事な言葉は、サビで2回以上。少しだけ形を変えてくり返すと、意味が深まります。</dd></div><div><dt>比喩</dt><dd>「〜のような」（直喩）と、「君は灯台」のように言い切る（隠喩）。言い切る方が強く響きます。</dd></div><div><dt>固有名詞</dt><dd>曜日、駅の名前、商品の名前など。具体的な名前が1つあるだけで、急にリアルになります。</dd></div><div><dt>問いかけ</dt><dd>サビ前に問いを置き、サビで答えると、聴き手が引きこまれます。</dd></div><div><dt>視点を変える</dt><dd>1番は「わたし」、2番は「きみ」から見た同じ出来事、のように視点を変えると、物語が広がります。</dd></div><div><dt>文字の見た目</dt><dd>ひらがなは柔らかく、漢字は硬く、カタカナは軽く無機質に見えます。歌詞カードや動画の字幕で効いてきます。</dd></div></dl>`],
+  ['言葉と音の合わせ方',`<dl class="ifacts"><div><dt>アクセント</dt><dd>言葉の高い・低いを、メロディの上がり下がりにそろえると聴き取りやすくなります（雨と飴のちがい）。</dd></div><div><dt>伸ばす音は開いた母音</dt><dd>長く伸ばす音は「あ」「お」が響きやすく、「い」「う」は細くなりがちです。</dd></div><div><dt>強拍に大事な言葉</dt><dd>小節の頭やキックの位置に、いちばん伝えたい言葉を置きます。</dd></div><div><dt>助詞で終わらない</dt><dd>「〜を」「〜が」で長く伸ばすと、意味が途切れて聴こえます。</dd></div></dl>`]
+ ],
+ voc:[
+  ['歌声合成で聴き取りやすくする',`<dl class="ifacts"><div><dt>入力は「発音どおり」</dt><dd>「は」（助詞）は「わ」、「を」は「お」、「へ」（助詞）は「え」と入力します。歌詞カード用の表記とは分けて管理します。</dd></div><div><dt>1ノート1モーラ</dt><dd>「きゃ」は1つのノート、「っ」と「ん」と「ー」はそれぞれ1つのノートとして数えます。</dd></div><div><dt>子音が埋もれやすい</dt><dd>速いパートでは「さ行・は行」が聴こえにくいことがあります。大事な言葉には、か行・た行・ぱ行のような立ち上がりのはっきりした音を選ぶと届きます。</dd></div><div><dt>高い音の母音</dt><dd>高音のロングトーンは「あ」「え」「お」が映えます。「い」「う」で高く伸ばすと細く聴こえやすいです。</dd></div><div><dt>ブレスの位置</dt><dd>歌声合成は息継ぎしなくても歌えますが、フレーズの間にブレス（休符）を入れると、人が歌っているように聴こえます。</dd></div></dl>`],
+  ['ボカロ曲らしい歌詞',`<div class="fxgen"><div><b>よくある書き方</b><ul><li>心の中のひとりごと（内面の独白）</li><li>比喩を重ねた、ちょっと不思議な言い回し</li><li>早口パートに情報をぎゅっと詰めこむ</li><li>人ではないもの（機械・幽霊・物）の視点</li></ul></div><div><b>気をつけたいこと</b><ul><li>早口ばかりだと内容が伝わらない。サビは短く</li><li>難しい漢字の言葉は、耳だけでは意味が取れない</li><li>ほかの人の歌詞の言い回しを、そのまま使わない</li></ul></div></div>`],
+  ['動画の字幕・歌詞カード',`<ul class="itips"><li><b>改行はフレーズごと</b>：歌の息継ぎの位置で改行すると読みやすくなります。</li><li><b>表記を統一する</b>：同じ言葉をひらがなと漢字で混ぜない（わざとの場合を除く）。</li><li><b>ルビ</b>：読み方を変える当て字は、字幕にルビを付けると伝わります。</li></ul>`]
+ ],
+ check:[
+  ['仕上げのチェックリスト',`<ul class="lcheck">${['テーマを1文で言える','サビにタイトル（いちばん言いたい言葉）が入っている','Aメロで場面が見える（五感が1つ以上ある）','「さみしい」などの気持ちの名前を、言いすぎていない','2番で時間か視点が進んでいる','サビは一度聴いただけで覚えられる','声に出して歌って、言いにくいところがない','長く伸ばす音が「い」「う」ばかりになっていない','言葉のアクセントとメロディの上がり下がりが合っている','歌声合成の入力用に、発音どおりの表記を用意した'].map((t,i)=>`<li><label><input type="checkbox" data-lc="${i}"><span>${t}</span></label></li>`).join('')}</ul><p class="sub" id="lcCount"></p>`],
+  ['困ったときの処方箋',`<dl class="ifacts"><div><dt>何を書けばいいかわからない</dt><dd>「ツール」のお題ガチャで、人物・場所・時間・物・気持ちを1つずつ引いて、組み合わせます。</dd></div><div><dt>ありきたりになる</dt><dd>「夢」「翼」「涙」のようなよく使われる言葉を、具体的な物や行動に置き換えます。</dd></div><div><dt>言葉が多すぎて入らない</dt><dd>助詞（て・に・を・は）を削り、同じ意味の短い言葉を探します。言い切りにすると短くなります。</dd></div><div><dt>サビが弱い</dt><dd>サビの最初の3〜4音に、いちばん強い言葉を置きます。タイトルをサビの頭か最後に入れます。</dd></div><div><dt>1番と2番が同じ話になる</dt><dd>2番は「その後」「その前」「相手から見た話」のどれかにします。</dd></div><div><dt>恥ずかしくて書けない</dt><dd>主人公を自分以外（物や動物、架空の人物）にすると、本音が書きやすくなります。</dd></div></dl>`]
+ ]
+};
+function lyrToolHTML(){return `
+ <div class="card" data-pane="ltool" id="lyrCounter" data-open="1"><h3>音数カウンター・母音チェック</h3>
+  <p class="sub" style="margin:0 0 8px">1行ずつ、ひらがなかカタカナで入力してください。音の数（モーラ）と母音を数えて、行末の韻が同じ行を同じ色で表示します。</p>
+  <textarea id="lyrIn" rows="5" placeholder="ひかりのなかで&#10;きみをさがした&#10;よるのしかいに&#10;ほしがおちた"></textarea>
+  <div id="lyrOut" class="lyrout"></div></div>
+ <div class="card" data-pane="ltool" id="lyrRhyme"><h3>韻さがし</h3>
+  <p class="sub" style="margin:0 0 8px">言葉をひらがなで入れると、母音のおわりが同じ言葉を探します。</p>
+  <div class="lrow"><input id="rhIn" type="text" placeholder="例：ひかり" autocomplete="off"><button class="btn primary keep" id="rhGo">探す</button></div>
+  <div id="rhOut" class="rhout"></div></div>
+ <div class="card" data-pane="ltool" id="lyrOdai"><h3>お題ガチャ</h3>
+  <p class="sub" style="margin:0 0 8px">5つのお題を組み合わせて、歌詞の種を作ります。気に入らない項目だけ引き直せます。</p>
+  <div id="odaiOut" class="odai"></div><button class="btn primary keep" id="odaiAll">ぜんぶ引く</button></div>`}
+function renderLyrics(){const sec=document.getElementById('lyrics');if(!sec||sec.dataset.done)return;sec.dataset.done=1;
+  const pane={base:'lbase',make:'lmake',tech:'ltech',voc:'lvoc',check:'lcheck'};let h='';
+  Object.entries(LYR).forEach(([k,cards])=>cards.forEach(([t,b])=>h+=`<div class="card" data-pane="${pane[k]}"><h3>${t}</h3>${b}</div>`));
+  h+=lyrToolHTML();sec.insertAdjacentHTML('beforeend',h);
+  /* 音数カウンター */
+  const inp=sec.querySelector('#lyrIn'),out=sec.querySelector('#lyrOut');const COLS=['var(--rose)','var(--soda)','var(--mint)','var(--butter)','#B48AD8','#E8955B'];
+  const run=()=>{const lines=(inp.value||inp.placeholder).split('\n').filter(x=>x.trim());const keys={};let ci=0;
+    const rows=lines.map(l=>{const r=moraOf(l),k=rhymeKey(r.m);return {l,r,k}});const cnt={};rows.forEach(x=>{if(x.k)cnt[x.k]=(cnt[x.k]||0)+1});
+    out.innerHTML=rows.map(({l,r,k})=>{let col='';if(k&&cnt[k]>1){if(!(k in keys))keys[k]=COLS[ci++%COLS.length];col=keys[k]}
+      return `<div class="lrline"${col?` style="--rc:${col}"`:''}><div class="lrt"><b>${l.replace(/</g,'&lt;')}</b><span class="lrn">${r.m.length}音${r.unk?`<em>（漢字${r.unk}字は数えていません）</em>`:''}</span></div><div class="lrv">${r.m.map(x=>`<span class="${'aiueo'.includes(x.v)?'v-'+x.v:'v-x'}">${VJ[x.v]||x.v}</span>`).join('')}</div>${col?'<span class="lrrh">韻</span>':''}</div>`}).join('')||'<p class="sub">ここに結果が出ます</p>'};
+  inp.oninput=run;run();
+  /* 韻さがし */
+  const rhGo=()=>{const w=sec.querySelector('#rhIn').value.trim()||'ひかり';const r=rhymeFind(w),key=moraOf(w).m.filter(x=>'aiueo'.includes(x.v)).map(x=>VJ[x.v]).join('');
+    sec.querySelector('#rhOut').innerHTML=`<p class="sub">「${w.replace(/</g,'&lt;')}」の母音：<b>${key||'—'}</b></p>`+(r.length?`<div class="chips">${r.map(([x,n])=>`<span class="chip rh${n>=3?' strong':''}">${x}</span>`).join('')}</div><p class="sub">${vconv('色が濃いものほど、うしろから多くの母音がそろっています。',curVoice())}</p>`:`<p class="sub">${vconv('見つかりませんでした。別の言葉や、ひらがなで試してみてください。',curVoice())}</p>`)};
+  sec.querySelector('#rhGo').onclick=rhGo;sec.querySelector('#rhIn').onkeydown=e=>{if(e.key==='Enter')rhGo()};
+  /* お題ガチャ */
+  const OD=[['who','だれが'],['where','どこで'],['when','いつ'],['thing','カギになる物'],['feel','気持ち']],cur={};
+  const draw=k=>{const a=ODAI[k];let x;do{x=a[Math.floor(Math.random()*a.length)]}while(x===cur[k]&&a.length>1);cur[k]=x};
+  const paint=()=>{sec.querySelector('#odaiOut').innerHTML=OD.map(([k,l])=>`<div class="od"><small>${l}</small><b>${cur[k]}</b><button class="keep" data-k="${k}" aria-label="${l}を引き直す">↻</button></div>`).join('');sec.querySelectorAll('#odaiOut [data-k]').forEach(b=>b.onclick=()=>{draw(b.dataset.k);paint()})};
+  OD.forEach(([k])=>draw(k));paint();sec.querySelector('#odaiAll').onclick=()=>{OD.forEach(([k])=>draw(k));paint()};
+  /* チェックリスト */
+  const ck=[...sec.querySelectorAll('[data-lc]')],upd=()=>{const n=ck.filter(c=>c.checked).length;sec.querySelector('#lcCount').textContent=`${n} / ${ck.length} できました`;S.lyrChk=ck.map(c=>c.checked?1:0);save()};
+  (S.lyrChk||[]).forEach((v,i)=>{if(ck[i])ck[i].checked=!!v});ck.forEach(c=>c.onchange=upd);sec.querySelector('#lcCount').textContent=`${ck.filter(c=>c.checked).length} / ${ck.length} できました`}
+
 /* ===== 起動 ===== */
 paintMascots();
 applyTheme();
 renderTips();renderPagers();
 
-sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();initLevels();foldPanes();
-setNavH();['sounds','tools',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
+sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderLyrics();initLevels();foldPanes();
+setNavH();['sounds','tools','lyrics',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();applyVoiceText();setTimeout(refreshFades,50);
 stopFns=[progStop,rStop,mStop,tClear,()=>{lenTimers.forEach(clearTimeout);lenTimers=[];$$('#lenLeds i').forEach(x=>x.classList.remove('on'))},rhStop,()=>{if(ctx)instStop()}];
