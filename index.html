@@ -473,6 +473,17 @@ section.fadein{animation:fadein .25s ease}
 .ifacts div{display:grid;grid-template-columns:7.5em 1fr;gap:8px;padding:6px 0;border-bottom:1px dashed var(--rule);font-size:13.5px}
 .ifacts dt{color:var(--mute)}
 .ifacts dd{margin:0}
+.msteps{margin:8px 0 0;padding:0;list-style:none;counter-reset:ms;display:grid;gap:10px}
+.msteps li{counter-increment:ms;position:relative;padding:2px 0 2px 40px;font-size:14px;line-height:1.7}
+.msteps li::before{content:counter(ms);position:absolute;left:0;top:2px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--sa);color:#fff;font-weight:700;font-size:13px}
+.msteps li b{display:block}.msteps li span{display:block;color:var(--mute);font-size:13px}
+.mcheck{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:6px}
+.mcheck li{position:relative;padding:9px 12px 9px 40px;background:var(--paper);border-radius:12px;font-size:13.5px;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .2s}
+.mcheck li::before{content:"";position:absolute;left:12px;top:50%;width:18px;height:18px;margin-top:-9px;border-radius:6px;border:2px solid var(--rule)}
+.mcheck li.on{background:color-mix(in srgb,var(--sa) 14%,var(--paper))}
+.mcheck li.on::before{background:var(--sa);border-color:var(--sa)}
+.mcheck li.on::after{content:"";position:absolute;left:18px;top:50%;width:5px;height:9px;margin-top:-7px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.itips .demo{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .itips{margin:8px 0;padding:0;list-style:none;display:grid;gap:6px}
 .itips li{position:relative;padding:6px 12px 6px 28px;background:var(--paper);border-radius:12px;font-size:13.5px}
 .itips li::before{content:"♪";position:absolute;left:11px;top:6px;color:var(--sa);font-family:var(--display)}
@@ -894,6 +905,105 @@ table.wrap td{white-space:normal}
     </table></div>
     <div class="tip"><b>ヒント：</b>同じリズムやフレーズを「くり返して」「少し変える」と覚えやすいメロディになります。</div>
   </div>
+  <div class="card" data-pane="howto">
+    <h3>いいメロディの3つの条件</h3>
+    <dl class="ifacts">
+      <div><dt>覚えやすい</dt><dd>同じリズムや形が<b>くり返されている</b>。一度聴いたら口ずさめる。</dd></div>
+      <div><dt>自然に歌える</dt><dd>音域が広すぎず、<b>息継ぎの場所</b>がある。跳躍のあとに無理がない。</dd></div>
+      <div><dt>ドラマがある</dt><dd>低いところから高いところへの<b>山と谷</b>がある。緊張と解決、問いかけと答えがある。</dd></div>
+    </dl>
+    <p class="sub" style="margin:8px 0 0">この3つは、どれか1つだけ強くてもだめです。くり返しばかりだと退屈、ドラマばかりだと覚えられません。</p>
+  </div>
+  <div class="card" data-pane="howto">
+    <h3>作り方の手順</h3>
+    <ol class="msteps">
+      <li><b>コード進行とテンポを決める</b><span>先に土台があると、メロディの音を選びやすくなります。迷ったら王道進行や小室進行から。</span></li>
+      <li><b>リズムだけで短いモチーフを作る</b><span>1〜2小節ぶんの「タタ・ターン・タ」のようなリズムを、手拍子や鼻歌で先に決めます。印象に残るのは音の高さより、まずリズムです。</span></li>
+      <li><b>強拍にコードトーンを置いて音をつける</b><span>小節の頭や拍の頭はコードの音にして、あいだを経過音や刺繍音でつなぎます。</span></li>
+      <li><b>くり返して、少し変える</b><span>同じモチーフをもう一度使い、最後だけ変えたり、高さをずらしたりします（下の「モチーフを育てる技」）。</span></li>
+      <li><b>山（いちばん高い音）の場所を決める</b><span>頂点はサビの中で1回だけ。そこへ向かって少しずつ上がっていく道筋を作ります。</span></li>
+      <li><b>終わり方を決める</b><span>区切りの最後を主音にすると「終わった」、主音以外にすると「続く」感じになります。</span></li>
+      <li><b>声に出して歌ってみる</b><span>息が続くか、高すぎないか、口ずさめるかを確かめます。歌えないところは直す候補です。</span></li>
+    </ol>
+  </div>
+  <div class="card" data-pane="howto">
+    <h3>モチーフを育てる技</h3>
+    <p>いいメロディの多くは、短いモチーフをいろいろな形で使い回しています。新しい素材を足し続けるより、<b>1つの素材を育てる</b>ほうが、まとまりのある覚えやすいメロディになります。</p>
+    <ul class="itips">
+      <li><b>反復</b>：そのままくり返す。いちばん強く記憶に残る。<span class="demo"><button class="btn quiet sm" data-md="rep">▶ 聴く</button></span></li>
+      <li><b>ゼクエンツ（反復進行）</b>：形はそのままで、高さだけずらしてくり返す。自然に展開していく。<span class="demo"><button class="btn quiet sm" data-md="seq">▶ 聴く</button></span></li>
+      <li><b>リズムはそのまま、音だけ変える</b>：同じフレーズの続きに聴こえるのに、景色が変わる。<span class="demo"><button class="btn quiet sm" data-md="rhy">▶ 聴く</button></span></li>
+      <li><b>A・A・A'・B</b>：3回目で少し変え、4回目で別の展開へ。J-POP のサビでよく使われる型。<span class="demo"><button class="btn quiet sm" data-md="aaab">▶ 聴く</button></span></li>
+      <li><b>反行</b>：モチーフの上下を逆にする。上がっていた形を下がる形にすると、答えのように聴こえる。<span class="demo"><button class="btn quiet sm" data-md="inv">▶ 聴く</button></span></li>
+    </ul>
+  </div>
+  <div class="card" data-pane="howto">
+    <h3>メロディの形（輪郭）</h3>
+    <p>音の高さの流れを線でなぞったときの形を、メロディの<b>輪郭</b>といいます。輪郭がはっきりしていると、聴き手は流れを追いやすくなります。</p>
+    <ul class="itips">
+      <li><b>アーチ型</b>：上がって、山を越えて、下りてくる。いちばん安定した形。<span class="demo"><button class="btn quiet sm" data-md="arch">▶ アーチ型</button><button class="btn quiet sm" data-md="flat">▶ 平らなまま</button></span></li>
+      <li><b>頂点は1回だけ</b>：いちばん高い音を何度も使うと特別感が薄れる。<span class="demo"><button class="btn quiet sm" data-md="peak1">▶ 頂点が1回</button><button class="btn quiet sm" data-md="peakN">▶ 何度も頂点</button></span></li>
+      <li><b>跳躍のあとは反対向きへ</b>：大きく上がったら、隣の音へ下りて着地する。跳びっぱなしは不安定に聴こえる。<span class="demo"><button class="btn quiet sm" data-md="leapOk">▶ 跳んで戻る</button><button class="btn quiet sm" data-md="leapNg">▶ 跳びっぱなし</button></span></li>
+    </ul>
+  </div>
+  <div class="card" data-pane="howto">
+    <h3>リズムで差をつける</h3>
+    <ul class="itips">
+      <li><b>食い（シンコペーション）</b>：次の拍の音を、半拍前に出す。前のめりな勢いが出る。J-POP やボカロのサビの定番。<span class="demo"><button class="btn quiet sm" data-md="onbeat">▶ 拍どおり</button><button class="btn quiet sm" data-md="sync">▶ 食いあり</button></span></li>
+      <li><b>休符から入る</b>：小節の頭を休んで、裏拍から歌い出す。軽やかで、言葉が立つ。<span class="demo"><button class="btn quiet sm" data-md="headIn">▶ 頭から</button><button class="btn quiet sm" data-md="restIn">▶ 休符から</button></span></li>
+      <li><b>細かい音と長い音の対比</b>：細かく動いたあとに長い音を置くと、その長い音が強く印象に残る。</li>
+      <li><b>アウフタクト（弱起）</b>：前の小節の終わりから歌い始める。「さあ行くぞ」という助走になる。</li>
+    </ul>
+  </div>
+  <div class="card" data-pane="howto">
+    <h3>Aメロ・Bメロ・サビの作り分け</h3>
+    <div class="tbl"><table class="wrap"><tr><th></th><th>Aメロ</th><th>Bメロ</th><th>サビ</th></tr>
+      <tr><td>音域</td><td>低め・狭め</td><td>少しずつ上がる</td><td>いちばん高い。頂点がある</td></tr>
+      <tr><td>音の細かさ</td><td>細かく、語るように</td><td>だんだん長く</td><td>長い音で歌い上げる</td></tr>
+      <tr><td>くり返し</td><td>多め</td><td>変化をつける</td><td>覚えやすい決めフレーズ</td></tr>
+      <tr><td>終わり方</td><td>続く感じ</td><td>Ⅴ で止めて期待させる</td><td>主音でしっかり着地</td></tr></table></div>
+    <div class="demo" style="margin-top:8px"><button class="btn quiet sm" data-md="secA">▶ Aメロ風</button><button class="btn quiet sm" data-md="secS">▶ サビ風（同じコード）</button></div>
+    <div class="tip"><b>サビ頭の「決め音」：</b>サビの最初の音は、Aメロ・Bメロで使っていない高さから入ると「ここからサビ」とはっきり伝わります。</div>
+  </div>
+  <div class="card" data-pane="howto">
+    <h3>終わり方で印象が変わる</h3>
+    <p>フレーズの最後の音で、聴き手の感じ方が大きく変わります。</p>
+    <div class="demo"><button class="btn quiet sm" data-md="endTonic">▶ 主音で終わる（完結）</button><button class="btn quiet sm" data-md="endOpen">▶ 2番目の音で終わる（続く）</button></div>
+    <p class="sub" style="margin:8px 0 0">前半は「続く」、後半は「完結」で終えると、問いかけと答えのペアになります。</p>
+  </div>
+  <div class="card" data-pane="howto">
+    <h3>歌声合成（ボカロ）でメロディを作るとき</h3>
+    <ul class="itips">
+      <li><b>人には歌えない速さ・高さも武器になる</b>：早口や超高音は歌声合成ならではの魅力。ただし、曲の中の見せ場に絞ると効果が上がります。</li>
+      <li><b>速いフレーズは言葉を選ぶ</b>：子音が多い言葉を細かい音符に詰めると聴き取りにくくなります。母音で伸ばせる言葉を山場に置きます。</li>
+      <li><b>息継ぎの休符を入れる</b>：機械は息が切れませんが、休符がないと聴く側が苦しくなります。人らしさのためにも区切りを作ります。</li>
+      <li><b>ハモリは3度下か6度下</b>：主旋律の3度下を基本に、ぶつかるところだけ別の音に逃がします。<span class="demo"><button class="btn quiet sm" data-md="harm">▶ 3度下のハモリ</button></span></li>
+    </ul>
+  </div>
+  <div class="card" data-pane="howto">
+    <h3>行き詰まったときの抜け出し方</h3>
+    <ul class="itips">
+      <li><b>鼻歌を録音する</b>：コードを1つ鳴らしながら、なんとなく歌ったものをスマホで録っておく。あとで聴き返すと使える断片が見つかります。</li>
+      <li><b>リズムだけ借りる</b>：好きな曲のメロディのリズムだけを借りて、音の高さを全部変える。リズムは著作権の心配が少なく、骨組みとして強力です。</li>
+      <li><b>制限をつける</b>：「3つの音だけ」「1オクターブ以内」など縛りを作ると、かえってアイデアが出ます。</li>
+      <li><b>サビの決め音から逆算する</b>：いちばん言いたい言葉といちばん高い音を先に決め、そこへ向かう道を作ります。</li>
+      <li><b>一晩置く</b>：作った直後は良し悪しがわかりません。翌日に聴いて、残ったものが本物です。</li>
+    </ul>
+  </div>
+  <div class="card" data-pane="howto">
+    <h3>できたメロディのチェックリスト</h3>
+    <ul class="mcheck">
+      <li>声に出して歌える？ 息が続く？</li>
+      <li>いちばん高い音はサビに1回だけ？</li>
+      <li>全体の音域は1オクターブ半くらいに収まっている？</li>
+      <li>同じモチーフが、くり返し・変化して使われている？</li>
+      <li>強拍にコードにない音を長く置いたままになっていない？</li>
+      <li>大きく跳んだあと、反対向きに戻っている？</li>
+      <li>フレーズの最後が、続くところと終わるところで使い分けられている？</li>
+      <li>次の日に聴いても、口ずさみたくなる？</li>
+    </ul>
+    <p class="sub" style="margin:8px 0 0">タップするとチェックできます。体験タブのメロディ作りで試しながら使ってみてください。</p>
+  </div>
   <div class="card tips" data-sec="melody" data-pane="tips"></div>
   <nav class="pager" data-sec="melody" aria-label="ステージの移動"></nav>
 </section>
@@ -1051,7 +1161,7 @@ table.wrap td{white-space:normal}
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 23</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 24</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -1371,7 +1481,7 @@ function conj(stem){
   if(/あり$/.test(stem))return [stem.slice(0,-2)+'ある',stem.slice(0,-2)+'ない',stem.slice(0,-2)+'あった',stem.slice(0,-2)+'あろう'];
   if(/(て|で)い$/.test(stem)||/^い$/.test(stem)||/[もがはに]い$/.test(stem))return [stem+'る',stem+'ない',stem+'た',stem+'よう'];
   if(/(て|で)み$/.test(stem))return [stem+'る',stem+'ない',stem+'た',stem+'よう'];
-  if(/(て|で)き$/.test(stem)){const b=stem.slice(0,-1);return [b+'くる',b+'こない',b+'きた',b+'こよう']}
+  if(/(て|んで)き$/.test(stem)){const b=stem.slice(0,-1);return [b+'くる',b+'こない',b+'きた',b+'こよう']}
   if(ICHI_I.some(x=>stem.endsWith(x)&&(x.length>1||!KANJI.test(stem[stem.length-2]||''))))return [stem+'る',stem+'ない',stem+'た',stem+'よう'];
   if(last==='し'){const suru=!prev||'がをにともくりっ'.includes(prev)||/[ァ-ヶー0-9]/.test(prev)||(KANJI.test(prev)&&KANJI.test(pp));
     if(suru){const b=stem.slice(0,-1);return [b+'する',b+'しない',b+'した',b+'しよう']}}
@@ -3025,8 +3135,8 @@ function updateIcons(){
     const c2=document.createElement('canvas');c2.width=c2.height=32;c2.getContext('2d').drawImage(img,0,0,32,32);setL('link[rel="icon"][sizes="32x32"]',c2.toDataURL('image/png'));window.__iconPng=png}catch(e){}};img.src=url;
 }
 /* ===== ページ内タブ ===== */
-const PANE_L={dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
-const PANE_O=['today','stages','record','settings','play','genre','ens','dtm','learn','weak','tips','tasks'];
+const PANE_L={howto:'作り方',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
+const PANE_O=['today','stages','record','settings','play','genre','ens','dtm','learn','howto','weak','tips','tasks'];
 const paneSel={};
 function setupPanes(root){
   const key=root.id||'x',items=[...root.querySelectorAll(':scope > [data-pane]')];
@@ -3959,12 +4069,41 @@ Object.assign(FAQ,{
 const dsBest=id=>Math.max(S.c.ds[id+'@1']||0,S.c.ds[id+'@2']||0);
 const qOk=k=>(S.qstat[k]||[0])[0];
 
+
+/* ===== メロディの作り方：デモ ===== */
+const MCH={C:'C3 G3 E4',Am:'A2 E3 C4',F:'F2 C3 A3',G:'G2 D3 B3',GB:'B2 G3 D4',EmG:'G2 E3 B3'};
+function mplay(ch,mel,{bpm=96,harm=null,lead='flute'}={}){const b=60/bpm,t=ac().currentTime+.08;comp('epiano',t,b,ch.map(c=>MCH[c]),'half',.4);ps('ebass',t,b,ch.map(c=>MCH[c].split(' ')[0].replace(/\d/,d=>+d-1)+':4').join(' '),{vm:.7});ps(lead,t,b,mel,{vm:1});if(harm)ps('piano',t,b,harm,{vm:.55});runViz()}
+const CAFG=['C','Am','F','G'];
+const MDEMO={
+ rep:()=>mplay(CAFG,'E5:.5 G5:.5 A5:1 G5:2 E5:.5 G5:.5 A5:1 E5:2 F5:.5 A5:.5 C6:1 A5:2 G5:.5 B5:.5 D6:1 B5:2'),
+ seq:()=>mplay(['C','GB','Am','EmG'],'G5:.5 E5:.5 F5:.5 D5:.5 E5:2 F5:.5 D5:.5 E5:.5 C5:.5 D5:2 E5:.5 C5:.5 D5:.5 B4:.5 C5:2 D5:.5 B4:.5 C5:.5 A4:.5 B4:2'),
+ rhy:()=>mplay(CAFG,'E5:.75 D5:.25 E5:1 G5:2 C5:.75 B4:.25 C5:1 E5:2 A4:.75 G4:.25 A4:1 C5:2 B4:.75 C5:.25 D5:1 G5:2'),
+ aaab:()=>mplay(CAFG,'C5:.5 D5:.5 E5:1 G5:1 E5:1 C5:.5 D5:.5 E5:1 G5:1 E5:1 C5:.5 D5:.5 F5:1 A5:1 F5:1 G5:1.5 F5:.5 D5:2'),
+ inv:()=>mplay(CAFG,'C5:.5 D5:.5 E5:.5 G5:.5 C6:2 C6:.5 B5:.5 A5:.5 E5:.5 A4:2 A4:.5 C5:.5 F5:.5 A5:.5 C6:2 B5:.5 A5:.5 G5:.5 D5:.5 G4:2'),
+ arch:()=>mplay(CAFG,'C5:1 D5:1 E5:1 G5:1 A5:1 C6:1 A5:1 G5:1 F5:1 E5:1 D5:1 C5:1 D5:2 B4:2'),
+ flat:()=>mplay(CAFG,'E5:1 E5:1 D5:1 E5:1 E5:1 C5:1 E5:1 E5:1 F5:1 E5:1 F5:1 E5:1 D5:2 D5:2'),
+ peak1:()=>mplay(CAFG,'E5:1 G5:1 A5:1 G5:1 E5:1 G5:1 C6:2 A5:1 G5:1 F5:1 E5:1 D5:4'),
+ peakN:()=>mplay(CAFG,'C6:1 G5:1 C6:1 G5:1 C6:1 A5:1 C6:2 C6:1 A5:1 C6:1 A5:1 B5:2 D6:2'),
+ leapOk:()=>mplay(['C','Am'],'C5:1 A5:1 G5:1 E5:1 E5:4'),
+ leapNg:()=>mplay(['C','Am'],'G4:1 E5:1 C6:1 A6:1 A6:4'),
+ onbeat:()=>mplay(CAFG,'E5:1 E5:1 G5:1 A5:1 G5:2 E5:2 F5:1 F5:1 A5:1 C6:1 B5:2 G5:2'),
+ sync:()=>mplay(CAFG,'E5:1 E5:.5 G5:1 A5:1.5 G5:1.5 E5:2.5 F5:1 F5:.5 A5:1 C6:1.5 B5:1.5 G5:2.5'),
+ headIn:()=>mplay(['C','Am'],'E5:.5 E5:.5 D5:.5 C5:.5 D5:1 E5:1 C5:.5 C5:.5 B4:.5 A4:.5 B4:1 C5:1'),
+ restIn:()=>mplay(['C','Am'],'r:.5 E5:.5 E5:.5 D5:.5 C5:.5 D5:1 E5:.5 r:.5 C5:.5 C5:.5 B4:.5 A4:.5 B4:.5 C5:1'),
+ secA:()=>mplay(CAFG,'G4:.5 G4:.5 A4:.5 G4:.5 E4:.5 G4:.5 C5:1 C5:.5 B4:.5 A4:.5 G4:.5 E4:1 r:1 F4:.5 F4:.5 A4:.5 C5:.5 A4:.5 G4:.5 F4:1 G4:.5 A4:.5 B4:.5 D5:.5 D5:2'),
+ secS:()=>mplay(CAFG,'E5:.5 G5:.5 C6:2 B5:1 A5:1.5 G5:.5 E5:2 F5:.5 A5:.5 C6:2 D6:1 B5:3 G5:1'),
+ endTonic:()=>mplay(['F','G','C'],'A5:1 G5:1 F5:1 A5:1 G5:1 F5:1 D5:1 B4:1 C5:4'),
+ endOpen:()=>mplay(['F','G','G'],'A5:1 G5:1 F5:1 A5:1 G5:1 F5:1 E5:1 B4:1 D5:4'),
+ harm:()=>mplay(CAFG,'E5:1 G5:1 A5:1 G5:1 E5:2 C5:2 F5:1 A5:1 C6:1 A5:1 G5:2 B5:2',{harm:'C5:1 E5:1 F5:1 E5:1 C5:2 A4:2 D5:1 F5:1 A5:1 F5:1 E5:2 G5:2'})
+};
+function initMelHow(){$$('[data-md]').forEach(b=>b.onclick=()=>MDEMO[b.dataset.md]());$$('.mcheck li').forEach(li=>li.onclick=()=>li.classList.toggle('on'))}
+
 /* ===== 起動 ===== */
 paintMascots();
 applyTheme();
 renderTips();renderPagers();
 
-sInitSounds();renderGenres();rhInit();renderDTM();
+sInitSounds();renderGenres();rhInit();renderDTM();initMelHow();
 setNavH();['sounds',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();applyVoiceText();
