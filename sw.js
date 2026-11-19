@@ -1,6 +1,6 @@
 // 音楽理論ラボ サービスワーカー
 // 内容を更新したら VERSION を上げてください（古いキャッシュが消え、新しい版が配られます）
-const VERSION = 'v6';
+const VERSION = 'v7';
 const APP_CACHE = `riron-lab-app-${VERSION}`;
 const FONT_CACHE = 'riron-lab-fonts';
 
@@ -39,7 +39,7 @@ self.addEventListener('fetch', (event) => {
   // ページ本体：ネット優先、つながらなければキャッシュ
   if (req.mode === 'navigate') {
     event.respondWith(
-      fetch(req)
+      fetch(req.url, { cache: 'no-store', credentials: 'same-origin' })
         .then((res) => {
           const copy = res.clone();
           caches.open(APP_CACHE).then((c) => c.put('./index.html', copy));

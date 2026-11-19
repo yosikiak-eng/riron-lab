@@ -744,7 +744,7 @@ section.fadein{animation:fadein .25s ease}
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 6</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 7</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -2103,7 +2103,11 @@ let lastW=innerWidth;
 addEventListener('resize',()=>{if((innerWidth<600)!==(lastW<600)){lastW=innerWidth;iRender();sRender();cRender();dShow();pShowChord(Math.max(0,pIdx-1),!pTimer)}});
 
 /* ===== PWA ===== */
-if('serviceWorker' in navigator&&location.protocol!=='file:'){addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(()=>{})})}
+if('serviceWorker' in navigator&&location.protocol!=='file:'){
+  const hadCtl=!!navigator.serviceWorker.controller;let reloading=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!hadCtl||reloading)return;reloading=true;location.reload()});
+  addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).then(r=>{r.update().catch(()=>{});document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')r.update().catch(()=>{})})}).catch(()=>{})});
+}
 (function(){
   const standalone=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
   if(standalone)return;
