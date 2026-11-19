@@ -260,6 +260,7 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 @keyframes floatup{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-30px);opacity:0}}
 #modal{position:fixed;inset:0;background:rgba(51,41,74,.32);display:grid;place-items:center;z-index:100;padding:20px}
 #modal[hidden]{display:none}
+[hidden]{display:none !important}
 .mbox{background:var(--sheet);border-radius:22px;padding:26px 22px 22px;text-align:center;width:min(100%,340px);box-shadow:0 20px 50px rgba(51,41,74,.2)}
 .mbox .mlabel{font-size:13px;color:var(--mute)}
 .mbox h4{font-family:var(--display);font-weight:500;font-size:22px;margin:6px 0;line-height:1.45}
@@ -396,6 +397,12 @@ nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:70
 .idx{margin-top:18px;padding-top:6px;border-top:1px dashed color-mix(in srgb,var(--ink) 14%,transparent)}
 .dtmh{font-family:var(--display);font-weight:500;font-size:17px;margin:20px 0 2px}
 .dtmh:first-of-type{margin-top:4px}
+.showbox{display:flex;gap:12px;align-items:center;margin:14px 0 4px;padding:12px 14px;border-radius:16px;background:color-mix(in srgb,var(--sa) 10%,var(--paper))}
+.showbox .btn{flex:none}
+.showbox p{margin:0;font-size:13px;line-height:1.65;color:var(--mute)}
+@media (max-width:420px){.showbox{flex-direction:column;align-items:stretch}.showbox .btn{align-self:flex-start}}
+.mi .mlv{display:block;font-size:11.5px;color:var(--mute);margin-top:2px;font-weight:400}
+.mi .mgo{margin-top:6px}
 .tipgrp li.x::before{content:"×";color:#B8456A;font-size:16px}
 .tipgrp li b{display:block;font-size:14.5px;line-height:1.6}
 .tipgrp li p{margin:2px 0 0;font-size:13.5px;color:var(--ink2)}
@@ -966,7 +973,7 @@ table.wrap td{white-space:normal}
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 15</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 16</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -1061,56 +1068,43 @@ const SEC=Object.fromEntries(SECS.map(s=>[s.id,s]));
 const NUM=id=>String(SECS.findIndex(s=>s.id===id)+1).padStart(2,'0');
 const CHURCH=['dorian','phryg','lydian','mixo'];
 const MISSIONS=[
- {id:'b1',sec:'basics',t:'鍵盤を50回弾こう',xp:20,p:c=>[c.keys,50]},
- {id:'b2',sec:'basics',t:'12音（白鍵7＋黒鍵5）をぜんぶ弾こう',xp:30,p:c=>[c.pcs.length,12]},
- {id:'b3',sec:'basics',t:'半音・全音・オクターブを聴きくらべ',xp:20,p:c=>[c.demo.length,3]},
- {id:'b4',sec:'basics',t:'半音ずつ13音連続で上がろう（クロマチック）',xp:50,p:c=>[c.chrom,13]},
- {id:'r1',sec:'rhythm',t:'音符の長さ6種類をすべて聴こう',xp:20,p:c=>[c.lens.length,6]},
+ {id:'b5',sec:'basics',t:'「半音・全音・異名同音」で6問連続正解',xp:40,go:'bs',p:c=>[dsBest('bs'),6]},
+ {id:'b6',sec:'basics',t:'上の鍵盤だけで、D メジャースケールを D から次の D まで順に弾く',xp:40,p:c=>[c.bsc.includes(2)?1:0,1],hint:'♯が2つ付きます。全全半全全全半の並びを鍵盤で探してください'},
+ {id:'b7',sec:'basics',t:'上の鍵盤だけで、B♭ メジャースケールを B♭ から次の B♭ まで順に弾く',xp:50,p:c=>[c.bsc.includes(10)?1:0,1],hint:'♭が2つ付きます'},
  {id:'r2',sec:'rhythm',t:'プリセットを使わず「4つ打ち」を打ち込んで再生',xp:30,p:c=>[c.four,1]},
  {id:'r3',sec:'rhythm',t:'プリセットを使わず「8ビート」を打ち込んで再生',xp:40,p:c=>[c.eight,1]},
- {id:'r4',sec:'rhythm',t:'BPM170以上で合計8小節演奏しよう',xp:40,p:c=>[c.fastBars,8]},
- {id:'i1',sec:'intervals',t:'長3度と短3度を両方聴こう',xp:20,p:c=>[[3,4].filter(x=>c.iv.includes(x)).length,2]},
- {id:'i2',sec:'intervals',t:'13種類の音程をコンプリート',xp:40,p:c=>[c.iv.length,13]},
- {id:'i3',sec:'intervals',t:'ちがう基準音4つで音程を聴こう',xp:30,p:c=>[c.ivRoots.length,4]},
- {id:'i4',sec:'intervals',t:'音程の耳トレ（ふつう以上）で8問正解',xp:50,p:c=>[c.qIv,8]},
- {id:'s1',sec:'scales',t:'平行調（C と Am）を聴きくらべ',xp:20,p:c=>[c.rel.length,2]},
- {id:'s2',sec:'scales',t:'チャーチモード4種類をすべて聴こう',xp:30,p:c=>[CHURCH.filter(x=>c.scale.includes(x)).length,4]},
- {id:'s3',sec:'scales',t:'ちがうルート5つでスケールを聴こう',xp:30,p:c=>[c.scRoots.length,5]},
- {id:'s4',sec:'scales',t:'11種類のスケールをコンプリート',xp:40,p:c=>[c.scale.length,11]},
- {id:'c1',sec:'chords',t:'メジャー→マイナー比較を聴こう',xp:20,p:c=>[c.cmp?1:0,1]},
- {id:'c2',sec:'chords',t:'13種類のコードをコンプリート',xp:40,p:c=>[c.chord.length,13]},
- {id:'c3',sec:'chords',t:'12のルートすべてでコードを鳴らそう',xp:40,p:c=>[c.chRoots.length,12]},
- {id:'c4',sec:'chords',t:'コードの耳トレ（ふつう以上）で8問正解',xp:50,p:c=>[c.qCh,8]},
- {id:'d1',sec:'diatonic',t:'2つのキーでメジャーの7コードをぜんぶ鳴らそう',xp:40,p:c=>[Object.values(c.diaMaj).filter(a=>a.length>=7).length,2]},
- {id:'d2',sec:'diatonic',t:'マイナーキーの7コードをぜんぶ鳴らそう',xp:30,p:c=>[Math.max(0,...Object.values(c.diaMin).map(a=>a.length)),7]},
- {id:'d3',sec:'diatonic',t:'4和音（7th）で7コードをぜんぶ鳴らそう',xp:30,p:c=>[c.dia7.length,7]},
- {id:'d4',sec:'diatonic',t:'3つの終止（カデンツ）を聴こう',xp:20,p:c=>[c.cad.length,3]},
- {id:'p1',sec:'progressions',t:'8つの進行をコンプリート',xp:40,p:c=>[c.prog.length,8]},
- {id:'p2',sec:'progressions',t:'ちがうキー5つで再生しよう',xp:30,p:c=>[c.progKey.length,5]},
- {id:'p3',sec:'progressions',t:'BPM140以上でループを合計3周聴こう',xp:40,p:c=>[c.fastLoops,3]},
- {id:'m1',sec:'melody',t:'6音以上のメロディを作って再生',xp:30,p:c=>[c.mel6,1]},
- {id:'m2',sec:'melody',t:'3種類以上の伴奏でメロディを再生',xp:30,p:c=>[c.melBack.length,3]},
+ {id:'r5',sec:'rhythm',t:'「音符と拍子の計算」で8問連続正解',xp:50,go:'rh',p:c=>[dsBest('rh'),8]},
+ {id:'i5',sec:'intervals',t:'音程の耳トレで5問連続正解',xp:60,go:'interval',p:c=>[dsBest('interval'),5]},
+ {id:'i6',sec:'intervals',t:'耳トレで、長3度と短3度をそれぞれ3回正解',xp:40,go:'interval',p:c=>[Math.min(qOk('iv:3'),qOk('iv:4')),3]},
+ {id:'i7',sec:'intervals',t:'「音程の知識」で8問連続正解',xp:30,go:'iv',p:c=>[dsBest('iv'),8]},
+ {id:'s5',sec:'scales',t:'「スケールと調号」で8問連続正解',xp:50,go:'sk',p:c=>[dsBest('sk'),8]},
+ {id:'s6',sec:'scales',t:'「スケールを聴き分ける」で5問連続正解',xp:60,go:'se',p:c=>[dsBest('se'),5]},
+ {id:'s7',sec:'scales',t:'聴き分けで、ドリアンとミクソリディアンをそれぞれ2回正解（むずかしい）',xp:50,go:'se',hard:1,p:c=>[Math.min(qOk('se:dorian'),qOk('se:mixo')),2]},
+ {id:'c5',sec:'chords',t:'コードの耳トレで5問連続正解',xp:60,go:'chord',p:c=>[dsBest('chord'),5]},
+ {id:'c6',sec:'chords',t:'「コードの構成音」で6問連続正解',xp:50,go:'ck',p:c=>[dsBest('ck'),6]},
+ {id:'c7',sec:'chords',t:'耳トレで、M7 と 7 をそれぞれ3回正解（むずかしい）',xp:50,go:'chord',hard:1,p:c=>[Math.min(qOk('ch:M7'),qOk('ch:7')),3]},
+ {id:'d5',sec:'diatonic',t:'「ダイアトニックと機能」で8問連続正解',xp:50,go:'dk',p:c=>[dsBest('dk'),8]},
+ {id:'d6',sec:'diatonic',t:'「終止を聴き分ける」で5問連続正解',xp:60,go:'ce',p:c=>[dsBest('ce'),5]},
+ {id:'p5',sec:'progressions',t:'「進行を聴き分ける」で4問連続正解',xp:70,go:'pe',p:c=>[dsBest('pe'),4]},
+ {id:'p6',sec:'progressions',t:'「進行の知識」で6問連続正解',xp:50,go:'pk',p:c=>[dsBest('pk'),6]},
  {id:'m3',sec:'melody',t:'自作で12音以上＆各小節の頭がすべてコードトーンのメロディを再生',xp:60,p:c=>[c.melGood,1]},
- {id:'m4',sec:'melody',t:'おまかせ生成を5回試そう',xp:20,p:c=>[c.gen,5]},
- {id:'t1',sec:'modulation',t:'3種類以上のラスサビ転調を聴こう',xp:30,p:c=>[c.mod.length,3]},
- {id:'t2',sec:'modulation',t:'同主調と平行調を聴きくらべ',xp:20,p:c=>[c.homo.length,2]},
- {id:'t3',sec:'modulation',t:'応用コード5つをぜんぶ聴こう',xp:40,p:c=>[c.app.length,5]},
- {id:'t4',sec:'modulation',t:'ちがうキー3つで応用コードを聴こう',xp:30,p:c=>[c.appKeys.length,3]},
- {id:'h1',sec:'reharm',t:'プリセットを3つ聴き比べよう',xp:20,p:c=>[c.rhPre.length,3]},
- {id:'h2',sec:'reharm',t:'ちがう技法を6種類使って再生しよう',xp:40,p:c=>[c.rhTech.length,6]},
+ {id:'m5',sec:'melody',t:'「メロディの知識」で6問連続正解',xp:50,go:'mk',p:c=>[dsBest('mk'),6]},
+ {id:'t5',sec:'modulation',t:'「転調を聴き分ける」で5問連続正解',xp:60,go:'me',p:c=>[dsBest('me'),5]},
+ {id:'t6',sec:'modulation',t:'「転調の知識」で6問連続正解',xp:50,go:'mo',p:c=>[dsBest('mo'),6]},
  {id:'h3',sec:'reharm',t:'メロディとぶつかるコードを見つけて再生しよう',xp:30,p:c=>[c.rhClash?1:0,1]},
  {id:'h4',sec:'reharm',t:'4小節すべて原曲と違うコードにして、ぶつかりなしで再生しよう',xp:60,p:c=>[c.rhGood?1:0,1]},
- {id:'q1',sec:'quiz',t:'クイズに合計30問正解',xp:40,p:c=>[c.qok,30]},
- {id:'q2',sec:'quiz',t:'10問連続で正解',xp:60,p:c=>[c.qbest,10]},
- {id:'q3',sec:'quiz',t:'3つのモードでそれぞれ5問以上正解',xp:40,p:c=>[Object.values(c.qm).filter(v=>v>=5).length,3]},
- {id:'q4',sec:'quiz',t:'「むずかしい」で10問正解',xp:60,p:c=>[c.qHard,10]}
+ {id:'h5',sec:'reharm',t:'「リハモの知識」で6問連続正解',xp:60,go:'rk',p:c=>[dsBest('rk'),6]},
+ {id:'q2',sec:'quiz',t:'どのモードでも10問連続正解',xp:60,p:c=>[c.qbest,10]},
+ {id:'q4',sec:'quiz',t:'「むずかしい」で10問正解',xp:60,p:c=>[c.qHard,10]},
+ {id:'q5',sec:'quiz',t:'「音楽用語」で8問連続正解',xp:50,go:'term',p:c=>[dsBest('term'),8]},
+ {id:'q6',sec:'quiz',t:'1ラウンド10問を全問正解',xp:60,p:c=>[c.perfect,1]}
 ];
 const LEVELS=[[0,'Grave','とても遅く、重々しく'],[80,'Largo','幅広く、ゆるやかに'],[200,'Adagio','ゆるやかに'],[360,'Andante','歩くような速さで'],[560,'Moderato','中くらいの速さで'],[800,'Allegretto','やや速く'],[1080,'Allegro','速く'],[1400,'Vivace','いきいきと速く'],[1720,'Presto','急速に'],[2000,'Prestissimo','できるかぎり速く']];
 const levelOf=xp=>{let l=0;LEVELS.forEach((L,i)=>{if(xp>=L[0])l=i});return l};
 
 /* ===== 保存 ===== */
 const SKEY='ongaku-riron-lab-v2';
-const fresh=()=>({xp:0,done:{},badges:{},daily:{date:'',pts:0,goalHit:0},days:[],goal:30,best:0,wrong:[],qstat:{},c:{keys:0,pcs:[],chrom:0,demo:[],lens:[],four:0,eight:0,fastBars:0,iv:[],ivRoots:[],scale:[],scRoots:[],rel:[],chord:[],chRoots:[],cmp:0,diaMaj:{},diaMin:{},dia7:[],cad:[],prog:[],progKey:[],fastLoops:0,mel6:0,melBack:[],melGood:0,gen:0,mod:[],homo:[],app:[],appKeys:[],qok:0,qtot:0,qbest:0,qm:{interval:0,chord:0,theory:0},qIv:0,qCh:0,qHard:0,rhPre:[],rhTech:[],rhClash:0,rhGood:0}});
+const fresh=()=>({xp:0,done:{},badges:{},daily:{date:'',pts:0,goalHit:0},days:[],goal:30,best:0,wrong:[],qstat:{},c:{keys:0,pcs:[],ds:{},bsc:[],perfect:0,chrom:0,demo:[],lens:[],four:0,eight:0,fastBars:0,iv:[],ivRoots:[],scale:[],scRoots:[],rel:[],chord:[],chRoots:[],cmp:0,diaMaj:{},diaMin:{},dia7:[],cad:[],prog:[],progKey:[],fastLoops:0,mel6:0,melBack:[],melGood:0,gen:0,mod:[],homo:[],app:[],appKeys:[],qok:0,qtot:0,qbest:0,qm:{interval:0,chord:0,theory:0},qIv:0,qCh:0,qHard:0,rhPre:[],rhTech:[],rhClash:0,rhGood:0}});
 function load(){try{const j=JSON.parse(localStorage.getItem(SKEY)||'null');if(j){const f=fresh();return {...f,...j,c:{...f.c,...(j.c||{}),qm:{...f.c.qm,...((j.c||{}).qm||{})}}}}}catch(e){}return fresh()}
 function save(){try{localStorage.setItem(SKEY,JSON.stringify(S))}catch(e){}}
 let S=load();
@@ -1257,7 +1251,9 @@ function track(type,v){
     case 'homo':add('homo',v);break;
     case 'app':add('app',v.i);add('appKeys',v.k);break;
     case 'reharm':if(v.pre>=0)add('rhPre',v.pre);v.techs.forEach(x=>add('rhTech',x));if(v.clash)c.rhClash=1;if(v.good)c.rhGood=1;break;
-    case 'qans':c.qtot++;if(v.ok){c.qok++;c.qbest=Math.max(c.qbest,v.streak);c.qm[v.mode]=(c.qm[v.mode]||0)+1;if(v.level>=1&&v.mode==='interval')c.qIv++;if(v.level>=1&&v.mode==='chord')c.qCh++;if(v.level===2)c.qHard++}break;
+    case 'bscale':add('bsc',v);break;
+    case 'perfect':c.perfect=1;break;
+    case 'qans':{const dk=v.dk+'@'+v.level;if(QS.dkey!==dk){QS.dkey=dk;QS.dst=0}if(v.ok){QS.dst++;c.ds[dk]=Math.max(c.ds[dk]||0,QS.dst)}else QS.dst=0}c.qtot++;if(v.ok){c.qok++;c.qbest=Math.max(c.qbest,v.streak);c.qm[v.mode]=(c.qm[v.mode]||0)+1;if(v.level>=1&&v.mode==='interval')c.qIv++;if(v.level>=1&&v.mode==='chord')c.qCh++;if(v.level===2)c.qHard++}break;
   }
   checkMissions();save();renderProgress();
 }
@@ -1326,10 +1322,11 @@ function recordSVG(pct){
 const HITOKOTO=['コード進行の Ⅵm→Ⅳ→Ⅴ→Ⅰ は、キーCなら Am→F→G→C。','BPM120 のとき、4分音符1つはちょうど0.5秒。','長3度を2つ重ねるとオーギュメント、短3度を2つ重ねるとディミニッシュ。','平行調のマイナーは、メジャーキーのルートから短3度下にあります。','Ⅴ7 の中にある3度と7度は増4度の関係。この不安定さが Ⅰ への解決を生みます。','ペンタトニックには半音の並びがないので、どの音を伸ばしてもぶつかりにくい。','全音上げの転調では、新しいキーの Ⅴ7 を1つ挟むと自然につながります。','16分音符は1拍を4つに割った長さ。ハイハットを16分で刻むと細かい疾走感が出ます。','sus4 は3度の代わりに4度を使うので、明るいとも暗いとも言えない響きになります。','メジャースケールで半音なのは、3番目と4番目、7番目と8番目の間だけ。','完全5度ずつ12回進むと、12音すべてを通って元の音名に戻ります（五度圏）。','メロディの最後をキーの主音で終えると、「終わった」感じが強くなります。','マイナーキーで Ⅴ をメジャーにすると、主音へ戻る力が強くなります。','同じメロディでも、下に置くコードを変えると印象がまったく変わります。'];
 function renderMissions(){
   $$('.missions').forEach(box=>{
+    box.onclick=e=>{const b=e.target.closest('[data-go]');if(!b)return;if(b.dataset.hard)$('#qLevel').value='2';startDrill(b.dataset.go)};
     const s=SEC[box.dataset.sec];const ms=MISSIONS.filter(m=>m.sec===s.id);const [a,b]=secProgress(s.id);const got=!!S.badges[s.id];
     box.innerHTML=`<div class="mhead"><div class="t">このステージの課題　${a}/${b}<small>${got?'スタンプを押しました':'すべて終えるとスタンプがもらえます'}</small></div>${stampHTML(s,'sm',!got)}</div>`+
       ms.map(m=>{const [x,y]=m.p(S.c);const d=!!S.done[m.id];const v=Math.min(x,y);
-        return `<div class="mi${d?' done':''}"><span class="ck" aria-hidden="true"></span><div class="mt">${m.t}<span class="pt">${m.xp}pt</span></div><div class="mp">${d?'済':`${v}/${y}<span class="bar"><i style="width:${v/y*100}%"></i></span>`}</div></div>`}).join('');
+        return `<div class="mi${d?' done':''}"><span class="ck" aria-hidden="true"></span><div class="mt">${m.t}<span class="pt">${m.xp}pt</span>${!d&&m.go?`<small class="mlv">${m.hard?'レベル「むずかしい」で数えます':DRILLS[m.go]||m.go==='term'||m.go==='interval'||m.go==='chord'?'レベル「ふつう」以上で数えます':''}</small><button class="btn quiet sm mgo" data-go="${m.go}" data-hard="${m.hard?1:''}">挑戦する</button>`:''}${!d&&m.hint?`<small class="mlv">${m.hint}</small>`:''}</div><div class="mp">${d?'済':`${v}/${y}<span class="bar"><i style="width:${v/y*100}%"></i></span>`}</div></div>`}).join('');
   });
 }
 function renderHome(){
@@ -1481,7 +1478,8 @@ addEventListener('hashchange',route);
 /* ===== 01 基礎 ===== */
 let bPrev=null,bRun=1;
 function bInit(){
-  keyboard($('#bKb'),{lo:60,hi:83,onKey:m=>{
+  const bHist=[];keyboard($('#bKb'),{lo:60,hi:83,onKey:m=>{
+    bHist.push(m);if(bHist.length>8)bHist.shift();if(bHist.length===8&&bHist.slice(1).map((x,i)=>x-bHist[i]).join()==='2,2,1,2,2,2,1')track('bscale',mod(bHist[0]));
     const pc=m%12;const black=[1,3,6,8,10].includes(pc);
     let s=`<b>${black?NAMES_S[pc]+' / '+NAMES_F[pc]:NAMES_S[pc]}</b> <span class="mono">${Math.floor(m/12)-1}</span>`;
     s+=black?`　（${SOLFA[pc-1]}♯ ＝ ${SOLFA[pc+1]}♭）`:`　（${SOLFA[pc]}）`;
@@ -1807,7 +1805,7 @@ const FAQ={
  borrow:['借用和音って何？','同じルートの別のキー（多くは同主調のマイナー）から一時的に借りてくるコードです。C メジャーの曲に C マイナーの Fm や A♭ を混ぜると、一瞬だけ切ない色や壮大な色がつきます。'],
  flat7:['なぜ ♭Ⅶ と書くの？','メジャースケールの7番目（C メジャーなら B）から半音下がった音がルートだからです。Ⅶ を基準に ♭ を付けて書くことで、どのキーでも位置がすぐわかります。']
 };
-const FAQ_BY=k=>k.startsWith('iv:')?['do','chotan','ear','hanon']:k.startsWith('ch:')?['Mm','sev','sus','dim']:({'th:0':['zen','chogo','hanon'],'th:1':['Mm','sev','sus','dim'],'th:2':['tobashi','roman'],'th:3':['do','chotan','hanon'],'th:4':['bpm','futen'],'th:5':['borrow','flat7','roman'],'th:6':['ura','dairi'],'th:7':['dairi','roman']})[k]||['hanon'];
+const FAQ_BY=k=>k.startsWith('iv:')?['do','chotan','ear','hanon']:k.startsWith('ch:')?['Mm','sev','sus','dim']:({'th:0':['zen','chogo','hanon'],'th:1':['Mm','sev','sus','dim'],'th:2':['tobashi','roman'],'th:3':['do','chotan','hanon'],'th:4':['bpm','futen'],'th:5':['borrow','flat7','roman'],'th:6':['ura','dairi'],'th:7':['dairi','roman']})[k]||FAQ_PRE[k.split(':')[0]]||['hanon'];
 const TERMS={
  '裏コード':'ドミナント7th のルートを増4度ずらした 7th コード。同じトライトーンを持つので代わりに使える。',
  '代理コード':'同じ機能を持ち、構成音を多く共有するコード。置き換えても流れが崩れない。',
@@ -1986,8 +1984,8 @@ function makeTh(p){
     steps:['ローマ数字は「キーの何番目の音がルートか」を表す。♭が付いていたら、その音を半音下げる。',`キー ${KEY_NAMES[k]} の${A[3]+1}番目の音は ${base}${A[4]?`。♭なので半音下げて ${root}`:''}。`,`後ろの記号はそのまま付ける：${A[2]?`「${A[2]}」は${CHORDS[A[2]].n}`:'記号なしなのでメジャー'} → ${ans}。`],
     tip:'♭Ⅵ・♭Ⅶ・Ⅳm は、同じルートのマイナーキーから借りてきたコード。「明るい曲に一瞬だけ暗い色を混ぜる」道具として覚えておくと、作曲で使いやすくなります。'};
 }
-function genTheory(lv){
-  const t=rand(lv===0?[0,3,4]:[0,1,2,3,4,5,6,7]);
+function genTheory(lv,ts){
+  const t=rand(ts||(lv===0?[0,3,4]:[0,1,2,3,4,5,6,7]));
   const P={t};
   if(t===0){P.k=rnd(12);P.d=2+rnd(6)}
   if(t===1){P.k=rnd(12);P.suf=rand(['','m','7','M7','m7','dim','aug','sus4','m7-5'])}
@@ -1999,10 +1997,10 @@ function genTheory(lv){
   if(t===7){P.k=rand([0,2,5,7,9,10,3]);P.f=rnd(3)}
   return P;
 }
-function buildQ(p){const q=p.kind==='iv'?makeIv(p):p.kind==='ch'?makeCh(p):makeTh(p);q.p=p;q.level=p.lv??+$('#qLevel').value;return q}
+function buildQ(p){const q=p.kind==='iv'?makeIv(p):p.kind==='ch'?makeCh(p):BUILD[p.kind]?BUILD[p.kind](p):makeTh(p);q.p=p;q.level=p.lv??+$('#qLevel').value;return q}
 function weakList(){return Object.entries(S.qstat).filter(([k,v])=>(k.startsWith('iv:')||k.startsWith('ch:'))&&v[1]>=2).map(([k,v])=>({k,ok:v[0],tot:v[1],rate:v[0]/v[1]})).sort((a,b)=>a.rate-b.rate)}
 function renderQModes(){
-  const el=$('#qMode');const items=[['interval','音程を聴き分ける'],['chord','コードを聴き分ける'],['theory','知識問題'],['review',`復習ノート（${S.wrong.length}）`],['focus','苦手を集中練習']];
+  const el=$('#qMode');const items=[['interval','音程を聴き分ける'],['chord','コードを聴き分ける'],['theory','知識問題'],['term','音楽用語'],...(DRILLS[qModeV]?[[qModeV,'ドリル：'+DRILLS[qModeV].n]]:[]),['review',`復習ノート（${S.wrong.length}）`],['focus','苦手を集中練習']];
   el.innerHTML='';items.forEach(([k,l])=>{const b=document.createElement('button');b.className='chip'+(k===qModeV?' sel':'');b.textContent=l;b.onclick=()=>{qModeV=k;round={i:0,res:[],pts:0};renderQModes();qNew()};el.appendChild(b)});
 }
 function renderDots(){
@@ -2019,15 +2017,17 @@ function qNew(){
     const w=rand(weak.slice(0,4)),v=w.k.split(':')[1];p=w.k.startsWith('iv')?{kind:'iv',r:55+rnd(12),iv:+v,lv:2}:{kind:'ch',r:52+rnd(12),s:v,lv:2};tag='苦手'}
   else if(qModeV==='interval')p={kind:'iv',r:55+rnd(12),iv:rand(IV_POOL[lv]),lv};
   else if(qModeV==='chord')p={kind:'ch',r:52+rnd(12),s:rand(CH_POOL[lv]),lv};
+  else if(qModeV==='term')p=genTm(lv);
+  else if(DRILLS[qModeV])p=DRILLS[qModeV].gen(lv);
   else{p=genTheory(lv);p.kind='th';p.lv=lv}
   Q=buildQ(p);
-  $('#qText').innerHTML=(tag?`<span class="qtag">${tag}</span>`:'')+Q.q;$('#qAudio').hidden=!Q.ear;
+  $('#qText').innerHTML=(tag?`<span class="qtag">${tag}</span>`:'')+Q.q;$('#qAudio').hidden=!Q.ear;$('#qHarm').hidden=!!Q.play;
   $('#qOpts').innerHTML=Q.opts.map(o=>`<button class="opt">${o}</button>`).join('');
   $$('#qOpts .opt').forEach(b=>b.onclick=()=>qAnswer(b));
   renderDots();
   if(Q.ear)qPlay();
 }
-function qPlay(){if(!Q)return;if(Q.chord)playChord(Q.notes,1.6);else playSeq(Q.notes,0.6)}
+function qPlay(){if(!Q)return;if(Q.play){stopAll();Q.play();return}if(Q.chord)playChord(Q.notes,1.6);else playSeq(Q.notes,0.6)}
 function expHTML(ok,chosen,gain,bonus){
   const used=new Set();
   return `<div class="exp"><div class="verdict"><div class="m">${mascot(ok?(bonus?'wow':'happy'):'oops')}</div><div>`+
@@ -2057,12 +2057,12 @@ function qAnswer(b){
   sfx(ok?'ok':'ng');
   if(Q.notes){const marks={};Q.notes.forEach((m,i)=>marks[m]={label:nm(m),cls:i===0?'root':'on'});const [lo,hi]=kbRange(Q.notes);keyboard($('#qKb'),{lo,hi,marks});$('#qKbWrap').hidden=false}
   if(ok){gainXP(gain);if(bonus)confetti(40)}
-  track('qans',{ok,streak:QS.st,mode:Q.p.kind==='iv'?'interval':Q.p.kind==='ch'?'chord':'theory',level:Q.level});
+  track('qans',{ok,streak:QS.st,mode:Q.p.kind==='iv'?'interval':Q.p.kind==='ch'?'chord':Q.p.kind==='tm'?'term':'theory',level:Q.level,dk:qModeV});
   $('#qNext').hidden=false;$('#qNext').textContent=round.i>=ROUND?'結果を見る':'次の問題';
   renderDots();renderQModes();renderWeak();
 }
 function qResult(){
-  const ok=round.res.filter(x=>x).length;
+  const ok=round.res.filter(x=>x).length;if(ok===ROUND)track('perfect',1);
   const msg=ok===ROUND?'全問正解です。':ok>=8?'かなり身についています。':ok>=5?'あと少しで安定します。間違えた問題は復習ノートに入れました。':'間違えた問題は復習ノートに入れました。解説の「考え方」を読み直してから復習すると定着します。';
   Q=null;$('#qText').textContent='ラウンド終了';$('#qOpts').innerHTML='';$('#qAudio').hidden=true;$('#qKbWrap').hidden=true;$('#qNext').hidden=true;
   $('#qFb').innerHTML=`<div class="result"><div class="m">${mascot(ok>=8?'wow':ok>=5?'happy':'oops')}</div><p class="rbig"><b>${ok}</b> / ${ROUND}問正解</p><p class="sub">このラウンドで ${round.pts}pt。${msg}</p><div class="ctrl" style="justify-content:center"><button class="btn primary" id="qAgain">もう1ラウンド</button>${S.wrong.length?`<button class="btn" id="qRev">復習ノートを解く（${S.wrong.length}問）</button>`:''}</div></div>`;
@@ -2358,10 +2358,11 @@ function renderInst(){
   box.innerHTML=`<div class="ihead"><h3 class="iname">${I.n}</h3><span class="qtag">${ICATS.find(c=>c[0]===I.cat)[1]}</span></div><p>${I.desc}</p>
    <dl class="ifacts"><div><dt>おいしい音域</dt><dd>${I.range}</dd></div><div><dt>曲での役割</dt><dd>${I.role}</dd></div><div><dt>よく合うジャンル</dt><dd>${I.genre}</dd></div></dl>
    <ul class="itips">${I.tips.map(x=>`<li>${x}</li>`).join('')}</ul>
-   <div class="ctrl">${btns.map(([k,l])=>`<button class="btn primary" data-ph="${k}">${l}</button>`).join('')}<button class="btn quiet" id="instStopBtn">■ 止める</button></div>
+   ${SHOW[curInst]?`<div class="showbox"><button class="btn primary" id="showBtn">▶ かっこいい演奏例</button><p>${SHOW[curInst].d}</p></div>`:''}
+   <div class="ctrl">${btns.map(([k,l])=>`<button class="btn quiet" data-ph="${k}">${l}</button>`).join('')}<button class="btn quiet" id="instStopBtn">■ 止める</button></div>
    ${I.kind==='drum'?`<div class="pads">${(I.pads||PADS).map(([l,k])=>`<button class="pad" data-d="${k}">${l}</button>`).join('')}</div>`:`<div class="ctrl"><label>オクターブ</label><button class="btn quiet sm" id="octDn">−</button><span class="mono" id="octV">${instOct>0?'+':''}${instOct}</span><button class="btn quiet sm" id="octUp">＋</button><span class="sub">鍵盤は押している間だけ鳴ります</span></div><div class="kbwrap"><div id="instKb"></div></div>`}${techHTML(curInst)}`;
   box.querySelectorAll('[data-ph]').forEach(b=>b.onclick=()=>instPhrase(b.dataset.ph));
-  $('#instStopBtn').onclick=instStop;bindTD(box);
+  $('#instStopBtn').onclick=instStop;bindTD(box);if($('#showBtn'))$('#showBtn').onclick=()=>playShow(curInst);
   if(I.kind==='drum'){box.querySelectorAll('.pad').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();const k=b.dataset.d;hit(isNaN(+k)?k:+k,ac().currentTime+.005);b.classList.add('on');setTimeout(()=>b.classList.remove('on'),140)}))}
   else{const lo=I.base+instOct*12;keyboard($('#instKb'),{lo,hi:lo+23,w:innerWidth<600?22:32,onDown:m=>INST[curInst].play(m,ac().currentTime+.005)});
     $('#octDn').onclick=()=>{if(instOct>-2){instOct--;renderInst()}};$('#octUp').onclick=()=>{if(instOct<2){instOct++;renderInst()}}}
@@ -3014,6 +3015,494 @@ const DDEMO={
  dRev(){const t=t0(),b=tBeat(84),mel=[[72,1],[76,.5],[79,1.5],[77,1.5]];let x=t;withWet(0,()=>mel.forEach(([m,l])=>{nOn('piano',m,x,l*b,.85);nOn('piano',m-12,x,l*b,.5);x+=l*b}));x+=b*1.5;withWet(2.6,()=>mel.forEach(([m,l])=>{nOn('piano',m,x,l*b,.85);nOn('piano',m-12,x,l*b,.5);x+=l*b}))},
  dVox(){const t=t0(),b=tBeat(80);const o={w1:'sawtooth',w2:'triangle',mix:.5,lp:2400,form:1100,peak:.1,rate:5.8,breath:1};glide(t,b,[[67,.5],[69,.5,.04],[72,2.5,.06]],{...o,vib:28,vd:0});glide(t+4*b,b,[[67,.5],[69,.5,.04],[71,.08,0,.9],[72,2.42,.08]],{...o,vib:30,vd:.45})}
 };
+
+/* ===== かっこいい演奏例 ===== */
+const NN={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+function nmid(s){const r=/^([A-G])([#b]?)(-?\d)$/.exec(s);if(!r)throw new Error('note '+s);return 12*(+r[3]+1)+NN[r[1]]+(r[2]==='#'?1:r[2]==='b'?-1:0)}
+const flen=l=>l.includes('/')?l.split('/').reduce((a,b)=>a/b):+l;
+/* "E5:.5 D5:1! [C4,E4]:2 r:1"  !＝強く ~＝弱く ^＝なめらかに滑らせる(^^＝ゆっくり) */
+function score(str){let x=0;const out=[];str.trim().split(/\s+/).forEach(tok=>{let v=.8,gl=0;if(tok.endsWith('!')){v=1;tok=tok.slice(0,-1)}else if(tok.endsWith('~')){v=.5;tok=tok.slice(0,-1)}
+  if(tok.startsWith('^^')){gl=.2;tok=tok.slice(2)}else if(tok.startsWith('^')){gl=.07;tok=tok.slice(1)}
+  const i=tok.lastIndexOf(':'),n=tok.slice(0,i),len=flen(tok.slice(i+1));
+  out.push({ms:n==='r'?null:n.startsWith('[')?n.slice(1,-1).split(',').map(nmid):[nmid(n)],at:x,len,v,gl});x+=len});out.total=x;return out}
+function ps(name,t,b,str,{gate=.92,vm=1,tr=0}={}){const sc=score(str);sc.forEach(e=>{if(e.ms)e.ms.forEach(m=>nOn(name,m+tr,t+e.at*b,Math.max(.05,e.len*b*gate),Math.min(1.1,e.v*vm)))});return sc.total}
+function gs(t,b,str,o={},tr=0){glide(t,b,score(str).map(e=>[e.ms?e.ms[0]+tr:null,e.len,e.gl,e.v]),o)}
+const GL={
+ lead:{lp:3600,peak:.1,vib:28},
+ violin:{w1:'sawtooth',w2:'sawtooth',mix:.3,lp:3800,form:2600,peak:.11,vib:26,rate:5.8},
+ cello:{w1:'sawtooth',w2:'sawtooth',mix:.3,lp:2400,form:900,peak:.16,vib:22,rate:5.2},
+ sax:{w1:'sawtooth',w2:'square',mix:.4,lp:2800,form:1300,peak:.11,vib:24,vd:.4,drive:1.4},
+ trumpet:{w1:'sawtooth',w2:'square',mix:.35,lp:3600,form:1400,peak:.11,vib:18},
+ clarinet:{w1:'square',w2:'triangle',mix:.5,lp:2200,peak:.11,vib:12},
+ flute:{w1:'sine',w2:'triangle',mix:.25,lp:4200,peak:.2,vib:16,breath:1},
+ shaku:{w1:'sine',w2:'triangle',mix:.15,lp:2600,peak:.22,vib:26,vd:.45,rate:4.5,breath:2},
+ b808:{w1:'sine',w2:'sine',mix:0,lp:900,peak:.32,vib:0,drive:2.2,wet:0,atk:.004},
+ acid:{w1:'sawtooth',w2:'sawtooth',mix:0,lp:1100,q:14,peak:.12,vib:0,wet:.05,atk:.004}
+};
+function beat(style,t,b,bars,{fill=false,crash=true,v=1}={}){
+  for(let bar=0;bar<bars;bar++){const T=t+bar*4*b,last=fill&&bar===bars-1;
+    if(crash&&bar===0&&style!=='trap')hit('cr',T,.7*v);
+    if(last&&['pop','rock','funk','shuffle'].includes(style)){for(let i=0;i<4;i++){hit(2,T+i*b/2,.6*v)}hit(0,T,v);hit(1,T+b,v);for(let i=0;i<8;i++)hit(i<4?'th':'tl',T+2*b+i*b/4,(.6+.05*i)*v);continue}
+    if(style==='pop'||style==='rock'){for(let i=0;i<8;i++){const x=T+i*b/2;hit(2,x,(i%2?.45:style==='rock'?.95:.8)*v);if(i===0||i===5||(style==='rock'&&i===3))hit(0,x,v);if(i===2||i===6)hit(1,x,v)}}
+    if(style==='four'){for(let i=0;i<4;i++){hit(0,T+i*b,v);hit(2,T+i*b+b/2,.75*v);if(i%2)hit(3,T+i*b,.75*v)}if(last)for(let i=0;i<8;i++)hit(1,T+2*b+i*b/4,(.3+.09*i)*v)}
+    if(style==='funk'){for(let i=0;i<16;i++){const x=T+i*b/4;hit(2,x,[.85,.3,.55,.3][i%4]*v);if([0,6,10].includes(i))hit(0,x,v);if(i===4||i===12)hit(1,x,v);if([7,9,15].includes(i))hit(1,x,.18*v)}}
+    if(style==='ride'){for(let i=0;i<4;i++){hit('rd',T+i*b,.8*v);if(i%2){hit('rd',T+i*b+b*2/3,.5*v);hit(2,T+i*b,.35*v)}}if(bar%2)hit(1,T+3*b+b*2/3,.22*v);hit(0,T,.35*v)}
+    if(style==='trap'){if(bar===0&&crash)hit('cr',T,.6*v);hit('8s',T+2*b,v);[0,.5,1,1.5,1.75,1+5/6,2,2.5,3,3.25,3.375,3.5,3.625,3.75,3.875].forEach(p=>hit('8h',T+p*b,(p%1===0?.85:.5)*v))}
+    if(style==='half'){hit(0,T,v);hit(0,T+1.5*b,.8*v);hit(1,T+2*b,v);for(let i=0;i<8;i++)hit(2,T+i*b/2,(i%2?.35:.65)*v);hit('oh',T+3.5*b,.45*v)}
+    if(style==='lofi'){for(let i=0;i<8;i++)hit(2,T+i*b/2+(i%2?b*.09:0),(i%2?.3:.55)*v);hit(0,T,.9*v);hit(0,T+1.5*b+b*.09,.7*v);hit(0,T+2.5*b,.7*v);hit(1,T+b,.75*v);hit(1,T+3*b,.75*v)}
+    if(style==='shuffle'){for(let i=0;i<4;i++){hit(2,T+i*b,.75*v);hit(2,T+i*b+b*2/3,.45*v)}hit(0,T,v);hit(0,T+2*b,v);hit(0,T+2*b+b*2/3,.6*v);hit(1,T+b,v);hit(1,T+3*b,v)}
+    if(style==='taiko'){[[0,'tl',1],[1.5,'th',.7],[2,'tl',.9],[3,'th',.7],[3.5,'th',.6]].forEach(([p,k,vv])=>hit(k,T+p*b,vv*v));hit(0,T,.7*v)}
+    if(style==='shaker'){for(let i=0;i<8;i++)hit(2,T+i*b/2,(i%2?.35:.6)*v)}
+  }
+}
+/* 1小節ごとの和音（低い音から） */
+function comp(name,t,b,bars,style,v=.6){bars.forEach((c,i)=>{const ms=c.split(' ').map(nmid),T=t+i*4*b;
+  if(style==='hold')ms.forEach(m=>nOn(name,m,T,4*b*.98,v));
+  if(style==='half')[0,2].forEach(p=>ms.forEach(m=>nOn(name,m,T+p*b,2*b*.95,v)));
+  if(style==='roll')ms.forEach((m,k)=>nOn(name,m,T+k*.035,4*b*.98,v*(1-.04*k)));
+  if(style==='neo'){ms.forEach((m,k)=>nOn(name,m,T+k*.025,2.3*b,v));ms.slice(1).forEach((m,k)=>nOn(name,m,T+2.5*b+k*.02,1.3*b,v*.75))}
+  if(style==='arp')for(let k=0;k<8;k++)nOn(name,ms[[0,1,2,3,2,1,2,3][k]%ms.length],T+k*b/2,b*1.6,v*(k%2?.7:1));
+  if(style==='arp16')for(let k=0;k<16;k++)nOn(name,ms[[0,1,2,3,2,3,1,2][k%8]%ms.length],T+k*b/4,b/4*.85,v*(k%4===0?1:.65));
+  if(style==='stab')[0,1.5,3].forEach(p=>ms.forEach(m=>nOn(name,m,T+p*b,b*.35,v)));
+  if(style==='charleston')[[0,.8],[1.5,.4]].forEach(([p,l])=>ms.forEach(m=>nOn(name,m,T+p*b,l*b,v)));
+  if(style==='trop')[0,.75,1.5,2,2.75,3.5].forEach((p,k)=>nOn(name,ms[(k*2)%ms.length],T+p*b,b*.4,v*(k%2?.75:1)));
+  if(style==='skank')[1,3].forEach(p=>ms.forEach(m=>nOn(name,m,T+p*b,b*.25,v)));
+})}
+function glissAt(name,t,from,to,dur,v=.6){const wk=[];const dir=to>from?1:-1;for(let m=from;dir>0?m<=to:m>=to;m+=dir)if(![1,3,6,8,10].includes(mod(m)))wk.push(m);wk.forEach((m,i)=>nOn(name,m,t+i*dur/wk.length,.3,v*(.7+.3*i/wk.length)));return t+dur}
+const GUI={G:'G2 B2 D3 G3 B3 G4',D:'D3 A3 D4 F#4',Em:'E2 B2 E3 G3 B3 E4',C:'C3 E3 G3 C4 E4',Am:'A2 E3 A3 C4 E4',F:'F2 C3 F3 A3 C4 F4'};
+function strumBar(name,t,b,ch,pat=[[0,1],[1,1],[1.5,-1],[2.5,-1],[3,1],[3.5,-1]],v=.85,sp=.016){const ms=ch.split(' ').map(nmid);pat.forEach(([p,d])=>strumAt(name,d>0?ms:ms.slice(-4),t+p*b,d,d>0?v:v*.75,sp,b*.95))}
+const SHOW={
+ piano:{bpm:72,d:'左手のアルペジオに、右手はオクターブで歌わせるバラード。最後はグリッサンドから大きな和音で締めます。',f(t,b){
+  comp('piano',t,b,['C3 G3 C4 E4','B2 G3 B3 D4','A2 E3 A3 C4','F2 C3 F3 A3'],'arp',.42);
+  const mel='E5:1.5 D5:.5 C5:1 D5:1! D5:1.5 C5:.5 B4:1 G4:1 C5:1.5 B4:.5 A4:1 E5:1! F5:1.5 E5:.5 D5:1 C5:1';ps('piano',t,b,mel,{vm:1});ps('piano',t,b,mel,{tr:-12,vm:.6});
+  const e=glissAt('piano',t+16*b,96,72,.7,.55);['C2','C3','G3','C4','E4','G4','C5','E5'].forEach((n,k)=>nOn('piano',nmid(n),e+k*.012,3.5,k<2?.9:.75))}},
+ epiano:{bpm:84,d:'9th や 13th を足した和音を少しずらして鳴らす、ネオソウル風。揺れるローファイのドラムと合わせています。',f(t,b){
+  comp('epiano',t,b,['D3 C4 E4 F4 A4','G2 F3 B3 E4','C3 B3 D4 E4 G4','A2 G3 C#4 F4'],'neo',.62);
+  ps('ebass',t,b,'D2:1.5 r:1 A1:.5 D2:1 G1:1.5 r:1 D2:.5 G1:1 C2:1.5 r:1 G1:.5 C2:1 A1:1.5 r:1 E2:.5 A1:1');ps('epiano',t+14*b,b,'E5:.25 F5:.25 A5:.5 G5:1',{vm:.7});beat('lofi',t,b,4,{crash:false,v:.85})}},
+ organ:{bpm:96,d:'シャッフルのリズムで短く切るゴスペルのスタブと、白鍵をなでるグリッサンド。',f(t,b){
+  ['C3 E3 G3 A#3','F3 A3 C4 D#4','C3 E3 G3 A#3','G3 B3 D4 F4'].forEach((c,i)=>{const ms=c.split(' ').map(nmid),T=t+i*4*b;[[0,1.3],[1+2/3,.3],[2,.9],[3+2/3,.3]].forEach(([p,l])=>ms.forEach(m=>nOn('organ',m,T+p*b,l*b,.85)))});
+  ps('ebass',t,b,'C2:1 C2:2/3 G1:1/3 A#1:1 G1:1 F1:1 F1:2/3 C2:1/3 D#2:1 C2:1 C2:1 C2:2/3 G1:1/3 A#1:1 G1:1 G1:1 B1:1 D2:1 F2:1');beat('shuffle',t,b,4,{fill:true});
+  glissAt('organ',t+15*b,84,64,.45,.7);['C3','E3','G3','C4','E4'].forEach(n=>nOn('organ',nmid(n),t+16*b,2.5,.9));hit('cr',t+16*b);hit(0,t+16*b)}},
+ bell:{bpm:110,d:'ピアノのメロディに、グロッケンを2オクターブ上で重ねた「キラッ」とするサビ。',f(t,b){
+  const mel='E6:.5 G6:.5 E6:.5 D6:.5 C6:1 G5:1 B5:.5 D6:.5 G6:1 F6:.5 E6:.5 D6:1 C6:.5 E6:.5 A6:1 G6:.5 E6:.5 C6:1 A5:.5 C6:.5 F6:1 E6:1! C6:1';
+  ps('bell',t,b,mel,{vm:.85});ps('piano',t,b,mel,{tr:-24,vm:.75});comp('piano',t,b,['C3 G3 E4','B2 G3 D4','A2 E3 C4','F2 C3 A3'],'half',.45);comp('strings',t,b,['C3 G3 E4','B2 G3 D4','A2 E3 C4','F2 C3 A3'],'hold',.5);beat('pop',t,b,4,{v:.8})}},
+ marimba:{bpm:104,d:'跳ねるような8分の裏を使ったトロピカルハウスのリフ。4つ打ちのキックと合わせると一気に夏っぽくなります。',f(t,b){
+  comp('marimba',t,b,['A4 C5 E5 A5','F4 A4 C5 F5','C5 E5 G5 C6','G4 B4 D5 G5'],'trop',.9);ps('synbass',t,b,'A1:1.5 A1:.5 r:2 F1:1.5 F1:.5 r:2 C2:1.5 C2:.5 r:2 G1:1.5 G1:.5 r:2',{vm:.8});comp('pad',t,b,['A3 C4 E4','F3 A3 C4','G3 C4 E4','G3 B3 D4'],'hold',.45);beat('four',t,b,4,{fill:true,v:.85})}},
+ aguitar:{bpm:96,d:'ダウンとアップを組み合わせたストローク。アップは高い弦だけを軽く鳴らすのがポイントです。',f(t,b){
+  ['G','D','Em','C'].forEach((c,i)=>strumBar('aguitar',t+i*4*b,b,GUI[c]));strumAt('aguitar',GUI.G.split(' ').map(nmid),t+16*b,1,1,.03,3);beat('shaker',t,b,4,{crash:false,v:.6})}},
+ eguitar:{bpm:150,d:'ブリッジミュートの刻みから、パワーコードのキメ、最後はチョーキングで歌わせるロックのリフ。',f(t,b){
+  const riff='[E2,B2]:.5 [E2,B2]:.5~ [E2,B2]:.5~ [G2,D3]:.5! [E2,B2]:.5 [E2,B2]:.5~ [A2,E3]:.5! [G2,D3]:.5!';
+  for(let r=0;r<2;r++){const T=t+r*4*b;score(riff).forEach(e=>e.ms.forEach(m=>nOn('eguitar',m,T+e.at*b,e.v===1?b*.45:.09,e.v)))}
+  ['[C3,G3]:1.5! [D3,A3]:1.5! [E3,B3]:1!'].forEach(s=>ps('eguitar',t+8*b,b,s,{gate:.95}));
+  const kb={buzz:3,lp:3000,peak:.1,wet:.25};ksBend(nmid('A4'),t+12*b,1,[[.2,2,.15]],kb);ksBend(nmid('G4'),t+13.5*b,1,[[0,0,0]],kb);ksBend(nmid('E4'),t+14*b,1,[[.1,2,.15],[.8,0,.2]],kb);
+  ps('ebass',t,b,'E1:.5 E1:.5 E1:.5 G1:.5 E1:.5 E1:.5 A1:.5 G1:.5 E1:.5 E1:.5 E1:.5 G1:.5 E1:.5 E1:.5 A1:.5 G1:.5 C2:1.5 D2:1.5 E2:1 E1:4',{gate:.8});beat('rock',t,b,4,{fill:false})}},
+ ebass:{bpm:104,d:'親指で叩く低音と、指で引っぱる高音を組み合わせたスラップのファンク。',f(t,b){
+  const s=[[40,0,1],[40,.5,.35],[52,.75,1.1],[40,1.5,1],[43,2.25,.9],[55,2.5,1.1],[40,3,1],[50,3.5,1],[52,3.75,1.1]];
+  for(let bar=0;bar<4;bar++)s.forEach(([m,p,v])=>nOn('ebass',m+(bar===2?5:0),t+(bar*4+p)*b,m>48?.09:.18,v));
+  comp('clav',t,b,['G4 B4 D5','G4 B4 D5','C5 E5 G5','G4 B4 D5'],'skank',.6);beat('funk',t,b,4)}},
+ synbass:{bpm:124,d:'ルートと1オクターブ上を行き来するシンセベース。キックに合わせて和音がうねるサイドチェインつき。',f(t,b){
+  ps('synbass',t,b,['A1','F1','C2','G1'].map(r=>Array.from({length:8},(_,i)=>(i%2?r.replace(/\d/,d=>+d+1):r)+':.5').join(' ')).join(' '),{gate:.7});
+  const g=sG(1);g.connect((bus||makeBus()).g);for(let i=0;i<16;i++){const bt=t+i*b;g.gain.setValueAtTime(.15,bt);g.gain.setTargetAtTime(1,bt+.02,b*.22)}drumOut=g;try{comp('supersaw',t,b,['A3 C4 E4','F3 A3 C4','G3 C4 E4','G3 B3 D4'],'hold',.7)}finally{drumOut=null}
+  beat('four',t,b,4,{fill:true})}},
+ lead:{bpm:128,d:'音と音のあいだをなめらかに滑らせるポルタメントと、伸ばす音の後半だけのビブラート。',f(t,b){
+  comp('supersaw',t,b,['A3 C4 E4','F3 A3 C4','G3 C4 E4','G3 B3 D4'],'half',.55);ps('synbass',t,b,'A1:4 F1:4 C2:4 G1:4',{gate:.95});beat('four',t,b,4,{v:.85});
+  gs(t,b,'A5:.5 C6:.5 E6:1 ^D6:.5 C6:.5 A5:1.5 ^C6:.5 ^D6:1 E6:1 G6:1 ^E6:.5 D6:.5 C6:1 D6:1 B5:1.5 ^C6:.5 ^^D6:2',GL.lead)}},
+ supersaw:{bpm:128,d:'サビ前に刻みを細かくして盛り上げ（ビルドアップ）、サビ頭で一気に広がる EDM の定番の流れ。',f(t,b){
+  let x=t,k=0;[[4,1],[8,.5],[16,.25]].forEach(([cnt,len])=>{for(let i=0;i<cnt;i++){['A3','C4','E4'].forEach(n=>nOn('supersaw',nmid(n),x,len*b*.8,.3+.6*k/28));if(len<1)hit(1,x,.2+.6*k/28);else hit(0,x,.7);x+=len*b;k++}});
+  const t2=x,g=sG(1);g.connect((bus||makeBus()).g);for(let i=0;i<16;i++){const bt=t2+i*b;g.gain.setValueAtTime(.12,bt);g.gain.setTargetAtTime(1,bt+.02,b*.22)}
+  drumOut=g;try{comp('supersaw',t2,b,['A3 C4 E4 A4','F3 A3 C4 F4','C4 E4 G4 C5','G3 B3 D4 G4'],'hold',.95)}finally{drumOut=null}
+  ps('synbass',t2,b,'A1:4 F1:4 C2:4 G1:4');beat('four',t2,b,4)}},
+ pad:{bpm:70,d:'ゆっくり立ち上がる和音の上に、ディレイのかかった音を少しだけ。何も起きないことが心地よい、アンビエントの使い方です。',f(t,b){
+  comp('pad',t,b,['C3 G3 B3 D4 E4','A2 E3 G3 B3 C4','F2 C3 E3 G3 A3','G2 D3 A3 C4 E4'],'hold',.85);
+  [[1,'E5'],[2.5,'G5'],[5,'B5'],[7,'C6'],[9,'A5'],[11.5,'G5'],[13,'D6'],[14.5,'E6']].forEach(([p,n])=>{const tt=t+p*b;nOn('pluck',nmid(n),tt,.3,.6);withPan(-.5,()=>nOn('pluck',nmid(n),tt+b*.75,.3,.3));withPan(.5,()=>nOn('pluck',nmid(n),tt+b*1.5,.3,.15))})}},
+ pluck:{bpm:150,d:'16分のアルペジオに、左右に跳ね返るディレイ。少ない音数でもきらきらした空間が生まれます。',f(t,b){
+  comp('pluck',t,b,['F4 A4 C5 E5','G4 B4 D5 G5','E4 G4 B4 E5','A4 C5 E5 A5'],'arp16',.85);ps('synbass',t,b,'F1:3 F1:1 G1:3 G1:1 E1:3 E1:1 A1:4');comp('pad',t,b,['F3 A3 C4 E4','G3 B3 D4','E3 G3 B3','A3 C4 E4'],'hold',.45);beat('half',t,b,4,{v:.85})}},
+ chip:{bpm:150,d:'メロディ・高速アルペジオ・ベースを、すべて8bit の音だけで。昔のゲーム機の工夫がそのまま魅力になります。',f(t,b){
+  ps('chip',t,b,'C6:.5 E6:.5 G6:.5 C7:.5! B6:.5 G6:.5 E6:.5 G6:.5 A6:1! E6:.5 C6:.5 A5:1 C6:1 F6:.5 A6:.5 F6:.5 C6:.5 D6:.5 F6:.5 A6:1 G6:1.5! F6:.5 E6:.5 D6:.5 B5:1',{gate:.85});
+  [['C4','E4','G4'],['A3','C4','E4'],['F3','A3','C4'],['G3','B3','D4']].forEach((c,k)=>{for(let i=0;i<48;i++)nOn('chip',nmid(c[i%3]),t+k*4*b+i*b/12,b/12*.9,.35)});
+  ps('chip',t,b,'C3:.5 C4:.5 C3:.5 C4:.5 C3:.5 C4:.5 C3:.5 C4:.5 A2:.5 A3:.5 A2:.5 A3:.5 A2:.5 A3:.5 A2:.5 A3:.5 F2:.5 F3:.5 F2:.5 F3:.5 F2:.5 F3:.5 F2:.5 F3:.5 G2:.5 G3:.5 G2:.5 G3:.5 G2:.5 B2:.5 D3:.5 G3:.5',{gate:.6,vm:.7});
+  for(let i=0;i<32;i++){const x=t+i*b/2;hit('8h',x,i%2?.4:.7);if(i%4===0)hit('8k',x,.8);if(i%4===2)hit('8s',x,.7)}}},
+ strings:{bpm:90,d:'低音のピチカートで刻み、上で和音を伸ばしてだんだん強く。映画の予告編のような高まりです。',f(t,b){
+  ['D3','A#2','F2','C3'].forEach((r,i)=>{for(let k=0;k<8;k++)ksPlay(nmid(r)+(k%2?12:0),t+(i*4+k/2)*b,.8+.05*i,.985,.75,{lp:1500,wet:.3,peak:.6})});
+  ['D4 F4 A4 D5','D4 F4 A#4 D5','C4 F4 A4 C5','C4 E4 G4 C5'].forEach((c,i)=>c.split(' ').forEach(n=>nOn('strings',nmid(n),t+i*4*b,4*b,.45+.18*i)));
+  ['D5','F5','A5','G5'].forEach((n,i)=>nOn('strings',nmid(n)+12,t+(8+i*2)*b,2*b,.6+.1*i));for(let i=0;i<4;i++)hit('tl',t+(12+i)*b,.4+.15*i);hit('cr',t+16*b);hit('tl',t+16*b);['D3','A3','D4','F4','A4','D5'].forEach(n=>nOn('strings',nmid(n),t+16*b,3,1))}},
+ brass:{bpm:116,d:'短く鋭いキメでリズムを強調し、最後は音程を落とすフォールで抜く、ファンクやスカで定番のホーンセクションです。',f(t,b){
+  const A='C4 E4 G4 A#4',B='D4 F4 A4 C5';[[0,A,.3],[1.5,A,.3],[2.5,A,.3],[3.5,B,.3],[4.5,B,.3],[6,B,.8],[8,A,.3],[9.5,A,.3],[10.5,A,.3],[11.5,B,.3],[12.5,B,.3],[14,A,1.6]].forEach(([p,c,l])=>c.split(' ').forEach(n=>nOn('brass',nmid(n),t+p*b,l*b,1)));
+  glide(t+15.4*b,b,[[nmid('A#4'),.3,0],[nmid('D4'),.7,.35]],{w1:'sawtooth',w2:'sawtooth',mix:.6,lp:2600,peak:.1,vib:0});
+  ps('ebass',t,b,'C2:.75 C2:.25 r:.5 C3:.5 A#1:.5 C2:.5 r:.5 G1:.5 D2:.75 D2:.25 r:.5 D3:.5 C2:.5 D2:.5 r:.5 A1:.5 C2:.75 C2:.25 r:.5 C3:.5 A#1:.5 C2:.5 r:.5 G1:.5 D2:.75 D2:.25 r:.5 D3:.5 C2:2',{gate:.8});beat('funk',t,b,4)}},
+ flute:{bpm:84,d:'息の混ざった柔らかい音色に、トリルの飾りと後半からのビブラート。',f(t,b){
+  comp('piano',t,b,['C3 G3 C4 E4','A2 E3 A3 C4','F2 C3 F3 A3','G2 D3 G3 B3'],'arp',.4);comp('strings',t,b,['C4 E4 G4','A3 C4 E4','A3 C4 F4','B3 D4 G4'],'hold',.35);
+  const seq=[['G5',1.5],['E5',.5],['C6',2]];const tr=[];for(let i=0;i<12;i++)tr.push(i%2?'^B5:1/6':'^A5:1/6');
+  gs(t,b,'G5:1.5 E5:.5 C6:2 '+tr.join(' ')+' ^G5:.5 E5:.5 ^F5:.5 A5:1.5 C6:1 ^B5:.5 ^A5:.5 G5:3',GL.flute)}},
+ choir:{bpm:72,d:'低い声から順に重ねて、合唱が広がっていく壮大な入り。太鼓のような低いタムで重さを足しています。',f(t,b){
+  [['D3',0],['A3',2],['D4',4],['F4',6],['A4',8]].forEach(([n,p])=>nOn('choir',nmid(n),t+p*b,(16-p)*b,.85));
+  [['A#2 F3 A#3 D4 F4',16]].forEach(([c,p])=>c.split(' ').forEach(n=>nOn('choir',nmid(n),t+p*b,3.2,.95)));comp('strings',t,b,['D2 A2 D3','D2 A2 D3','D2 A2 D3','D2 A2 D3'],'hold',.6);
+  beat('taiko',t+8*b,b,2,{crash:false});hit('cr',t+16*b);hit('tl',t+16*b)}},
+ drums:{bpm:100,d:'8ビートにゴーストノートを足してグルーヴを作り、スネアロールからクラッシュで締めます。',f(t,b){
+  beat('pop',t,b,1);const T=t+4*b;for(let i=0;i<8;i++)hit(2,T+i*b/2,i%2?.45:.85);hit(0,T);hit(0,T+2.5*b);hit(1,T+b);hit(1,T+3*b);[.75,1.75,2.25,3.75].forEach(p=>hit(1,T+p*b,.2));
+  beat('funk',t+8*b,b,1,{crash:false});let x=t+12*b;[[4,.5],[8,.25]].forEach(([c,l])=>{for(let i=0;i<c;i++){hit(1,x,.3+.06*((x-t-12*b)/b*3));x+=l*b}});hit('cr',x);hit(0,x)}},
+ harpsi:{bpm:110,d:'16分の分散和音を、和音を変えながら繰り返すバロックの「ゼクエンツ」。左手は8分で低音を支えます。',f(t,b){
+  ['D5 F5 A5','G4 A#4 D5','C5 E5 G5','F4 A4 C5'].forEach((c,i)=>{const [r,th,fi]=c.split(' ').map(nmid);[fi,th,r,th,fi,r+12,fi,th].concat([fi,th,r,th,fi,r+12,fi,th]).forEach((m,k)=>nOn('harpsi',m,t+(i*4+k/4)*b,b/4*.9,k%4===0?.85:.65))});
+  ps('harpsi',t,b,'D3:.5 D4:.5 D3:.5 D4:.5 D3:.5 D4:.5 D3:.5 D4:.5 G2:.5 G3:.5 G2:.5 G3:.5 G2:.5 G3:.5 G2:.5 G3:.5 C3:.5 C4:.5 C3:.5 C4:.5 C3:.5 C4:.5 C3:.5 C4:.5 F2:.5 F3:.5 F2:.5 F3:.5 A2:.5 A3:.5 A2:.5 A3:.5',{vm:.7});
+  ps('harpsi',t+16*b,b,'E5:.125 F5:.125 E5:.125 F5:.125 E5:.125 F5:.125 E5:.125 D5:.125 [D3,A3,D4,F4,A4,D5]:3')}},
+ musicbox:{bpm:80,d:'高い音域で鳴らす子守唄。最後に向かってぜんまいがゆるむように、少しずつ遅くしています。',f(t,b){
+  const m='E6:1 G6:1 C7:1 B6:1 A6:1 G6:1 E6:2 F6:1 A6:1 G6:1 E6:1 D6:1 E6:1 C6:2';const sc=score(m);let x=t,last=sc.length;
+  sc.forEach((e,i)=>{const stretch=i>last-5?1+(i-(last-5))*.18:1;nOn('musicbox',e.ms[0],x,e.len*b,.75);x+=e.len*b*stretch});
+  ps('musicbox',t,b,'C5:2 G5:2 F5:2 G5:2 F5:2 C5:2 G4:2',{vm:.5})}},
+ vibes:{bpm:120,d:'跳ねる8分（スイング）で歌うビブラフォン。ウォーキングベースとライドシンバルのジャズの編成です。',f(t,b){
+  ps('vibes',t,b,'A5:2/3 F5:1/3 E5:2/3 D5:1/3 C5:1 A4:1 B4:2/3 D5:1/3 F5:2/3 A5:1/3 G5:2 E5:2/3 G5:1/3 B5:2/3 G5:1/3 E5:1 D5:1 C#5:2/3 E5:1/3 G5:2/3 A#5:1/3 A5:2');
+  ps('woodbass',t,b,'D2:1 F2:1 A2:1 C3:1 G2:1 F2:1 D2:1 B1:1 C2:1 E2:1 G2:1 B2:1 A2:1 G2:1 E2:1 C#2:1',{gate:.85});comp('piano',t,b,['F3 A3 C4 E4','F3 B3 D4 E4','E3 G3 B3 D4','G3 C#4 E4 F4'],'charleston',.45);beat('ride',t,b,4)}},
+ clav:{bpm:100,d:'ほとんどの音をミュートで短く刻み、ところどころアクセントを強く。ベースと休符をかみ合わせたファンクの心臓部です。',f(t,b){
+  for(let bar=0;bar<4;bar++){const c=bar===2?['C5','E5','G5']:['G4','A#4','D5'];for(let i=0;i<16;i++){const acc=[2,6,10,13,14].includes(i),tt=t+(bar*4+i/4)*b;c.forEach((n,k)=>nOn('clav',nmid(n),tt+k*.004,acc?.12:.035,acc?.95:.3))}}
+  ps('ebass',t,b,'G1:.75 r:.25 G2:.25 r:.75 F2:.5 G2:.5 r:.5 D2:.5 G1:.75 r:.25 G2:.25 r:.75 A#1:.5 B1:.5 r:1 C2:.75 r:.25 C3:.25 r:.75 A#1:.5 C2:.5 r:.5 G1:.5 G1:.75 r:.25 G2:.25 r:.75 F2:.5 D2:.5 A#1:.5 B1:.5',{gate:.8});beat('funk',t,b,4)}},
+ cleangt:{bpm:112,d:'ミュートの「チャカチャカ」にアクセントを混ぜるカッティング。エレピとベースで、シティポップ風にまとめています。',f(t,b){
+  ['A3 C#4 E4 G#4','F#3 A3 C#4 E4','B3 D4 F#4 A4','E3 G#3 B3 D4'].forEach((c,bar)=>{const ms=c.split(' ').map(nmid);for(let i=0;i<16;i++){const acc=[0,3,6,10,12].includes(i),tt=t+(bar*4+i/4)*b;ms.forEach((m,k)=>nOn('cleangt',m+12,tt+k*.004,acc?.14:.035,acc?.9:.28))}});
+  comp('epiano',t,b,['A2 G#3 C#4 E4','F#2 E3 A3 C#4','B2 A3 D4 F#4','E2 D3 G#3 B3'],'hold',.45);ps('ebass',t,b,'A1:1.5 A1:.5 r:.5 E2:.5 A2:.5 G#2:.5 F#1:1.5 F#1:.5 r:.5 C#2:.5 F#2:.5 E2:.5 B1:1.5 B1:.5 r:.5 F#2:.5 B2:.5 A2:.5 E1:1.5 E1:.5 r:.5 B1:.5 E2:.5 G#1:.5',{gate:.8});beat('pop',t,b,4,{v:.85})}},
+ ukulele:{bpm:100,d:'軽く跳ねるストロークで、のんびりした南国の雰囲気。ウクレレは一番上の弦がいちばん高い音なのが特徴です。',f(t,b){
+  ['G4 C4 E4 C5','G4 C4 E4 A4','A4 C4 F4 A4','G4 B3 D4 G4'].forEach((c,i)=>strumBar('ukulele',t+i*4*b,b,c,[[0,1],[1,1],[1.5,-1],[2.5,-1],[3,1],[3.5,-1]],.8,.012));
+  ps('ebass',t,b,'C2:2 G1:2 A1:2 E2:2 F1:2 C2:2 G1:2 B1:2',{vm:.7});beat('shaker',t,b,4,{v:.7})}},
+ woodbass:{bpm:132,d:'4分音符でコードの音をつなぐウォーキングベース。小節の最後の音が、次のコードへ半音で寄っていくのがポイントです。',f(t,b){
+  ps('woodbass',t,b,'C2:1 E2:1 G2:1 A2:1 F2:1 A2:1 C3:1 C#3:1 D3:1 A2:1 F2:1 G#1:1 G1:1 B1:1 D2:1 C#2:1',{gate:.85});
+  comp('piano',t,b,['E3 A3 C4','A3 C4 E4','F3 A3 C4','F3 B3 D4'],'charleston',.45);beat('ride',t,b,4)}},
+ bass808:{bpm:140,d:'音程を滑らせる 808 のグライドと、3連や32分を混ぜたハイハット。トラップの象徴的な組み合わせです。',f(t,b){
+  gs(t,b,'C2:1.5 C2:.5 r:.5 D#2:.5 A#1:1 ^C2:1.5 G2:.5 ^G1:2 C2:1.5 C2:.5 r:.5 D#2:.5 F2:1 ^G2:1 ^D#2:1 ^C2:2',GL.b808);beat('trap',t,b,4)}},
+ acid:{bpm:130,d:'16分の中で強く鳴らす音と、音程を滑らせる音を混ぜて、うねりを作るアシッドハウス。',f(t,b){
+  const pat='A1:.25! A2:.25~ A1:.25~ ^C2:.25 A1:.25~ ^G2:.25! A2:.25 A1:.25~ ';gs(t,b,pat.repeat(8),GL.acid);beat('four',t,b,4,{v:.9})}},
+ wobble:{bpm:140,d:'半分のテンポに感じるドラムの上で、揺れるベースを長く伸ばすダブステップの「ドロップ」。',f(t,b){
+  ps('wobble',t,b,'A1:1.5 A1:.5 r:.5 A2:1.5 F1:2 G1:2 A1:1.5 A1:.5 r:.5 C2:1.5 E2:2 E1:2',{gate:.95});beat('half',t,b,4)}},
+ violin:{bpm:76,d:'指を滑らせるポルタメントと、伸ばす音の後半からかけるビブラートで、歌うように弾くバイオリン。',f(t,b){
+  comp('piano',t,b,['A2 E3 A3 C4','F2 C3 F3 A3','C3 G3 C4 E4','G2 D3 G3 B3'],'arp',.38);
+  gs(t,b,'E5:1 ^A5:1 ^^C6:2 B5:.5 A5:.5 ^G5:1 ^^A5:2 G5:.5 E5:.5 ^^G5:1 C6:1 ^B5:.5 A5:.5 ^G5:1 ^^B5:3',GL.violin)}},
+ cello:{bpm:66,d:'低く深い音で、人の声のように歌うチェロ。ゆっくりしたポルタメントが哀愁を生みます。',f(t,b){
+  comp('piano',t,b,['D4 F4 A4','A#3 D4 F4','G3 A#3 D4','A3 C#4 E4'],'half',.32);
+  gs(t,b,'D3:1.5 E3:.5 F3:1 ^^A3:1 A#3:1.5 A3:.5 G3:1 F3:1 G3:1.5 A3:.5 A#3:1 ^^D4:1 C#4:1.5 ^A3:.5 ^^A2:2',GL.cello)}},
+ sax:{bpm:92,d:'音の頭を下からすくい上げる「しゃくり」と、最後に音程を落とすフォール。色っぽさの正体です。',f(t,b){
+  comp('epiano',t,b,['D3 C4 F4 A4','G2 F3 B3 E4','C3 B3 E4 G4','A2 G3 C#4 F4'],'neo',.5);ps('ebass',t,b,'D2:1.5 r:1 A1:.5 D2:1 G1:1.5 r:1 D2:.5 G1:1 C2:1.5 r:1 G1:.5 C2:1 A1:1.5 r:1 E2:.5 A1:1');beat('lofi',t,b,4,{crash:false,v:.8});
+  gs(t,b,'r:.5 A4:.5 C#5:.06 ^D5:.94 F5:.5 E5:.5 D5:.5 C5:1 r:.5 G4:.5 A4:.5 B4:.08 ^C5:.92 D5:.5 E5:1 G5:.08 ^A5:1.92 G5:.5 E5:.5 C#5:1 ^E5:.5 D5:1.5 ^^A4:1',GL.sax)}},
+ clarinet:{bpm:120,d:'低い音から高い音へなめらかに跳ぶのがクラリネットの得意技。スイングのジャズで軽やかに。',f(t,b){
+  gs(t,b,'G3:1 ^D5:1 ^C5:2/3 B4:1/3 A4:2/3 G4:1/3 E4:1 ^G4:1 ^C5:1 ^E5:1 D5:2/3 C5:1/3 A4:2/3 C5:1/3 D5:2/3 B4:1/3 G4:1 A3:1 ^G5:2 ^^E5:1 C5:3',GL.clarinet);
+  ps('woodbass',t,b,'C2:1 E2:1 G2:1 A2:1 F2:1 A2:1 C3:1 A2:1 G2:1 B2:1 D3:1 B2:1 C2:1 G1:1 C2:2',{gate:.85});beat('ride',t,b,4)}},
+ trumpet:{bpm:112,d:'ブラスのキメに乗せて、高らかに鳴らすファンファーレ。最後は伸ばした音を落とすフォールで。',f(t,b){
+  [[0,'C4 E4 G4'],[2.5,'D4 F4 A4'],[4,'E4 G4 C5'],[6.5,'F4 A4 C5'],[8,'G4 B4 D5']].forEach(([p,c])=>c.split(' ').forEach(n=>nOn('brass',nmid(n),t+p*b,b*.6,.8)));
+  gs(t,b,'G4:.5 C5:.5 E5:1 G5:1! E5:.5 G5:.5 C6:3! A5:.5 G5:.5 F5:.5 E5:.5 D5:1 G5:1 C6:2 ^^G5:1',GL.trumpet);beat('taiko',t,b,3,{crash:true,v:.8});hit('cr',t+12*b)}},
+ koto:{bpm:76,d:'弦をかき鳴らすグリッサンドから、弦を押して音程を上げる「押し手」へ。都節という日本の音階を使っています。',f(t,b){
+  const pent=['E4','F4','A4','B4','C5','E5','F5','A5','B5','C6'];pent.forEach((n,i)=>nOn('koto',nmid(n),t+i*.045,1.4,.55+i*.04));
+  const k={fb:.995,br:.95,lp:7000,wet:.3};ps('koto',t+2*b,b,'E5:1 F5:.5 E5:.5 C5:1 B4:1 A4:2',{gate:.98});ksBend(nmid('A4'),t+8*b,1,[[.4,1,.25]],k);ksBend(nmid('B4'),t+10*b,1,[[0,0,0]],k);ksBend(nmid('E4'),t+11*b,1,[[.3,1,.2],[.9,0,.2]],k);
+  beat('taiko',t+4*b,b,2,{crash:false,v:.55})}},
+ shamisen:{bpm:160,d:'三味線の鋭い音でギターのようなリフを弾く「和ロック」。バチの強弱の差がかっこよさの決め手です。',f(t,b){
+  const riff='E4:.5! E4:.5~ F4:.5~ A4:.5! B4:.5~ A4:.5~ F4:.5! E4:.5~ ';ps('shamisen',t,b,riff.repeat(3)+'B4:.5! C5:.5! B4:.5 A4:.5 F4:.5 E4:1.5!',{gate:.7});
+  for(let bar=0;bar<4;bar++)['E2','B2'].forEach(n=>{for(let i=0;i<8;i++)nOn('eguitar',nmid(n)+(bar===3&&i>=4?1:0),t+(bar*4+i/2)*b,.08,.6)});
+  ps('ebass',t,b,'E1:.5 '.repeat(28)+'F1:.5 F1:.5 F1:.5 F1:.5');beat('rock',t,b,4,{fill:true})}},
+ shakuhachi:{bpm:60,d:'あごを引いて音程を下げる「メリ」と、息の音をあえて残した音色。音と音の間の静けさも演奏のうちです。',f(t,b){
+  gs(t,b,'D5:1.5 ^C5:.5 ^^D5:1 r:.5 F5:.5 ^G5:2 A5:1 ^^G5:.5 F5:.5 ^D5:2.5',GL.shaku);[[0,'D4'],[3,'A3'],[6,'D4'],[9,'G3']].forEach(([p,n])=>nOn('koto',nmid(n),t+p*b,2,.5))}},
+ d808:{bpm:140,d:'太く伸びる 808 のキックに、ロールを混ぜたハイハット。トラップのビートの組み立て方です。',f(t,b){
+  for(let bar=0;bar<4;bar++){const T=t+bar*4*b;hit('8k',T);hit('8k',T+(bar%2?2.75:1.75)*b,.85)}beat('trap',t,b,4);hit('cb',t+15.5*b,.6)}}
+};
+function playShow(n){const S_=SHOW[n];if(!S_)return;const b=60/S_.bpm,t=ac().currentTime+.08;S_.f(t,b);runViz()}
+
+/* ===== 音楽用語・ドリル問題 ===== */
+const TCAT={sp:'速さ',ch:'速さの変化',dy:'強弱',ar:'奏法',ex:'表情',fo:'曲の構成・記号',th:'楽典',dt:'DTM'};
+/* [用語, 読み, 意味, 分類, レベル, 覚え方, 混同しやすい用語] */
+const TERM_Q=[
+ ['Largo','ラルゴ','幅広く、とても遅く','sp',1,'イタリア語の「幅が広い」。ゆったりと幅をとった遅さです。','Lento'],
+ ['Lento','レント','遅く','sp',1,'英語の slow にあたる言葉。Largo ほどの重さはありません。','Largo'],
+ ['Adagio','アダージョ','ゆるやかに','sp',0,'「くつろいで」が元の意味。落ち着いた遅めの速さです。','Andante'],
+ ['Andante','アンダンテ','歩くような速さで','sp',0,'andare（歩く）から。BPM でいうと 76〜108 くらいの、急がない速さです。','Moderato'],
+ ['Moderato','モデラート','中くらいの速さで','sp',0,'英語の moderate（ほどほどの）と同じ語源です。','Andante'],
+ ['Allegro','アレグロ','速く','sp',0,'もとは「陽気に、楽しげに」。明るく速いテンポです。','Presto'],
+ ['Presto','プレスト','きわめて速く','sp',1,'英語でも「プレスト！（あっという間に）」と使います。Allegro より速い。','Allegro'],
+ ['Vivace','ヴィヴァーチェ','活発に、速く','sp',1,'英語の vivid（生き生きした）と同じ仲間の言葉です。','Allegro'],
+ ['Allegretto','アレグレット','やや速く','sp',2,'Allegro に「小さい」を表す -etto が付いた形。Allegro より少し遅い、と覚えます。','Andantino'],
+ ['Andantino','アンダンティーノ','アンダンテより少し速く','sp',2,'-ino は「小さい」。「小さな歩み」なので、歩く速さより少し軽快になります。','Allegretto'],
+ ['Grave','グラーヴェ','重々しく、きわめて遅く','sp',2,'英語の grave（重大な）と同じ。速さだけでなく重さも表します。','Largo'],
+ ['ritardando（rit.）','リタルダンド','だんだん遅く','ch',0,'英語の retard（遅らせる）と同じ語源。曲の終わりによく出てきます。','rallentando（rall.）'],
+ ['accelerando（accel.）','アッチェレランド','だんだん速く','ch',0,'英語の accelerate（加速する）と同じ。アクセルの語源です。','più mosso'],
+ ['a tempo','ア・テンポ','もとの速さで','ch',0,'「テンポに戻って」。rit. や accel. のあとで、元の速さに戻すときに使います。','Tempo primo'],
+ ['Tempo primo（Tempo I）','テンポ・プリモ','最初の速さで','ch',1,'primo は「1番目の」。曲の最初に指定された速さに戻ります。a tempo は「直前の速さ」に戻る点が違います。','a tempo'],
+ ['rubato','ルバート','テンポを自由に揺らして','ch',1,'「盗まれた時間」という意味。ある音で時間を盗んだら、別の所で返すように揺らします。','rallentando（rall.）'],
+ ['rallentando（rall.）','ラレンタンド','だんだんゆるやかに','ch',2,'rit. とほぼ同じですが、力を抜いてゆるめていくニュアンスがあります。','ritardando（rit.）'],
+ ['ritenuto','リテヌート','すぐに遅く','ch',2,'rit. は「だんだん」遅く、ritenuto は「その場ですぐ」遅く。似た綴りなので注意。','ritardando（rit.）'],
+ ['meno mosso','メノ・モッソ','今までより遅く','ch',2,'meno は「より少なく」、mosso は「動き」。動きを減らす＝遅く。','più mosso'],
+ ['più mosso','ピウ・モッソ','今までより速く','ch',2,'più は「より多く」。動きを増やす＝速く。','meno mosso'],
+ ['pp（ピアニッシモ）','ピアニッシモ','とても弱く','dy',0,'p（ピアノ＝弱く）に「とても」の -issimo が付いた形。','p（ピアノ）'],
+ ['p（ピアノ）','ピアノ','弱く','dy',0,'楽器のピアノは「弱い音も強い音も出せる楽器（ピアノフォルテ）」の略です。','mp（メゾピアノ）'],
+ ['mp（メゾピアノ）','メゾピアノ','やや弱く','dy',0,'mezzo は「半分」。半分だけ p、つまり p より少し強い。','mf（メゾフォルテ）'],
+ ['mf（メゾフォルテ）','メゾフォルテ','やや強く','dy',0,'半分だけ f。f より少し弱い。強弱の順は pp＜p＜mp＜mf＜f＜ff。','mp（メゾピアノ）'],
+ ['f（フォルテ）','フォルテ','強く','dy',0,'英語の force（力）と同じ語源です。','mf（メゾフォルテ）'],
+ ['ff（フォルティッシモ）','フォルティッシモ','とても強く','dy',0,'f に「とても」の -issimo。','f（フォルテ）'],
+ ['crescendo（cresc.）','クレッシェンド','だんだん強く','dy',0,'「成長する」が元の意味。記号は右に向かって開く「＜」。','decrescendo（decresc.）'],
+ ['decrescendo（decresc.）','デクレッシェンド','だんだん弱く','dy',0,'cresc. の反対。記号は右に向かって閉じる「＞」。diminuendo（dim.）も同じ意味です。','crescendo（cresc.）'],
+ ['sforzando（sfz）','スフォルツァンド','その音だけ特に強く','dy',1,'「力を込めて」。前後の音量に関係なく、その1音だけを強調します。','fp（フォルテピアノ）'],
+ ['fp（フォルテピアノ）','フォルテピアノ','強く弾いて、すぐ弱く','dy',2,'f と p を続けて書いた形のとおり、強く入ってすぐ弱くします。','sforzando（sfz）'],
+ ['subito p','スービト・ピアノ','急に弱く','dy',2,'subito は「急に」。cresc. のあとなどに置くと、はっとする効果が出ます。','decrescendo（decresc.）'],
+ ['poco a poco','ポコ・ア・ポコ','少しずつ','dy',1,'poco は「少し」。cresc. poco a poco なら「少しずつだんだん強く」。','subito p'],
+ ['staccato','スタッカート','音を短く切って','ar',0,'音符の上下に点を付けて表します。「切り離す」が元の意味。','tenuto'],
+ ['legato','レガート','なめらかにつなげて','ar',0,'「結ばれた」が元の意味。音と音の間にすき間を作りません。','staccato'],
+ ['tenuto','テヌート','その音の長さを十分に保って','ar',1,'音符に短い横線を付けて表します。「保たれた」が元の意味。','staccato'],
+ ['accent','アクセント','その音を目立たせて強く','ar',0,'記号は「＞」。sfz より軽く、その音を周りより少し強くします。','marcato'],
+ ['marcato','マルカート','1音ずつはっきりと','ar',2,'「印をつけた」が元の意味。アクセントより強く、1音ずつ際立たせます。','accent'],
+ ['スラー','スラー','高さの違う音をなめらかにつなぐ','ar',1,'弧線で表します。同じ高さの音をつなぐタイと見た目が似ています。','タイ'],
+ ['タイ','タイ','同じ高さの音をつないで1つの音にする','ar',1,'弧線でつながれた同じ高さの音は、2回弾かずに長さを足します。','スラー'],
+ ['pizzicato（pizz.）','ピッツィカート','弦を指ではじいて','ar',1,'弦楽器の奏法。弓で弾く指示は arco（アルコ）です。','arco'],
+ ['arco','アルコ','弓で弾いて','ar',2,'pizz. のあとに「弓に戻して」という意味で使います。','pizzicato（pizz.）'],
+ ['glissando','グリッサンド','音を滑らせて','ar',1,'鍵盤なら白鍵の上を滑らせ、弦楽器なら指を滑らせます。','portamento'],
+ ['portamento','ポルタメント','音から音へ音程をなめらかに移す','ar',2,'glissando は間の音を連続して鳴らす、portamento は歌うように音程を運ぶ、という違いがあります。','glissando'],
+ ['tremolo','トレモロ','同じ音をすばやく反復して','ar',1,'「震える」が元の意味。マリンバや弦楽器で長い音の代わりに使います。','trill（tr）'],
+ ['trill（tr）','トリル','隣り合う音をすばやく交互に','ar',1,'tremolo は同じ音、trill は隣の音と交互、と区別します。','tremolo'],
+ ['vibrato','ビブラート','音程を細かく揺らして','ar',1,'歌や弦楽器で、伸ばす音に表情をつけます。後半からかけると自然です。','tremolo'],
+ ['con sordino','コン・ソルディーノ','弱音器をつけて','ar',2,'sordino は弱音器（ミュート）。外す指示は senza sordino です。','pizzicato（pizz.）'],
+ ['dolce','ドルチェ','甘く、やわらかに','ex',1,'デザートの「ドルチェ」と同じ言葉です。','cantabile'],
+ ['cantabile','カンタービレ','歌うように','ex',1,'cantare（歌う）から。メロディをたっぷり歌わせます。','espressivo'],
+ ['espressivo','エスプレッシーヴォ','表情豊かに','ex',1,'英語の expressive と同じ語源です。','cantabile'],
+ ['maestoso','マエストーソ','堂々と','ex',2,'maestro（巨匠）と同じ語源。威厳のある演奏を求めます。','grazioso'],
+ ['grazioso','グラツィオーソ','優雅に','ex',2,'英語の graceful にあたります。','maestoso'],
+ ['agitato','アジタート','激しく、せき立てるように','ex',2,'英語の agitate（かき乱す）と同じ語源。','con brio'],
+ ['con brio','コン・ブリオ','生き生きと','ex',2,'brio は「活気」。速さではなく気分の指示です。','agitato'],
+ ['leggiero','レッジェーロ','軽く','ex',2,'「軽い」という意味。音を重くしないで弾きます。','dolce'],
+ ['tranquillo','トランクイッロ','静かに落ち着いて','ex',2,'英語の tranquil（静かな）と同じ。','dolce'],
+ ['D.C.（ダ・カーポ）','ダ・カーポ','曲の始めに戻る','fo',1,'capo は「頭」。曲の頭へ戻り、Fine で終わります。','D.S.（ダル・セーニョ）'],
+ ['D.S.（ダル・セーニョ）','ダル・セーニョ','セーニョ記号の所に戻る','fo',1,'segno は「しるし」。𝄋 のしるしまで戻ります。','D.C.（ダ・カーポ）'],
+ ['Fine','フィーネ','終わり','fo',1,'D.C. や D.S. で戻ったあと、ここで曲を終えます。','Coda'],
+ ['Coda','コーダ','曲の最後に付け足す結びの部分','fo',1,'「尾」が元の意味。To Coda から Coda へ飛びます。','Fine'],
+ ['リピート記号','リピート','その区間をくり返す','fo',0,'太い線と2つの点で区間を挟みます。','D.C.（ダ・カーポ）'],
+ ['1番かっこ・2番かっこ','いちばん・にばんかっこ','1回目と2回目で違う終わり方をする','fo',1,'くり返しの1回目は1番かっこ、2回目は1番を飛ばして2番かっこを弾きます。','リピート記号'],
+ ['アウフタクト','アウフタクト','小節の頭より前から始まる（弱起）','fo',1,'ドイツ語。メロディが前の小節の途中から始まる形で、歌い出しによくあります。','シンコペーション'],
+ ['フック','フック','耳に残る印象的なフレーズ','fo',2,'釣り針のように聴き手を引っかけるフレーズ。サビの決め言葉やリフのことです。','ブリッジ'],
+ ['ブリッジ','ブリッジ','曲の流れに変化をつける中間部分','fo',2,'英語圏では、サビを何度か聴いたあとの「Cメロ」にあたる部分を指すことが多いです。','フック'],
+ ['シンコペーション','シンコペーション','強拍と弱拍の位置をずらしたリズム','th',1,'裏拍の音を次の表拍までつなげると、アクセントが前にずれて前のめりな感じが出ます。','アウフタクト'],
+ ['調号','ちょうごう','曲の初めに書く、そのキーの♯や♭','th',0,'キーで決まった音を、毎回書かなくてすむようにまとめたものです。','臨時記号'],
+ ['臨時記号','りんじきごう','曲の途中で一時的に付ける♯・♭・♮','th',1,'その小節の中だけ有効です。','調号'],
+ ['ナチュラル（♮）','ナチュラル','♯や♭を取り消して元の高さに戻す','th',0,'「自然な」という意味。調号の♯・♭も一時的に打ち消せます。','臨時記号'],
+ ['異名同音','いめいどうおん','書き方は違うが同じ高さの音','th',1,'C♯ と D♭ のように、鍵盤では同じ所を押す音です。','ユニゾン'],
+ ['ユニゾン','ユニゾン','同じ高さ・同じ旋律を複数で演奏する','th',1,'「1つの音」が元の意味。オクターブ違いもユニゾンと呼ぶことがあります。','異名同音'],
+ ['移調','いちょう','曲全体を別のキーに移す','th',1,'歌いやすい高さに合わせるのが移調。曲の途中でキーが変わるのは転調です。','転調'],
+ ['転調','てんちょう','曲の途中でキーが変わる','th',1,'ラスサビで半音上げるのが代表例です。','移調'],
+ ['主音','しゅおん','スケールの1番目の音','th',0,'キーの名前になる音です。C メジャーなら C。','導音'],
+ ['導音','どうおん','主音の半音下にある7番目の音','th',2,'主音に「導く」音。強く主音へ進みたがります。','属音'],
+ ['属音','ぞくおん','スケールの5番目の音','th',2,'ドミナント。この音から作るコードがⅤ（ドミナントコード）です。','下属音'],
+ ['下属音','かぞくおん','スケールの4番目の音','th',2,'サブドミナント。主音の完全5度下の音でもあります。','属音'],
+ ['BPM','ビーピーエム','1分間あたりの拍の数','dt',0,'Beats Per Minute の略。数字が大きいほど速い。','ベロシティ'],
+ ['DAW','ダウ','録音・打ち込み・ミックスを行う作曲ソフト','dt',0,'Digital Audio Workstation の略。','MIDI'],
+ ['MIDI','ミディ','音の高さ・長さ・強さなどの演奏情報をやりとりする規格','dt',1,'音そのものではなく「どう弾いたか」の情報です。だから後から音色を変えられます。','DAW'],
+ ['ベロシティ','ベロシティ','鍵盤を弾く強さの値','dt',0,'0〜127 の数字で表します。強さだけでなく音色の明るさも変わる音源が多いです。','クオンタイズ'],
+ ['クオンタイズ','クオンタイズ','音のタイミングをグリッドにそろえる','dt',0,'「量子化」が元の意味。かけすぎると機械的になるので、強さを調整できる機能もあります。','ベロシティ'],
+ ['ピアノロール','ピアノロール','縦が音の高さ、横が時間の打ち込み画面','dt',0,'自動演奏ピアノの穴のあいた紙のロールが名前の由来です。','オートメーション'],
+ ['パン','パン','音の左右の位置','dt',0,'パノラマの略。キックやベースや歌は中央に置くのが基本です。','EQ（イコライザー）'],
+ ['リバーブ','リバーブ','残響を加えるエフェクト','dt',0,'部屋やホールの響きを足します。','ディレイ'],
+ ['ディレイ','ディレイ','音を遅らせてくり返す、やまびこのようなエフェクト','dt',1,'リバーブは響きの空気感、ディレイははっきり聴こえるくり返し、と覚えます。','リバーブ'],
+ ['EQ（イコライザー）','イコライザー','周波数ごとに音量を調整する','dt',1,'低音・中音・高音のバランスを整えます。楽器同士の住み分けに使います。','コンプレッサー'],
+ ['コンプレッサー','コンプレッサー','大きい音を抑えて音量の差を縮める','dt',1,'音量のばらつきをそろえ、音を前に出します。','EQ（イコライザー）'],
+ ['オートメーション','オートメーション','音量などの設定を時間に沿って自動で動かす','dt',1,'サビで少しだけ音量を上げる、フィルターをだんだん開く、などに使います。','サイドチェイン'],
+ ['ピッチベンド','ピッチベンド','音程を連続的に上げ下げする','dt',1,'チョーキングやしゃくりの打ち込みに使います。','オートメーション'],
+ ['プラグイン','プラグイン','DAW に追加して使う音源やエフェクト','dt',1,'VST や AU などの形式があります。','サンプリング'],
+ ['サンプリング','サンプリング','録音した音を素材として使う','dt',1,'ドラムの音やフレーズを切り出して、楽器のように並べます。','プラグイン'],
+ ['調声','ちょうせい','歌声合成で、歌い方を細かく調整する作業','dt',1,'ピッチの曲線、強さ、子音の長さなどを整えて、人らしい歌にします。','オートメーション'],
+ ['サイドチェイン','サイドチェイン','別の音に反応して音量を下げる','dt',2,'キックが鳴った瞬間だけベースや和音を下げると、低音がぶつからず、うねりも生まれます。','コンプレッサー'],
+ ['マスタリング','マスタリング','完成した曲の音質と音量を最終調整する','dt',2,'ミックスのあとの最後の工程。配信先に合わせた音量にそろえます。','ステム'],
+ ['ステム','ステム','楽器のグループごとに書き出した音声ファイル','dt',2,'ドラム・ベース・上モノ・歌などに分けて書き出したもの。共同作業やリミックスで使います。','マスタリング'],
+ ['レイテンシー','レイテンシー','音が出るまでの遅れ','dt',2,'鍵盤を押してから音が出るまでの時間。録音中は小さく設定します。','ディレイ']
+];
+const TERM_IDX=Object.fromEntries(TERM_Q.map((x,i)=>[x[0],i]));
+function makeTm(p){
+  const T=TERM_Q[p.i],[term,kana,mean,cat,lv,memo,conf]=T,C=TERM_IDX[conf]!==undefined?TERM_Q[TERM_IDX[conf]]:null;
+  const near=TERM_Q.filter(x=>x[3]===cat&&x[0]!==term&&x[4]<=Math.max(1,p.lv)),pool=near.length>=3?near:TERM_Q.filter(x=>x[3]===cat&&x[0]!==term);
+  const others=shuffle(pool);if(C&&!others.includes(C))others.unshift(C);else if(C){others.splice(others.indexOf(C),1);others.unshift(C)}
+  const picks=[T,...others.slice(0,3)];
+  const dir=p.dir;
+  const q=dir?`「${mean}」を表す言葉は？`:`「${term}」の意味は？`;
+  const opts=shuffle(picks.map(x=>dir?x[0]:x[2])),ans=dir?term:mean;
+  return {q,opts,ans,key:'tm:'+cat,
+    why:`${term}（${kana}）は「${mean}」という意味です。${memo}`,
+    steps:[`まず、何についての言葉かを見分ける。これは「${TCAT[cat]}」を表す言葉。`,`言葉の成り立ちから考える：${memo}`].concat(C?[`まぎらわしいのは ${C[0]}（${C[2]}）。違いを1点で押さえておく。`]:[]),
+    tip:{sp:'速さの言葉は、遅い順に Grave・Largo・Lento・Adagio・Andante・Moderato・Allegretto・Allegro・Vivace・Presto。',ch:'「だんだん」は -ando で終わる言葉（ritardando・accelerando・rallentando）。',dy:'p と f に、mezzo（半分）と -issimo（とても）が付くと覚えれば、6段階がすぐ並びます。',ar:'奏法の記号は、音の「長さ」（staccato・tenuto）と「つなぎ方」（legato・スラー・タイ）と「強さ」（accent・marcato）に分けて覚えると整理できます。',ex:'表情の言葉は、英語の似た単語を思い浮かべると意味が推測できるものが多いです。',fo:'D.C.＝頭へ、D.S.＝しるしへ、Fine＝ここで終わり、Coda＝飛んだ先の結び。',th:'似た言葉はペアで覚える：調号と臨時記号、移調と転調、スラーとタイ。',dt:'DAW の画面で実際に探してみると、一気に覚えられます。'}[cat]};
+}
+function genTm(lv){const pool=TERM_Q.map((x,i)=>[x,i]).filter(([x])=>x[4]<=lv);const [,i]=rand(pool);return {kind:'tm',i,dir:rnd(2),lv}}
+const ENH={1:['C♯','D♭'],3:['D♯','E♭'],6:['F♯','G♭'],8:['G♯','A♭'],10:['A♯','B♭']};
+function makeBs(p){
+  const {t,a}=p,N=x=>NAMES_S[mod(x)],F=x=>NAMES_F[mod(x)];
+  if(t===0||t===1){const up=p.up,st=t===0?1:2,b=a+(up?st:-st),ans=up?N(b):F(b),w=t===0?'半音':'全音';
+    const path=up?`${N(a)} → ${N(a+1)}${st===2?' → '+N(a+2):''}`:`${F(a)} → ${F(a-1)}${st===2?' → '+F(a-2):''}`;
+    return {q:`${up?N(a):F(a)} から${w}${up?'上':'下'}の音は？`,opts:fill4(ans,()=>(up?N:F)(a+(up?1:-1)*(1+rnd(4)))),ans,notes:[60+mod(a),60+mod(a)+(up?st:-st)],key:'bs:'+t,
+      why:`${up?N(a):F(a)} から鍵盤を${st}つ${up?'右':'左'}へ（黒鍵も数える）進むと ${ans} です。`,
+      steps:[`${w}は鍵盤${st}つぶん。白鍵・黒鍵の区別なく、隣の鍵盤を1つと数える。`,`${up?'右':'左'}へ順に進む：${path}`,`白鍵の E–F と B–C の間には黒鍵がないので、そこは白鍵どうしでも半音になる点に注意。`],
+      tip:'上がるときは♯、下がるときは♭で書くのが読みやすい習慣です（C から半音上は C♯、D から半音下は D♭）。'}}
+  if(t===2){const pc=p.pc,[s,f]=ENH[pc],give=p.flip?f:s,ans=p.flip?s:f;
+    return {q:`${give} と同じ鍵盤の音（異名同音）は？`,opts:fill4(ans,()=>rand(['C♯','D♭','D♯','E♭','F♯','G♭','G♯','A♭','A♯','B♭'])),ans,notes:[60+pc],key:'bs:2',
+      why:`${give} と ${ans} は、鍵盤では同じ黒鍵です。${s} は ${NAMES_S[pc-1]} を半音上げた音、${f} は ${NAMES_F[pc+1]} を半音下げた音、と呼び方が違うだけです。`,
+      steps:[`${give} の位置を決める：${p.flip?`${NAMES_F[pc+1]} の半音下`:`${NAMES_S[pc-1]} の半音上`}。`,`その黒鍵を、反対側の白鍵から呼ぶと ${ans}。`],
+      tip:'どちらで書くかはキーで決まります。♯系のキー（G・D・A…）なら♯、♭系のキー（F・B♭・E♭…）なら♭で書きます。'}}
+  if(t===3){const prs=[['E','F',1],['B','C',1],['C','D',2],['F','G',2],['G','A',2],['A','B',2],['D','E',2]],P=prs[p.k],ans=P[2]===1?'半音':'全音';
+    return {q:`白鍵の ${P[0]} と ${P[1]} の間は、半音？全音？`,opts:['半音','全音'],ans,notes:[60+NN[P[0]],60+NN[P[0]]+P[2]],key:'bs:3',
+      why:`${P[0]} と ${P[1]} の間には黒鍵が${P[2]===1?'ないので、隣どうしで半音':'1つあるので、鍵盤2つぶんで全音'}です。`,
+      steps:['白鍵どうしの間に黒鍵があるかを見る。','黒鍵がなければ半音、あれば全音。黒鍵がないのは E–F と B–C の2か所だけ。'],
+      tip:'「ミファ」と「シド」だけが半音、と覚えておけば迷いません。'}}
+  const sp=[['E♯','F'],['B♯','C'],['F♭','E'],['C♭','B']][p.k%4];
+  return {q:`${sp[0]} は、どの白鍵と同じ高さ？`,opts:shuffle(['C','E','F','B']),ans:sp[1],key:'bs:4',
+    why:`${sp[0]} は ${sp[0][0]} を半音${sp[0].includes('♯')?'上げ':'下げ'}た音。${sp[0][0]} の${sp[0].includes('♯')?'右':'左'}隣には黒鍵がないので、白鍵の ${sp[1]} と同じ高さになります。`,
+    steps:[`♯は半音上、♭は半音下。${sp[0][0]} から1つ${sp[0].includes('♯')?'右':'左'}の鍵盤を探す。`,`E–F・B–C の間には黒鍵がないので、隣は白鍵の ${sp[1]}。`],
+    tip:'E♯ や C♭ は珍しく見えますが、F♯ メジャー（E♯ を使う）など、スケールの音名を A〜G で1つずつ並べるために使われます。'};
+}
+function genBs(lv){const t=rand(lv===0?[0,0,1,3]:lv===1?[0,1,2,3]:[0,1,2,2,4]);const P={kind:'bs',t,lv};if(t<2){P.a=rnd(12);P.up=rnd(2)===0}if(t===2){P.pc=rand([1,3,6,8,10]);P.flip=rnd(2)===1}if(t>=3)P.k=rnd(7);return P}
+function makeRh(p){
+  const {t}=p;
+  if(t===0)return makeTh({t:4,i:p.i});
+  if(t===1){const D=[['付点4分音符','8分音符',3],['付点2分音符','4分音符',3],['付点8分音符','16分音符',3],['付点2分音符','8分音符',6],['付点4分音符','16分音符',6]][p.i],ans=D[2]+'つ';
+    return {q:`${D[0]}1つは、${D[1]}いくつぶん？`,opts:fill4(ans,()=>rand([1,2,3,4,5,6,8])+'つ'),ans,key:'rh:1',
+      why:`付点は元の音符の長さを1.5倍にします。${D[0].replace('付点','')}は${D[1]}${D[2]/1.5}つぶんなので、付点が付くと ${D[2]/1.5}×1.5＝${D[2]}つぶんです。`,
+      steps:['点が付く前の音符の長さを、聞かれている音符で数える。',`${D[0].replace('付点','')}＝${D[1]}${D[2]/1.5}つ。`,`付点で1.5倍 → ${D[2]}つ。`],tip:'付点8分＋16分の「タッカ」というはねたリズムは、ボカロ曲のメロディにもよく出てきます。'}}
+  if(t===2){const M=[['4/4',8,'8分音符',8],['3/4',4,'4分音符',3],['3/4',8,'8分音符',6],['6/8',8,'8分音符',6],['2/4',16,'16分音符',8],['4/4',16,'16分音符',16],['12/8',4,'付点4分音符',4]][p.i],ans=M[3]+'つ';
+    return {q:`${M[0]}拍子の1小節に、${M[2]}はいくつ入る？`,opts:fill4(ans,()=>rand([2,3,4,6,8,12,16])+'つ'),ans,key:'rh:2',
+      why:`${M[0]}拍子は「${M[0].split('/')[1]}分音符が1小節に${M[0].split('/')[0]}つ」という意味。${M[2]}に直すと${M[3]}つです。`,
+      steps:['拍子記号の下の数字は「何分音符を1拍とするか」、上の数字は「1小節に何拍か」。',`${M[0]} → ${M[0].split('/')[1]}分音符が${M[0].split('/')[0]}つ。`,`それを${M[2]}で数え直す → ${M[3]}つ。`],
+      tip:'6/8拍子は8分音符6つですが、感じ方は「3つずつ×2」。付点4分音符を1拍と感じる大きな2拍子です。'}}
+  if(t===3){const B=[[120,'4分音符',.5],[60,'4分音符',1],[150,'4分音符',.4],[100,'4分音符',.6],[120,'8分音符',.25],[75,'4分音符',.8],[240,'4分音符',.25],[90,'8分音符',1/3]][p.i],f=x=>(Math.round(x*1000)/1000)+'秒',ans=B[2]===1/3?'約0.33秒':f(B[2]);
+    return {q:`BPM${B[0]}のとき、${B[1]}1つは何秒？`,opts:fill4(ans,()=>rand(['0.25秒','0.4秒','0.5秒','0.6秒','0.75秒','0.8秒','1秒','約0.33秒','1.2秒'])),ans,key:'rh:3',
+      why:`BPM は1分（60秒）に4分音符がいくつ入るか。BPM${B[0]}なら4分音符1つは 60÷${B[0]}＝${f(60/B[0])}${B[1]==='8分音符'?`。8分音符はその半分で ${ans}`:''}です。`,
+      steps:['60秒を BPM で割ると、4分音符1つの長さになる。',`60÷${B[0]}＝${f(60/B[0])}。`].concat(B[1]==='8分音符'?['8分音符は4分音符の半分。']:[]),
+      tip:'ディレイの時間をテンポに合わせるときに使う計算です。BPM120 なら4分＝0.5秒、8分＝0.25秒。'}}
+  const Q3=[['4分音符1拍に入る、8分3連符の数は？','3つ','3連符は「2つぶんの長さを3等分」した音符。8分音符2つ（＝4分音符1つ）に3つ入ります。'],['2分音符1つぶんを3等分した音符は？','4分3連符','4分音符2つぶん（＝2分音符）を3等分するので4分3連符です。'],['16分3連符は、4分音符1拍にいくつ入る？','6つ','16分音符4つぶんの長さ（1拍）に、2組の3連符で6つ入ります。']][p.i%3];
+  return {q:Q3[0],opts:fill4(Q3[1],()=>rand(['2つ','3つ','4つ','6つ','8分3連符','4分3連符','16分音符'])),ans:Q3[1],key:'rh:4',why:Q3[2],steps:['3連符は「本来2つ入る長さに3つ詰めた」もの。','もとの2つぶんの長さを確かめ、そこに3つ入ると数える。'],tip:'3連符はシャッフルやバラードの「ハネ」の正体です。'};
+}
+function genRh(lv){const t=rand(lv===0?[0,1]:lv===1?[0,1,2,3]:[1,2,3,4]);const n={0:NOTE_PAIRS.length,1:5,2:7,3:8,4:3}[t];return {kind:'rh',t,i:rnd(n),lv}}
+const KEYSIG={0:'なし',7:'♯1つ',2:'♯2つ',9:'♯3つ',4:'♯4つ',11:'♯5つ',5:'♭1つ',10:'♭2つ',3:'♭3つ',8:'♭4つ',1:'♭5つ'};
+const MODE_Q=[['dorian','ドリアン','ナチュラルマイナーの6番目を半音上げた音','minor'],['phryg','フリジアン','ナチュラルマイナーの2番目を半音下げた音','minor'],['lydian','リディアン','メジャーの4番目を半音上げた音','major'],['mixo','ミクソリディアン','メジャーの7番目を半音下げた音','major'],['harm','ハーモニックマイナー','ナチュラルマイナーの7番目を半音上げた音','minor']];
+function makeSk(p){
+  const {t}=p;
+  if(t===0)return makeTh({t:0,k:p.k,d:p.d});
+  if(t===1){const k=p.k,ans=KEYSIG[k],dir=p.dir;
+    if(dir)return {q:`調号が${ans}のメジャーキーは？`,opts:fill4(KEY_NAMES[k],()=>KEY_NAMES[rand(Object.keys(KEYSIG).map(Number))]),ans:KEY_NAMES[k],key:'sk:1',
+      why:`${ans}のメジャーキーは ${KEY_NAMES[k]} です。`,steps:['♯のキーは C から完全5度ずつ上：C → G → D → A → E → B。♭のキーは完全5度ずつ下：C → F → B♭ → E♭ → A♭ → D♭。',`${ans}なので、${ans.includes('♯')?'5度上':'5度下'}へ${ans[1]}つ進む → ${KEY_NAMES[k]}。`],
+      tip:'♯の調号なら「最後の♯の半音上」、♭なら「最後から2番目の♭」がキーの名前になります。'};
+    return {q:`${KEY_NAMES[k]} メジャーの調号は？`,opts:fill4(ans,()=>rand(Object.values(KEYSIG))),ans,key:'sk:1',notes:MAJ.map(i=>60+k+i),
+      why:`${KEY_NAMES[k]} メジャーの調号は${ans}です。`,steps:['五度圏を思い出す：C から5度上へ進むたびに♯が1つ、5度下へ進むたびに♭が1つ増える。',`${KEY_NAMES[k]} は C から${ans==='なし'?'動かない':ans.includes('♯')?'5度上へ'+ans[1]+'つ':'5度下へ'+ans[1]+'つ'}。`],
+      tip:'♯は「ファ・ド・ソ・レ・ラ・ミ・シ」、♭は「シ・ミ・ラ・レ・ソ・ド・ファ」の順に付きます。'}}
+  if(t===2){const k=p.k,fl=FLAT_MAJ.has(k),rel=nm(k+9,fl)+'m',dir=p.dir;
+    if(dir){const mk=mod(k+9),ans=KEY_NAMES[k];return {q:`${nm(mk,fl)}m（マイナー）の平行調は？`,opts:fill4(ans,()=>KEY_NAMES[rnd(12)]),ans,key:'sk:2',why:`${nm(mk,fl)}m の短3度上の ${ans} メジャーが平行調です。どちらも同じ7音・同じ調号を使います。`,steps:['平行調は、同じ調号を使うメジャーとマイナーのペア。','マイナーから見るとメジャーは短3度（半音3つ）上。',`${nm(mk,fl)} から半音3つ上 → ${ans}。`],tip:'C と Am、G と Em のペアはすぐ出るようにしておくと便利です。'}}
+    return {q:`${KEY_NAMES[k]} メジャーの平行調は？`,opts:fill4(rel,()=>nm(rnd(12),fl)+'m'),ans:rel,key:'sk:2',why:`${KEY_NAMES[k]} メジャーの6番目の音 ${nm(k+9,fl)} から始まるマイナーキー、${rel} が平行調です。同じ7音・同じ調号を使います。`,steps:['平行調は、同じ調号を使うメジャーとマイナーのペア。','メジャーの6番目の音（＝短3度下）がマイナーの主音。',`${KEY_NAMES[k]} から半音3つ下 → ${nm(k+9,fl)}。`],tip:'明るいサビから暗いBメロへ、など平行調への行き来は J-POP で頻繁に使われます。'}}
+  const M=MODE_Q[p.m],ans=M[2];
+  return {q:`${M[1]}の特徴になる音は？`,opts:shuffle(MODE_Q.map(x=>x[2]).filter(x=>x!==ans).slice(0,3).concat(ans)),ans,key:'sk:3',notes:SCALES[M[0]].iv.map(i=>60+i),
+    why:`${M[1]}（${SCALES[M[0]].iv.map(i=>NAMES_S[i]).join(' ')}）は、${ans}が特徴です。${SCALES[M[0]].d}`,
+    steps:[`まず土台を決める：${M[1]}は${M[3]==='major'?'明るい（メジャー系）':'暗い（マイナー系）'}スケール。`,`土台の${M[3]==='major'?'メジャー':'ナチュラルマイナー'}と1音ずつ比べ、違う1音を探す。`,`違うのは ${ans}。この1音を強調すると、そのモードらしく聴こえる。`],
+    tip:'モードは「メジャーかマイナーを1音だけ変えたもの」と考えると、特徴音がすぐわかります。'};
+}
+function genSk(lv){const t=rand(lv===0?[0,2]:lv===1?[0,1,2]:[1,2,3,3]);const P={kind:'sk',t,lv};if(t===0){P.k=rnd(12);P.d=2+rnd(6)}if(t===1||t===2){P.k=rand(Object.keys(KEYSIG).map(Number));P.dir=rnd(2)}if(t===3)P.m=rnd(MODE_Q.length);return P}
+const SE_POOL=[['major','minor'],['major','minor','harm','penta'],['major','minor','harm','dorian','mixo','lydian']];
+function makeSe(p){
+  const {r,s,lv}=p,sc=SCALES[s],ms=sc.iv.map(i=>r+i).concat([r+12]),pool=SE_POOL[lv];
+  const bright=sc.iv.includes(4);
+  const feat={major:'特に変わった音がなく、素直に明るい',minor:'暗く、7番目が主音の全音下にある',harm:'暗いのに、最後の2音（7番目→主音）が半音で、6→7番目が大きく開く',penta:'5音しかなく、半音の動きが一度もない',dorian:'暗いのに6番目が明るく浮く',mixo:'明るいのに、7番目が主音の全音下にあって終わりが少し間延びする',lydian:'明るく、4番目が高く浮いている'}[s];
+  return {q:'このスケールは？',opts:pool.map(x=>SCALES[x].n),ans:sc.n,notes:ms,ear:true,key:'se:'+s,play:()=>{const c=ac(),t=c.currentTime+.05;ms.forEach((m,i)=>nOn('piano',m,t+i*.3,.32,.75));['piano'].forEach(n=>[r,r+(bright?4:3),r+7].forEach(m=>nOn(n,m-12,t+ms.length*.3+.05,1.4,.55)))},
+    why:`${NAMES_S[mod(r)]} ${sc.n}（${sc.iv.map(i=>NAMES_S[mod(r+i)]).join(' ')}）。${sc.d}`,
+    steps:[`3番目の音で明暗を聴く。今回は${bright?'明るい → メジャー系':'暗い → マイナー系'}。`,`次に「変わった音」を探す。今回は${feat}。`,`最後の2音（7番目→主音）が半音か全音かも手がかり。${[11].some(x=>sc.iv.includes(x))?'今回は半音でぴたっと着地する。':'今回は全音で、ゆるやかに着地する。'}`],
+    tip:'スケールは最後に主音の和音を鳴らしてから聴き直すと、明暗がつかみやすくなります。'};
+}
+function genSe(lv){return {kind:'se',r:55+rnd(8),s:rand(SE_POOL[lv]),lv}}
+function makeDk(p){
+  const {t}=p;
+  if(t===0)return makeTh({t:2,k:p.k,i:p.i});
+  const k=p.k,flat=FLAT_MAJ.has(k);
+  if(t===1){const ds=diatonic(k,'major',false),d=ds[p.i],name=nm(d.pc,flat)+d.suf,FNN={T:'トニック',SD:'サブドミナント',D:'ドミナント'},ans=FNN[d.fn];
+    return {q:`キー ${KEY_NAMES[k]} で、${name}（${ROM[p.i]}）の機能は？`,opts:['トニック','サブドミナント','ドミナント'],ans,notes:voiceClose(d.pc,d.rel),key:'dk:1',
+      why:`${name} は ${ROM[p.i]} なので${ans}です。トニック＝落ち着く（Ⅰ・Ⅲm・Ⅵm）、サブドミナント＝広がる（Ⅳ・Ⅱm）、ドミナント＝主音へ帰りたがる（Ⅴ・Ⅶm-5）。`,
+      steps:[`まず度数を出す：${name} はキー ${KEY_NAMES[k]} の${p.i+1}番目の音から作ったコード → ${ROM[p.i]}。`,'機能の型を当てはめる：Ⅰ・Ⅲm・Ⅵm＝T、Ⅳ・Ⅱm＝SD、Ⅴ・Ⅶm-5＝D。',`${ROM[p.i]} → ${ans}。`],
+      tip:'Ⅲm はトニックとドミナントの両方の性格を持つ、と説明されることもあります。どちらに聴こえるかは前後の流れ次第です。'}}
+  if(t===2){const ds=diatonic(k,'major',true),names=ds.map(d=>nm(d.pc,flat)+d.suf),ans=names[4];
+    return {q:`キー ${KEY_NAMES[k]} の Ⅴ7 は？`,opts:fill4(ans,()=>rand(names.concat([nm(k+7,flat)+'M7',nm(k+7,flat)+'m7']))),ans,notes:voiceClose(ds[4].pc,ds[4].rel),key:'dk:2',
+      why:`キー ${KEY_NAMES[k]} の5番目の音は ${nm(k+7,flat)}。そこから4和音を作ると ${ans} です。メジャーキーで「7」（ドミナントセブンス）になるのは Ⅴ だけです。`,
+      steps:[`キーの5番目の音を出す：${KEY_NAMES[k]} から完全5度上 → ${nm(k+7,flat)}。`,'ダイアトニックの4和音で、Ⅴ は必ずドミナントセブンス（7）。',`→ ${ans}。`],tip:'Ⅴ7 の3度と7度は、主音の半音下と、Ⅳ の音（増4度＝トライトーン）。この2音が解決したがるので強く主音へ進みます。'}}
+  const ds=diatonic(k,'minor',false),fl=useFlat(k,true),names=ds.map(d=>nm(d.pc,fl)+d.suf),R=['Ⅰm','Ⅱm-5','♭Ⅲ','Ⅳm','Ⅴm','♭Ⅵ','♭Ⅶ'],ans=names[p.i];
+  return {q:`キー ${nm(k,fl)}m（ナチュラルマイナー）で ${R[p.i]} にあたるコードは？`,opts:fill4(ans,()=>rand(names)),ans,notes:voiceClose(ds[p.i].pc,ds[p.i].rel),key:'dk:3',
+    why:`キー ${nm(k,fl)}m のダイアトニックコードは ${names.join('・')}。${R[p.i]} は ${ans} です。`,
+    steps:[`${nm(k,fl)} ナチュラルマイナーを書き出す：${SCALES.minor.iv.map(i=>nm(k+i,fl)).join(' ')}`,`${p.i+1}番目の音から1つ飛ばしで3つ重ねる。`,`→ ${ans}。`],tip:'マイナーキーのダイアトニックは、平行調メジャーと同じ7つのコードを、6番目から数え直したものです。Am なら C の Ⅵm から始めた並び。'};
+}
+function genDk(lv){const t=rand(lv===0?[0,1]:lv===1?[0,1,2]:[1,2,3,3]);return {kind:'dk',t,k:rand([0,2,4,5,7,9,10,3]),i:rnd(7),lv}}
+const CAD_Q=[['完全終止','Ⅴ7 → Ⅰ',[[0,''],[5,''],[7,'7'],[0,'']],'いちばん強い「終わった」感じ。ドミナントから主和音へ帰ります。'],['偽終止','Ⅴ7 → Ⅵm',[[0,''],[5,''],[7,'7'],[9,'m']],'Ⅰ に帰ると思わせて Ⅵm へ。「終わりそうで終わらない」裏切りの響きです。'],['半終止','… → Ⅴ',[[0,''],[9,'m'],[2,'m'],[7,'']],'Ⅴ で止まるので、問いかけのように続きを期待させます。'],['変格終止','Ⅳ → Ⅰ',[[0,''],[9,'m'],[5,''],[0,'']],'Ⅳ から Ⅰ へ。完全終止より柔らかい「アーメン終止」。']];
+function makeCe(p){
+  const {k,c,lv}=p,C=CAD_Q[c],pool=lv===0?CAD_Q.slice(0,3):CAD_Q,flat=FLAT_MAJ.has(k);
+  return {q:'この終わり方（終止）は？',opts:pool.map(x=>x[0]),ans:C[0],ear:true,key:'ce:'+c,play:()=>{const t0=.05;C[2].forEach(([o,s],i)=>playVoiced(mod(k+o),s,.85,null,t0+i*.9))},
+    why:`${C[0]}（${C[1]}）。${C[3]}今回は ${C[2].map(([o,s])=>nm(k+o,flat)+s).join(' → ')} でした。`,
+    steps:['最後の和音が「家に帰った」感じか、まだ途中かを聴く。','帰っていない → 最後が Ⅴ なら半終止、明るい家ではなく暗い Ⅵm に着いたなら偽終止。','帰った → 直前が緊張した Ⅴ7 なら完全終止、穏やかな Ⅳ なら変格終止。'],
+    tip:'偽終止は、サビの最後をもう1回くり返したいときの定番です。Ⅵm に逃げることで、もう1周する理由が生まれます。'};
+}
+function genCe(lv){return {kind:'ce',k:rand([0,2,5,7,9]),c:rnd(lv===0?3:4),lv}}
+const PE_POOL=[[0,3,4,6],[0,3,4,5,6,7],[0,1,2,3,4,5,6,7]];
+function makePe(p){
+  const {k,i,lv}=p,P=PROGS[i],flat=FLAT_MAJ.has(k);
+  const deg=P.c.map(([o,s])=>romanOf(o)+s).join(' → ');
+  const first=P.c[0][0];
+  return {q:'このコード進行は？',opts:PE_POOL[lv].map(j=>PROGS[j].n),ans:P.n,ear:true,key:'pe:'+i,play:()=>{let x=.05;P.c.forEach(([o,s,bt])=>{const d=P.c.length>5?.7:1.05;playVoiced(mod(k+o),s,d*.95,null,x);x+=d})},
+    why:`${P.n}は ${deg}（キー ${KEY_NAMES[k]} なら ${P.c.map(([o,s])=>nm(k+o,flat)+s).join(' → ')}）。${P.d}`,
+    steps:[`1つ目のコードの性格を聴く。今回は ${first===0?'落ち着いた Ⅰ（トニック）から始まる':first===5?'広がりのある Ⅳ から始まる':first===9?'暗い Ⅵm から始まる':'Ⅱm7 から始まる'}。`,`2つ目への動きを聴く。${P.c.length>1?romanOf(P.c[0][0])+P.c[0][1]+' → '+romanOf(P.c[1][0])+P.c[1][1]:''}。`,`和音の数と流れ全体で確かめる：${P.c.length}つのコードで ${deg}。`],
+    tip:'進行は「1つ目のコード」で大きく絞れます。Ⅳ 始まり＝王道系・丸サ、Ⅵm 始まり＝小室、Ⅰ 始まり＝カノン・アクシス・イチロクニーゴー、Ⅱm7 始まり＝ツーファイブ。'};
+}
+function genPe(lv){return {kind:'pe',k:rand([0,2,5,7]),i:rand(PE_POOL[lv]),lv}}
+function makePk(p){
+  const {i,k,t}=p,P=PROGS[i],flat=FLAT_MAJ.has(k),deg=P.c.map(([o,s])=>romanOf(o)+s).join('→'),inKey=P.c.map(([o,s])=>nm(k+o,flat)+s).join('→');
+  if(t===0){const opts=fill4(P.n,()=>rand(PROGS).n);return {q:`「${deg}」は何進行？`,opts,ans:P.n,key:'pk:0',why:`${deg} は${P.n}。${P.d}`,steps:['1つ目のコードで候補を絞る：Ⅳ 始まり＝王道系・丸サ、Ⅵm 始まり＝小室、Ⅰ 始まり＝カノン・アクシス・イチロクニーゴー、Ⅱm7 始まり＝ツーファイブ。','2つ目以降で決める。'],tip:'名前と度数をセットで覚えると、どのキーの曲でもすぐに弾けます。'}}
+  const wrong=()=>{const Q=rand(PROGS.filter(x=>x!==P));return Q.c.map(([o,s])=>nm(k+o,flat)+s).join('→')};
+  return {q:`キー ${KEY_NAMES[k]} で${P.n}（${deg}）を弾くと？`,opts:fill4(inKey,wrong),ans:inKey,key:'pk:1',why:`キー ${KEY_NAMES[k]} の${P.n}は ${inKey} です。`,
+    steps:[`キー ${KEY_NAMES[k]} のスケールを書き出す：${MAJ.map(x=>nm(k+x,flat)).join(' ')}`,`ローマ数字の番号の音をルートにして、後ろの記号を付ける：${P.c.map(([o,s])=>romanOf(o)+s+'＝'+nm(k+o,flat)+s).join('、')}`],tip:'カポや移調で、歌いやすいキーに合わせるときに必ず使う計算です。'};
+}
+function genPk(lv){return {kind:'pk',i:rnd(PROGS.length),k:lv===0?0:rand([0,2,5,7,9,4,10]),t:lv===0?0:rnd(2),lv}}
+const MK_Q=[
+ ['コード C（ド・ミ・ソ）の上で、強拍に置くといちばん安定するメロディの音は？','ミ',['レ','ファ','シ'],'強拍にはコードトーン（ド・ミ・ソ）を置くと安定します。選択肢の中でコードトーンはミだけです。','強拍＝コードトーン、が基本。'],
+ ['ミ → レ → ド と順に下がるとき、コード C の上の「レ」のような音を何と呼ぶ？','経過音',['刺繍音','倚音','掛留音'],'コードトーンからコードトーンへ、間を順に埋める音を経過音といいます。','経過音は弱拍に置くのが基本。'],
+ ['ミ → ファ → ミ と、隣の音へ行ってすぐ戻る「ファ」を何と呼ぶ？','刺繍音',['経過音','倚音','先取音'],'同じ音に戻ってくる隣の音を刺繍音（ししゅうおん）と呼びます。縫い物の針が布を出入りする様子からきた名前です。','行って戻る＝刺繍音。'],
+ ['強拍にわざとコードにない音を置き、すぐ隣のコードトーンへ解決させる音は？','倚音',['経過音','刺繍音','先取音'],'倚音（いおん）は強拍の非和声音。切なさや色っぽさを生みます。サビの頭でよく使われます。','強拍の非和声音＝倚音。'],
+ ['次のコードの音を、コードが変わる少し前に先に鳴らす音は？','先取音',['掛留音','経過音','刺繍音'],'先取音（アンティシペーション）は、J-POP の「食い」のメロディの正体です。','前に出す＝先取音、後ろに残す＝掛留音。'],
+ ['前のコードの音を、コードが変わったあとも伸ばし続けてぶつかる音は？','掛留音',['先取音','倚音','経過音'],'掛留音（けいりゅうおん）は前の音を残して不協和を作り、そのあと下へ解決させます。sus4 の響きと同じ仕組みです。','後ろに残す＝掛留音。'],
+ ['メロディの最後を「終わった」と感じさせやすい音は？','主音',['導音','属音','第2音'],'キーの1番目の音（主音）で終わると、もっとも落ち着いて聴こえます。','最後は主音、途中の区切りは主音以外で。'],
+ ['大きく跳躍したあと、自然に聴こえやすい動きは？','反対方向へ順次進行で戻る',['同じ方向へさらに跳躍する','同じ音を連打する','半音で上がり続ける'],'大きく跳んだあとは、反対向きに隣の音へ進むと、メロディのバランスがとれます。','跳躍のあとは反対方向へ一歩。'],
+ ['同じリズムのフレーズを、音の高さだけずらしてくり返す手法は？','ゼクエンツ',['モチーフ','カデンツ','オスティナート'],'ゼクエンツ（反復進行）は、覚えやすさと展開を両立させる手法です。','形をそのままに高さだけ変える＝ゼクエンツ。'],
+ ['同じ短いフレーズをずっとくり返す伴奏やリフを何と呼ぶ？','オスティナート',['ゼクエンツ','カデンツ','モチーフ'],'オスティナートは「しつこい」が元の意味。ベースのリフなどが代表例です。','同じものを延々と＝オスティナート。'],
+ ['メロディのいちばん高い音（頂点）を置くと効果的な場所は？','サビの山場に1回だけ',['曲の冒頭','どの小節にも','Aメロの最初'],'頂点は何度も使うと特別感が薄れます。いちばん伝えたい所に一度だけ置くと印象に残ります。','頂点は出し惜しみする。'],
+ ['歌のメロディで、息継ぎのために入れるとよいものは？','フレーズの間の休符',['連続した16分音符','高音の連続','跳躍の連続'],'人が歌える長さでフレーズを区切ると、自然で歌いやすいメロディになります。','歌える？を必ず確かめる。']
+];
+function makeMk(p){const Q=MK_Q[p.i];return {q:Q[0],opts:shuffle([Q[1],...Q[2]]),ans:Q[1],key:'mk:'+p.i,why:Q[3],steps:['メロディの音を「コードトーンか、そうでないか」でまず分ける。','そうでない音なら、どこから来てどこへ行くか（前後の動き）で名前が決まる。'],tip:Q[4]}}
+function genMk(lv){return {kind:'mk',i:rnd(lv===0?8:MK_Q.length),lv}}
+const ME_POOL=[[1,2],[1,2,3,5],[1,2,3,5,-2]];
+const ME_N={1:'半音上',2:'全音上',3:'短3度上',5:'完全4度上','-2':'全音下'};
+function makeMe(p){
+  const {k,n,lv}=p,ph=[[0,''],[5,''],[7,''],[0,'']];
+  return {q:'後半はどれだけ転調した？',opts:ME_POOL[lv].map(x=>ME_N[x]),ans:ME_N[n],ear:true,key:'me:'+n,play:()=>{ph.forEach(([o,s],i)=>playVoiced(mod(k+o),s,.55,null,.05+i*.6));ph.forEach(([o,s],i)=>playVoiced(mod(k+n+o),s,.55,null,2.65+i*.6))},
+    why:`前半はキー ${KEY_NAMES[mod(k)]}、後半はキー ${KEY_NAMES[mod(k+n)]} で、${ME_N[n]}への転調です。`,
+    steps:['前半の最後の和音（主和音）の、いちばん上かいちばん下の音を口ずさんで覚える。','後半の最初の和音の同じ音と比べ、どれだけ離れたかを測る。',`${Math.abs(n)<=2?'半音か全音なら、すぐ隣に感じる。半音は「ずれた」感じ、全音は「一段上がった」感じ。':'短3度や完全4度は、はっきり景色が変わったように感じる。'}`],
+    tip:'ラスサビの転調は半音上・全音上が定番。短3度上は、もっと劇的に場面を変えたいときに使われます。'};
+}
+function genMe(lv){return {kind:'me',k:rand([0,2,5,7,9]),n:rand(ME_POOL[lv]),lv}}
+function makeMo(p){
+  const {k,t}=p,fl=FLAT_MAJ.has(k);
+  const R=[['属調',7,'完全5度上のキー。調号が♯1つ増える（♭1つ減る）、いちばん近い親戚です。'],['下属調',5,'完全5度下のキー。調号が♭1つ増える（♯1つ減る）。'],['平行調',9,'同じ調号のマイナーキー。主音が短3度下です。'],['同主調',0,'主音が同じで、メジャーとマイナーが入れ替わったキーです。']];
+  if(t<4){const X=R[t],minor=t>=2,ans=minor?nm(k+X[1],t===2?fl:true)+'m':KEY_NAMES[mod(k+X[1])];
+    return {q:`${KEY_NAMES[k]} メジャーの${X[0]}は？`,opts:fill4(ans,()=>rand([KEY_NAMES[mod(k+7)],KEY_NAMES[mod(k+5)],nm(k+9,fl)+'m',nm(k,true)+'m',KEY_NAMES[mod(k+2)],nm(k+4,fl)+'m'])),ans,key:'mo:'+t,
+      why:`${KEY_NAMES[k]} メジャーの${X[0]}は ${ans}。${X[2]}`,steps:[`${X[0]}の定義を思い出す：${X[2]}`,`${KEY_NAMES[k]} に当てはめる → ${ans}。`],tip:'属調・下属調・平行調・同主調は「近親調」と呼ばれ、転調先として自然に聴こえます。'}}
+  if(t===4){const up=p.up,ans=KEY_NAMES[mod(k+up)];return {q:`キー ${KEY_NAMES[k]} の曲で、ラスサビを${up===1?'半音':'全音'}上げるとキーは？`,opts:fill4(ans,()=>KEY_NAMES[mod(k+1+rnd(4))]),ans,key:'mo:4',
+    why:`${KEY_NAMES[k]} から${up===1?'半音':'全音'}上は ${ans} です。メロディもコードもすべて同じだけ上げます。`,steps:[`${up===1?'半音＝鍵盤1つ':'全音＝鍵盤2つ'}ぶん、キーの主音を上げる。`,`${KEY_NAMES[k]} → ${ans}。`],tip:'歌い手の最高音も同じだけ上がります。転調する前に、上がった最高音が歌える範囲か必ず確かめます。'}}
+  const to=mod(k+2),ans=nm(to+7,FLAT_MAJ.has(to))+'7';
+  return {q:`キー ${KEY_NAMES[k]} から ${KEY_NAMES[to]} へ自然に転調したい。直前に置くと効果的なコードは？`,opts:fill4(ans,()=>nm(rnd(12),true)+rand(['7','M7','m7'])),ans,key:'mo:5',
+    why:`転調先 ${KEY_NAMES[to]} の Ⅴ7 は ${ans}。新しいキーのドミナントを先に鳴らすと、耳が新しい主音を予感するので、なめらかにつながります。`,steps:['転調先のキーを決める：'+KEY_NAMES[to]+'。','そのキーの Ⅴ7（主音の完全5度上の 7th コード）を求める → '+ans+'。','元のキーの最後のコードのあとに置き、新しいキーの Ⅰ へ解決させる。'],tip:'Ⅱm7 → Ⅴ7 の2つをセットで置くと、さらに自然な転調になります。'};
+}
+function genMo(lv){const t=rand(lv===0?[0,2,4]:lv===1?[0,1,2,3,4]:[1,2,3,4,5,5]);return {kind:'mo',t,k:rand([0,2,5,7,9,10,3]),up:1+rnd(2),lv}}
+function genTh(ts){return lv=>{const P=genTheory(lv,ts);P.kind='th';P.lv=lv;return P}}
+const BUILD={tm:makeTm,bs:makeBs,rh:makeRh,sk:makeSk,se:makeSe,dk:makeDk,ce:makeCe,pe:makePe,pk:makePk,mk:makeMk,me:makeMe,mo:makeMo};
+const DRILLS={
+ bs:{n:'半音・全音・異名同音',gen:genBs},rh:{n:'音符と拍子の計算',gen:genRh},iv:{n:'音程の知識',gen:genTh([3])},
+ sk:{n:'スケールと調号',gen:genSk},se:{n:'スケールを聴き分ける',gen:genSe},ck:{n:'コードの構成音',gen:genTh([1])},
+ dk:{n:'ダイアトニックと機能',gen:genDk},ce:{n:'終止を聴き分ける',gen:genCe},pe:{n:'進行を聴き分ける',gen:genPe},pk:{n:'進行の知識',gen:genPk},
+ mk:{n:'メロディの知識',gen:genMk},me:{n:'転調を聴き分ける',gen:genMe},mo:{n:'転調の知識',gen:genMo},rk:{n:'リハモの知識',gen:genTh([5,6,7])}
+};
+function startDrill(id){if(+$('#qLevel').value<1)$('#qLevel').value='1';startQuiz(id)}
+
+const FAQ_PRE={tm:['italia','tempo'],bs:['zen','hanon'],rh:['bpm','futen'],sk:['zen','chogo'],se:['zen','ear'],dk:['tobashi','roman'],ce:['shushi','roman'],pe:['roman','shushi'],pk:['roman'],mk:['hiwasei'],me:['kinshin','chogo'],mo:['kinshin','chogo']};
+Object.assign(FAQ,{
+ italia:['なぜイタリア語が多いの？','楽譜の書き方が整ったバロック時代に、音楽の中心地がイタリアだったからです。そのため速さや強弱の言葉は今もイタリア語が基本で、英語やフランス語、ドイツ語で書く作曲家もいます。'],
+ tempo:['速さの言葉は BPM でいくつ？','目安として、Largo 40〜60、Adagio 66〜76、Andante 76〜108、Moderato 108〜120、Allegro 120〜156、Presto 168〜200 くらいです。ただし厳密な決まりはなく、曲の性格を表す言葉として読みます。'],
+ shushi:['終止って何？','フレーズや曲の区切りで、和音がどう着地するかの型です。文章でいう「。」（完全終止）、「、」（半終止）、「……と思いきや」（偽終止）のような役割を持ちます。'],
+ hiwasei:['非和声音って何？','そのとき鳴っているコードに含まれない、メロディの音のことです。経過音・刺繍音・倚音・掛留音・先取音などがあり、前後の動き方で名前が決まります。うまく使うとメロディに色が出ます。'],
+ kinshin:['近親調って何？','元のキーと共通する音が多い、近い関係のキーのことです。属調（5度上）・下属調（5度下）・平行調・同主調などがあり、転調先として自然に聴こえます。']
+});
+const dsBest=id=>Math.max(S.c.ds[id+'@1']||0,S.c.ds[id+'@2']||0);
+const qOk=k=>(S.qstat[k]||[0])[0];
 
 /* ===== 起動 ===== */
 paintMascots();
