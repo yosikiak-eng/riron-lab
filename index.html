@@ -983,7 +983,7 @@ table.wrap td{white-space:normal}
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 17</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 18</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -1113,7 +1113,7 @@ const LEVELS=[[0,'Grave','とても遅く、重々しく'],[80,'Largo','幅広�
 const levelOf=xp=>{let l=0;LEVELS.forEach((L,i)=>{if(xp>=L[0])l=i});return l};
 
 /* ===== 話し方 ===== */
-const VOICES=[['cute','かわいい'],['polite','ていねい'],['friend','フレンドリー'],['cool','クール'],['kansai','関西弁']];
+const VOICES=[['cute','かわいい'],['strict','厳しめかわいい'],['polite','ていねい'],['friend','フレンドリー'],['cool','クール'],['kansai','関西弁']];
 const VO={
  cute:{sample:'正解だよ♪ その調子〜！',praise:['正解だよ♪','すごい、ばっちり！','その調子だよ〜','いい耳してるね♪','天才かも…！'],miss:'おしい〜！',
   greetFirst:'はじめまして、おんぷっぴだよ♪ 1日ちょっとずつで大丈夫。今日の目標ぶんポイントをためて、レコードを1周させよっ！',greetGoal:'今日の目標、もう達成してるよ！えらいっ♪ ここからは気になるところを好きなだけ練習しよ〜',greetStreak:(n,r)=>`${n}日連続だよ、すごい！今日もあと ${r}pt で記録がのびるよ♪`,greetBack:'おかえり〜！今日の目標まで、クイズ1ラウンドくらいだよ♪',
@@ -1146,6 +1146,15 @@ const VO={
   r10:'全問正解！ほんまにすごいわ！',r8:'かなり身についとるやん！',r5:'あとちょっとで安定しそうやな。間違えた問題は復習ノートに入れといたで',r0:'間違えた問題は復習ノートに入れといたで。解説の「考え方」読んでから復習したら、ちゃんと覚えられるわ',
   revEmpty:'復習ノートは空っぽやで。クイズで間違えた問題がここにたまって、2回続けて正解したら卒業や',focusEmpty:'まだ苦手は見つかってへんで。音程かコードの耳トレを何問か解いたら、苦手だけ集中して練習できるようになるわ',roundEnd:'ラウンド終了や！',streak:n=>`${n}問連続や！`}
 };
+VO.strict={sample:'ちゃんと聴いた？…正解。やればできるじゃん',praise:['…正解。やればできるじゃん','ふーん、正解。次も当ててよね','当然でしょ？ その調子♡','今のはえらい。…ちょっとだけね','合ってる。油断しないでよ？'],miss:'ちがーう！ちゃんと聴いて！',
+  greetFirst:'おんぷっぴだよ。言っとくけど、毎日やらないと上達しないからね？ 今日の目標ぶんポイントをためて、レコードを1周させること！',greetGoal:'今日の目標は達成。…よくできました♡ でも、もうちょっとやってもいいんだよ？',greetStreak:(n,r)=>`${n}日連続。ここで途切れさせたら許さないからね？ あと ${r}pt だよ`,greetBack:'遅い！ 待ってたんだから。今日の目標まで、クイズ1ラウンドくらいだよ',
+  mission:'課題クリア。当然だよね♡',goalT:'今日の目標、達成',goalP:g=>`${g}pt たまったよ。…えらいじゃん。ホームのレコードが回ってるよ`,levelL:'テンポアップ。まだまだ上があるからね',cont:'つづける',close:'とじる',
+  stampH:'課題、ぜんぶ終わったんだ',stampP:'スタンプ押してあげる。譜面に音符がひとつ増えたよ。ボーナス 50pt',allL:'全ステージ修了',allH:'…ほんとに全部埋めたんだ。すごいよ',allP:'ホームで、書き上げた旋律を最後まで聴けるよ。ちゃんと聴いてね♡',
+  r10:'全問正解。…今日は特別にほめてあげる♡',r8:'悪くないね。あと少しで満点だったのに',r5:'まだ安定してないよ。間違えた問題は復習ノートに入れたから、ちゃんとやってね',r0:'これは復習が必要だね。間違えた問題は復習ノートに入れたよ。解説の「考え方」を読んでからやり直すこと！',
+  revEmpty:'復習ノートは空っぽ。…やるじゃん。間違えた問題はここにたまって、2回続けて正解したら卒業だよ',focusEmpty:'苦手はまだ見つかってないよ。音程かコードの耳トレを何問か解いてから来て',roundEnd:'ラウンド終了。結果を見なさい',streak:n=>`${n}問連続。その調子♡`};
+
+Object.entries({"cute": {"noStreak": "まだ連続記録はないよ", "staffD": "ステージをクリアすると、その音符に色が塗られるよ♪ 11個そろったら、ドから上のファまでの旋律になるんだ", "staffLocked": "最初のステージをクリアしたら、ここで旋律が聴けるようになるよ♪", "voiceD": "おんぷっぴの話し方を選べるよ♪ 解説の文章はそのままだよ", "designD": "画面の色と文字の雰囲気を選べるよ。アプリのアイコンもテーマに合わせて変わるんだ♪", "iconNote": "ホーム画面に追加ずみのアイコンは、iPhone の仕組みで自動では変わらないの。新しいテーマのアイコンにしたいときは、テーマを選んでから一度削除して、追加し直してね", "transD": "ステージを移動するときの演出を選べるよ", "psD": "ステージを移動するときに、小さな効果音とチャイムが鳴るよ♪", "resetH": "記録をリセットしちゃう…？", "resetP": "ポイント、課題、スタンプ、毎日の記録、復習ノートがぜんぶ消えちゃうよ。元には戻せないから気をつけてね", "resetNo": "やめとく", "misHint": "ぜんぶ終わったらスタンプがもらえるよ♪", "misGot": "スタンプ押しておいたよ♪", "pagerEnd": "おつかれさま♪", "qStart": "「始める」を押すと10問のラウンドが始まるよ♪"}, "polite": {"noStreak": "まだ連続記録はありません", "staffD": "ステージをクリアすると、その音符が塗られます。11個そろうと、ドから上のファまでの旋律になります。", "staffLocked": "最初のステージをクリアすると、ここで旋律を聴けるようになります。", "voiceD": "おんぷっぴの話し方を選べます。解説の文章はそのままです", "designD": "画面の色と文字の雰囲気を選べます。アプリのアイコンもテーマに合わせて変わります", "iconNote": "ホーム画面に追加済みのアイコンは、iPhone の仕組み上あとから自動では変わりません。新しいテーマのアイコンにしたいときは、テーマを選んでから一度削除して追加し直してください。", "transD": "ステージを移動するときの演出を選べます", "psD": "ステージを移動するときに、小さな効果音とチャイムを鳴らします", "resetH": "記録をリセットしますか", "resetP": "ポイント、課題、スタンプ、毎日の記録、復習ノートがすべて消えます。元には戻せません。", "resetNo": "やめる", "misHint": "すべて終えるとスタンプがもらえます", "misGot": "スタンプを押しました", "pagerEnd": "おつかれさまでした", "qStart": "「始める」を押すと10問のラウンドが始まります。"}, "friend": {"noStreak": "まだ連続記録はなし", "staffD": "ステージをクリアすると、その音符が塗られるよ。11個そろえば、ドから上のファまでの旋律になる！", "staffLocked": "最初のステージをクリアしたら、ここで旋律が聴けるよ", "voiceD": "おんぷっぴの話し方を選べるよ。解説の文章はそのまま", "designD": "画面の色と文字の雰囲気を選べるよ。アイコンもテーマに合わせて変わる！", "iconNote": "ホーム画面に追加済みのアイコンは、iPhone の仕組みで自動では変わらないんだ。テーマを選んでから一度削除して、追加し直してね", "transD": "ステージ移動の演出を選べるよ", "psD": "ステージ移動のときに、小さな効果音とチャイムを鳴らすよ", "resetH": "記録をリセットする？", "resetP": "ポイント・課題・スタンプ・毎日の記録・復習ノートがぜんぶ消えるよ。元には戻せないからね", "resetNo": "やめとく", "misHint": "ぜんぶ終わったらスタンプゲット！", "misGot": "スタンプゲット済み！", "pagerEnd": "おつかれ！", "qStart": "「始める」を押したら10問のラウンドスタート！"}, "cool": {"noStreak": "連続記録はまだない", "staffD": "ステージをクリアすると音符が塗られる。11個そろえば、ドから上のファまでの旋律になる。", "staffLocked": "最初のステージをクリアすれば、ここで旋律が聴ける。", "voiceD": "おんぷっぴの話し方を選べる。解説の文章は変わらない。", "designD": "画面の色と文字の雰囲気を選べる。アイコンもテーマに合わせて変わる。", "iconNote": "ホーム画面に追加済みのアイコンは、iPhone の仕様で自動では変わらない。テーマを選んでから削除し、追加し直すこと。", "transD": "ステージ移動の演出を選べる。", "psD": "ステージ移動時に、小さな効果音とチャイムを鳴らす。", "resetH": "記録をリセットするか？", "resetP": "ポイント、課題、スタンプ、毎日の記録、復習ノートがすべて消える。元には戻せない。", "resetNo": "やめる", "misHint": "すべて終えればスタンプ。", "misGot": "スタンプ済み。", "pagerEnd": "おつかれ", "qStart": "「始める」で10問のラウンドが始まる。"}, "kansai": {"noStreak": "まだ連続記録はあらへんで", "staffD": "ステージをクリアしたら、その音符が塗られるで。11個そろたら、ドから上のファまでの旋律になるんや", "staffLocked": "最初のステージをクリアしたら、ここで旋律聴けるようになるで", "voiceD": "おんぷっぴの話し方、選べるで。解説の文章はそのままや", "designD": "画面の色と文字の雰囲気、選べるで。アイコンもテーマに合わせて変わるんや", "iconNote": "ホーム画面に追加済みのアイコンは、iPhone の仕組みで勝手には変わらへんねん。テーマ選んでから一回削除して、追加し直してな", "transD": "ステージを移動するときの演出、選べるで", "psD": "ステージ移動するときに、ちっちゃい効果音とチャイム鳴らすで", "resetH": "記録、リセットしてまう？", "resetP": "ポイント、課題、スタンプ、毎日の記録、復習ノート、ぜんぶ消えてまうで。元には戻されへんからな", "resetNo": "やめとくわ", "misHint": "ぜんぶ終わったらスタンプもらえるで", "misGot": "スタンプ押しといたで", "pagerEnd": "おつかれさん！", "qStart": "「始める」押したら10問のラウンド始まるで"}, "strict": {"noStreak": "連続記録ゼロ。今日から始めなさいっ", "staffD": "ステージをクリアしないと、音符は塗られないからね。11個ぜんぶそろえて、ドから上のファまでの旋律を完成させること！", "staffLocked": "まだ1つもクリアしてないでしょ？ 聴きたかったら、まず最初のステージを終わらせて", "voiceD": "話し方を選んで。解説の文章は変えないからね、ちゃんと読むこと", "designD": "画面の色と文字の雰囲気を選んで。アイコンもテーマに合わせて変わるよ。…選ぶのに時間かけすぎないでね", "iconNote": "ホーム画面に追加ずみのアイコンは、iPhone の仕組みで自動では変わらないの。変えたいなら、テーマを選んでから一度削除して追加し直すこと。わかった？", "transD": "ステージを移動するときの演出を選んで", "psD": "ステージを移動するときに、効果音とチャイムを鳴らすよ。集中したいなら切っていいからね", "resetH": "ほんとにリセットするの？", "resetP": "ポイントも課題もスタンプも毎日の記録も復習ノートも、ぜんぶ消えるんだよ？ 元には戻せないからね。…今までのがんばり、もったいなくない？", "resetNo": "やっぱりやめる", "misHint": "ぜんぶ終わるまでスタンプはあげないからね", "misGot": "スタンプ押してあげた。…よくがんばったね", "pagerEnd": "おつかれ。…がんばったね", "qStart": "「始める」を押して。10問、集中してね"}}).forEach(([v,o])=>Object.assign(VO[v],o));
+Object.entries({cute:(x,n,d,dn,t)=>`${x}pt だよ。${n?`次の ${n} まであと ${d}pt！`:'いちばん速いテンポまで来ちゃった♪'} 課題は ${dn}/${t} クリア`,polite:(x,n,d,dn,t)=>`${x}pt　${n?`次の ${n} まで ${d}pt`:'最も速いテンポに到達しました'}。課題は ${dn}/${t} 完了。`,friend:(x,n,d,dn,t)=>`${x}pt。${n?`次の ${n} まであと ${d}pt！`:'最速テンポに到達！'} 課題は ${dn}/${t} クリア`,cool:(x,n,d,dn,t)=>`${x}pt。${n?`次の ${n} まで ${d}pt。`:'最速テンポに到達。'}課題 ${dn}/${t}。`,kansai:(x,n,d,dn,t)=>`${x}pt や。${n?`次の ${n} まであと ${d}pt やで！`:'いちばん速いテンポまで来たで！'} 課題は ${dn}/${t} クリアや`,strict:(x,n,d,dn,t)=>`${x}pt。${n?`次の ${n} まであと ${d}pt、さぼらないでね`:'最速テンポ到達…やるじゃない'}。課題は ${dn}/${t}。`}).forEach(([v,f])=>VO[v].recSub=f);
 const V=k=>{const v=(VO[S.voice]||VO.cute)[k];return v===undefined?VO.polite[k]:v};
 /* ===== 保存 ===== */
 const SKEY='ongaku-riron-lab-v2';
@@ -1366,7 +1375,7 @@ function renderMissions(){
   $$('.missions').forEach(box=>{
     box.onclick=e=>{const b=e.target.closest('[data-go]');if(!b)return;if(b.dataset.hard)$('#qLevel').value='2';startDrill(b.dataset.go)};
     const s=SEC[box.dataset.sec];const ms=MISSIONS.filter(m=>m.sec===s.id);const [a,b]=secProgress(s.id);const got=!!S.badges[s.id];
-    box.innerHTML=`<div class="mhead"><div class="t">このステージの課題　${a}/${b}<small>${got?'スタンプを押しました':'すべて終えるとスタンプがもらえます'}</small></div>${stampHTML(s,'sm',!got)}</div>`+
+    box.innerHTML=`<div class="mhead"><div class="t">このステージの課題　${a}/${b}<small>${got?V('misGot'):V('misHint')}</small></div>${stampHTML(s,'sm',!got)}</div>`+
       ms.map(m=>{const [x,y]=m.p(S.c);const d=!!S.done[m.id];const v=Math.min(x,y);
         return `<div class="mi${d?' done':''}"><span class="ck" aria-hidden="true"></span><div class="mt">${m.t}<span class="pt">${m.xp}pt</span>${!d&&m.go?`<small class="mlv">${m.hard?'レベル「むずかしい」で数えます':DRILLS[m.go]||m.go==='term'||m.go==='interval'||m.go==='chord'?'レベル「ふつう」以上で数えます':''}</small><button class="btn quiet sm mgo" data-go="${m.go}" data-hard="${m.hard?1:''}">挑戦する</button>`:''}${!d&&m.hint?`<small class="mlv">${m.hint}</small>`:''}</div><div class="mp">${d?'済':`${v}/${y}<span class="bar"><i style="width:${v/y*100}%"></i></span>`}</div></div>`}).join('');
   });
@@ -1386,7 +1395,7 @@ function renderHome(){
     <div class="rec${d.goalHit?' spin':''}">${recordSVG(pct)}</div>
     <div class="tinfo"><p class="tl">今日の練習</p><p class="tn">${d.pts}<small> / ${S.goal}pt</small></p>
       <div class="week">${week}</div>
-      <p class="sub" style="margin:0">${sk?`${sk}日連続`:'まだ連続記録はありません'}　最長 ${S.best||0}日</p>
+      <p class="sub" style="margin:0">${sk?`${sk}日連続`:V('noStreak')}　最長 ${S.best||0}日</p>
       <div class="goalsel">1日の目標 ${[30,60,100].map(g=>`<button data-g="${g}" class="${S.goal===g?'sel':''}">${g}pt</button>`).join('')}</div></div>
   </div>
   <div class="quick">
@@ -1399,16 +1408,16 @@ function renderHome(){
   ${nextM?`<div class="card nextcard" style="--sa:${secAcc(SEC[nextM.sec])}"><div><p class="sub" style="margin:0">次の課題（${SEC[nextM.sec].n}）</p><p class="nm">${nextM.t}<span class="pt">${nextM.xp}pt</span></p></div><a class="btn primary" href="#${nextM.sec}">開く</a></div>`:''}
   </div>
   <div class="pw" data-pane="stages">
-  <div class="card"><h3>ステージの譜面</h3><p class="sub">ステージをクリアすると、その音符が塗られます。11個そろうと、ドから上のファまでの旋律になります。</p>
+  <div class="card"><h3>ステージの譜面</h3><p class="sub">${V('staffD')}</p>
     <div class="staffbig">${staffSVG(nextM?nextM.sec:null,true,false)}</div>
-    ${cleared?'<button class="btn quiet" id="playStaff">▶ 書き込んだ旋律を聴く</button>':'<p class="sub">最初のステージをクリアすると、ここで旋律を聴けるようになります。</p>'}</div>
+    ${cleared?'<button class="btn quiet" id="playStaff">▶ 書き込んだ旋律を聴く</button>':`<p class="sub">${V('staffLocked')}</p>`}</div>
   <h3 class="home-h">ステージ一覧</h3>
   <div class="slist">${SECS.map((s,i)=>`<a href="#${s.id}" style="--sa:${secAcc(s)};--sc:${secSoft(s)}"><span class="num">${i+1}</span><span class="nm"><b>${s.n}</b><small>${s.sub}</small></span><span class="heads">${MISSIONS.filter(m=>m.sec===s.id).map(m=>`<i class="${S.done[m.id]?'on':''}"></i>`).join('')}</span></a>`).join('')}</div>
   </div>
   <div class="pw" data-pane="record">
   <div class="card"><div class="tempo"><span class="word">${L.title}</span><span class="gloss">Lv.${L.l+1}　${L.gloss}</span></div>
     <span class="bar thick"><i style="width:${L.pct}%"></i></span>
-    <p class="sub">${S.xp}pt　${L.need?`次の ${LEVELS[L.l+1][1]} まで ${L.need}pt`:'最も速いテンポに到達しました'}。課題は ${done}/${total} 完了。</p></div>
+    <p class="sub">${V('recSub')(S.xp,L.need?LEVELS[L.l+1][1]:'',L.need,done,total)}</p></div>
   <div class="card"><h3>スタンプ帳</h3><div class="stampbook">${SECS.map(s=>`<div>${stampHTML(s,'',!S.badges[s.id])}${s.n}</div>`).join('')}</div></div>
   <div class="card"><h3>記録</h3><dl class="stats">
     ${row('練習した日数',S.days.length+'日')}${row('最長連続',(S.best||0)+'日')}${row('クイズの正解数',c.qok)}${row('正答率',(c.qtot?Math.round(c.qok/c.qtot*100):0)+'%')}
@@ -1416,22 +1425,22 @@ function renderHome(){
   </dl></div>
   </div>
   <div class="pw" data-pane="settings">
-  <div class="card"><b>話し方</b><p class="sub" style="margin:0 0 8px">おんぷっぴの話し方を選べます。解説の文章はそのままです</p><div class="chips" id="voiceSel">${VOICES.map(([k,l])=>`<button class="chip${(S.voice||'cute')===k?' sel':''}" data-v="${k}">${l}</button>`).join('')}</div><div class="greetline vprev"><div class="m">${mascot('happy')}</div><p>${V('sample')}</p></div></div>
-  <div class="card"><b>デザイン</b><p class="sub" style="margin:0">画面の色と文字の雰囲気を選べます。アプリのアイコンもテーマに合わせて変わります</p><p class="sub" style="margin:4px 0 0;font-size:12px">ホーム画面に追加済みのアイコンは、iPhone の仕組み上あとから自動では変わりません。新しいテーマのアイコンにしたいときは、テーマを選んでから一度削除して追加し直してください。</p>${[...new Set(THEMES.map(t=>t.g))].map(g=>`<p class="tgen">${g}</p><div class="themes">${THEMES.filter(t=>t.g===g).map(t=>`<button class="th${curTheme().id===t.id?' sel':''}" data-th="${t.id}" data-theme="${t.id}"><span class="tic">${iconSVG(t,k=>`var(${k})`)}</span><span class="smp"><span>ドレミ</span><i></i><em></em></span><b>${t.n}</b><small>${t.d}</small></button>`).join('')}</div>`).join('')}</div>
-  <div class="card"><b>画面の切り替え</b><p class="sub" style="margin:0 0 8px">ステージを移動するときの演出を選べます${RM()?'（この端末は「視差効果を減らす」がオンです）':''}</p><div class="chips" id="transSel">${[['wipe','五線ワイプ'],['fade','ふんわり'],['turn','ページめくり'],['none','なし']].map(([k,l])=>`<button class="chip${transMode()===k?' sel':''}" data-t="${k}">${l}</button>`).join('')}</div></div>
-  <div class="card setrow"><div><b>切り替えの音</b><p class="sub" style="margin:0">ステージを移動するときに、小さな効果音とチャイムを鳴らします</p></div><button class="switch${S.pageSound===false?'':' on'}" id="psToggle" role="switch" aria-checked="${S.pageSound!==false}" aria-label="切り替えの音"><i></i></button></div>
+  <div class="card"><b>話し方</b><p class="sub" style="margin:0 0 8px">${V('voiceD')}</p><div class="chips" id="voiceSel">${VOICES.map(([k,l])=>`<button class="chip${(S.voice||'cute')===k?' sel':''}" data-v="${k}">${l}</button>`).join('')}</div><div class="greetline vprev"><div class="m">${mascot('happy')}</div><p>${V('sample')}</p></div></div>
+  <div class="card"><b>デザイン</b><p class="sub" style="margin:0">${V('designD')}</p><p class="sub" style="margin:4px 0 0;font-size:12px">${V('iconNote')}</p>${[...new Set(THEMES.map(t=>t.g))].map(g=>`<p class="tgen">${g}</p><div class="themes">${THEMES.filter(t=>t.g===g).map(t=>`<button class="th${curTheme().id===t.id?' sel':''}" data-th="${t.id}" data-theme="${t.id}"><span class="tic">${iconSVG(t,k=>`var(${k})`)}</span><span class="smp"><span>ドレミ</span><i></i><em></em></span><b>${t.n}</b><small>${t.d}</small></button>`).join('')}</div>`).join('')}</div>
+  <div class="card"><b>画面の切り替え</b><p class="sub" style="margin:0 0 8px">${V('transD')}${RM()?'（この端末は「視差効果を減らす」がオンです）':''}</p><div class="chips" id="transSel">${[['wipe','五線ワイプ'],['fade','ふんわり'],['turn','ページめくり'],['none','なし']].map(([k,l])=>`<button class="chip${transMode()===k?' sel':''}" data-t="${k}">${l}</button>`).join('')}</div></div>
+  <div class="card setrow"><div><b>切り替えの音</b><p class="sub" style="margin:0">${V('psD')}</p></div><button class="switch${S.pageSound===false?'':' on'}" id="psToggle" role="switch" aria-checked="${S.pageSound!==false}" aria-label="切り替えの音"><i></i></button></div>
   <p style="text-align:center;margin-top:24px"><button class="btn quiet" id="resetBtn">記録をリセット</button></p>
   </div>`;
   $$('.goalsel button').forEach(b=>b.onclick=()=>{S.goal=+b.dataset.g;const t=todayRec();if(!t.goalHit&&t.pts>=S.goal){t.goalHit=1;sfx('badge')}save();renderHome()});
   $$('.themes .th').forEach(b=>b.onclick=()=>{S.theme=b.dataset.th;save();applyTheme();renderProgress();renderTips&&0});
-  $$('#voiceSel .chip').forEach(b=>b.onclick=()=>{S.voice=b.dataset.v;save();renderHome()});
+  $$('#voiceSel .chip').forEach(b=>b.onclick=()=>{S.voice=b.dataset.v;save();renderHome();renderMissions();renderPagers()});
   $$('#transSel .chip').forEach(b=>b.onclick=()=>{S.trans=b.dataset.t;save();renderHome()});
   $('#psToggle').onclick=()=>{S.pageSound=S.pageSound===false;save();renderHome()};
   $('#qkRound').onclick=()=>startQuiz(qModeV==='review'||qModeV==='focus'?'interval':qModeV);
   if($('#qkReview'))$('#qkReview').onclick=()=>startQuiz('review');
   if(cleared)$('#playStaff').onclick=()=>{const mids=[60,62,64,65,67,69,71,72,74,76];const c2=ac();const t=c2.currentTime+0.05;SECS.forEach((s,i)=>{if(S.badges[s.id])tone(mids[i],t+i*0.34,0.3,1,'lead')})};
   setupPanes($('#homeBody'));
-  $('#resetBtn').onclick=()=>queueModal({html:`<div class="m">${mascot('oops')}</div><h4>記録をリセットしますか</h4><p>ポイント、課題、スタンプ、毎日の記録、復習ノートがすべて消えます。元には戻せません。</p><div class="mbtns"><button class="btn quiet" data-close>やめる</button><button class="btn primary" id="doReset">リセットする</button></div>`,bind:el=>{el.querySelector('#doReset').onclick=()=>{S=fresh();save();nextModal();renderProgress()}}});
+  $('#resetBtn').onclick=()=>queueModal({html:`<div class="m">${mascot('oops')}</div><h4>${V('resetH')}</h4><p>${V('resetP')}</p><div class="mbtns"><button class="btn quiet" data-close>${V('resetNo')}</button><button class="btn primary" id="doReset">リセットする</button></div>`,bind:el=>{el.querySelector('#doReset').onclick=()=>{S=fresh();save();nextModal();renderProgress()}}});
 }
 function renderProgress(){renderNav();renderMissions();refreshPaneCounts();renderStaffs();refreshChips();if(curRoute()==='home')renderHome();if(curRoute()==='diatonic')dRender(true);if(curRoute()==='modulation')tRenderApps();if(curRoute()==='quiz')renderQModes()}
 /* ===== 鍵盤・UI部品 ===== */
@@ -2122,7 +2131,7 @@ function qInit(){
   renderQModes();
   $('#qLevel').onchange=()=>{round={i:0,res:[],pts:0};qNew()};$('#qNext').onclick=qNew;$('#qReplay').onclick=qPlay;
   $('#qHarm').onclick=()=>Q&&Q.notes&&playChord(Q.notes,1.6);
-  $('#qText').textContent='「始める」を押すと10問のラウンドが始まります。';$('#qAudio').hidden=true;$('#qNext').hidden=false;$('#qNext').textContent='始める';
+  $('#qText').textContent=V('qStart');$('#qAudio').hidden=true;$('#qNext').hidden=false;$('#qNext').textContent='始める';
   renderDots();renderWeak();
 }
 
@@ -2210,7 +2219,7 @@ function renderPagers(){
   $$('.pager').forEach(el=>{
     const i=SECS.findIndex(s=>s.id===el.dataset.sec),pv=SECS[i-1],nx=SECS[i+1];
     el.innerHTML=(pv?`<a class="pg prev" href="#${pv.id}" style="--sa:${secAcc(pv)}"><small>前のステージ</small>${i}. ${pv.n}</a>`:`<a class="pg prev" href="#home"><small>戻る</small>ホーム</a>`)+
-      (nx?`<a class="pg nextp" href="#${nx.id}" style="--sa:${secAcc(nx)}"><small>次のステージ</small>${i+2}. ${nx.n}</a>`:`<a class="pg nextp" href="#home"><small>おつかれさまでした</small>ホームへ</a>`);
+      (nx?`<a class="pg nextp" href="#${nx.id}" style="--sa:${secAcc(nx)}"><small>次のステージ</small>${i+2}. ${nx.n}</a>`:`<a class="pg nextp" href="#home"><small>${V('pagerEnd')}</small>ホームへ</a>`);
   });
 }
 
