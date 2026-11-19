@@ -377,6 +377,45 @@ nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:70
 .ask textarea{width:100%;font:inherit;font-size:14px;border:1px solid var(--rule);border-radius:12px;padding:8px 12px;background:var(--sheet);color:var(--ink);resize:vertical}
 .ask textarea:focus{outline:2px solid var(--sc);border-color:var(--sa)}
 .askrow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:8px}
+/* tips */
+.tips h3{margin-bottom:4px}
+.tipgrp{margin-top:14px}
+.tg{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 12px;margin:0 0 6px}
+.tg.kotsu{background:#DDF1EA;color:#2F7A60}
+.tg.tech{background:var(--sc);color:var(--sa)}
+.tg.taboo{background:#FBE1E6;color:#B8456A}
+.tipgrp ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.tipgrp li{position:relative;padding:8px 12px 8px 30px;background:var(--paper);border-radius:12px}
+.tipgrp li::before{position:absolute;left:11px;top:9px;font-family:var(--display);font-size:14px;line-height:1.6}
+.tipgrp li.k::before{content:"✓";color:#2F7A60}
+.tipgrp li.t::before{content:"♪";color:var(--sa)}
+.tipgrp li.x::before{content:"×";color:#B8456A;font-size:16px}
+.tipgrp li b{display:block;font-size:14.5px;line-height:1.6}
+.tipgrp li p{margin:2px 0 0;font-size:13.5px;color:#4B4163}
+.tipgrp .sub{margin-top:8px}
+.demo{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.btn.sm{font-size:12.5px;padding:4px 12px;background:var(--sheet)}
+/* pager */
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:22px}
+.pg{display:block;text-decoration:none;color:var(--ink);background:var(--sheet);border:1px solid var(--rule);border-radius:16px;padding:10px 14px;font-weight:700;font-size:14.5px;line-height:1.4}
+.pg small{display:block;font-weight:400;font-size:11.5px;color:var(--mute)}
+.pg.nextp{text-align:right;border-color:var(--sa,var(--rule));box-shadow:inset 0 -3px 0 color-mix(in srgb,var(--sa,var(--rose)) 35%,transparent)}
+.pg:hover{background:var(--paper)}
+/* page transition */
+header.top{view-transition-name:apphead}
+nav.tabs{view-transition-name:appnav}
+::view-transition-old(root){animation:vt-out .16s ease-in both}
+::view-transition-new(root){animation:vt-in .28s cubic-bezier(.2,.8,.3,1) both}
+html[data-dir="back"]{--vtx:-1}
+@keyframes vt-out{to{opacity:0;transform:translateX(calc(-12px * var(--vtx,1)))}}
+@keyframes vt-in{from{opacity:0;transform:translateX(calc(16px * var(--vtx,1)))}}
+section.in-fwd{animation:sec-in .28s cubic-bezier(.2,.8,.3,1)}
+section.in-back{animation:sec-in-b .28s cubic-bezier(.2,.8,.3,1)}
+@keyframes sec-in{from{opacity:0;transform:translateX(16px)}}
+@keyframes sec-in-b{from{opacity:0;transform:translateX(-16px)}}
+.band a.here{animation:hop .55s .2s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes hop{0%{transform:translateY(0)}40%{transform:translateY(-5px)}100%{transform:translateY(0)}}
+.band .no{animation:none}
 @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
 </style>
 </head>
@@ -415,7 +454,8 @@ nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:70
     <p>♯ は半音上げる、♭ は半音下げる記号。C♯ と D♭ は鍵盤上では同じ黒鍵（<b>異名同音</b>）。どちらで書くかはキー（調）で決まります。</p>
     <p>「C4」の数字はオクターブ番号。ピアノ中央のドが C4、その上の C が C5。DAW によっては C3 と表示されることもあるので注意。</p>
   </div>
-  <div class="next"><a class="nextlink" href="#rhythm">次は「リズム」</a></div>
+  <div class="card tips" data-sec="basics"></div>
+  <nav class="pager" data-sec="basics" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 02 リズム -->
@@ -440,7 +480,8 @@ nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:70
     </div>
     <div class="tip"><b>4つ打ち</b>：キックを毎拍（1・5・9・13マス目）。ダンス系の基本。<br><b>8ビート</b>：ハイハットを8分（1つおき）、スネアを2・4拍目（5・13マス目）、キックは1拍目から。ロック・ポップスの基本。<br>速い曲は BPM 160〜200 くらいがよく使われます。</div>
   </div>
-  <div class="next"><a class="nextlink" href="#intervals">次は「音程」</a></div>
+  <div class="card tips" data-sec="rhythm"></div>
+  <nav class="pager" data-sec="rhythm" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 03 音程 -->
@@ -461,7 +502,8 @@ nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:70
     <div class="tbl"><table id="iTable"></table></div>
     <div class="tip"><b>覚え方：</b>「長・短」は2・3・6・7度に、「完全」は1・4・5・8度に付く。長3度（明るい）と短3度（暗い）の違いが、メジャーとマイナーの違いそのもの。</div>
   </div>
-  <div class="next"><a class="nextlink" href="#scales">次は「スケール」</a></div>
+  <div class="card tips" data-sec="intervals"></div>
+  <nav class="pager" data-sec="intervals" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 04 スケール -->
@@ -484,7 +526,8 @@ nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:70
     <div class="ctrl"><button class="btn primary" id="sRelC">▶ C メジャー</button><button class="btn primary" id="sRelA">▶ A マイナー</button></div>
     <div class="tip"><b>チャーチモード：</b>ドリアン・フリジアン・リディアン・ミクソリディアンは、メジャースケールを別の音から始めたもの。1音だけ違う「色」を感じてみよう。</div>
   </div>
-  <div class="next"><a class="nextlink" href="#chords">次は「コード」</a></div>
+  <div class="card tips" data-sec="scales"></div>
+  <nav class="pager" data-sec="scales" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 05 コード -->
@@ -512,7 +555,8 @@ nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:70
       <tr><td><b>C/E</b></td><td>分数コード：C のコードで、一番下（ベース）を E にする</td></tr>
     </table></div>
   </div>
-  <div class="next"><a class="nextlink" href="#diatonic">次は「ダイアトニック」</a></div>
+  <div class="card tips" data-sec="chords"></div>
+  <nav class="pager" data-sec="chords" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 06 ダイアトニック -->
@@ -536,7 +580,8 @@ nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:70
     <div class="ctrl"><button class="btn primary" id="dCad1">▶ Ⅰ→Ⅳ→Ⅴ→Ⅰ</button><button class="btn primary" id="dCad2">▶ Ⅴ→Ⅰ（解決）</button><button class="btn primary" id="dCad3">▶ Ⅴ→Ⅵm（偽終止）</button></div>
     <div class="tip"><b>代理コード：</b>同じ機能のコードは入れ替えOK。Ⅰ の代わりに Ⅵm、Ⅳ の代わりに Ⅱm を使うと、雰囲気だけ変えて流れはそのまま。</div>
   </div>
-  <div class="next"><a class="nextlink" href="#progressions">次は「コード進行」</a></div>
+  <div class="card tips" data-sec="diatonic"></div>
+  <nav class="pager" data-sec="diatonic" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 07 コード進行 -->
@@ -559,7 +604,8 @@ nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:70
     <div class="kbwrap"><div id="pKb"></div></div>
     <div class="tip">青がベース音、黄色が上のコード音です。コードをタップすると単体で鳴ります。上の音がなるべく動かないように並べる（<b>ボイスリーディング</b>）と、なめらかに聴こえる。</div>
   </div>
-  <div class="next"><a class="nextlink" href="#melody">次は「メロディ」</a></div>
+  <div class="card tips" data-sec="progressions"></div>
+  <nav class="pager" data-sec="progressions" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 08 メロディ -->
@@ -591,7 +637,8 @@ nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:70
     </table></div>
     <div class="tip"><b>ヒント：</b>同じリズムやフレーズを「くり返して」「少し変える」と覚えやすいメロディになります。</div>
   </div>
-  <div class="next"><a class="nextlink" href="#modulation">次は「転調・応用」</a></div>
+  <div class="card tips" data-sec="melody"></div>
+  <nav class="pager" data-sec="melody" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 09 転調・応用 -->
@@ -615,7 +662,8 @@ nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:70
     <h3>応用コード（借用和音・セカンダリードミナント）</h3>
     <div class="acards" id="tApps"></div>
   </div>
-  <div class="next"><a class="nextlink" href="#quiz">次は「クイズ」</a></div>
+  <div class="card tips" data-sec="modulation"></div>
+  <nav class="pager" data-sec="modulation" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 10 クイズ -->
@@ -636,6 +684,8 @@ nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:70
     <div class="ctrl" style="justify-content:flex-end"><button class="btn primary" id="qNext">始める</button></div>
   </div>
   <div class="card"><h3>苦手チェック</h3><div id="qWeak"></div></div>
+  <div class="card tips" data-sec="quiz"></div>
+  <nav class="pager" data-sec="quiz" aria-label="ステージの移動"></nav>
 </section>
 
 </main>
@@ -949,7 +999,7 @@ function staffSVG(cur,big,band){
     const ledger=y>=60?`<line x1="${x-9}" x2="${x+9}" y1="60" y2="60" stroke="${band?'rgba(51,41,74,.35)':'#B9AECB'}"/>`:'';
     const ring=here&&band?`<circle cx="${x}" cy="${y}" r="10" fill="none" stroke="#33294A" stroke-width="1.2" stroke-dasharray="2 2.4"/>`:'';
     const lab=big?`<text x="${x}" y="${H-6}" text-anchor="middle" font-size="10.5" fill="${here?s.acc:'#7C7390'}">${i+1}</text>`:'';
-    return `<a href="#${s.id}" aria-label="${i+1}. ${s.n}"><rect x="${x-13}" y="0" width="26" height="${H}" fill="transparent"/>${ledger}${ring}<ellipse cx="${x}" cy="${y}" rx="${here?6.3:5.6}" ry="${here?4.5:4.1}" transform="rotate(-20 ${x} ${y})" fill="${fill}" stroke="${col}" stroke-width="1.5"/>${stem}${lab}</a>`;
+    return `<a href="#${s.id}" aria-label="${i+1}. ${s.n}"${here?' class="here"':''}><rect x="${x-13}" y="0" width="26" height="${H}" fill="transparent"/>${ledger}${ring}<ellipse cx="${x}" cy="${y}" rx="${here?6.3:5.6}" ry="${here?4.5:4.1}" transform="rotate(-20 ${x} ${y})" fill="${fill}" stroke="${col}" stroke-width="1.5"/>${stem}${lab}</a>`;
   }).join('');
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="ステージの譜面">${lines}${bars}${notes}</svg>`;
 }
@@ -1054,15 +1104,23 @@ function refreshChips(){$$('.chips').forEach(el=>{if(!el._got)return;[...el.chil
 
 /* ===== ルーティング ===== */
 const ROUTES=['home',...SECS.map(s=>s.id)];
+let prevIdx=-1;
 function route(){
-  const id=curRoute();
-  ROUTES.forEach(r=>document.getElementById(r).classList.toggle('show',r===id));
-  renderStaffs();
-  if(id!=='progressions')progStop();if(id!=='rhythm')rStop();if(id!=='melody')mStop();if(id!=='modulation')tClear();
-  if(id==='home')renderHome();
-  renderNav();
-  const a=$(`#nav a.tab[data-id="${id}"]`);if(a)a.scrollIntoView({block:'nearest',inline:'center'});
-  scrollTo(0,0);
+  const id=curRoute(),idx=ROUTES.indexOf(id),dir=idx>=prevIdx?'fwd':'back',first=prevIdx<0;prevIdx=idx;
+  const apply=()=>{
+    ROUTES.forEach(r=>document.getElementById(r).classList.toggle('show',r===id));
+    renderStaffs();
+    if(id!=='progressions')progStop();if(id!=='rhythm')rStop();if(id!=='melody')mStop();if(id!=='modulation')tClear();
+    if(id==='home')renderHome();
+    renderNav();
+    const a=$(`#nav a.tab[data-id="${id}"]`);if(a)a.scrollIntoView({block:'nearest',inline:'center'});
+    scrollTo(0,0);
+  };
+  const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.documentElement.dataset.dir=dir;
+  if(first||calm){apply();return}
+  if(document.startViewTransition){document.startViewTransition(apply)}
+  else{apply();const sec=document.getElementById(id);sec.classList.remove('in-fwd','in-back');void sec.offsetWidth;sec.classList.add('in-'+dir)}
 }
 addEventListener('hashchange',route);
 
@@ -1649,9 +1707,98 @@ function qInit(){
   renderDots();renderWeak();
 }
 
+/* ===== コツ・テクニック・タブー ===== */
+function playLines(lines,step=0.42,chord){const c=ac(),t=c.currentTime+0.05;if(chord)chord.forEach(([pc,suf,at,dur])=>playVoiced(pc,suf,dur,null,at));lines.forEach(L=>L.forEach((m,i)=>{if(m!=null)tone(m,t+i*step,step*0.95,0.9,'lead')}))}
+function seqChords(list,dur=0.9){list.forEach(([pc,suf],i)=>playVoiced(pc,suf,dur*0.95,null,i*dur))}
+function chordWithMelody(pc,suf,mel){playVoiced(pc,suf,2.2,null,0);tone(mel,ac().currentTime+0.08,2,0.9,'lead')}
+const MEL=[60,62,64,65,67,65,64,62,60];
+const DEMO={
+  harm3:()=>playLines([MEL,[64,65,67,69,71,69,67,65,64]]),
+  harm2:()=>playLines([MEL,MEL.map(m=>m+1)]),
+  par5:()=>playLines([MEL,MEL.map(m=>m+7)]),
+  minV:()=>seqChords([[9,'m'],[2,'m'],[4,'m'],[9,'m']]),
+  majV:()=>seqChords([[9,'m'],[2,'m'],[4,''],[9,'m']]),
+  avoid:()=>chordWithMelody(0,'',77),
+  chordTone:()=>chordWithMelody(0,'',76),
+  lowMud:()=>playChord([36,40,43],1.8),
+  lowOpen:()=>playChord([36,52,55,60],1.8),
+  inv:()=>seqChords([[0,''],[7,''],[9,'m'],[5,'']]),
+  invSlash:()=>{[[0,[60,64,67],48],[7,[59,62,67],47],[9,[60,64,69],45],[5,[60,65,69],41]].forEach(([_,up,b],i)=>{playChord([b],0.85,null,i*0.9);playChord(up,0.85,null,i*0.9,'pad')})},
+  sus:()=>seqChords([[7,'sus4'],[7,''],[0,'']],1),
+  vToIV:()=>seqChords([[7,''],[5,''],[0,'']]),
+  ivToV:()=>seqChords([[5,''],[7,''],[0,'']]),
+  rotA:()=>seqChords([[0,''],[7,''],[9,'m'],[5,'']]),
+  rotB:()=>seqChords([[9,'m'],[5,''],[0,''],[7,'']]),
+  ncLong:()=>chordWithMelody(0,'',74),
+  appog:()=>{playVoiced(0,'',2.2,null,0);const t=ac().currentTime+0.08;tone(77,t,0.7,0.9,'lead');tone(76,t+0.75,1.3,0.9,'lead')},
+  sync:()=>{const c=ac(),t=c.currentTime+0.05,b=60/110;for(let i=0;i<8;i++){drum(i%2?1:0,t+i*b);drum(2,t+i*b+b/2)}[[0,0],[2,7],[4,9],[6,5]].forEach(([at,pc])=>playVoiced(pc,pc===9?'m':'',b*1.9,null,0.05+at*b))},
+  sync2:()=>{const c=ac(),t=c.currentTime+0.05,b=60/110;for(let i=0;i<8;i++){drum(i%2?1:0,t+i*b);drum(2,t+i*b+b/2)}[[0,0],[1.5,7],[3.5,9],[5.5,5]].forEach(([at,pc])=>playVoiced(pc,pc===9?'m':'',b*1.9,null,0.05+at*b))}
+};
+const TIPS={
+ basics:{
+  kotsu:[['C の位置は「黒鍵2つのグループの左」','鍵盤は黒鍵が2つ・3つと並んでいます。2つのグループのすぐ左の白鍵が C。ここを起点にすると、どの音もすぐ見つかります。'],['E–F と B–C だけは白鍵どうしで半音','間に黒鍵がない2か所です。スケールやコードを数えるときにずれやすいので、まずここを意識します。']],
+  tech:[['オクターブで重ねて厚くする','同じメロディを1オクターブ上（または下）で重ねると、音色を変えずに存在感だけ増やせます。サビで主旋律を強くしたいときの定番です。'],['半音ずつ動く「クロマチック」','C→C♯→D のように半音で動くと、スルッとつながる感じが出ます。ベースやメロディの経過音として使えます。']],
+  taboo:[['♯と♭を気分で混ぜて書く','同じ黒鍵でも、キーに合った書き方（G メジャーなら F♯）にそろえないと、楽譜やコード表が読みにくくなります。']]},
+ rhythm:{
+  kotsu:[['スネアは2拍目と4拍目','いわゆるバックビート。ポップスやロックのノリの土台です。まずここを置いてから、キックとハイハットを足すと組み立てやすくなります。'],['キックとベースのリズムをそろえる','低音の2つが同じタイミングで鳴ると、曲の芯がまとまって聴こえます。']],
+  tech:[['シンコペーション（食い）','次の小節の頭の音を、ひとつ前の裏拍から先に鳴らす技です。前のめりな勢いが出ます。',[['▶ 頭ちょうどで入る','sync'],['▶ 裏から食って入る','sync2']]],['ハイハットに強弱をつける','打ち込みで全部同じ強さにすると機械っぽくなります。表拍を強く、裏拍を少し弱くするだけで人が叩いたような揺れが出ます。'],['ハーフタイム','BPM はそのままで、スネアを3拍目だけにすると、半分の速さに感じるゆったりしたノリになります。サビ前の落差づくりに使えます。']],
+  taboo:[['全部の楽器が同じリズムで埋まる','隙間がなくなり、ノリが平坦になります。どこかの楽器を休ませると、残りのリズムが生きます。'],['全部の音を同じ強さで打ち込む','意図した機械的な表現でなければ、ベロシティ（強さ）に差をつけましょう。']]},
+ intervals:{
+  kotsu:[['ひっくり返すと「9から引く」','音程を上下ひっくり返すと、度数は 9 から引いた数になり、長と短が入れ替わります。長3度 ↔ 短6度、完全4度 ↔ 完全5度。片方を覚えればもう片方もわかります。'],['半音の数と響きをセットで覚える','名前だけ覚えるより、「半音4つ＝長3度＝明るい」のように3つを結びつけるほうが、耳と理屈の両方で使えます。']],
+  tech:[['ハモリは3度か6度','主旋律の3度上（または6度下）を、キーの音だけでなぞるときれいなハモリになります。',[['▶ 3度のハモリ','harm3'],['▶ 半音でぶつかる','harm2']]],['完全5度の重ね（パワーコード）','ルートと5度だけを重ねると、明るくも暗くもない力強い響きになります。歪んだギターでよく使われます。']],
+  taboo:[['主旋律と短2度で重ね続ける','半音でこすれる音を長く重ねると濁って聴こえます。一瞬の経過なら緊張感として使えます。'],['ハモリを完全5度で平行に動かし続ける','5度や8度のまま同じ形で動くと、2つのパートが溶けて1本に聴こえ、ハモリの意味が薄れます（連続5度・連続8度）。',[['▶ 5度で平行に動く','par5'],['▶ 3度で動く','harm3']]]]},
+ scales:{
+  kotsu:[['迷ったらペンタトニック','4番目と7番目を抜いた5音は、半音の並びがないのでぶつかりにくく、メロディの下書きに向いています。'],['主音で終わると「終わった」感じ','フレーズの最後をキーの主音（メジャーなら1番目、マイナーなら6番目から始めた音）に置くと、落ち着いて聴こえます。']],
+  tech:[['マイナーキーの Ⅴ をメジャーにする','ナチュラルマイナーの Ⅴm を Ⅴ に変えると（ハーモニックマイナーの考え方）、主音へ戻る力が強くなります。',[['▶ Ⅴm のまま','minV'],['▶ Ⅴ をメジャーに','majV']]],['モードで1音だけ色を変える','メジャーの4番目を半音上げればリディアンの浮遊感、マイナーの6番目を上げればドリアンのおしゃれさ。1音で雰囲気が変わります。']],
+  taboo:[['キーにない音を長く伸ばす','意図がないと「外れた」と聴こえます。使うなら短く通り過ぎるか、次の音へすぐ解決させます。'],['スケールを順番に上下するだけ','練習曲のように聴こえやすくなります。跳躍や同じ音の連打を混ぜるとメロディらしくなります。']]},
+ chords:{
+  kotsu:[['3度が明暗を決める','長3度ならメジャー、短3度ならマイナー。3度を抜くと明暗がなくなります（パワーコード）。'],['いちばん下の音が響きを左右する','同じ構成音でも、ベースに何を置くかで印象が大きく変わります。まずベースの動きを決めると組み立てやすくなります。']],
+  tech:[['分数コードでベースをなめらかに','C→G/B→Am→F のように、ベースを順番に下げると流れがスムーズになります。',[['▶ ふつうに弾く','inv'],['▶ ベースを順番に下げる','invSlash']]],['sus4 から戻してタメを作る','Gsus4→G→C のように、sus4 を一度挟んでから解決させると、期待感が生まれます。',[['▶ Gsus4→G→C','sus']]]],
+  taboo:[['メジャーコードの上で4度を伸ばす','C の上でメロディが F を長く伸ばすと、コードの3度 E と半音でぶつかって濁ります（アボイドノート）。',[['▶ C の上で F を伸ばす','avoid'],['▶ C の上で E を伸ばす','chordTone']]],['低い音域で3度を詰めて重ねる','低音で音を密集させると、ゴワゴワと濁って聴こえます。低音はルート（と5度）だけにして、3度は上に置くとすっきりします。',[['▶ 低音で密集','lowMud'],['▶ 3度を上に','lowOpen']]]]},
+ diatonic:{
+  kotsu:[['Ⅰ・Ⅳ・Ⅴ だけでも曲は作れる','主要3和音と呼ばれる3つです。まずこれで骨組みを作り、あとから代理コードに置き換えていくと迷いません。'],['同じ機能のコードは入れ替えられる','Ⅰ の代わりに Ⅵm、Ⅳ の代わりに Ⅱm。流れはそのままで、雰囲気だけ変えられます。']],
+  tech:[['Ⅴ を Ⅴ7 にする','7度を足すと、Ⅰ へ戻る力がさらに強くなります。サビ前やフレーズの終わりで使うと効果的です。'],['サビの直前に Ⅳ→Ⅴ','展開から緊張へ一気に高めて、サビの Ⅰ（や Ⅳ）で解放します。']],
+  taboo:[['Ⅴ から Ⅳ へ戻る','クラシックの和声では、緊張したあとに展開へ戻る流れとして避けられます。ただしロックやブルースでは普通に使われる、味のある進行です。',[['▶ Ⅴ→Ⅳ→Ⅰ','vToIV'],['▶ Ⅳ→Ⅴ→Ⅰ','ivToV']]],['Ⅶm7-5 を単独で目立たせる','不安定さが強く、使いどころが難しいコードです。使うなら Ⅲm や Ⅲ7 へつなぐ経過として。']]},
+ progressions:{
+  kotsu:[['4小節でひとまわり','まず4つのコードを決めて繰り返します。そこにメロディを乗せてから、必要なところだけ変えていくと形になりやすいです。'],['最初のコードで雰囲気が決まる','Ⅰ 始まりは素直、Ⅳ 始まりは切なさ、Ⅵm 始まりは疾走感。同じコードでも始める位置で印象が変わります。']],
+  tech:[['進行を回転させる','同じ4つのコードを別の位置から始めると、新しい進行のように聴こえます。',[['▶ Ⅰ→Ⅴ→Ⅵm→Ⅳ','rotA'],['▶ Ⅵm→Ⅳ→Ⅰ→Ⅴ','rotB']]],['1つだけセカンダリードミナントに','王道進行の Ⅲm を Ⅲ7 にするように、1か所だけ変えるとドラマが生まれます。']],
+  taboo:[['セクションごとに全部ちがう進行','覚える取っかかりがなくなり、曲の印象がぼやけます。Aメロとサビで同じ進行を使い回すのは、むしろよくある手法です。'],['最初から最後まで変化なし','同じループを続けるなら、リズムや転回形、楽器の数で変化をつけましょう。']]},
+ melody:{
+  kotsu:[['拍の頭にコードトーン','強拍（小節の頭）にコードの構成音を置くと、メロディとコードがかみ合って聴こえます。'],['跳躍したら逆向きに戻る','大きく飛んだあとは、反対方向へ順番に戻ると自然な流れになります。'],['フレーズの最高音は1つに','山のてっぺんを1か所に決めると、どこが盛り上がりかがはっきりします。']],
+  tech:[['同じリズムの型を繰り返す（モチーフ）','音の高さを変えてもリズムが同じなら、聴き手は「同じフレーズの続き」と感じて覚えやすくなります。'],['倚音（いおん）で切なさを出す','強拍にあえてコード外の音を置き、すぐ隣のコードトーンへ解決させると、胸がきゅっとなる効果が出ます。',[['▶ F→E と解決','appog']]],['ブレス（休符）を入れる','歌メロは息継ぎの隙間があると自然に聴こえます。歌声合成でも、休符があると人間らしさが増します。']],
+  taboo:[['強拍にコード外の音を長く置いたまま','解決しないと濁った印象が残ります。倚音として使うなら、すぐ隣の音へ動かします。',[['▶ C の上で D を伸ばす','ncLong'],['▶ C の上で E を伸ばす','chordTone']]],['歌いにくい跳躍が続く','増4度や7度の跳躍が続くと、人間には歌いにくくなります。聴き手が口ずさめるかを意識しましょう。']]},
+ modulation:{
+  kotsu:[['ラスサビは半音〜全音上げ','最も定番の転調です。同じメロディが少し高くなるだけで、気持ちが一段上がります。'],['転調の直前に一瞬ためる','1拍のブレイクや、新しいキーの Ⅴ7 を挟むと、変わる瞬間がはっきりして気持ちよく決まります。']],
+  tech:[['ピボットコードでつなぐ','元のキーと新しいキーの両方にあるコードを経由すると、いつの間にか転調している自然なつなぎになります。'],['借用和音でワンポイント','転調までしなくても、Ⅳm や ♭Ⅵ を1つ混ぜるだけで場面が変わったような色が出ます。']],
+  taboo:[['転調を重ねすぎる','元のキーがわからなくなり、聴き手が置いていかれます。大きな転調は1曲に1〜2回が目安です。'],['歌える音域を超える','上げた結果、サビの最高音が高すぎると、聴き手が口ずさめなくなります。上げる前に最高音を確認しましょう。']]},
+ quiz:{
+  kotsu:[['毎日少しずつ','耳は、まとめて1時間より毎日5分のほうが育ちます。今日の目標を小さめにして、続けることを優先しましょう。'],['間違えたら「考え方」を読む','答えだけ覚えても次は解けません。どの手順でつまずいたかを確かめてから復習ノートを解きます。']],
+  tech:[['声に出して歌う','聴いた2音を自分で歌うと、距離が体に入ります。音程の耳トレで特に効果があります。'],['好きな曲のコードを耳でとる','ベースの音を探す → 明るいか暗いかを聴く、の2段階だけでも、だんだんコードがわかるようになります。']],
+  taboo:[['選択肢の位置で覚える','問題は毎回ランダムです。位置ではなく響きで答えるようにしましょう。'],['苦手を避ける','正答率の低いものほど伸びしろがあります。「苦手を集中練習」で少しずつ慣らしましょう。']]}
+};
+function renderTips(){
+  $$('.tips').forEach(box=>{
+    const T=TIPS[box.dataset.sec];if(!T)return;
+    const item=(x,cls)=>`<li class="${cls}"><b>${x[0]}</b><p>${x[1]}</p>${x[2]?`<div class="demo">${x[2].map(([l,f])=>`<button class="btn quiet sm" data-demo="${f}">${l}</button>`).join('')}</div>`:''}</li>`;
+    box.innerHTML=`<h3>コツ・テクニック・タブー</h3>
+      <div class="tipgrp"><p class="tg kotsu">コツ</p><ul>${T.kotsu.map(x=>item(x,'k')).join('')}</ul></div>
+      <div class="tipgrp"><p class="tg tech">テクニック</p><ul>${T.tech.map(x=>item(x,'t')).join('')}</ul></div>
+      <div class="tipgrp"><p class="tg taboo">タブー</p><ul>${T.taboo.map(x=>item(x,'x')).join('')}</ul><p class="sub">タブーは「理由を知ったうえで、あえて破る」こともできます。効果をわかって使えば、それはテクニックです。</p></div>`;
+    box.querySelectorAll('[data-demo]').forEach(b=>b.onclick=()=>DEMO[b.dataset.demo]());
+  });
+}
+function renderPagers(){
+  $$('.pager').forEach(el=>{
+    const i=SECS.findIndex(s=>s.id===el.dataset.sec),pv=SECS[i-1],nx=SECS[i+1];
+    el.innerHTML=(pv?`<a class="pg prev" href="#${pv.id}" style="--sa:${pv.acc}"><small>前のステージ</small>${i}. ${pv.n}</a>`:`<a class="pg prev" href="#home"><small>戻る</small>ホーム</a>`)+
+      (nx?`<a class="pg nextp" href="#${nx.id}" style="--sa:${nx.acc}"><small>次のステージ</small>${i+2}. ${nx.n}</a>`:`<a class="pg nextp" href="#home"><small>おつかれさまでした</small>ホームへ</a>`);
+  });
+}
+
 /* ===== 起動 ===== */
 paintMascots();
 SECS.forEach(x=>{const el=document.getElementById(x.id);el.style.setProperty('--sc',x.soft);el.style.setProperty('--sa',x.acc)});
+renderTips();renderPagers();
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();
 let lastW=innerWidth;
