@@ -260,6 +260,11 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:20px}
 @keyframes floatup{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-30px);opacity:0}}
 #modal{position:fixed;inset:0;background:rgba(51,41,74,.32);display:grid;place-items:center;z-index:100;padding:20px}
 #modal[hidden]{display:none}
+[data-chat]{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.boing{animation:boing .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes boing{0%{transform:scale(1)}35%{transform:scale(1.18,.86)}70%{transform:scale(.94,1.08)}100%{transform:scale(1)}}
+.vwho{margin:8px 0 0;font-size:12.5px}
+@media (prefers-reduced-motion:reduce){.boing{animation:none}}
 .qfab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom));z-index:40;padding:14px 28px;font-size:16px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
 body:not([data-route="quiz"]) .qfab{display:none !important}
 body[data-route="quiz"] main{padding-bottom:96px}
@@ -1030,7 +1035,7 @@ table.wrap td{white-space:normal}
   </div>
   <div class="card" data-pane="play">
     <div class="qtop"><div class="rdots" id="qDots"></div><span class="sub" id="qCount"></span></div>
-    <div class="qtext" id="qText"></div>
+    <div class="qtext vo-raw" id="qText"></div>
     <div class="ctrl" id="qAudio"><button class="btn primary" id="qReplay">▶ もう一度聴く</button><button class="btn" id="qHarm">▶ 同時に鳴らす</button></div>
     <div class="opts" id="qOpts"></div>
     <div id="qFb"></div>
@@ -1045,7 +1050,7 @@ table.wrap td{white-space:normal}
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 21</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 22</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -1175,7 +1180,7 @@ const LEVELS=[[0,'Grave','とても遅く、重々しく'],[80,'Largo','幅広�
 const levelOf=xp=>{let l=0;LEVELS.forEach((L,i)=>{if(xp>=L[0])l=i});return l};
 
 /* ===== 話し方 ===== */
-const VOICES=[['cute','かわいい'],['tsun','ツンデレ'],['kouhai','後輩'],['downer','ダウナー'],['strict','厳しめかわいい'],['polite','ていねい'],['friend','フレンドリー'],['cool','クール'],['kansai','関西弁']];
+const VOICES=[['cute','ふわふわ'],['tsun','ツンデレ'],['kouhai','後輩ちゃん'],['downer','ダウナー'],['strict','スパルタお姉さん'],['polite','おしとやか'],['friend','ギャル'],['cool','クールお姉さん'],['kansai','関西弁']];
 const tod=h=>h<5?'night':h<11?'morning':h<17?'day':h<22?'evening':'night';
 const VO={
  cute:{sample:'正解〜！え、天才すぎない？',
@@ -1206,19 +1211,19 @@ const VO={
   r5:['まだまだだし。間違えたのは復習ノートに入れといたから、やっときなよ','半分ちょっと。…次はもっと当ててよね'],r0:['ぜんぜんじゃん。…しょうがないから、間違えたのは復習ノートに入れといた。解説の「考え方」読んでからやり直しなよ','今日は調子悪かっただけでしょ。…復習ノート、ちゃんとやってよね'],
   revEmpty:'復習ノート空っぽじゃん。…べつにすごいとか思ってないし。間違えた問題はここにたまって、2回続けて正解したら卒業',focusEmpty:'苦手、まだ見つかってないし。音程かコードの耳トレを何問か解いてから来なよ',
   roundEnd:['はい終わり。…結果、見てあげる','ラウンド終了。'],streak:[n=>`${n}問連続。…やるじゃん`,n=>`${n}連続とか、たまたまでしょ`,n=>`${n}問連続。…ちょっとすごいかも`]},
- kouhai:{sample:'正解っす！さすが先輩！',
-  praise:['正解っす！さすが先輩！','先輩、耳よすぎっす！','うわ、完璧っす！','それっす、それ！','先輩マジ天才っす','ナイスっす！その調子っす！','見直したっす！いや、最初から尊敬してるっす'],
-  miss:['あー、惜しいっす！','ドンマイっす先輩、次いきましょ！','ひっかかったっすね〜','ちがったっす…でも惜しかったっす！'],
-  greetFirst:'はじめましてっす、おんぷっぴっす！先輩といっしょに音楽理論やれるの、楽しみっす！今日の目標ぶんポイントためて、レコード1周させましょ！',
-  greetGoal:['今日の目標もう達成っす！先輩さすがっす！','目標クリアっす！まだやるなら付き合うっすよ！'],
-  greetStreak:[(n,r)=>`${n}日連続っす！先輩の継続力、見習いたいっす。あと ${r}pt っす！`,(n,r)=>`連続${n}日目っす！今日はあと ${r}pt っすよ`],
-  greetBack:[{morning:'先輩、おはようございまっす！朝の耳トレ、いっちゃいましょ！',day:'先輩、おつかれさまっす！今日の目標まで、クイズ1ラウンドくらいっす',evening:'先輩、今日もおつかれっす！ちょっとだけやってきましょ',night:'先輩、夜おそくまでおつかれっす…1ラウンドだけやって寝ましょ！'},'先輩、待ってたっす！今日はどこやります？'],
-  mission:['課題クリアっす！','さすが先輩、クリアっす！'],goalT:['今日の目標達成っす！'],goalP:g=>`${g}pt たまったっす！レコード回ってるっすよ！`,
-  levelL:['テンポアップっす！','レベルアップっす！先輩また強くなったっす'],cont:'つづけるっす',close:'とじるっす',
-  stampH:['ステージ課題、ぜんぶクリアっす！'],stampP:'スタンプ押しといたっす！譜面に音符ひとつ増えたっす。ボーナス 50pt',allL:'全ステージ修了っす！',allH:'譜面ぜんぶ埋まったっす…！先輩すごすぎっす！',allP:'ホームで、書き上げた旋律を最後まで聴けるっす！',
-  r10:['全問正解っす！先輩が優勝っす！','パーフェクトっす！一生ついていくっす！'],r8:['ほぼ完璧っす！あと一歩っす！'],r5:['いい感じっす！間違えたのは復習ノートに入れといたっす'],r0:['今日はむずかったっすね…間違えたのは復習ノートに入れといたっす。解説の「考え方」読んでからリベンジっす！'],
-  revEmpty:'復習ノート空っぽっす！さすがっす。間違えた問題はここにたまって、2回続けて正解したら卒業っす',focusEmpty:'まだ苦手は見つかってないっす。音程かコードの耳トレを何問か解いてほしいっす',
-  roundEnd:['ラウンド終了っす！'],streak:[n=>`${n}問連続っす！`,n=>`${n}連続っす！止まんないっす！`]},
+ kouhai:{sample:'せんぱいっ、正解です！さすがです〜！',
+  praise:['正解ですっ！せんぱいさすがです！','せんぱい、耳よすぎません！？','完璧です〜！かっこいいです！','わ、正解！わたしも見習います！','すごいです、ばっちりです！','せんぱい天才ですか…？','はいっ、大正解です！'],
+  miss:['あっ、惜しいです…！','せんぱいでも間違えることあるんですね…ちょっと安心しました','ドンマイです！次いきましょ！','うぅ、ちがいました…でも解説見ればすぐわかりますよ！'],
+  greetFirst:'はじめまして、おんぷっぴです！せんぱいと一緒に音楽理論やれるの、すっごく楽しみです！今日の目標ぶんポイントためて、レコード1周させましょうね！',
+  greetGoal:['せんぱい、今日の目標もう達成してます！さすがです！','目標クリアです！まだやるなら、わたしもお付き合いしますっ'],
+  greetStreak:[(n,r)=>`${n}日連続です！せんぱいの継続力、尊敬しちゃいます。あと ${r}pt です！`,(n,r)=>`連続${n}日目ですっ！今日はあと ${r}pt ですよ`],
+  greetBack:[{morning:'せんぱい、おはようございますっ！朝の耳トレ、一緒にやりましょ！',day:'せんぱい、おつかれさまです！今日の目標まで、クイズ1ラウンドくらいですよ',evening:'せんぱい、今日もおつかれさまです！ちょっとだけ一緒にやりませんか？',night:'せんぱい、夜おそくまでおつかれさまです…1ラウンドだけやったら、ちゃんと寝てくださいね'},'せんぱい、待ってました！今日はどこやります？'],
+  mission:['課題クリアです！','さすがせんぱい、クリアです！'],goalT:['今日の目標達成です！'],goalP:g=>`${g}pt たまりました！レコード回ってますよ〜！`,
+  levelL:['テンポアップです！','レベルアップです！せんぱいまた上手になりましたね'],cont:'つづけます',close:'とじます',
+  stampH:['ステージ課題、ぜんぶクリアです！'],stampP:'スタンプ押しておきました！譜面に音符がひとつ増えましたよ。ボーナス 50pt',allL:'全ステージ修了です！',allH:'譜面ぜんぶ埋まりました…！せんぱい、すごすぎます！',allP:'ホームで、書き上げた旋律を最後まで聴けますよ！',
+  r10:['全問正解です！せんぱいが優勝です！','パーフェクトです！一生ついていきますっ！'],r8:['ほぼ完璧です！あと一歩ですっ！'],r5:['いい感じです！間違えたのは復習ノートに入れておきましたよ'],r0:['今日はむずかしかったですね…間違えたのは復習ノートに入れておきました。解説の「考え方」を読んでからリベンジしましょ！'],
+  revEmpty:'復習ノート、空っぽです！さすがです。間違えた問題はここにたまって、2回続けて正解したら卒業ですよ',focusEmpty:'まだ苦手は見つかってないです。音程かコードの耳トレを何問か解いてみてくださいっ',
+  roundEnd:['ラウンド終了です！'],streak:[n=>`${n}問連続です！`,n=>`${n}連続！止まらないですね！`]},
  downer:{sample:'…ん、正解。えらいじゃん',
   praise:['…ん、正解。えらいじゃん','合ってる。いいね','すご…。耳いいんだね','正解。…ちょっとうれしいかも','ん、完璧','…やるね。好きだよ、そういうの'],
   miss:['ちがうね…まあ、次があるよ','おしい…。解説、いっしょに読も','ん、ちがった。ゆっくりでいいよ','…ひっかかったね。だいじょぶ'],
@@ -1246,50 +1251,58 @@ const VO={
   r5:['まだ安定してないよ。間違えた問題は復習ノートに入れたから、ちゃんとやってね','半分ちょっと。復習ノートをやるまで今日は終わらないよ'],r0:['これは復習が必要だね。間違えた問題は復習ノートに入れたよ。解説の「考え方」を読んでからやり直すこと！','今日はここからが勝負。復習ノートで取り返そう'],
   revEmpty:'復習ノートは空っぽ。…やるじゃん。間違えた問題はここにたまって、2回続けて正解したら卒業だよ',focusEmpty:'苦手はまだ見つかってないよ。音程かコードの耳トレを何問か解いてから来て',
   roundEnd:['ラウンド終了。結果を見なさい','はい、終了。振り返るよ'],streak:[n=>`${n}問連続。その調子`,n=>`${n}連続。まだ止まらないで`,n=>`${n}問連続。集中できてるね`]},
- polite:{sample:'正解です。その調子で進めましょう。',
-  praise:['正解','よくできました','その調子','いい耳です','見事です','正確です'],miss:['惜しい','不正解','もう一度確かめましょう'],
-  greetFirst:'はじめまして、おんぷっぴです。1日少しずつで大丈夫。今日の目標のポイントをためて、レコードを1周させましょう。',
-  greetGoal:['今日の目標は達成済みです。この先は好きなだけ、気になるところを練習しましょう。','目標を達成しました。苦手チェックで弱点を確認するのもおすすめです。'],
-  greetStreak:[(n,r)=>`${n}日続いています。今日も ${r}pt ためれば記録が伸びます。`,(n,r)=>`連続${n}日目です。今日はあと ${r}pt です。`],
-  greetBack:[{morning:'おはようございます。朝は耳が新鮮なので、耳トレに向いています。',day:'こんにちは。今日の目標まで、クイズ1ラウンドくらいです。',evening:'おかえりなさい。今日も少しだけ練習しましょう。',night:'夜遅くまでおつかれさまです。少しだけ進めて、休みましょう。'},'おかえりなさい。今日の目標まで、クイズ1ラウンドくらいです。'],
-  mission:['課題クリア'],goalT:['今日の目標を達成'],goalP:g=>`${g}pt たまりました。ホームのレコードが回っています`,levelL:['テンポが上がりました'],cont:'続ける',close:'閉じる',
-  stampH:['課題をすべて終えました'],stampP:'スタンプを押しました。譜面に音符がひとつ書き込まれます。ボーナス 50pt',allL:'全ステージ修了',allH:'譜面がすべて埋まりました',allP:'ホームで、書き上げた旋律を最後まで聴けます。',
-  r10:['全問正解です。'],r8:['かなり身についています。'],r5:['あと少しで安定します。間違えた問題は復習ノートに入れました。'],r0:['間違えた問題は復習ノートに入れました。解説の「考え方」を読み直してから復習すると定着します。'],
-  revEmpty:'復習ノートは空です。クイズで間違えた問題がここにたまり、2回続けて正解すると卒業します。',focusEmpty:'まだ苦手が見つかっていません。音程かコードの耳トレを何問か解くと、正答率の低いものだけを集中して練習できるようになります。',
-  roundEnd:['ラウンド終了'],streak:[n=>`${n}問連続`]},
- friend:{sample:'正解！やるじゃん、その調子！',
-  praise:['正解！','やるじゃん！','いいね、その調子！','耳いいね！','さすが！','ナイス！','それそれ！'],miss:['あー、惜しい！','残念、ちがった！','ドンマイ！次いこう','うわ、惜しい！'],
-  greetFirst:'はじめまして、おんぷっぴ！1日ちょっとずつでいいからね。今日の目標ぶんポイントためて、レコード1周させよう！',
-  greetGoal:['今日の目標はもうクリア！あとは好きなところを好きなだけやっちゃおう','目標達成！余裕があるなら苦手チェックもどう？'],
-  greetStreak:[(n,r)=>`${n}日連続！今日もあと ${r}pt で記録更新だよ`,(n,r)=>`連続${n}日目、いいペース！あと ${r}pt`],
-  greetBack:[{morning:'おはよう！朝イチの耳トレ、いっとく？',day:'おかえり！今日の目標まで、クイズ1ラウンドくらいだよ',evening:'おつかれ！ちょっとだけやってこ',night:'夜ふかしさんだね。サクッと1ラウンドやって寝よ'},'おかえり！今日の目標まで、クイズ1ラウンドくらいだよ'],
-  mission:['課題クリア！','よっしゃ、課題クリア！'],goalT:['今日の目標クリア！'],goalP:g=>`${g}pt たまった！ホームのレコードが回ってるよ`,levelL:['テンポアップ！','レベルアップ！'],cont:'続ける',close:'閉じる',
-  stampH:['このステージ、課題ぜんぶクリア！'],stampP:'スタンプゲット！譜面に音符がひとつ増えたよ。ボーナス 50pt',allL:'全ステージ修了！',allH:'譜面がぜんぶ埋まった！',allP:'ホームで、完成した旋律を最後まで聴けるよ。',
-  r10:['全問正解！完璧！','10問ぜんぶ正解、すごっ！'],r8:['かなり身についてるじゃん！'],r5:['もうちょいで安定しそう！間違えた問題は復習ノートに入れといたよ'],r0:['間違えた問題は復習ノートに入れといたよ。解説の「考え方」を読んでから復習すると覚えやすいよ'],
-  revEmpty:'復習ノートは空っぽ！クイズで間違えた問題がここにたまって、2回連続で正解したら卒業だよ',focusEmpty:'まだ苦手は見つかってないよ。音程かコードの耳トレを何問か解くと、苦手だけ集中練習できるようになるよ',
-  roundEnd:['ラウンド終了！'],streak:[n=>`${n}問連続！`,n=>`${n}連続、のってる！`]},
- cool:{sample:'正解。悪くない。',
-  praise:['正解。','悪くない。','その調子。','いい耳だ。','見事だ。','正確だ。'],miss:['違う。','外れ。次だ。','惜しい。理由を確かめよう。'],
-  greetFirst:'おんぷっぴだ。毎日少しずつでいい。目標のポイントをためて、レコードを1周させよう。',
-  greetGoal:['今日の目標は達成済み。ここから先は自由に練習しよう。','目標達成。余力があるなら苦手を潰そう。'],
-  greetStreak:[(n,r)=>`${n}日連続。あと ${r}pt で記録が伸びる。`,(n,r)=>`連続${n}日目。残り ${r}pt。`],
-  greetBack:[{morning:'朝か。耳が冴えている時間だ。',day:'来たか。今日の目標まで、クイズ1ラウンドほどだ。',evening:'始めよう。まずは1ラウンド。',night:'遅い時間だ。1ラウンドだけにしておこう。'},'来たか。今日の目標まで、クイズ1ラウンドほどだ。'],
-  mission:['課題クリア'],goalT:['今日の目標、達成。'],goalP:g=>`${g}pt 到達。レコードが回っている。`,levelL:['テンポが上がった。'],cont:'続ける',close:'閉じる',
-  stampH:['課題、すべて完了。'],stampP:'スタンプを押した。譜面に音符がひとつ増える。ボーナス 50pt',allL:'全ステージ修了',allH:'譜面が埋まった。',allP:'ホームで、完成した旋律を最後まで聴ける。',
-  r10:['全問正解。見事だ。'],r8:['かなり身についている。'],r5:['あと少しで安定する。間違えた問題は復習ノートに入れた。'],r0:['間違えた問題は復習ノートに入れた。解説の「考え方」を読み直してから復習するといい。'],
-  revEmpty:'復習ノートは空だ。間違えた問題がここにたまり、2回続けて正解すると卒業する。',focusEmpty:'苦手はまだ見つかっていない。音程かコードの耳トレを何問か解くと、苦手だけを練習できる。',
-  roundEnd:['ラウンド終了'],streak:[n=>`${n}問連続`]},
- kansai:{sample:'正解や！ええやん、その調子やで！',
-  praise:['正解や！','ええやん！','その調子やで！','ええ耳しとるなあ！','さすがやわ！','バッチリやん！','やるやん！'],miss:['あー、惜しいわ〜','ちゃうちゃう！','ドンマイや、次いこ！','惜しいなあ〜'],
-  greetFirst:'はじめまして、おんぷっぴやで！1日ちょっとずつでええからな。今日の目標ぶんポイントためて、レコード1周させよか！',
-  greetGoal:['今日の目標はもう達成しとるで！あとは好きなとこ、好きなだけ練習しよか','目標クリアや！余裕あるんやったら苦手チェックもしとこか'],
-  greetStreak:[(n,r)=>`${n}日連続やん、すごいわ！今日もあと ${r}pt で記録のびるで`,(n,r)=>`連続${n}日目や！あと ${r}pt やで`],
-  greetBack:[{morning:'おはようさん！朝の耳はよう聴こえるで',day:'おかえり〜！今日の目標まで、クイズ1ラウンドくらいやで',evening:'おつかれさん！ちょっとだけやってこか',night:'夜ふかしやなあ。1ラウンドだけやって寝よか'},'おかえり〜！今日の目標まで、クイズ1ラウンドくらいやで'],
-  mission:['課題クリアや！','よっしゃ、課題クリアや！'],goalT:['今日の目標、達成や！'],goalP:g=>`${g}pt たまったで！ホームのレコード回っとるわ`,levelL:['テンポ上がったで！','レベルアップや！'],cont:'続ける',close:'閉じる',
-  stampH:['このステージの課題、ぜんぶ終わったで！'],stampP:'スタンプ押しといたで。譜面に音符がひとつ増えたわ。ボーナス 50pt',allL:'全ステージ修了や！',allH:'譜面ぜんぶ埋まったで！',allP:'ホームで、書き上げた旋律を最後まで聴けるで。',
-  r10:['全問正解！ほんまにすごいわ！','10問ぜんぶ正解や、天才ちゃう？'],r8:['かなり身についとるやん！'],r5:['あとちょっとで安定しそうやな。間違えた問題は復習ノートに入れといたで'],r0:['間違えた問題は復習ノートに入れといたで。解説の「考え方」読んでから復習したら、ちゃんと覚えられるわ'],
-  revEmpty:'復習ノートは空っぽやで。クイズで間違えた問題がここにたまって、2回続けて正解したら卒業や',focusEmpty:'まだ苦手は見つかってへんで。音程かコードの耳トレを何問か解いたら、苦手だけ集中して練習できるようになるわ',
-  roundEnd:['ラウンド終了や！'],streak:[n=>`${n}問連続や！`,n=>`${n}連続、ノッとるなあ！`]}
+ polite:{sample:'正解です。ふふ、その調子ですよ',
+  praise:['正解です。ふふ、お見事です','よくできました。さすがですね','その調子ですよ','いい耳をしていますね','正確です。すてきです','はい、正解です。わたしもうれしいです'],
+  miss:['惜しかったですね','ちがいましたね。でも大丈夫ですよ','もう一度、一緒に確かめましょうか','あら、ひっかかってしまいましたね'],
+  greetFirst:'はじめまして、おんぷっぴです。1日少しずつで大丈夫ですよ。今日の目標のポイントをためて、レコードを1周させましょうね。',
+  greetGoal:['今日の目標は達成していますね。ふふ、よくがんばりました','目標達成です。この先は、気になるところをゆっくり練習しましょうか'],
+  greetStreak:[(n,r)=>`${n}日続いていますね。今日もあと ${r}pt で記録が伸びますよ`,(n,r)=>`連続${n}日目です。毎日えらいですね。あと ${r}pt です`],
+  greetBack:[{morning:'おはようございます。朝は耳が澄んでいるので、耳トレにぴったりですよ',day:'こんにちは。今日の目標まで、クイズ1ラウンドくらいですね',evening:'おかえりなさい。今日も少しだけ、一緒に練習しましょうか',night:'夜遅くまでおつかれさまです。少しだけ進めたら、ゆっくり休んでくださいね'},'おかえりなさい。お待ちしていました'],
+  mission:['課題クリアです。お見事です','課題クリアですね'],goalT:['今日の目標を達成しました'],goalP:g=>`${g}pt たまりました。レコードが回っていますよ`,
+  levelL:['テンポが上がりました。ふふ、すてきです','レベルアップですね'],cont:'続ける',close:'閉じる',
+  stampH:['課題をすべて終えましたね'],stampP:'スタンプを押しておきました。譜面に音符がひとつ書き込まれますよ。ボーナス 50pt',allL:'全ステージ修了',allH:'譜面がすべて埋まりましたね。本当によくがんばりました',allP:'ホームで、書き上げた旋律を最後まで聴けますよ',
+  r10:['全問正解です。本当にお見事です','パーフェクトですね。わたしまでうれしいです'],r8:['かなり身についていますね'],r5:['あと少しで安定しますよ。間違えた問題は復習ノートに入れておきました'],r0:['間違えた問題は復習ノートに入れておきました。解説の「考え方」を読んでから、一緒に復習しましょうね'],
+  revEmpty:'復習ノートは空ですね。間違えた問題はここにたまって、2回続けて正解すると卒業ですよ',focusEmpty:'まだ苦手は見つかっていませんね。音程かコードの耳トレを何問か解くと、苦手だけを練習できるようになりますよ',
+  roundEnd:['ラウンド終了です'],streak:[n=>`${n}問連続ですね`,n=>`${n}問連続。お上手です`]},
+ friend:{sample:'正解じゃん！まじ天才なんだけど〜！',
+  praise:['正解じゃん！まじ天才！','え、すご！耳よすぎでしょ','ちょ、完璧なんだけど〜','それな！大正解！','優勝〜！あげてこ！','わかってんじゃん！さすが！','神じゃん…！'],
+  miss:['あー惜しい！ドンマイ！','ちがったか〜！でもいい線いってたよ','え、そっち！？次いこ次！','ひっかかったね〜！解説見よ見よ'],
+  greetFirst:'はじめまして〜！おんぷっぴだよ！毎日ちょっとずつでいいからさ、今日の目標ぶんポイントためて、レコード1周させちゃお！',
+  greetGoal:['今日の目標もう達成してんじゃん！えらすぎ〜！','目標クリア！あとは好きなとこやっちゃお〜'],
+  greetStreak:[(n,r)=>`${n}日連続とかまじすごくない！？あと ${r}pt で今日も記録更新〜`,(n,r)=>`連続${n}日目！続けられるのって才能だって！あと ${r}pt！`],
+  greetBack:[{morning:'おはよ〜！朝からえらすぎない？耳トレいっとこ！',day:'やほ〜！今日の目標まで、クイズ1ラウンドくらいだよ！',evening:'おつかれ〜！ちょっとだけやってこ！',night:'夜ふかしじゃん〜！1ラウンドだけやって寝よ？'},'待ってた〜！今日どこやる？'],
+  mission:['課題クリア〜！あがる〜！','クリアじゃん！さすが〜'],goalT:['今日の目標クリア〜！'],goalP:g=>`${g}pt たまった〜！レコード回ってるよ！`,
+  levelL:['テンポアップ！あがってこ〜！','レベルアップじゃん！'],cont:'つづける',close:'とじる',
+  stampH:['ステージ課題ぜんぶクリア！やば！'],stampP:'スタンプぽち〜！譜面に音符ひとつ増えたよ。ボーナス 50pt',allL:'全ステージ修了！',allH:'譜面ぜんぶ埋まったんだけど！まじすごい！',allP:'ホームで、書いた旋律を最後まで聴けるよ〜！',
+  r10:['全問正解！？天才すぎ！','パーフェクト〜！今日の主役じゃん！'],r8:['ほぼ完璧じゃん！'],r5:['いい感じ〜！間違えたのは復習ノートに入れといたよ'],r0:['今日むずかったね〜。間違えたのは復習ノートに入れといたから、解説の「考え方」見てリベンジしよ！'],
+  revEmpty:'復習ノート空っぽじゃん！えらすぎ！間違えた問題はここにたまって、2回連続正解で卒業だよ',focusEmpty:'まだ苦手は見つかってないよ〜。音程かコードの耳トレ何問かやってみて！',
+  roundEnd:['ラウンド終了〜！'],streak:[n=>`${n}問連続！あがる〜！`,n=>`${n}連続とかやば！`]},
+ cool:{sample:'正解。…さすがね',
+  praise:['正解。さすがね','悪くないわね','その調子。ちゃんと見てるわよ','いい耳ね','完璧。少し感心したわ','正確ね。いい集中力'],
+  miss:['違うわ。もう一度聴いて','惜しいわね。理由を確かめましょう','外れ。でも次は当てられるはずよ'],
+  greetFirst:'おんぷっぴよ。毎日少しずつでいいわ。目標のポイントをためて、レコードを1周させましょう',
+  greetGoal:['今日の目標は達成済みね。よくやったわ','目標達成。余裕があるなら、苦手もつぶしておきましょう'],
+  greetStreak:[(n,r)=>`${n}日連続ね。あと ${r}pt で記録が伸びるわ`,(n,r)=>`連続${n}日目。続けられるのは才能よ。あと ${r}pt`],
+  greetBack:[{morning:'おはよう。朝の耳は冴えてるわ。始めましょう',day:'来たのね。今日の目標まで、クイズ1ラウンドほどよ',evening:'おかえりなさい。少しだけ付き合ってあげる',night:'遅い時間ね。1ラウンドだけにして、ちゃんと休むこと'},'待ってたわ。始めましょうか'],
+  mission:['課題クリア。いいわね','クリア。次もその調子で'],goalT:['今日の目標、達成ね'],goalP:g=>`${g}pt 到達。レコードが回っているわ`,
+  levelL:['テンポが上がったわね','レベルアップ。期待してるわよ'],cont:'続ける',close:'閉じる',
+  stampH:['課題、すべて完了ね'],stampP:'スタンプを押しておいたわ。譜面に音符がひとつ増える。ボーナス 50pt',allL:'全ステージ修了',allH:'譜面が埋まったわね。…見事よ',allP:'ホームで、完成した旋律を最後まで聴けるわ',
+  r10:['全問正解。見事ね','パーフェクト。言うことないわ'],r8:['かなり身についているわね'],r5:['あと少しで安定するわ。間違えた問題は復習ノートに入れておいた'],r0:['間違えた問題は復習ノートに入れておいたわ。解説の「考え方」を読み直してから復習して'],
+  revEmpty:'復習ノートは空ね。間違えた問題はここにたまって、2回続けて正解すると卒業よ',focusEmpty:'苦手はまだ見つかってないわ。音程かコードの耳トレを何問か解いてみて',
+  roundEnd:['ラウンド終了ね'],streak:[n=>`${n}問連続。いいわね`,n=>`${n}連続。集中できてるわ`]},
+ kansai:{sample:'正解やん！めっちゃええやん！',
+  praise:['正解やん！めっちゃええやん！','すごっ、耳ええなあ！','完璧やん、天才ちゃう？','せやせや、それやで！','うち、感動してもうた…！','ばっちりやん！さすがやわ'],
+  miss:['あー、惜しいなあ！','ちゃうちゃう！でもええとこいってたで','ドンマイや、次いこ！','ひっかかってもうたなあ〜。解説見よ！'],
+  greetFirst:'はじめまして、おんぷっぴやで！毎日ちょっとずつでええからな。今日の目標ぶんポイントためて、レコード1周させよ！',
+  greetGoal:['今日の目標もう達成しとるやん！えらいなあ','目標クリアや！余裕あるんやったら苦手チェックもしとこか'],
+  greetStreak:[(n,r)=>`${n}日連続やん！うち、うれしいわ。あと ${r}pt やで`,(n,r)=>`連続${n}日目や！続けられるん、ほんますごいで。あと ${r}pt`],
+  greetBack:[{morning:'おはようさん！朝の耳はよう聴こえるで',day:'おかえり〜！今日の目標まで、クイズ1ラウンドくらいやで',evening:'おつかれさん！ちょっとだけ一緒にやろか',night:'夜ふかしやなあ。1ラウンドだけやって、ちゃんと寝るんやで'},'待っとったで〜！今日どこやる？'],
+  mission:['課題クリアや！','やったやん、課題クリア！'],goalT:['今日の目標、達成や！'],goalP:g=>`${g}pt たまったで！レコード回っとるわ`,
+  levelL:['テンポ上がったで！','レベルアップや！うちも鼻が高いわ'],cont:'つづける',close:'とじる',
+  stampH:['このステージの課題、ぜんぶ終わったで！'],stampP:'スタンプ押しといたで。譜面に音符ひとつ増えたわ。ボーナス 50pt',allL:'全ステージ修了や！',allH:'譜面ぜんぶ埋まったやん！ほんますごいわ！',allP:'ホームで、書き上げた旋律を最後まで聴けるで。一緒に聴こ！',
+  r10:['全問正解！ほんまに天才やわ！','パーフェクトや！うち、拍手しとるで！'],r8:['かなり身についとるやん！'],r5:['あとちょっとで安定しそうやな。間違えたんは復習ノートに入れといたで'],r0:['今日はむずかしかったなあ。間違えたんは復習ノートに入れといたで。解説の「考え方」読んでからリベンジしよ！'],
+  revEmpty:'復習ノート空っぽやん！えらいなあ。間違えた問題はここにたまって、2回続けて正解したら卒業や',focusEmpty:'まだ苦手は見つかってへんで。音程かコードの耳トレ、何問か解いてみて〜',
+  roundEnd:['ラウンド終了や！'],streak:[n=>`${n}問連続や！`,n=>`${n}連続、のっとるなあ！`]}
 };
 const VO_DESC={
  noStreak:{downer:'連続記録は…まだないね。今日からでいいよ',kouhai:'まだ連続記録はないっす。今日からっすね！',tsun:'連続記録？ まだないし。…今日から作れば？',cute:'まだ連続記録はないよ。今日からいっしょに作ろ！',cute:'まだ連続記録はないよ',tsun:'連続記録？ まだないわよ。…今日から作れば？',strict:'連続記録ゼロ。今日から始めなさいっ',polite:'まだ連続記録はありません',friend:'まだ連続記録はなし',cool:'連続記録はまだない',kansai:'まだ連続記録はあらへんで'},
@@ -1310,6 +1323,25 @@ const VO_DESC={
  recSub:{cute:(x,n,d,dn,t)=>`${x}pt！${n?`次の ${n} まであと ${d}pt だよ`:'いちばん速いテンポまで来ちゃった！'} 課題は ${dn}/${t} クリア`,tsun:(x,n,d,dn,t)=>`${x}pt。${n?`次の ${n} まであと ${d}pt。…がんばれば？`:'最速テンポとか…ほんとに来たんだ'} 課題は ${dn}/${t}。`,kouhai:(x,n,d,dn,t)=>`${x}pt っす！${n?`次の ${n} まであと ${d}pt っす`:'最速テンポ到達っす！'} 課題は ${dn}/${t} クリアっす`,downer:(x,n,d,dn,t)=>`${x}pt。${n?`次の ${n} まで、あと ${d}pt`:'いちばん速いテンポまで来たね'}。課題は ${dn}/${t}。`,strict:(x,n,d,dn,t)=>`${x}pt。${n?`次の ${n} まであと ${d}pt、さぼらないでね`:'最速テンポ到達…やるじゃない'}。課題は ${dn}/${t}。`,polite:(x,n,d,dn,t)=>`${x}pt　${n?`次の ${n} まで ${d}pt`:'最も速いテンポに到達しました'}。課題は ${dn}/${t} 完了。`,friend:(x,n,d,dn,t)=>`${x}pt。${n?`次の ${n} まであと ${d}pt！`:'最速テンポに到達！'} 課題は ${dn}/${t} クリア`,cool:(x,n,d,dn,t)=>`${x}pt。${n?`次の ${n} まで ${d}pt。`:'最速テンポに到達。'}課題 ${dn}/${t}。`,kansai:(x,n,d,dn,t)=>`${x}pt や。${n?`次の ${n} まであと ${d}pt やで！`:'いちばん速いテンポまで来たで！'} 課題は ${dn}/${t} クリアや`}
 };
 Object.entries(VO_DESC).forEach(([k,o])=>Object.entries(o).forEach(([v,x])=>VO[v][k]=x));
+const VO_WHO={cute:'ふわふわで甘え上手な女の子。なんでもいっぱいほめてくれる',tsun:'素直になれない女の子。口は悪いけど、ほんとはずっと応援してる',kouhai:'元気いっぱいの後輩ちゃん。あなたを「せんぱい」と呼んで慕ってくれる',downer:'ねむたげな女の子。ゆるいけど、ちゃんと見てくれている',strict:'スパルタ家庭教師のお姉さん。厳しいけど、最後はちゃんとほめてくれる',polite:'おしとやかで優しい先輩。ていねい語でやわらかく話す',friend:'ノリのいいギャル。なんでもアゲてほめてくれる',cool:'クールなお姉さん。口数は少ないけど、ちゃんと見てくれている',kansai:'関西弁の元気な女の子。一人称は「うち」'};
+const VO_CHAT={
+ cute:['ねえねえ、BPM120だと4分音符はちょうど0.5秒なんだって！','王道進行ってね、ボカロ曲にもいっぱい出てくるんだよ','つかれたら休んでいいんだよ？ 耳にも休憩は大事なの','好きなコードある？ わたしはM7！おしゃれなんだもん','長3度と短3度が聴き分けられたら、もう一人前だよ！','毎日ちょっとずつやってるの、ちゃんと知ってるよ。えらい！','ラスサビで半音上がる転調、ずるいくらいエモいよね','タップしすぎ〜！くすぐったいよ！','ねえ、今日の調子はどう？ わたしは絶好調！'],
+ tsun:['な、なに。用がないならタップしないでよね','べつに、話しかけてほしいわけじゃないし','…BPM120なら1拍0.5秒。覚えときなよ','裏コードとか、使えたらちょっとかっこいいじゃん','休憩もしなよ。…べつに心配してないけど','つ、つつかないでってば！','今日もちゃんと来たじゃん。…ちょっとだけ、うれしい','sus4って、なんか素直になれない感じで…べつに親近感とかないし'],
+ kouhai:['せんぱい、M7の響きって、なんかおしゃれですよね！','知ってました？ 王道進行ってボカロ曲にめっちゃ出てくるんですよ！','せんぱい、つかれてません？ 休憩も大事ですよ！','わたしもせんぱいみたいに耳よくなりたいです！','ラスサビの半音上げ転調、テンション上がりますよね！','わっ、つつかないでくださいよ〜！','せんぱい、今日はどのステージやります？ わたし、ついていきます！'],
+ downer:['…ん。どうしたの','sus4って、ふわっとしてて好き…','ねむい…でも、来てくれるなら起きてる','休憩、しよっか。…5分だけ','BPM70くらいの曲が、いちばん落ち着く…','…つんつんしないで。くすぐったい','今日もえらいね。…ほんとだよ'],
+ strict:['タップしてる暇があったら1問解くよ','ちゃんと休憩も取ってる？ 集中力は休んで回復するの','長3度と短3度、まだ迷うなら耳トレ10問ね','王道進行くらい、どのキーでも弾けるようにしておいて','…今日もちゃんと来たね。そこはえらい','こら、つつかないの！'],
+ polite:['M7の響き、やわらかくて素敵ですよね','BPM120なら、4分音符はちょうど0.5秒ですよ','少しずつでも、毎日続けるのがいちばんの近道です','疲れたら、温かいものでも飲んで休んでくださいね','裏コードは、ベースが半音で下がるのがきれいなんです','ふふ、くすぐったいです'],
+ friend:['ねぇ王道進行ってまじ最強じゃない？','M7の響きエモすぎて無理〜','つかれたら休も！がんばりすぎ禁止〜','ラスサビの半音上げ、ずるくない？泣くって','BPM120って4分音符0.5秒なんだって、知ってた？','ちょ、つつきすぎ〜！'],
+ cool:['何？ …聞きたいことがあるなら言って','BPM120の4分音符は0.5秒。覚えておいて','sus4は、解決を待つ響き。嫌いじゃないわ','休憩も練習のうちよ','裏コードが使えると、響きが一段上になるわ','…つつかないで'],
+ kansai:['なあなあ、王道進行ってほんまよう聴くよなあ','うち、M7の響きめっちゃ好きやねん','つかれたら休みや？ 無理したらあかんで','BPM120やったら4分音符はちょうど0.5秒やで','ラスサビで半音上がるやつ、テンション上がるわ〜','ちょ、つつかんといて〜！']
+};
+const VO_DESC2={
+ kouhai:{noStreak:'まだ連続記録はないです。今日から一緒に作りましょ！',staffD:'ステージをクリアすると、その音符が塗られますよ！11個そろったら、ドから上のファまでの旋律になるんです',staffLocked:'最初のステージをクリアしたら、ここで旋律が聴けるようになりますよ！',voiceD:'話し方を選べます！解説の文章もこの話し方になりますよ',designD:'画面の色と文字の雰囲気を選べます！アイコンもテーマに合わせて変わるんですよ',iconNote:'ホーム画面に追加ずみのアイコンは、iPhone の仕組みで自動では変わらないんです。テーマを選んでから一度削除して、追加し直してくださいっ',transD:'ステージ移動の演出、選べますよ！',psD:'ステージ移動のときに、効果音とチャイムが鳴りますよ！',resetH:'せんぱい、ほんとにリセットしちゃうんですか…？',resetP:'ポイントも課題もスタンプも、ぜんぶ消えちゃいます。元には戻せないですよ…',resetNo:'やめておきます',misHint:'ぜんぶ終わったらスタンプもらえますよ！',misGot:'スタンプ押しておきました！',pagerEnd:'おつかれさまです！',qStart:'「始める」を押したら10問スタートです！',recSub:(x,n,d,dn,t)=>`${x}pt です！${n?`次の ${n} まであと ${d}pt ですよ`:'最速テンポ到達です！'} 課題は ${dn}/${t} クリアです`},
+ friend:{noStreak:'まだ連続記録ないよ〜。今日から作ろ！',staffD:'ステージクリアすると、その音符が塗られるよ！11個そろったら、ドから上のファまでのメロディになるの、エモくない？',staffLocked:'最初のステージクリアしたら、ここでメロディ聴けるよ〜',voiceD:'話し方選べるよ！解説もこの話し方になるの',designD:'画面の色と雰囲気、好きなの選んで！アイコンもテーマで変わるよ',iconNote:'ホーム画面に追加したアイコンは、iPhone の仕組みで勝手には変わんないの。テーマ選んでから一回消して、追加し直してね〜',transD:'ステージ移動の演出、選べるよ！',psD:'ステージ移動のとき、効果音とチャイム鳴らすよ〜',resetH:'え、記録リセットしちゃうの…？',resetP:'ポイントも課題もスタンプも、ぜんぶ消えちゃうよ？ 元に戻せないからね！',resetNo:'やっぱやめる',misHint:'ぜんぶ終わったらスタンプゲット！',misGot:'スタンプゲット済み〜！',pagerEnd:'おつかれ〜！',qStart:'「始める」押したら10問スタート！',recSub:(x,n,d,dn,t)=>`${x}pt！${n?`次の ${n} まであと ${d}pt〜`:'最速テンポ到達じゃん！'} 課題は ${dn}/${t} クリア`},
+ cool:{noStreak:'連続記録はまだないわ。今日から始めましょう',staffD:'ステージをクリアすると、音符が塗られるわ。11個そろえば、ドから上のファまでの旋律になる',staffLocked:'最初のステージをクリアすれば、ここで旋律が聴けるわ',voiceD:'話し方を選べるわ。解説の文章も切り替わる',designD:'画面の色と文字の雰囲気を選べるわ。アイコンもテーマに合わせて変わる',iconNote:'ホーム画面に追加済みのアイコンは、iPhone の仕様で自動では変わらないの。テーマを選んでから、一度削除して追加し直して',transD:'ステージ移動の演出を選べるわ',psD:'ステージ移動のときに、小さな効果音とチャイムを鳴らすわ',resetH:'記録をリセットするの？',resetP:'ポイント、課題、スタンプ、毎日の記録、復習ノートがすべて消えるわ。元には戻せない',resetNo:'やめる',misHint:'すべて終えたら、スタンプをあげる',misGot:'スタンプは押しておいたわ',pagerEnd:'おつかれさま',qStart:'「始める」を押せば、10問のラウンドが始まるわ',recSub:(x,n,d,dn,t)=>`${x}pt。${n?`次の ${n} まで ${d}pt`:'最速テンポに到達ね'}。課題 ${dn}/${t}。`}
+};
+Object.entries(VO_DESC2).forEach(([v,o])=>Object.assign(VO[v],o));
+Object.entries(VO_WHO).forEach(([v,x])=>VO[v].who=x);Object.entries(VO_CHAT).forEach(([v,x])=>VO[v].chat=x);
 const curVoice=()=>VO[S.voice]?S.voice:'cute';
 const STABLE=new Set(['greetGoal','greetStreak','greetBack','r10','r8','r5','r0']);
 let vNonce=0;
@@ -1321,12 +1353,13 @@ function V(k){let v=VO[curVoice()][k];if(v===undefined)v=VO.polite[k];
 const VSFX={
  cute:{N:['だよ！','なの！','なんだよね'],V:['よ！','の！','んだよね'],P:['よ！','んだよね'],NG:['よ！','の！'],VOL:['ね！','っ！'],REQ:'ね！'},
  tsun:{N:['だから','だし','なんだからね'],V:['から','し','んだからね'],P:['から','し'],NG:['から','し'],VOL:[''],REQ:'よね'},
- kouhai:{N:['っす','なんすよ','っす'],V:['っす','んすよ','っす'],P:['っす','んすよ'],NG:['っす','んすよ'],VOL:['っす'],REQ:'っす'},
+ kouhai:{ADD:['よ！','っ！','ね！','！']},
+ polite:{ADD:['ね','よ','']},
  downer:{N:['だよ','だね','なんだ'],V:['よ','んだ','んだよね'],P:['よ','んだよね'],NG:['よ','んだ'],VOL:['か','かな'],REQ:'ね'},
  strict:{N:['だよ','だからね','なの'],V:['の','からね','よ'],P:['の','よ'],NG:['の','からね'],VOL:['ね'],REQ:'ね'},
- friend:{N:['だよ','だ'],V:['よ',''],P:['よ',''],NG:['よ',''],VOL:['',''],REQ:'ね'},
- cool:{N:['だ'],V:[''],P:[''],NG:[''],VOL:[''],REQ:''},
- kansai:{N:['や','やで','なんや'],V:['で','んや','んやで'],P:['で','んや'],NG:['んや','で'],VOL:['な',''],REQ:'な'}
+ friend:{N:['なんだよね','だよ〜','なの！'],V:['んだよね','の！','んだって'],P:['んだよね','の！'],NG:['んだよね','の！'],VOL:['〜','ね！'],REQ:'ね〜'},
+ cool:{N:['よ','ね','なの'],V:['の','わ','のよ'],P:['の','わ'],NG:['の','わ'],VOL:[''],REQ:'ね'},
+ kansai:{N:['やで','やねん','やん'],V:['ねん','んやで','で'],P:['ねん','で'],NG:['ねん','で'],VOL:['な',''],REQ:'な'}
 };
 const ICHI_I=['でき','起き','生き','過ぎ','伸び','浴び','足り','降り','借り','用い','信じ','感じ','閉じ','似','見','着','居','落ち','満ち','延び','滅び','煮'];
 const KANJI=/[一-龠々0-9０-９A-Za-zァ-ヶー]/;
@@ -1350,9 +1383,10 @@ let vcN=0;
 const pickS=a=>a[(vcN++)%a.length];
 const ADJ_NOUN=['違い','扱い','間違い','使い','勢い','合い','狙い','色合い','せい','くらい','ぐらい','ため','はず','とおり','場合'];
 function vconv(text,voice){
-  if(voice==='polite'||!VSFX[voice]||!/(です|ます|ません|ました|ましょう|ください|でしょう|でした)/.test(text))return text;
+  if(!VSFX[voice]||!/(です|ます|ません|ました|ましょう|ください|でしょう|でした)/.test(text))return text;
   const X=VSFX[voice],END='(?=(?:（[^）]{0,40}）)?(?:[。！？!?）」\\s、]|$))';
   let t=text;
+  if(X.ADD){t=t.replace(new RegExp('(です|ます|ません|ました|ましょう|でした)(?![ぁ-ん])'+END,'g'),m=>m+pickS(X.ADD));return t.replace(/！。/g,'！')}
   t=t.replace(new RegExp('([ぁ-んァ-ヶー一-龠々0-9A-Za-z]{1,8}?)(ませんでした|ません|ましょう|ました|ます)(が|から|ので|し|けど|ね|よ)?'+END,'g'),(m,stem,form,con)=>{
     const [d,nai,ta,vol]=conj(stem);
     let base=form==='ます'?d:form==='ません'?nai:form==='ました'?ta:form==='ませんでした'?nai.replace(/ない$/,'なかった'):vol;
@@ -1606,7 +1640,7 @@ function renderMissions(){
   $$('.missions').forEach(box=>{
     box.onclick=e=>{const b=e.target.closest('[data-go]');if(!b)return;if(b.dataset.hard)$('#qLevel').value='2';startDrill(b.dataset.go)};
     const s=SEC[box.dataset.sec];const ms=MISSIONS.filter(m=>m.sec===s.id);const [a,b]=secProgress(s.id);const got=!!S.badges[s.id];
-    box.innerHTML=`<div class="mhead"><div class="t">このステージの課題　${a}/${b}<small>${got?V('misGot'):V('misHint')}</small></div>${stampHTML(s,'sm',!got)}</div>`+
+    box.innerHTML=`<div class="mhead"><div class="t">このステージの課題　${a}/${b}<small class="vo-raw">${got?V('misGot'):V('misHint')}</small></div>${stampHTML(s,'sm',!got)}</div>`+
       ms.map(m=>{const [x,y]=m.p(S.c);const d=!!S.done[m.id];const v=Math.min(x,y);
         return `<div class="mi${d?' done':''}"><span class="ck" aria-hidden="true"></span><div class="mt">${m.t}<span class="pt">${m.xp}pt</span>${!d&&m.go?`<small class="mlv">${m.hard?'レベル「むずかしい」で数えます':DRILLS[m.go]||m.go==='term'||m.go==='interval'||m.go==='chord'?'レベル「ふつう」以上で数えます':''}</small><button class="btn quiet sm mgo" data-go="${m.go}" data-hard="${m.hard?1:''}">挑戦する</button>`:''}${!d&&m.hint?`<small class="mlv">${m.hint}</small>`:''}</div><div class="mp">${d?'済':`${v}/${y}<span class="bar"><i style="width:${v/y*100}%"></i></span>`}</div></div>`}).join('');
   });
@@ -1622,7 +1656,7 @@ function renderHome(){
   $('#homeBody').innerHTML=`
   <div class="pw" data-pane="today">
   <div class="today">
-    <div class="greetline"><div class="m">${mascot(d.goalHit?'wow':done===0?'happy':'wink')}</div><p>${greet}</p></div>
+    <div class="greetline"><div class="m" data-chat title="タップすると話しかけてくれます">${mascot(d.goalHit?'wow':done===0?'happy':'wink')}</div><p>${greet}</p></div>
     <div class="rec${d.goalHit?' spin':''}">${recordSVG(pct)}</div>
     <div class="tinfo"><p class="tl">今日の練習</p><p class="tn">${d.pts}<small> / ${S.goal}pt</small></p>
       <div class="week">${week}</div>
@@ -1639,16 +1673,16 @@ function renderHome(){
   ${nextM?`<div class="card nextcard" style="--sa:${secAcc(SEC[nextM.sec])}"><div><p class="sub" style="margin:0">次の課題（${SEC[nextM.sec].n}）</p><p class="nm">${nextM.t}<span class="pt">${nextM.xp}pt</span></p></div><a class="btn primary" href="#${nextM.sec}">開く</a></div>`:''}
   </div>
   <div class="pw" data-pane="stages">
-  <div class="card"><h3>ステージの譜面</h3><p class="sub">${V('staffD')}</p>
+  <div class="card"><h3>ステージの譜面</h3><p class="sub"><span class="vo-raw">${V('staffD')}</span></p>
     <div class="staffbig">${staffSVG(nextM?nextM.sec:null,true,false)}</div>
-    ${cleared?'<button class="btn quiet" id="playStaff">▶ 書き込んだ旋律を聴く</button>':`<p class="sub">${V('staffLocked')}</p>`}</div>
+    ${cleared?'<button class="btn quiet" id="playStaff">▶ 書き込んだ旋律を聴く</button>':`<p class="sub"><span class="vo-raw">${V('staffLocked')}</span></p>`}</div>
   <h3 class="home-h">ステージ一覧</h3>
   <div class="slist">${SECS.map((s,i)=>`<a href="#${s.id}" style="--sa:${secAcc(s)};--sc:${secSoft(s)}"><span class="num">${i+1}</span><span class="nm"><b>${s.n}</b><small>${s.sub}</small></span><span class="heads">${MISSIONS.filter(m=>m.sec===s.id).map(m=>`<i class="${S.done[m.id]?'on':''}"></i>`).join('')}</span></a>`).join('')}</div>
   </div>
   <div class="pw" data-pane="record">
   <div class="card"><div class="tempo"><span class="word">${L.title}</span><span class="gloss">Lv.${L.l+1}　${L.gloss}</span></div>
     <span class="bar thick"><i style="width:${L.pct}%"></i></span>
-    <p class="sub">${V('recSub')(S.xp,L.need?LEVELS[L.l+1][1]:'',L.need,done,total)}</p></div>
+    <p class="sub"><span class="vo-raw">${V('recSub')(S.xp,L.need?LEVELS[L.l+1][1]:'',L.need,done,total)}</span></p></div>
   <div class="card"><h3>スタンプ帳</h3><div class="stampbook">${SECS.map(s=>`<div>${stampHTML(s,'',!S.badges[s.id])}${s.n}</div>`).join('')}</div></div>
   <div class="card"><h3>記録</h3><dl class="stats">
     ${row('練習した日数',S.days.length+'日')}${row('最長連続',(S.best||0)+'日')}${row('クイズの正解数',c.qok)}${row('正答率',(c.qtot?Math.round(c.qok/c.qtot*100):0)+'%')}
@@ -1656,10 +1690,10 @@ function renderHome(){
   </dl></div>
   </div>
   <div class="pw" data-pane="settings">
-  <div class="card"><b>話し方</b><p class="sub" style="margin:0 0 8px">${V('voiceD')}</p><div class="chips" id="voiceSel">${VOICES.map(([k,l])=>`<button class="chip${curVoice()===k?' sel':''}" data-v="${k}">${l}</button>`).join('')}</div><div class="greetline vprev"><div class="m">${mascot('happy')}</div><p>${V('sample')}</p></div></div>
-  <div class="card"><b>デザイン</b><p class="sub" style="margin:0">${V('designD')}</p><p class="sub" style="margin:4px 0 0;font-size:12px">${V('iconNote')}</p>${[...new Set(THEMES.map(t=>t.g))].map(g=>`<p class="tgen">${g}</p><div class="themes">${THEMES.filter(t=>t.g===g).map(t=>`<button class="th${curTheme().id===t.id?' sel':''}" data-th="${t.id}" data-theme="${t.id}"><span class="tic">${iconSVG(t,k=>`var(${k})`)}</span><span class="smp"><span>ドレミ</span><i></i><em></em></span><b>${t.n}</b><small>${t.d}</small></button>`).join('')}</div>`).join('')}</div>
-  <div class="card"><b>画面の切り替え</b><p class="sub" style="margin:0 0 8px">${V('transD')}${RM()?'（この端末は「視差効果を減らす」がオンです）':''}</p><div class="chips" id="transSel">${[['wipe','五線ワイプ'],['fade','ふんわり'],['turn','ページめくり'],['none','なし']].map(([k,l])=>`<button class="chip${transMode()===k?' sel':''}" data-t="${k}">${l}</button>`).join('')}</div></div>
-  <div class="card setrow"><div><b>切り替えの音</b><p class="sub" style="margin:0">${V('psD')}</p></div><button class="switch${S.pageSound===false?'':' on'}" id="psToggle" role="switch" aria-checked="${S.pageSound!==false}" aria-label="切り替えの音"><i></i></button></div>
+  <div class="card"><b>話し方</b><p class="sub" style="margin:0 0 8px"><span class="vo-raw">${V('voiceD')}</span></p><div class="chips" id="voiceSel">${VOICES.map(([k,l])=>`<button class="chip${curVoice()===k?' sel':''}" data-v="${k}">${l}</button>`).join('')}</div><div class="greetline vprev"><div class="m" data-chat>${mascot('happy')}</div><p>${V('sample')}</p></div><p class="sub vwho"><span class="vo-raw">${V('who')}</span></p></div>
+  <div class="card"><b>デザイン</b><p class="sub" style="margin:0"><span class="vo-raw">${V('designD')}</span></p><p class="sub" style="margin:4px 0 0;font-size:12px"><span class="vo-raw">${V('iconNote')}</span></p>${[...new Set(THEMES.map(t=>t.g))].map(g=>`<p class="tgen">${g}</p><div class="themes">${THEMES.filter(t=>t.g===g).map(t=>`<button class="th${curTheme().id===t.id?' sel':''}" data-th="${t.id}" data-theme="${t.id}"><span class="tic">${iconSVG(t,k=>`var(${k})`)}</span><span class="smp"><span>ドレミ</span><i></i><em></em></span><b>${t.n}</b><small>${t.d}</small></button>`).join('')}</div>`).join('')}</div>
+  <div class="card"><b>画面の切り替え</b><p class="sub" style="margin:0 0 8px"><span class="vo-raw">${V('transD')}</span>${RM()?'（この端末は「視差効果を減らす」がオンです）':''}</p><div class="chips" id="transSel">${[['wipe','五線ワイプ'],['fade','ふんわり'],['turn','ページめくり'],['none','なし']].map(([k,l])=>`<button class="chip${transMode()===k?' sel':''}" data-t="${k}">${l}</button>`).join('')}</div></div>
+  <div class="card setrow"><div><b>切り替えの音</b><p class="sub" style="margin:0"><span class="vo-raw">${V('psD')}</span></p></div><button class="switch${S.pageSound===false?'':' on'}" id="psToggle" role="switch" aria-checked="${S.pageSound!==false}" aria-label="切り替えの音"><i></i></button></div>
   <p style="text-align:center;margin-top:24px"><button class="btn quiet" id="resetBtn">記録をリセット</button></p>
   </div>`;
   $$('.goalsel button').forEach(b=>b.onclick=()=>{S.goal=+b.dataset.g;const t=todayRec();if(!t.goalHit&&t.pts>=S.goal){t.goalHit=1;sfx('badge')}save();renderHome()});
@@ -1671,6 +1705,7 @@ function renderHome(){
   if($('#qkReview'))$('#qkReview').onclick=()=>startQuiz('review');
   if(cleared)$('#playStaff').onclick=()=>{const mids=[60,62,64,65,67,69,71,72,74,76];const c2=ac();const t=c2.currentTime+0.05;SECS.forEach((s,i)=>{if(S.badges[s.id])tone(mids[i],t+i*0.34,0.3,1,'lead')})};
   setupPanes($('#homeBody'));
+  $$('#homeBody [data-chat]').forEach(m=>m.onclick=()=>{const p=m.parentElement.querySelector('p');let t;do{t=V('chat')}while(t===p.textContent&&VO[curVoice()].chat.length>1);p.textContent=t;m.classList.remove('boing');void m.offsetWidth;m.classList.add('boing')});
   $('#resetBtn').onclick=()=>queueModal({html:`<div class="m">${mascot('oops')}</div><h4>${V('resetH')}</h4><p>${V('resetP')}</p><div class="mbtns"><button class="btn quiet" data-close>${V('resetNo')}</button><button class="btn primary" id="doReset">リセットする</button></div>`,bind:el=>{el.querySelector('#doReset').onclick=()=>{S=fresh();save();nextModal();renderProgress()}}});
 }
 function renderProgress(){renderNav();renderMissions();refreshPaneCounts();renderStaffs();refreshChips();if(curRoute()==='home')renderHome();if(curRoute()==='diatonic')dRender(true);if(curRoute()==='modulation')tRenderApps();if(curRoute()==='quiz')renderQModes()}
@@ -2451,7 +2486,7 @@ function renderPagers(){
   $$('.pager').forEach(el=>{
     const i=SECS.findIndex(s=>s.id===el.dataset.sec),pv=SECS[i-1],nx=SECS[i+1];
     el.innerHTML=(pv?`<a class="pg prev" href="#${pv.id}" style="--sa:${secAcc(pv)}"><small>前のステージ</small>${i}. ${pv.n}</a>`:`<a class="pg prev" href="#home"><small>戻る</small>ホーム</a>`)+
-      (nx?`<a class="pg nextp" href="#${nx.id}" style="--sa:${secAcc(nx)}"><small>次のステージ</small>${i+2}. ${nx.n}</a>`:`<a class="pg nextp" href="#home"><small>${V('pagerEnd')}</small>ホームへ</a>`);
+      (nx?`<a class="pg nextp" href="#${nx.id}" style="--sa:${secAcc(nx)}"><small>次のステージ</small>${i+2}. ${nx.n}</a>`:`<a class="pg nextp" href="#home"><small><span class="vo-raw">${V('pagerEnd')}</span></small>ホームへ</a>`);
   });
 }
 
