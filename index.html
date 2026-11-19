@@ -551,6 +551,11 @@ html .th.sel{outline-color:var(--rose)}
 .tipgrp details[open] summary::after{content:"－"}
 .tipgrp .hasdemo{font-size:11px;color:var(--sa,var(--rose));background:var(--sc,var(--rose-soft));border-radius:999px;padding:0 8px}
 .tipgrp li b{font-size:14px}
+.gbtn{text-align:left;color:var(--ink);background:var(--paper);border:1.5px solid transparent;border-radius:14px;padding:8px 10px;cursor:pointer;line-height:1.35}
+.gbtn b{display:block;font-size:12.5px}
+.gbtn small{font-size:11px;color:var(--mute)}
+.gbtn:hover{border-color:var(--rule);background:var(--sheet)}
+.gbtn.sel{background:var(--sc);border-color:var(--sa)}
 @media (prefers-reduced-motion:reduce){*:not(.turnpage):not(.shade):not(.turnwrap):not(.wipe):not(.wipe *):not(section){animation:none !important;transition:none !important}.turnwrap::before{animation:none !important}}
 </style>
 </head>
@@ -571,6 +576,34 @@ html .th.sel{outline-color:var(--rose)}
     <div class="ilist" id="instList"></div>
   </div>
   <div class="card" id="instDetail" data-pane="play"></div>
+  <div class="card" data-pane="genre">
+    <h3>ジャンル別の特徴</h3>
+    <p class="sub" style="margin-top:0">ジャンルを選ぶと、リズム・コード・よく使う楽器と、その雰囲気のデモが聴けます。</p>
+    <div class="ilist" id="genreList"></div>
+  </div>
+  <div class="card" data-pane="genre" id="genreDetail"></div>
+  <div class="card" data-pane="learn">
+    <h3>楽器の分類</h3>
+    <p class="sub" style="margin-top:0">楽器は、何がふるえて音が出るかで仲間分けできます。</p>
+    <dl class="ifacts">
+      <div><dt>弦楽器</dt><dd>弦のふるえで鳴る。<b>こする</b>（バイオリン・チェロ）、<b>はじく</b>（ギター・ベース・琴・三味線・チェンバロ）、<b>たたく</b>（ピアノ）に分かれます。</dd></div>
+      <div><dt>木管楽器</dt><dd>息で空気をふるわせる。フルート・尺八（歌口に息を当てる）、クラリネット・サックス（リードといううすい板をふるわせる）。サックスは金属製でも木管の仲間です。</dd></div>
+      <div><dt>金管楽器</dt><dd>くちびるのふるえで鳴る。トランペット・トロンボーン・ホルン・チューバ。</dd></div>
+      <div><dt>打楽器</dt><dd>たたいて鳴らす。皮を張った<b>膜鳴楽器</b>（ドラム・和太鼓）と、本体そのものが鳴る<b>体鳴楽器</b>（シンバル・マリンバ・グロッケン・ビブラフォン）。</dd></div>
+      <div><dt>鍵盤楽器</dt><dd>鍵盤で操作する楽器のまとめ方。ピアノは「打弦楽器」、オルガンは「管楽器」の仲間でもあります。</dd></div>
+      <div><dt>電子楽器</dt><dd>電気で音を作る楽器。シンセサイザー・リズムマシン・エレピ・電子オルガンなど。</dd></div>
+      <div><dt>声</dt><dd>ボーカル、合唱、そして歌声合成ソフト。いちばん表情豊かな「楽器」です。</dd></div>
+    </dl>
+  </div>
+  <div class="card" data-pane="learn">
+    <h3>音色を決める3つの要素</h3>
+    <dl class="ifacts">
+      <div><dt>倍音</dt><dd>1つの音の中に含まれる、高い成分の量と並び方。倍音が多いと明るく鋭い音（のこぎり波・トランペット）、少ないと丸く柔らかい音（サイン波・フルート）になります。</dd></div>
+      <div><dt>エンベロープ</dt><dd>音の立ち上がりから消えるまでの形。シンセでは <b>A</b>（アタック：鳴りはじめの速さ）、<b>D</b>（ディケイ：落ち着くまで）、<b>S</b>（サステイン：伸ばしている間の大きさ）、<b>R</b>（リリース：離してから消えるまで）の4つで表します。ピアノは A が速く S がない、パッドは A も R も長い、という違いです。</dd></div>
+      <div><dt>音域</dt><dd>同じ楽器でも、低い音は太く暗く、高い音は細く明るく聴こえます。楽器ごとの「おいしい音域」を使うのがコツです。</dd></div>
+    </dl>
+    <div class="tip"><b>聴き比べのヒント：</b>「体験」タブで、ピアノ（すぐ消える）とシンセパッド（ゆっくり立ち上がる）を同じ鍵盤で弾くと、エンベロープの違いがよくわかります。</div>
+  </div>
   <div class="card" data-pane="ens">
     <h3>組み合わせて聴く</h3>
     <p class="sub" style="margin-top:0">C → Am → F → G の4小節を、いろいろな編成で鳴らします。</p>
@@ -844,7 +877,7 @@ html .th.sel{outline-color:var(--rose)}
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 11</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 12</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -2022,6 +2055,11 @@ function ksBuf(m,fb,br){const key=m+'_'+fb+'_'+br;if(ksCache[key])return ksCache
 function dist(){if(distCurve)return distCurve;const n=1024,k=60;distCurve=new Float32Array(n);for(let i=0;i<n;i++){const x=i*2/n-1;distCurve[i]=(1+k)*x/(1+k*Math.abs(x))}return distCurve}
 function drum2(type,t){
   const c=ac();
+  if(type==='rd'){const g=sG(0),h=sF('highpass',5000);[3150,4790,6200].forEach(f=>{const o=sO('square',f);o.connect(h);o.start(t);o.stop(t+.75)});g.gain.setValueAtTime(.05,t);g.gain.exponentialRampToValueAtTime(.001,t+.7);h.connect(g);g.connect(master);return}
+  if(type==='cb'){const b=sF('bandpass',800,3),g=sG(0);[540,800].forEach(f=>{const o=sO('square',f);o.connect(b);o.start(t);o.stop(t+.35)});g.gain.setValueAtTime(.3,t);g.gain.exponentialRampToValueAtTime(.001,t+.3);b.connect(g);g.connect(master);return}
+  if(type==='8k'){const o=sO('sine',120),g=sG(0),pg=sG(.7),ws=c.createWaveShaper();ws.curve=dist();o.frequency.setValueAtTime(120,t);o.frequency.exponentialRampToValueAtTime(48,t+.09);g.gain.setValueAtTime(.9,t);g.gain.exponentialRampToValueAtTime(.001,t+1.1);o.connect(pg);pg.connect(ws);ws.connect(g);g.connect(master);o.start(t);o.stop(t+1.2);return}
+  if(type==='8s'){const s=sN(),b=sF('bandpass',2600,.8),g=sG(0);g.gain.setValueAtTime(.55,t);g.gain.exponentialRampToValueAtTime(.001,t+.18);s.connect(b);b.connect(g);g.connect(master);s.start(t);s.stop(t+.2);[185,330].forEach(f=>{const o=sO('triangle',f),og=sG(0);og.gain.setValueAtTime(.3,t);og.gain.exponentialRampToValueAtTime(.001,t+.1);o.connect(og);og.connect(master);o.start(t);o.stop(t+.12)});return}
+  if(type==='8h'){const s=sN(),h=sF('highpass',9000),g=sG(0);g.gain.setValueAtTime(.28,t);g.gain.exponentialRampToValueAtTime(.001,t+.035);s.connect(h);h.connect(g);g.connect(master);s.start(t);s.stop(t+.05);return}
   if(type==='th'||type==='tl'){const hi=type==='th',o=sO('sine',hi?240:150),g=sG(0);o.frequency.setValueAtTime(hi?240:150,t);o.frequency.exponentialRampToValueAtTime(hi?120:72,t+.3);g.gain.setValueAtTime(.85,t);g.gain.exponentialRampToValueAtTime(.001,t+.45);o.connect(g);g.connect(master);o.start(t);o.stop(t+.5);return}
   if(type==='rim'){const o=sO('square',1750),b=sF('bandpass',1750,4),g=sG(0);g.gain.setValueAtTime(.4,t);g.gain.exponentialRampToValueAtTime(.001,t+.04);o.connect(b);b.connect(g);g.connect(master);o.start(t);o.stop(t+.06);return}
   const s=sN(),cr=type==='cr',f=sF('highpass',cr?4200:7000),g=sG(0),out=cr?vout(.25):master,L=cr?1.8:.36;
@@ -2139,6 +2177,7 @@ function drumBar(t,beat,{fill=false,crash=false,half=false}={}){
 function instPhrase(kind){
   instStop();const I=INST[curInst],c=ac(),t0=c.currentTime+.06,bpm=104,beat=60/bpm,base=I.base+instOct*12;
   if(I.kind==='drum'){
+    if(curInst==='d808'){drumPat('trap',t0,beat,{crash:true});drumPat('trap',t0+4*beat,beat);if(kind==='fill')[0,.25,.5,.75,1,1.25,1.5,1.75].forEach((x,i)=>hit('8h',t0+7*beat+x*beat/2));return}
     if(kind==='beat'){drumBar(t0,beat,{crash:true});drumBar(t0+4*beat,beat)}
     else{drumBar(t0,beat);drumBar(t0+4*beat,beat,{fill:true});hit('cr',t0+8*beat);hit(0,t0+8*beat)}
     return;
@@ -2165,7 +2204,7 @@ function renderInst(){
    <dl class="ifacts"><div><dt>おいしい音域</dt><dd>${I.range}</dd></div><div><dt>曲での役割</dt><dd>${I.role}</dd></div><div><dt>よく合うジャンル</dt><dd>${I.genre}</dd></div></dl>
    <ul class="itips">${I.tips.map(x=>`<li>${x}</li>`).join('')}</ul>
    <div class="ctrl">${btns.map(([k,l])=>`<button class="btn primary" data-ph="${k}">${l}</button>`).join('')}<button class="btn quiet" id="instStopBtn">■ 止める</button></div>
-   ${I.kind==='drum'?`<div class="pads">${PADS.map(([l,k])=>`<button class="pad" data-d="${k}">${l}</button>`).join('')}</div>`:`<div class="ctrl"><label>オクターブ</label><button class="btn quiet sm" id="octDn">−</button><span class="mono" id="octV">${instOct>0?'+':''}${instOct}</span><button class="btn quiet sm" id="octUp">＋</button><span class="sub">鍵盤は押している間だけ鳴ります</span></div><div class="kbwrap"><div id="instKb"></div></div>`}`;
+   ${I.kind==='drum'?`<div class="pads">${(I.pads||PADS).map(([l,k])=>`<button class="pad" data-d="${k}">${l}</button>`).join('')}</div>`:`<div class="ctrl"><label>オクターブ</label><button class="btn quiet sm" id="octDn">−</button><span class="mono" id="octV">${instOct>0?'+':''}${instOct}</span><button class="btn quiet sm" id="octUp">＋</button><span class="sub">鍵盤は押している間だけ鳴ります</span></div><div class="kbwrap"><div id="instKb"></div></div>`}`;
   box.querySelectorAll('[data-ph]').forEach(b=>b.onclick=()=>instPhrase(b.dataset.ph));
   $('#instStopBtn').onclick=instStop;
   if(I.kind==='drum'){box.querySelectorAll('.pad').forEach(b=>b.addEventListener('pointerdown',e=>{e.preventDefault();const k=b.dataset.d;hit(isNaN(+k)?k:+k,ac().currentTime+.005);b.classList.add('on');setTimeout(()=>b.classList.remove('on'),140)}))}
@@ -2215,6 +2254,181 @@ function sInitSounds(){
   $('#ensStop').onclick=instStop;
   $('#sounds').addEventListener('pointerdown',()=>{if(!vizRaf)vizLoop()});
 }
+/* ===== 楽器の追加 ===== */
+function ksPlay(m,t,v,fb,br,{lp=5000,hp=0,wet=.18,peak=.5,buzz=0,rate=1}={}){const src=ac().createBufferSource();src.buffer=ksBuf(m,fb,br);src.playbackRate.value=rate;let node=src;if(hp){const h=sF('highpass',hp);node.connect(h);node=h}if(buzz){const pre=sG(buzz),ws=ac().createWaveShaper();ws.curve=dist();node.connect(pre);pre.connect(ws);node=ws}const l=sF('lowpass',lp),amp=sG(0);node.connect(l);l.connect(amp);amp.connect(vout(wet));return sVoice([src],amp,t,{a:.002,peak:peak*v},.12)}
+Object.assign(INST,{
+ harpsi:{n:'チェンバロ',cat:'keys',kind:'poly',base:48,desc:'弦を爪ではじく、ピアノ以前の鍵盤楽器。きらびやかで、すぐに消える音です。',range:'F1〜F6 くらい',role:'バロック風の伴奏、細かいアルペジオ',genre:'バロック、ゲーム音楽、ファンタジー',tips:['音の強弱がつけにくい楽器なので、音の数や重ね方で盛り上がりを作る','速い分散和音（アルペジオ）でクラシカルな雰囲気が出る'],
+  play(m,t,v=1){const f=freq(m),out=vout(.22),amp=sG(0),hp=sF('highpass',180),lp=sF('lowpass',7000);lp.frequency.setTargetAtTime(2500,t,.3);const os=[-4,4].map(d=>{const o=sO('sawtooth',f,d);o.connect(hp);return o});const o3=sO('square',f*2),g3=sG(.15);o3.connect(g3);g3.connect(hp);hp.connect(lp);lp.connect(amp);amp.connect(out);return sVoice([...os,o3],amp,t,{a:.002,peak:.12*v,dec:1.3},.15)}},
+ musicbox:{n:'オルゴール',cat:'keys',kind:'poly',base:72,desc:'小さな金属の歯を弾いて鳴らす、懐かしく可憐な音です。',range:'C5〜C8',role:'イントロやエンディングの飾り、子守唄',genre:'映画音楽、ゲーム音楽、ノスタルジー系',tips:['高い音域で、音数を少なく','ゆっくりのテンポで少し揺らすと、ぜんまいが回っている感じが出る'],
+  play(m,t,v=1){const f=freq(m),out=vout(.35),amp=sG(0),c=sO('sine',f),mo=sO('sine',f*5),mg=sG(0);mo.connect(mg);mg.connect(c.frequency);mg.gain.setValueAtTime(f*.8,t);mg.gain.setTargetAtTime(0,t,.08);const p=sO('sine',f*4.2),pg=sG(.08);p.connect(pg);pg.connect(amp);c.connect(amp);amp.connect(out);return sVoice([c,mo,p],amp,t,{a:.001,peak:.22*v,dec:1.6},.3)}},
+ vibes:{n:'ビブラフォン',cat:'keys',kind:'poly',base:60,desc:'金属の板を叩く鍵盤打楽器。モーターで音が揺れる、やわらかい響きです。',range:'F3〜F6',role:'ジャズの和音やメロディ、おしゃれな飾り',genre:'ジャズ、ラウンジ、シティポップ',tips:['揺れ（トレモロ）があるので、長い音でも退屈しない','4和音を柔らかく鳴らすと、一気にジャジーになる'],
+  play(m,t,v=1){const f=freq(m),out=vout(.3),amp=sG(0),tr=sG(1),l=sO('sine',5.5),lg=sG(.3);l.connect(lg);lg.connect(tr.gain);const o1=sO('sine',f),o2=sO('sine',f*4),g2=sG(0);g2.gain.setValueAtTime(.2,t);g2.gain.setTargetAtTime(0,t,.05);o1.connect(amp);o2.connect(g2);g2.connect(amp);amp.connect(tr);tr.connect(out);return sVoice([o1,o2,l],amp,t,{a:.003,peak:.35*v,dec:3},.4)}},
+ clav:{n:'クラビネット',cat:'keys',kind:'poly',base:48,desc:'弦をゴムで叩く電気鍵盤。ペチペチした歯切れのいい音で、ファンクの定番です。',range:'F1〜E6',role:'16分音符のリズム伴奏',genre:'ファンク、R&B、ソウル',tips:['短く切って弾くほど、ファンキーになる','ギターのカッティングと同じように、休符を多めに'],
+  play(m,t,v=1){const f=freq(m),out=vout(.1),amp=sG(0),o=sO('square',f),o2=sO('sawtooth',f*2),g2=sG(.3),bp=sF('bandpass',f*4,2.5);bp.frequency.setTargetAtTime(f*2,t,.08);o.connect(bp);o2.connect(g2);g2.connect(bp);bp.connect(amp);amp.connect(out);return sVoice([o,o2],amp,t,{a:.002,peak:.35*v,s:.4,d:.25},.05)}},
+ cleangt:{n:'クリーンギター',cat:'guitar',kind:'guitar',base:48,desc:'歪ませないエレキギター。透明感があり、カッティングやアルペジオに向きます。',range:'E2〜E6',role:'カッティング、アルペジオ、オブリガート（合いの手）',genre:'シティポップ、ファンク、ボサノバ、J-POP',tips:['短く切るカッティングで、リズムを刻む','和音の高い3〜4音だけを使うと、ほかの楽器とぶつかりにくい'],
+  play(m,t,v=1){const a=ksPlay(m,t,v*.8,.996,.8,{lp:6000,wet:.22}),b=ksPlay(m,t+.012,v*.4,.996,.8,{lp:6000,wet:.22,rate:1.004});return {stop(x){a.stop(x);b.stop(x)}}}},
+ ukulele:{n:'ウクレレ',cat:'guitar',kind:'guitar',base:60,desc:'4本弦の小さなギター。明るく軽い音で、のんびりした雰囲気が出ます。',range:'C4〜A5 くらい',role:'明るいストローク伴奏',genre:'ハワイアン、ほのぼの系、子ども向けの曲',tips:['高い音域だけなので、低音はベースにまかせる','軽いストロークで「チャカチャカ」と刻む'],
+  play(m,t,v=1){return ksPlay(m,t,v,.992,.7,{lp:5500,wet:.2,peak:.45})}},
+ woodbass:{n:'ウッドベース',cat:'guitar',kind:'bass',base:36,desc:'コントラバスを指ではじく、ジャズの低音。ふくよかで温かい音です。',range:'E1〜G3',role:'ウォーキングベース、ゆったりした低音',genre:'ジャズ、ボサノバ、カフェ系',tips:['4分音符で歩くように動かすと、ジャズらしくなる','音の終わりを少し短めにすると、軽やかに聴こえる'],
+  play(m,t,v=1){const f=freq(m),out=vout(.08),amp=sG(0),o1=sO('sine',f),o2=sO('triangle',f*2),g2=sG(.25),lp=sF('lowpass',900);lp.frequency.setValueAtTime(1600,t);lp.frequency.setTargetAtTime(500,t,.06);o1.connect(lp);o2.connect(g2);g2.connect(lp);lp.connect(amp);amp.connect(out);return sVoice([o1,o2],amp,t,{a:.006,peak:.55*v,s:.2,d:1},.1)}},
+ bass808:{n:'808ベース',cat:'synth',kind:'bass',base:36,desc:'リズムマシンの低いキックを長く伸ばした、ヒップホップの重低音です。',range:'C1〜C3',role:'キック兼ベース',genre:'トラップ、ヒップホップ、ドリル',tips:['キックと同じタイミングで鳴らし、音の高さでベースラインを作る','少し歪ませると、スマホのスピーカーでも聴こえやすくなる'],
+  play(m,t,v=1){const f=freq(m),out=vout(0),amp=sG(0),o=sO('sine',f*2.2),pre=sG(1.4),ws=ac().createWaveShaper();ws.curve=dist();o.frequency.setValueAtTime(f*2.2,t);o.frequency.exponentialRampToValueAtTime(f,t+.06);o.connect(pre);pre.connect(ws);ws.connect(amp);amp.connect(out);return sVoice([o],amp,t,{a:.003,peak:.32*v,s:.7,d:1.4},.15)}},
+ acid:{n:'アシッドベース',cat:'synth',kind:'bass',base:36,desc:'フィルターのクセが強い「ビュワッ」とした音。1980年代のベースマシンが元祖です。',range:'C1〜C4',role:'うねるベースライン',genre:'アシッドハウス、テクノ',tips:['同じフレーズでもフィルターの開き具合で表情が変わる','16分音符で動かし、オクターブ上の音を混ぜる'],
+  play(m,t,v=1){const f=freq(m),out=vout(.05),amp=sG(0),o=sO('sawtooth',f),lp=sF('lowpass',3200,18);lp.frequency.setValueAtTime(3200,t);lp.frequency.setTargetAtTime(220,t,.1);o.connect(lp);lp.connect(amp);amp.connect(out);return sVoice([o],amp,t,{a:.003,peak:.14*v,s:.8,d:.2},.06)}},
+ wobble:{n:'ワブルベース',cat:'synth',kind:'bass',base:36,desc:'フィルターを周期的に開け閉めする「ワウワウ」したベースです。',range:'C1〜C3',role:'ドロップ（サビ）の主役',genre:'ダブステップ、ベースミュージック',tips:['揺れの速さを8分・16分・3連符と切り替えると、リズムが生まれる','鳴らす音は少なくして、揺れで聴かせる'],
+  play(m,t,v=1){const f=freq(m),out=vout(0),amp=sG(0),o1=sO('sawtooth',f),o2=sO('sawtooth',f*1.006),lp=sF('lowpass',800,8),l=sO('sine',3.5),lg=sG(700);l.connect(lg);lg.connect(lp.frequency);o1.connect(lp);o2.connect(lp);lp.connect(amp);amp.connect(out);return sVoice([o1,o2,l],amp,t,{a:.01,peak:.16*v},.1)}},
+ violin:{n:'バイオリン',cat:'orch',kind:'mono',base:60,desc:'弦楽器でいちばん高い音域を受け持つ。歌うようなメロディが得意です。',range:'G3〜E7',role:'主旋律、対旋律、盛り上げの高音',genre:'クラシック、映画音楽、バラード、J-POP',tips:['ビブラートを遅れてかけると、人が弾いているように聴こえる','サビでメロディを1オクターブ上でなぞると華やか'],
+  play(m,t,v=1){const f=freq(m),out=vout(.35),amp=sG(0),o=sO('sawtooth',f),bp=sF('peaking',2600,1.2),lp=sF('lowpass',4200);bp.gain.value=6;o.connect(bp);bp.connect(lp);lp.connect(amp);amp.connect(out);const l=vib(o,f,t,5.8,.006,.2);return sVoice([o,l],amp,t,{a:.09,peak:.12*v,s:.9,d:.3},.2)}},
+ cello:{n:'チェロ',cat:'orch',kind:'mono',base:36,desc:'弦楽器の低音を受け持つ。深く温かい、人の声に近い音です。',range:'C2〜A5',role:'低音、内声、哀愁のあるメロディ',genre:'クラシック、映画音楽、バラード',tips:['低音を支えながら、ときどきメロディを歌わせる','ピアノの左手と同じ音域なので、重ねるならどちらかを薄く'],
+  play(m,t,v=1){const f=freq(m),out=vout(.3),amp=sG(0),o=sO('sawtooth',f),lp=sF('lowpass',1700);o.connect(lp);lp.connect(amp);amp.connect(out);const l=vib(o,f,t,5,.005,.25);return sVoice([o,l],amp,t,{a:.12,peak:.18*v,s:.9,d:.3},.25)}},
+ sax:{n:'サックス',cat:'orch',kind:'mono',base:48,desc:'金属製だけど木管楽器の仲間。息づかいのある、色っぽい音です。',range:'D♭3〜A♭5（テナー）',role:'ソロ、メロディ、ブラスセクション',genre:'ジャズ、ファンク、シティポップ',tips:['音の出だしを少しだけ下からずり上げると、サックスらしくなる','フレーズの終わりにビブラートをかける'],
+  play(m,t,v=1){const f=freq(m),out=vout(.28),amp=sG(0),o1=sO('sawtooth',f),o2=sO('square',f),g2=sG(.4),bp=sF('bandpass',1300,.7),lp=sF('lowpass',3200);o1.frequency.setValueAtTime(f*.96,t);o1.frequency.linearRampToValueAtTime(f,t+.08);o2.frequency.setValueAtTime(f*.96,t);o2.frequency.linearRampToValueAtTime(f,t+.08);o1.connect(bp);o2.connect(g2);g2.connect(bp);bp.connect(lp);lp.connect(amp);amp.connect(out);const l=vib(o1,f,t,5.2,.007,.35);return sVoice([o1,o2,l],amp,t,{a:.04,peak:.42*v,s:.85,d:.3},.12)}},
+ clarinet:{n:'クラリネット',cat:'orch',kind:'mono',base:48,desc:'丸く柔らかい木管楽器。低い音は深く、高い音は明るく響きます。',range:'E3〜C7',role:'メロディ、やさしい対旋律',genre:'クラシック、ジャズ（スウィング）、映画音楽',tips:['フルートより暗め、オーボエより柔らかい、と覚えると使い分けやすい','低音域で静かに伸ばすと、不思議な雰囲気になる'],
+  play(m,t,v=1){const f=freq(m),out=vout(.28),amp=sG(0),o=sO('square',f),lp=sF('lowpass',Math.min(3000,f*4));o.connect(lp);lp.connect(amp);amp.connect(out);const l=vib(o,f,t,5,.003,.4);return sVoice([o,l],amp,t,{a:.05,peak:.12*v,s:.9,d:.3},.12)}},
+ trumpet:{n:'トランペット',cat:'orch',kind:'mono',base:60,desc:'金管楽器でいちばん高く、華やかで輝かしい音です。',range:'F♯3〜C6',role:'ファンファーレ、キメ、ソロ',genre:'ジャズ、スカ、ラテン、オーケストラ',tips:['短い音で鋭く吹くと、曲が引き締まる','2本以上で3度ハモらせると、ブラスセクションらしくなる'],
+  play(m,t,v=1){const f=freq(m),out=vout(.24),amp=sG(0),o=sO('sawtooth',f),lp=sF('lowpass',f*2,1.2);lp.frequency.setValueAtTime(f*2,t);lp.frequency.linearRampToValueAtTime(Math.min(9000,f*9),t+.05);lp.frequency.setTargetAtTime(Math.min(7000,f*5),t+.05,.2);o.connect(lp);lp.connect(amp);amp.connect(out);const l=vib(o,f,t,5.5,.004,.35);return sVoice([o,l],amp,t,{a:.03,peak:.16*v,s:.85,d:.3},.1)}},
+ koto:{n:'琴',cat:'wa',kind:'poly',base:60,desc:'13本の弦を爪ではじく日本の弦楽器。凛とした、余韻のある音です。',range:'D3〜D6 くらい（調弦による）',role:'和のメロディ、華やかなアルペジオ',genre:'和風、和ロック、時代劇・ゲーム音楽',tips:['「ミ・ファ・ラ・シ・ド」の都節音階を使うと、すぐに和の雰囲気になる','弾いた後に音を少し上げ下げすると（押し手）、琴らしくなる'],
+  play(m,t,v=1){return ksPlay(m,t,v,.995,.95,{lp:7000,hp:120,wet:.3,peak:.5})}},
+ shamisen:{n:'三味線',cat:'wa',kind:'mono',base:60,desc:'3本の弦をバチで弾く。「ベン」と鋭く、ジリジリした独特の響き（さわり）があります。',range:'B2〜B5 くらい',role:'力強いリフ、速いフレーズ',genre:'和風、民謡、和ロック',tips:['短く鋭いフレーズを繰り返すと、和ロックの勢いが出る','同じ音を連打して、リズムで聴かせる'],
+  play(m,t,v=1){return ksPlay(m,t,v,.985,1,{lp:6500,hp:300,wet:.15,peak:.35,buzz:1.6})}},
+ shakuhachi:{n:'尺八',cat:'wa',kind:'mono',base:60,desc:'竹で作られた縦笛。息の音が多く混ざった、素朴で深い音です。',range:'D4〜D6 くらい',role:'和のメロディ、静かな場面',genre:'和風、時代劇、瞑想・ヒーリング',tips:['音の出だしを下からゆっくり持ち上げると（メリ・カリ）、尺八らしくなる','息の音（ノイズ）を残したまま、長く伸ばす'],
+  play(m,t,v=1){const f=freq(m),out=vout(.4),amp=sG(0),o=sO('sine',f),nz=sN(),bp=sF('bandpass',f*1.3,1),ng=sG(.18);o.frequency.setValueAtTime(f*.95,t);o.frequency.setTargetAtTime(f,t,.12);nz.connect(bp);bp.connect(ng);ng.connect(amp);o.connect(amp);amp.connect(out);const l=vib(o,f,t,4.5,.008,.5);return sVoice([o,nz,l],amp,t,{a:.15,peak:.3*v,s:.9,d:.4},.2)}},
+ d808:{n:'ドラム（808）',cat:'drum',kind:'drum',base:0,desc:'1980年代のリズムマシンの音。電子的で、ヒップホップやダンス音楽の土台です。',range:'—',role:'電子的なビート',genre:'ヒップホップ、トラップ、ダンスミュージック',tips:['ハイハットの細かい連打（ロール）を、要所に入れる','キックは長く伸びるので、ベースと音の高さをそろえる'],
+  play(){return {stop(){}}},pads:[['808キック','8k'],['スネア','8s'],['ハット','8h'],['クラップ',3],['カウベル','cb'],['オープンハット','oh'],['ロータム','tl'],['リム','rim'],['クラッシュ','cr']]}
+});
+INST.drums.pads=PADS;
+ICATS.splice(5,0,['wa','和楽器']);
+/* ===== ジャンル ===== */
+const DV={k:0,s:1,h:2,c:3,o:'oh',r:'rd',rim:'rim',t:'tl',th:'th',k8:'8k',s8:'8s',h8:'8h',cb:'cb'};
+const DPAT={
+ pop:{k:'x.......x.x.....',s:'....x.......x...',h:'x.x.x.x.x.x.x.x.'},
+ rock:{k:'x.....x.x.......',s:'....x.......x...',h:'x.x.x.x.x.x.x.x.'},
+ voca:{k:'x.x...x.x.x...x.',s:'....x.......x...',h:'x.x.x.x.x.x.x.x.'},
+ four:{k:'x...x...x...x...',c:'....x.......x...',o:'..x...x...x...x.',h:'x.x.x.x.x.x.x.x.'},
+ dnb:{k:'x.........x.....',s:'....x.......x...',h:'x.x.x.x.x.x.x.x.'},
+ hiphop:{k:'x......x..x.....',s:'....x.......x...',h:'x.x.x.x.x.x.x.x.',sw:.17},
+ jazz:{r:'x...x..xx...x..x',s:'..........x.....',k:'x.......x.......',sw:.2},
+ bossa:{k:'x..x....x..x....',rim:'x..x..x...x.x...',h:'x.x.x.x.x.x.x.x.'},
+ funk:{k:'x..x......x.....',s:'....x..x.x..x...',h:'xxxxxxxxxxxxxxxx'},
+ city:{k:'x.....x...x.....',s:'....x.......x...',h:'xxxxxxxxxxxxxxxx'},
+ ballad:{k:'x.........x.....',s:'....x.......x...',h:'x.x.x.x.x.x.x.x.'},
+ half:{k:'x.........x.....',s:'........x.......',h:'xxxxxxxxxxxxxxxx'},
+ chip:{k:'x.......x.......',s:'....x.......x...',h:'..x...x...x...x.'},
+ wa:{k:'x.x...x.x.x...x.',s:'....x.......x...',h:'x.x.x.x.x.x.x.x.',t:'x.....x.x.......'},
+ trap:{k8:'x......x..x.....',c:'........x.......',h8:'x.x.x.x.x.x.xxxx'},
+ orch:{t:'x.......x...x.x.'},
+ none:{}
+};
+function drumPat(id,t,beat,{crash=false}={}){const P=DPAT[id];if(crash&&id!=='none')hit('cr',t);Object.entries(P).forEach(([v,str])=>{if(v==='sw'||!DV.hasOwnProperty(v))return;[...str].forEach((ch,i)=>{if(ch!=='x')return;const sw=(i%4===2&&P.sw)?P.sw*beat:0;hit(DV[v],t+i*beat/4+sw)})})}
+const swAt=(x,beat,sw)=>((x*2)%2===1&&sw?sw*beat:0);
+function bassBar(inst,style,r,ch,t,beat,sw,next){
+  const b=(INST[inst].kind==='bass'?INST[inst].base:36)+r,N=(x,n,l)=>nOn(inst,b+n,t+x*beat+swAt(x,beat,sw),l*beat*.9);
+  ({root4:()=>[0,1,2,3].forEach(x=>N(x,0,1)),root8:()=>{for(let k=0;k<8;k++)N(k/2,0,.5)},oct8:()=>{for(let k=0;k<8;k++)N(k/2,k%2?12:0,.45)},off8:()=>[.5,1.5,2.5,3.5].forEach(x=>N(x,0,.45)),
+    long:()=>N(0,0,4),walk:()=>{const third=CHORDS[ch.suf].iv[1];[[0,0],[1,third],[2,7],[3,(next-r+12)%12-1]].forEach(([x,n])=>N(x,n,1))},
+    bossa:()=>[[0,0,1.5],[1.5,7,.5],[2,7,1.5],[3.5,0,.5]].forEach(([x,n,l])=>N(x,n,l)),
+    funk:()=>[[0,0,.25],[.75,0,.25],[1.5,12,.25],[2,0,.25],[2.75,10,.25],[3,7,.5],[3.5,12,.25]].forEach(([x,n,l])=>N(x,n,l)),
+    trap:()=>[[0,0,1.6],[1.75,0,.5],[2.5,0,1.4],[3.5,-2,.5]].forEach(([x,n,l])=>N(x,n,l))})[style]();
+}
+function chordBar(inst,style,notes,t,beat,sw,v=.8){
+  const C=(x,l,ns=notes,vv=v)=>ns.forEach((m,i)=>nOn(inst,m,t+x*beat+swAt(x,beat,sw)+(INST[inst].kind==='guitar'?i*.022:0),l*beat*.92,vv));
+  const arp=(n,step)=>{const seq=[...notes,notes[0]+12];for(let k=0;k<n;k++)nOn(inst,seq[k%seq.length],t+k*step*beat+swAt(k*step,beat,sw),step*beat*.9,v)};
+  ({block:()=>C(0,4),half:()=>{C(0,2);C(2,2)},stab:()=>[.5,1.5,2.5,3.5].forEach(x=>C(x,.35)),pump:()=>{for(let k=0;k<8;k++)C(k/2,.42)},
+    arp8:()=>arp(8,.5),arp16:()=>arp(16,.25),strum:()=>[0,1,1.5,2.5,3,3.5].forEach(x=>C(x,.5)),
+    power:()=>{const r=notes[0]-12;for(let k=0;k<8;k++)[r,r+7,r+12].forEach(m=>nOn(inst,m,t+k*beat/2,beat*.42,v))},
+    comp:()=>{const nn=notes.slice(1);C(1.5,.6,nn);C(3,.8,nn)},bossa:()=>[0,.75,1.5,2.5,3].forEach(x=>C(x,.45)),
+    funk16:()=>[...'x.x.xx.x.x.xx.x.'].forEach((c,i)=>{if(c==='x')C(i/4,.18)}),
+    pianoarp:()=>{const r=notes[0]-12;[r,r+7,r+12,notes[1]+12,r+12,r+7,notes[2],r+7].forEach((m,k)=>nOn(inst,m,t+k*beat/2,beat*1.2,.7))},
+    sparse:()=>{nOn(inst,notes[2]+12,t,beat*2,.6);nOn(inst,notes[1]+12,t+2.5*beat,beat*1.5,.5)}})[style]();
+}
+const MIYAKO=[64,65,69,71,72,76,77];
+function leadBar(inst,style,ch,t,beat,sw,bar){
+  const tones=ch.notes.map(m=>m+12),pent=[...MIYAKO];
+  const R={mel:[[0,1],[1,.5],[1.5,.5],[2,1.5],[3.5,.5]],run:[[0,.5],[.5,.5],[1,.5],[1.5,.5],[2,.5],[2.5,.5],[3,1]],long:[[0,2],[2,2]],sax:[[.5,.5],[1,1],[2.5,.5],[3,1]]}[style==='wa'?'run':style];
+  R.forEach(([x,l],k)=>{const m=style==='wa'?pent[(bar*3+k*2)%pent.length]+12:tones[(k+bar)%tones.length]+(k===R.length-1?0:(k%2?2:0));nOn(inst,style==='wa'?m:snapScale(m),t+x*beat+swAt(x,beat,sw),l*beat*.9,.85)});
+}
+const snapScale=m=>MAJ.includes(mod(m))?m:m-1;
+const GENRES=[
+ {id:'jpop',n:'J-POP',bpm:120,prog:[[5,'M7'],[7,'7'],[4,'m7'],[9,'m']],drum:'pop',bass:['ebass','root8'],chord:['piano','half'],chord2:['aguitar','strum'],lead:['bell','mel'],insts:['piano','aguitar','ebass','strings','drums','bell'],
+  desc:'歌メロが主役のポップス。Aメロ→Bメロ→サビの構成と、サビで一気に開ける展開が特徴です。',rhythm:'8ビートか16ビート。BPM 90〜140 が中心。',harmony:'王道進行・カノン進行・小室進行などの定番進行。Ⅳ△7 のおしゃれな響きや、ラスサビの転調もよく使われます。',sound:'ピアノ・アコギ・エレキ・ストリングスなどの生楽器に、シンセを少し足します。',
+  tips:['サビの最初の音を、曲の中でいちばん印象的な高さにする','Bメロでドラムやベースを減らして、サビの爆発力を作る','イントロにサビのメロディを楽器で入れると、覚えてもらいやすい']},
+ {id:'voca',n:'ボカロロック',bpm:188,prog:[[9,'m'],[5,''],[7,''],[0,'']],drum:'voca',bass:['ebass','root8'],chord:['eguitar','power'],chord2:['piano','arp16'],lead:['lead','run'],insts:['eguitar','ebass','drums','piano','lead','supersaw'],
+  desc:'速いテンポに、歪んだギターと細かく動くメロディ。人間には歌いにくい音域や早口も、歌声合成だからこそ表現できます。',rhythm:'BPM 170〜200 の8ビート〜16ビート。キックの連打やシンコペーションで疾走感を出します。',harmony:'小室進行・王道進行。マイナーキーが多く、サビ前の半音・全音上げ転調も定番です。',sound:'歪みギター＋ベース＋ドラムのバンド編成に、ピアノの16分アルペジオやシンセを重ねます。',
+  tips:['ピアノの速いアルペジオを裏で鳴らすと、一気にボカロらしくなる','早口のパートは、言葉のアクセントと拍の頭をそろえると聴き取りやすい','ギターはパワーコード中心にして、和音の色はピアノやシンセにまかせる']},
+ {id:'ballad',n:'バラード',bpm:70,prog:[[0,''],[7,''],[9,'m'],[5,'']],drum:'ballad',bass:['ebass','long'],chord:['piano','pianoarp'],chord2:['strings','block'],insts:['piano','strings','cello','ebass','drums'],
+  desc:'ゆっくりしたテンポで、歌詞と歌声をじっくり聴かせる曲です。',rhythm:'BPM 60〜80。前半はドラムなしで、後半から入ることも多いです。',harmony:'分数コードでベースが順番に下がる進行や、Ⅳ→Ⅴ→Ⅲm→Ⅵm。',sound:'ピアノとストリングスが中心。音数を少なくして、余韻を生かします。',
+  tips:['1番はピアノだけ、2番からストリングス、と少しずつ厚くする','休符をこわがらない。息継ぎの間が、聴き手が感情を受け取る時間になる']},
+ {id:'rock',n:'ロック',bpm:140,prog:[[0,''],[10,''],[5,''],[0,'']],drum:'rock',bass:['ebass','root8'],chord:['eguitar','power'],insts:['eguitar','ebass','drums','organ','cleangt'],
+  desc:'エレキギター・ベース・ドラムのバンドサウンドが中心。勢いと生々しさが魅力です。',rhythm:'8ビートが基本。BPM 110〜170。',harmony:'パワーコード、♭Ⅶ（ミクソリディアン）の解放感、ブルース由来の進行。',sound:'歪んだギターを左右に2本重ねると、壁のような厚みが出ます。',
+  tips:['ギターリフ（短い繰り返しのフレーズ）を曲の顔にする','キックとベースを同じリズムにそろえて、低音を引き締める']},
+ {id:'edm',n:'EDM・フューチャーベース',bpm:150,prog:[[5,'M7'],[7,''],[4,'m7'],[9,'m7']],drum:'half',bass:['synbass','long'],chord:['supersaw','pump'],chord2:['pluck','arp16'],insts:['supersaw','synbass','pluck','pad','lead','wobble'],
+  desc:'シンセサイザー中心の電子的なダンス音楽。フューチャーベースは、うねるような分厚いシンセの和音が特徴です。',rhythm:'BPM 140〜160 のハーフタイム（スネアが3拍目）。',harmony:'ⅣM7 や Ⅵm7 などのきらきらした4和音。',sound:'スーパーソーの和音を、キックのたびに音量が下がるように刻みます（サイドチェイン）。',
+  tips:['サビ（ドロップ）の前に、音を減らしてためる「ビルドアップ」を作る','和音を8分で刻むと、うねりとノリが出る']},
+ {id:'house',n:'ハウス',bpm:124,prog:[[9,'m7'],[2,'m7'],[7,''],[0,'M7']],drum:'four',bass:['synbass','off8'],chord:['piano','stab'],insts:['piano','organ','synbass','drums','pad'],
+  desc:'4つ打ちのキックが一定に続く、踊るための音楽です。',rhythm:'BPM 120〜128。キックが毎拍、裏拍にオープンハイハット。',harmony:'m7 や M7 の4和音を2〜4つ繰り返すループが多いです。',sound:'ピアノやオルガンの短い和音（スタブ）と、裏拍で鳴るベース。',
+  tips:['ベースを裏拍に置くと、キックとぶつからずに跳ねる','8〜16小節ごとに1つ音を足したり抜いたりして、変化を作る']},
+ {id:'dnb',n:'ドラムンベース',bpm:172,prog:[[9,'m7'],[5,'M7'],[2,'m7'],[4,'m7']],drum:'dnb',bass:['synbass','long'],chord:['pad','block'],chord2:['pluck','arp8'],insts:['drums','synbass','pad','pluck','strings'],
+  desc:'速いブレイクビーツと、太く低いベースが特徴の電子音楽です。',rhythm:'BPM 170〜180。キックとスネアが跳ねるように入れ替わります。',harmony:'マイナーキーの4和音で、浮遊感のあるパッド。',sound:'ドラムは速いのに、パッドやベースはゆったり伸ばす。その対比が魅力です。',
+  tips:['ドラムが細かいぶん、和音はゆっくり変えると聴きやすい','ベースを半分の速さで動かすと、疾走感とゆったり感を両立できる']},
+ {id:'trap',n:'トラップ・ヒップホップ',bpm:140,prog:[[9,'m'],[5,''],[0,''],[7,'']],drum:'trap',bass:['bass808','trap'],chord:['bell','sparse'],chord2:['pad','block'],insts:['d808','bass808','bell','piano','pad'],
+  desc:'重い808ベースと細かいハイハットが特徴の、ヒップホップから生まれたビートです。',rhythm:'BPM 130〜150 のハーフタイム。ハイハットの細かい連打（ロール）。',harmony:'マイナーキーで、2〜4つのコードを暗めにループ。',sound:'808（伸びるキック兼ベース）、クラップ、ハイハット、ベルやピアノの暗い上モノ。',
+  tips:['808 はキックと同じタイミングで鳴らし、音の高さでベースラインを作る','ハイハットのロールは要所だけに入れると効く']},
+ {id:'lofi',n:'Lo-fi ヒップホップ',bpm:80,prog:[[5,'M7'],[4,'m7'],[2,'m7'],[0,'M7']],drum:'hiphop',bass:['ebass','root4'],chord:['epiano','half'],insts:['epiano','ebass','drums','pad','vibes'],
+  desc:'ゆったりしたビートに、少しこもった温かい音。作業用BGMの定番です。',rhythm:'BPM 70〜90。ハネた（スウィングした）ヒップホップのビート。',harmony:'M7・m7・9th などのジャジーな和音が、順番に下がっていく進行。',sound:'エレピやジャズギター。高音を少し削って、レコードのような質感にします。',
+  tips:['ドラムをきっちり合わせず、少し後ろにずらすと気だるい感じが出る','同じ4小節を繰り返し、上に乗る音だけ少しずつ変える']},
+ {id:'jazz',n:'ジャズ',bpm:132,prog:[[2,'m7'],[7,'7'],[0,'M7'],[9,'7']],drum:'jazz',bass:['woodbass','walk'],chord:['piano','comp'],lead:['sax','sax'],insts:['piano','woodbass','sax','trumpet','vibes','drums'],
+  desc:'スウィングのリズムと、即興演奏（アドリブ）が特徴の音楽です。',rhythm:'8分音符をハネる「スウィング」。ライドシンバルとウォーキングベース。',harmony:'Ⅱm7→Ⅴ7→ⅠM7（ツーファイブ）が基本単位。9・11・13 などのテンションを多用します。',sound:'ピアノ・ウッドベース・ドラムのトリオに、サックスやトランペット。',
+  tips:['ベースは4分音符で、コードの音をつなぐように歩かせる（ウォーキング）','ピアノはルートをベースにまかせて、3度と7度を中心に弾く']},
+ {id:'bossa',n:'ボサノバ',bpm:130,prog:[[0,'M7'],[9,'7'],[2,'m7'],[7,'7']],drum:'bossa',bass:['woodbass','bossa'],chord:['cleangt','bossa'],lead:['flute','long'],insts:['cleangt','woodbass','flute','vibes','drums'],
+  desc:'ブラジル生まれの、ささやくような柔らかい音楽です。',rhythm:'ギターの独特なシンコペーションと、リムショットで刻むクラーベのリズム。',harmony:'M7・m7・7th の4和音が中心。内側の声部が半音ずつ動きます。',sound:'ナイロン弦ギターとウッドベース、控えめなパーカッション。',
+  tips:['ギターはベース音（親指）と和音（ほかの指）を分けて弾く','メロディは小さめに、語りかけるように']},
+ {id:'funk',n:'ファンク',bpm:104,prog:[[4,'m7'],[4,'m7'],[9,'7'],[9,'7']],drum:'funk',bass:['ebass','funk'],chord:['clav','funk16'],insts:['clav','ebass','cleangt','brass','drums'],
+  desc:'細かい16分音符のノリと、体が動くグルーヴが主役の音楽です。',rhythm:'BPM 95〜115 の16ビート。小節の1拍目（ワン）を強く。',harmony:'1〜2個のコードを繰り返すことが多く、7th や 9th の和音を使います。',sound:'カッティングギターやクラビネット、スラップベース、ブラスのキメ。',
+  tips:['全員が細かく弾くのではなく、パートごとに16分のすき間を分け合う','休符の位置こそがノリを作る']},
+ {id:'city',n:'シティポップ',bpm:110,prog:[[5,'M7'],[4,'7'],[9,'m7'],[0,'7']],drum:'city',bass:['ebass','oct8'],chord:['epiano','half'],chord2:['cleangt','stab'],insts:['epiano','ebass','cleangt','brass','strings','drums'],
+  desc:'1980年代の日本で生まれた、都会的でおしゃれなポップスです。',rhythm:'BPM 100〜120 の16ビート。軽く跳ねるハイハット。',harmony:'M7・m7・7th、丸サ進行などのジャジーな進行。',sound:'エレピ、カッティングギター、チョッパーベース、ブラス。',
+  tips:['ⅣM7 から始めると、一気にシティポップらしくなる','ベースはオクターブで跳ねるように動かす']},
+ {id:'chip',n:'チップチューン',bpm:150,prog:[[0,''],[9,'m'],[5,''],[7,'']],drum:'chip',bass:['chip','oct8'],chord:['chip','arp16'],insts:['chip','drums'],
+  desc:'昔のゲーム機の音源（矩形波・三角波・ノイズ）だけで作る音楽です。',rhythm:'BPM 120〜180。ノイズでドラムを作ります。',harmony:'同時に鳴らせる音が少ないので、和音は高速アルペジオで表現します。',sound:'矩形波のメロディ、三角波のベース、ノイズのドラム。',
+  tips:['3〜4音しか同時に鳴らせない制限の中で、役割を分ける','アルペジオをとても速くすると、和音のように聴こえる']},
+ {id:'wa',n:'和風・和ロック',bpm:160,prog:[[9,'m'],[5,''],[7,''],[9,'m']],drum:'wa',bass:['ebass','root8'],chord:['eguitar','power'],lead:['koto','wa'],insts:['koto','shamisen','shakuhachi','eguitar','drums'],
+  desc:'琴・三味線・尺八・和太鼓などの和楽器や、日本の音階を取り入れた曲です。',rhythm:'ロックの8ビートに、和太鼓の力強い連打。',harmony:'メロディを「ミ・ファ・ラ・シ・ド」の都節音階や、ヨナ抜き音階で作ると和の雰囲気になります。',sound:'和楽器のメロディに、歪んだギターとドラムを組み合わせます。',
+  tips:['メロディだけ和の音階にして、コードは普通のマイナー進行にすると作りやすい','三味線や琴は音が短いので、速いフレーズで華やかに']},
+ {id:'ambient',n:'アンビエント',bpm:70,prog:[[0,'M7'],[5,'M7'],[0,'M7'],[5,'M7']],drum:'none',chord:['pad','block'],chord2:['musicbox','sparse'],insts:['pad','musicbox','strings','choir','piano'],
+  desc:'空間や空気感を味わう、ゆったりした環境音楽です。',rhythm:'はっきりしたビートがないことも多いです。',harmony:'M7 や add9 などの響きを、ゆっくり長く伸ばします。',sound:'パッドやストリングスに、長い残響（リバーブ）をかけます。',
+  tips:['音を足すより、音が消えていく時間を大切にする','同じフレーズを少しずらして重ねると、ゆらぎが生まれる']},
+ {id:'orch',n:'オーケストラ・壮大系',bpm:96,prog:[[2,'m'],[10,''],[5,''],[0,'']],drum:'orch',bass:['cello','long'],chord:['strings','block'],chord2:['brass','half'],lead:['violin','long'],insts:['strings','violin','cello','brass','choir','flute'],
+  desc:'弦・管・打楽器の大編成で、映画やゲームのような壮大さを出す音楽です。',rhythm:'ティンパニでゆったり刻むか、細かく刻むストリングスで推進力を出します。',harmony:'Ⅵm→Ⅳ→Ⅰ→Ⅴ（キー F なら Dm→B♭→F→C）のように、マイナーとメジャーを行き来する進行。',sound:'低音はチェロ、和音はストリングス、メロディはバイオリンやホルン、盛り上げに合唱。',
+  tips:['それぞれの楽器が出せる音域を守ると、本物らしく響く','同じメロディをバイオリンとフルートで重ねると、輝きが出る']}
+];
+let curGenre='jpop';
+function playGenre(id){
+  instStop();const G=GENRES.find(g=>g.id===id),beat=60/G.bpm,sw=DPAT[G.drum].sw||0;
+  const chords=G.prog.map(([r,suf])=>{const rr=r>6?r-12:r;return {r:rr,suf,notes:CHORDS[suf].iv.map(i=>60+rr+i).slice(0,4)}});
+  const row=$('#genreRow');if(row)row.innerHTML=G.prog.map(([r,suf])=>`<div class="pchord"><b>${nm(r,FLAT_MAJ.has(0)||[10,3,8].includes(r))}${suf}</b></div>`).join('');
+  for(let rep=0;rep<2;rep++)chords.forEach((c,bi)=>{const bar=rep*4+bi;instTimers.push(setTimeout(()=>{
+    const t=ac().currentTime+.05;$$('#genreRow .pchord').forEach((b,k)=>b.classList.toggle('now',k===bi));
+    if(G.drum!=='none')drumPat(G.drum,t,beat,{crash:bar===0||bar===4});
+    if(G.bass)bassBar(G.bass[0],G.bass[1],c.r,c,t,beat,sw,chords[(bi+1)%4].r);
+    if(G.chord)chordBar(G.chord[0],G.chord[1],c.notes,t,beat,sw);
+    if(G.chord2&&rep===1)chordBar(G.chord2[0],G.chord2[1],c.notes.map(m=>m+(['arp16','arp8','sparse'].includes(G.chord2[1])?12:0)),t,beat,sw,.6);
+    if(G.lead&&rep===1)leadBar(G.lead[0],G.lead[1],c,t,beat,sw,bi);
+  },bar*4*beat*1000))});
+  instTimers.push(setTimeout(()=>$$('#genreRow .pchord').forEach(b=>b.classList.remove('now')),8*4*beat*1000+200));
+}
+function renderGenres(){
+  $('#genreList').innerHTML=GENRES.map(g=>`<button class="gbtn${g.id===curGenre?' sel':''}" data-g="${g.id}"><b>${g.n}</b><small>BPM ${g.bpm}</small></button>`).join('');
+  $$('#genreList .gbtn').forEach(b=>b.onclick=()=>{curGenre=b.dataset.g;instStop();renderGenres()});
+  const G=GENRES.find(g=>g.id===curGenre);
+  $('#genreDetail').innerHTML=`<div class="ihead"><h3 class="iname">${G.n}</h3><span class="qtag">BPM ${G.bpm} くらい</span></div><p>${G.desc}</p>
+   <div class="ctrl"><button class="btn primary" id="gPlay">▶ 雰囲気を聴く</button><button class="btn quiet" id="gStop">■ 止める</button><span class="sub">8小節。後半で上モノが加わります</span></div>
+   <div class="prow" id="genreRow">${G.prog.map(([r,suf])=>`<div class="pchord"><b>${nm(r,[10,3,8].includes(r))}${suf}</b></div>`).join('')}</div>
+   <dl class="ifacts"><div><dt>リズム</dt><dd>${G.rhythm}</dd></div><div><dt>コード・進行</dt><dd>${G.harmony}</dd></div><div><dt>音色・編成</dt><dd>${G.sound}</dd></div></dl>
+   <p class="sub" style="margin:10px 0 4px">よく使う楽器（タップで楽器の説明へ）</p><div class="chips">${G.insts.map(k=>`<button class="chip" data-inst="${k}">${INST[k].n}</button>`).join('')}</div>
+   <ul class="itips">${G.tips.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+  $('#gPlay').onclick=()=>{playGenre(curGenre);if(!vizRaf)vizLoop()};$('#gStop').onclick=instStop;
+  $$('#genreDetail [data-inst]').forEach(b=>b.onclick=()=>{curInst=b.dataset.inst;instOct=0;instCat='all';renderInstList();renderInst();const bar=$('#sounds .panes button[data-p="play"]');if(bar)bar.click();const I=INST[curInst];if(I.kind==='drum')hit(I.pads?I.pads[0][1]:0,ac().currentTime+.02);else nOn(curInst,I.base+12,ac().currentTime+.02,.9)});
+}
+
 /* ===== 編成のコツ（デモ） ===== */
 let curPan=0;
 function arrStart(){instStop();return {t0:ac().currentTime+.08,beat:60/100}}
@@ -2290,8 +2504,8 @@ function secAcc(s){const T=curTheme();if(T.mono)return '#1C1C1C';if(T.id==='neon
 function applySecColors(){SECS.concat([{id:'sounds',...SOUNDS_SEC}]).forEach(x=>{const el=document.getElementById(x.id);if(el){el.style.setProperty('--sc',secSoft(x));el.style.setProperty('--sa',secAcc(x))}})}
 function applyTheme(){const T=curTheme();document.documentElement.dataset.theme=T.id;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=getComputedStyle(document.documentElement).getPropertyValue('--paper').trim()||'#F7F5FA';applySecColors()}
 /* ===== ページ内タブ ===== */
-const PANE_L={play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
-const PANE_O=['today','stages','record','settings','play','ens','learn','weak','tips','tasks'];
+const PANE_L={genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
+const PANE_O=['today','stages','record','settings','play','genre','ens','learn','weak','tips','tasks'];
 const paneSel={};
 function setupPanes(root){
   const key=root.id||'x',items=[...root.querySelectorAll(':scope > [data-pane]')];
@@ -2314,7 +2528,7 @@ paintMascots();
 applyTheme();
 renderTips();renderPagers();
 
-sInitSounds();
+sInitSounds();renderGenres();
 setNavH();['sounds',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();
