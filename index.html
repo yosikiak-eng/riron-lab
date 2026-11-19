@@ -452,7 +452,7 @@ section.fadein{animation:fadein .25s ease}
 .switch i{position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(51,41,74,.25);transition:transform .15s}
 .switch.on{background:var(--rose)}
 .switch.on i{transform:translateX(20px)}
-@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+@media (prefers-reduced-motion:reduce){*:not(.turnpage):not(.shade):not(.turnwrap){animation:none !important;transition:none !important}.turnwrap::before{animation:none !important}}
 </style>
 </head>
 <body>
@@ -744,7 +744,7 @@ section.fadein{animation:fadein .25s ease}
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 7</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 8</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -1122,9 +1122,11 @@ function renderHome(){
     ${row('練習した日数',S.days.length+'日')}${row('最長連続',(S.best||0)+'日')}${row('クイズの正解数',c.qok)}${row('正答率',(c.qtot?Math.round(c.qok/c.qtot*100):0)+'%')}
     ${row('最高連続正解',c.qbest)}${row('復習ノート',S.wrong.length+'問')}${row('聴いた音程',c.iv.length+' / 13')}${row('鳴らしたコード',c.chord.length+' / 13')}
   </dl></div>
+  <div class="card setrow"><div><b>ページをめくる演出</b><p class="sub" style="margin:0">ステージを移動するときに、楽譜のページをめくる動きを入れます${matchMedia('(prefers-reduced-motion: reduce)').matches?'<br><span style="color:var(--rose)">この端末は「視差効果を減らす」がオンなので、最初はオフにしています</span>':''}</p></div><button class="switch${(S.pageTurn??!matchMedia('(prefers-reduced-motion: reduce)').matches)?' on':''}" id="ptToggle" role="switch" aria-checked="${!!(S.pageTurn??!matchMedia('(prefers-reduced-motion: reduce)').matches)}" aria-label="ページをめくる演出"><i></i></button></div>
   <div class="card setrow"><div><b>ページをめくる音</b><p class="sub" style="margin:0">ステージを移動するときに、紙の音と小さなチャイムを鳴らします</p></div><button class="switch${S.pageSound===false?'':' on'}" id="psToggle" role="switch" aria-checked="${S.pageSound!==false}" aria-label="ページをめくる音"><i></i></button></div>
   <p style="text-align:center;margin-top:24px"><button class="btn quiet" id="resetBtn">記録をリセット</button></p>`;
   $$('.goalsel button').forEach(b=>b.onclick=()=>{S.goal=+b.dataset.g;const t=todayRec();if(!t.goalHit&&t.pts>=S.goal){t.goalHit=1;sfx('badge')}save();renderHome()});
+  $('#ptToggle').onclick=()=>{S.pageTurn=!(S.pageTurn??!matchMedia('(prefers-reduced-motion: reduce)').matches);save();renderHome()};
   $('#psToggle').onclick=()=>{S.pageSound=S.pageSound===false;save();renderHome()};
   $('#qkRound').onclick=()=>startQuiz(qModeV==='review'||qModeV==='focus'?'interval':qModeV);
   if($('#qkReview'))$('#qkReview').onclick=()=>startQuiz('review');
@@ -1189,7 +1191,7 @@ function route(){
   };
   if(first||fromId===id){apply();return}
   pageSound(idx);
-  const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const calm=!(S.pageTurn??!matchMedia('(prefers-reduced-motion: reduce)').matches);
   if(calm){apply();const sec=document.getElementById(id);sec.classList.remove('fadein');void sec.offsetWidth;sec.classList.add('fadein');return}
   const go=makeTurn(fromId,dir);apply();
   const sec=document.getElementById(id);sec.classList.remove('under');void sec.offsetWidth;sec.classList.add('under');
