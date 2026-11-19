@@ -868,6 +868,15 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 .lcheck label{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-radius:12px;background:var(--sheet);border:1px solid var(--rule);cursor:pointer;font-size:14px;line-height:1.6}
 .lcheck input{width:20px;height:20px;flex:none;margin-top:2px;accent-color:var(--sa,var(--rose))}
 .lcheck input:checked+span{color:var(--text2);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--sa,var(--rose)) 60%,transparent)}
+/* まちがえた答えの説明 */
+.wrongx{margin:12px 0 4px;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--rose) 9%,var(--sheet));border:1px solid color-mix(in srgb,var(--rose) 30%,var(--rule))}
+.wrongx b{display:block;font-size:14px;color:color-mix(in srgb,var(--rose) 75%,var(--ink));margin-bottom:2px}.wrongx p{margin:0;font-size:14.5px;line-height:1.75}
+.othx{margin:14px 0 4px;border:1px solid var(--rule);border-radius:14px;background:var(--sheet)}
+.othx summary{cursor:pointer;padding:11px 14px;font-weight:700;font-size:14px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.othx summary::-webkit-details-marker{display:none}.othx summary::after{content:'';width:7px;height:7px;border-right:2px solid var(--mute);border-bottom:2px solid var(--mute);transform:rotate(45deg);transition:transform .2s;margin-right:4px}
+.othx[open] summary::after{transform:rotate(-135deg)}
+.othx dl{margin:0;padding:0 14px 10px;display:grid;gap:8px}.othx dl>div{padding-top:8px;border-top:1px dashed var(--rule)}
+.othx dt{font-weight:700;font-size:14px}.othx dd{margin:2px 0 0;font-size:13.5px;line-height:1.7;color:var(--text2)}
 </style>
 </head>
 <body>
@@ -1416,7 +1425,7 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 37</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 38</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -2895,8 +2904,8 @@ function expHTML(ok,chosen,gain,bonus){
   const used=new Set();
   return `<div class="exp"><div class="verdict"><div class="m">${mascot(ok?(bonus?'wow':'happy'):'oops')}</div><div>`+
    (ok?`<b>${V('praise')}<span class="pt">+${gain}pt</span>${bonus?`<span class="streak">${V('streak')(QS.st)}</span>`:''}</b>`:`<b>${V('miss')}</b><span>あなたの答え：${chosen}</span>`)+
-   `<span>正解：<strong>${Q.ans}</strong></span></div></div>`+
-   `${qFig(Q)?`<div class="qfig">${qFig(Q)}</div>`:''}<h4>解説</h4><p>${linkTerms(Q.why,used)}</p>${anaFor(Q)?`<div class="ana"><b>たとえるなら</b><p>${linkTerms(anaFor(Q),used)}</p></div>`:''}<h4>答えまでの考え方</h4><ol>${Q.steps.map(s=>`<li>${linkTerms(s,used)}</li>`).join('')}</ol>`+
+   `<span>正解：<strong>${Q.ans}</strong></span></div></div>`+oxMine(Q,chosen,ok)+
+   `${qFig(Q)?`<div class="qfig">${qFig(Q)}</div>`:''}<h4>解説</h4><p>${linkTerms(Q.why,used)}</p>${anaFor(Q)?`<div class="ana"><b>たとえるなら</b><p>${linkTerms(anaFor(Q),used)}</p></div>`:''}<h4>答えまでの考え方</h4><ol>${Q.steps.map(s=>`<li>${linkTerms(s,used)}</li>`).join('')}</ol>`+oxOthers(Q,chosen,ok)+
    (Q.tip?`<p class="tipline">${linkTerms(Q.tip,used)}</p>`:'')+
    (used.size?`<p class="termhint">点線の言葉をタップすると、意味が表示されます。</p>`:'')+
    `<div class="gloss" hidden></div>`+
@@ -5699,6 +5708,88 @@ function renderLyrics(){const sec=document.getElementById('lyrics');if(!sec||sec
   /* チェックリスト */
   const ck=[...sec.querySelectorAll('[data-lc]')],upd=()=>{const n=ck.filter(c=>c.checked).length;sec.querySelector('#lcCount').textContent=`${n} / ${ck.length} できました`;S.lyrChk=ck.map(c=>c.checked?1:0);save()};
   (S.lyrChk||[]).forEach((v,i)=>{if(ck[i])ck[i].checked=!!v});ck.forEach(c=>c.onchange=upd);sec.querySelector('#lcCount').textContent=`${ck.filter(c=>c.checked).length} / ${ck.length} できました`}
+
+/* ===== まちがえた答え（選択肢）の説明 ===== */
+const OX_PC={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+function oxPc(s){const m=/^([A-G])([♯♭#b]*)/.exec(s||'');if(!m)return null;let p=OX_PC[m[1]];for(const c of m[2])p+=(c==='♯'||c==='#')?1:-1;return mod(p)}
+function oxChord(s){const m=/^([A-G][♯♭#b]?)(.*)$/.exec((s||'').trim());if(!m)return null;return {r:oxPc(m[1]),rn:m[1],suf:m[2].trim()}}
+const OX_DIA=[[0,'','M7','Ⅰ','T'],[2,'m','m7','Ⅱm','SD'],[4,'m','m7','Ⅲm','T'],[5,'','M7','Ⅳ','SD'],[7,'','7','Ⅴ','D'],[9,'m','m7','Ⅵm','T'],[11,'dim','m7-5','Ⅶ','D']];
+const OX_DIA_MIN=[[0,'m','m7','Ⅰm','T'],[2,'dim','m7-5','Ⅱ','SD'],[3,'','M7','♭Ⅲ','T'],[5,'m','m7','Ⅳm','SD'],[7,'m','m7','Ⅴm','D'],[8,'','M7','♭Ⅵ','SD'],[10,'','7','♭Ⅶ','D']];
+const OX_FN={T:'トニック（安定）',SD:'サブドミナント（お出かけ）',D:'ドミナント（帰りたがる）'};
+const keyNm=(pc,minor)=>(minor?NAMES_S[mod(pc)]:KEY_NAMES[mod(pc)])+(minor?'m':'');
+function oxDegree(k,cs,minor){const c=oxChord(cs);if(!c||c.r==null)return '';const off=mod(c.r-k),T=minor?OX_DIA_MIN:OX_DIA,d=T.find(x=>x[0]===off&&(x[1]===c.suf||x[2]===c.suf));const kn=keyNm(k,minor);
+  if(d)return `${cs} はキー ${kn} の ${d[3]}${c.suf===d[2]&&d[2]!==d[1]?'（4和音）':''}で、${OX_FN[d[4]]}の役割です。`;
+  if(c.suf==='7')return `${cs} はキー ${kn} のダイアトニックコードではありません。${nm(c.r+5,FLAT_MAJ.has(k))} へ向かうドミナント（セカンダリードミナントなど）として使われるコードです。`;
+  return `${cs} はキー ${kn} のダイアトニックコードには入っていません（${romanOf(off)}${c.suf} にあたる、キーの外のコードです）。`}
+function oxNotesChord(str){const ns=str.split('・').map(oxPc);if(ns.some(x=>x==null))return '';const rel=[...new Set(ns.map(p=>mod(p-ns[0])))].sort((a,b)=>a-b).join(',');
+  const hit=Object.entries(CHORDS).find(([k,v])=>[...new Set(v.iv.map(x=>mod(x)))].sort((a,b)=>a-b).join(',')===rel);
+  return hit?`${str} を並べると ${str.split('・')[0]}${hit[0]}（${hit[1].n}）の音になります。${hit[1].d}`:`${str} は、決まった名前のコードにならない並びです。`}
+function oxKeyFromText(t){const m=/([A-G][♯♭]?)(m)?\s*(メジャー|マイナー|（|の|\s)/.exec(t);return m?{pc:oxPc(m[1]),minor:!!m[2]||m[3]==='マイナー'}:null}
+function oxKeyRel(b,o,disp){const d=mod(o.pc-b.pc),on=disp||keyNm(o.pc,o.minor),bn=keyNm(b.pc,b.minor);
+  if(d===0&&o.minor!==b.minor)return `${on} は ${bn} の同主調（同じ主音で、明るさが逆のキー）です。`;
+  if(!b.minor&&o.minor&&d===9||b.minor&&!o.minor&&d===3)return `${on} は ${bn} の平行調（同じ音を使う、明るさが逆のキー）です。`;
+  if(o.minor===b.minor&&d===7)return `${on} は ${bn} の属調（5度上のキー）です。`;
+  if(o.minor===b.minor&&d===5)return `${on} は ${bn} の下属調（4度上のキー）です。`;
+  if(o.minor!==b.minor){const rp=o.minor?mod(o.pc+3):mod(o.pc-3),rn=keyNm(rp,!o.minor),rel=oxKeyRel(b,{pc:rp,minor:!o.minor}).replace(/^.+? は /,'').replace(/です。$/,'');return `${on} は ${rn} の平行調です。${rn} は ${rel}${/キー$/.test(rel)?'':''}です。`}
+  return `${on} は ${bn} の${INTERVALS[d][2]}上（半音${d}個上）のキーです。`}
+const OX_NAMED={
+ '完全終止':'Ⅴ（Ⅴ7）→ Ⅰ。いちばん「終わった」感じがする終わり方です。','偽終止':'Ⅴ → Ⅵm。終わると見せかけて、切なくはぐらかす終わり方です。','半終止':'Ⅴ で止まる終わり方。「まだ続く」感じが残ります。','変格終止':'Ⅳ → Ⅰ。アーメン終止とも呼ばれる、やわらかい終わり方です。',
+ 'トニック':'Ⅰ・Ⅲm・Ⅵm。落ち着く「家」の役割です。','サブドミナント':'Ⅳ・Ⅱm。家から少し離れる「お出かけ」の役割です。','ドミナント':'Ⅴ・Ⅶ。家に帰りたくなる「帰り道」の役割です。',
+ '経過音':'コードトーンとコードトーンの間を、順番に通り過ぎる音です。','刺繍音':'コードトーンからとなりの音へ行って、すぐ同じ音に戻る音です。','倚音':'強拍にわざとコードにない音を置き、となりのコードトーンへ解決する音です。','掛留音':'前のコードの音を伸ばし続けて、次のコードとぶつかってから解決する音です。','先取音':'次のコードの音を、コードが変わる少し前に先に鳴らす音です。',
+ 'ゼクエンツ':'同じ形のフレーズを、高さだけずらしてくり返す手法です。','カデンツ':'曲や区切りを終わらせるコードの流れ（終止形）のことです。','オスティナート':'同じ短いフレーズを、ずっとくり返す伴奏やリフです。','モチーフ':'メロディのもとになる、2〜4音くらいの短いかたまりです。',
+ '主音':'スケールの1番目の音。いちばん落ち着く音です。','属音':'スケールの5番目の音。主音の次に強い音です。','導音':'スケールの7番目の音。主音の半音下にあって、主音へ進みたがる音です。','第2音':'スケールの2番目の音。主音のとなりで、落ち着かない音です。',
+ '半音':'となり合う鍵盤どうし（黒鍵も含む）の距離です。','全音':'半音2つぶんの距離です。',
+ '4分3連符':'2拍を3等分した音符。1拍に3つ入るのは8分3連符です。','8分3連符':'1拍を3等分した音符です。2拍を3等分するのは4分3連符です。',
+ 'レ':'コード C（ド・ミ・ソ）に入っていない音です。強拍で長く置くと落ち着かず、ドかミへ動きたくなります。','ファ':'コード C に入っていない音です。ミと半音でぶつかるので、強拍で伸ばすとにごります。','シ':'コード C に入っていない音です。ドの半音下で、ドへ進みたくなる音です。','ラ':'コード C に入っていない音です。ソへ下りたくなる、少し切ない音です。',
+ '同じ方向へさらに跳躍する':'跳躍を重ねると、メロディが不安定で歌いにくくなります。','半音で上がり続ける':'緊張が続きすぎて、落ち着き先がわからなくなります。','同じ音を連打する':'リズムは出ますが、跳躍で生まれた流れが止まってしまいます。',
+ 'どの小節にも':'最高音が何度も出ると、どこが山場かわからなくなります。','Aメロの最初':'最初に頂点を使うと、そのあと盛り上げる余地がなくなります。','曲の冒頭':'始まりで頂点を使うと、サビでそれ以上高くできなくなります。',
+ '跳躍の連続':'歌うのが大変になるだけで、息を吸うすき間にはなりません。','連続した16分音符':'音が詰まって、息を吸うすき間がなくなります。','高音の連続':'のどが疲れるうえ、息継ぎの場所にもなりません。','16分音符':'1拍を4等分した音符です。',
+ 'メジャーの4番目を半音上げた音':'リディアンの特徴になる音です（浮遊感）。','メジャーの7番目を半音下げた音':'ミクソリディアンの特徴になる音です（ゆるい明るさ）。','ナチュラルマイナーの6番目を半音上げた音':'ドリアンの特徴になる音です（おしゃれな暗さ）。','ナチュラルマイナーの2番目を半音下げた音':'フリジアンの特徴になる音です（エキゾチック）。'
+};
+const OX_SHIFT={'半音上':1,'全音上':2,'短3度上':3,'長3度上':4,'完全4度上':5,'全音下':-2,'半音下':-1};
+const OX_UNIT={'16分音符':1,'8分音符':2,'4分音符':4,'2分音符':8,'全音符':16,'8分3連符':4/3,'4分3連符':8/3};
+const OX_DUR={1:'16分音符',2:'8分音符',3:'付点8分音符',4:'4分音符',6:'付点4分音符',8:'2分音符',12:'付点2分音符',16:'全音符'};
+function oxNamed(o,ctx){
+  if(OX_NAMED[o])return `${o}：${OX_NAMED[o]}`;
+  const iv=INTERVALS.find(x=>x[2]===o);if(iv)return `${o} は半音${iv[0]}個ぶんで、響きは「${iv[3]}」です。`;
+  const sc=Object.values(SCALES).find(x=>x.n===o);if(sc&&ctx==='se')return `${o}：${sc.d}`;
+  const chk=o==='メジャー'?'':o;if(CHORDS[chk]&&(o.length<6)){const c=CHORDS[chk];return `${o}${c.n!==o?`（${c.n}）`:''}：${c.d}`}
+  if(sc)return `${o}：${sc.d}`;
+  const pr=PROGS.find(x=>x.n===o);if(pr)return `${o} は ${pr.c.map(([f,s])=>romanOf(f)+s).join('→')}。${pr.d}`;
+  const tq=TERM_Q.find(x=>x[0]===o);if(tq)return `${o}（${tq[1]}）は「${tq[2]}」という意味です。`;
+  const tm=TERM_Q.find(x=>x[2]===o);if(tm)return `「${o}」は ${tm[0]}（${tm[1]}）の意味です。`;
+  if(typeof TERMS!=='undefined'&&TERMS[o])return `${o}：${TERMS[o]}`;
+  return ''}
+function optExplain(Q,o){const p=Q.p||{},kind=p.kind,t=p.t;let r='';
+  try{
+  if(o===Q.ans)return '';
+  if(kind==='iv'){const a=INTERVALS.find(x=>x[2]===o),b=INTERVALS.find(x=>x[2]===Q.ans);if(a&&b){const d=a[0]-b[0];return `${oxNamed(o)}正解（${Q.ans}）より半音${Math.abs(d)}個${d>0?'広い':'せまい'}音程です。`}}
+  if(kind==='me'&&OX_SHIFT[o]!=null){const n=OX_SHIFT[o],k=p.k;return `${o} はキーを半音${Math.abs(n)}個${n>0?'上げる':'下げる'}転調です。キー ${KEY_NAMES[k]} なら ${KEY_NAMES[mod(k+n)]} になります。`}
+  const T=Q.key.startsWith('th:')?+Q.key.split(':')[1]:null;
+  if(T===0&&p.k!=null){const pc=oxPc(o);if(pc!=null){const i=MAJ.indexOf(mod(pc-p.k));return i>=0?`${o} はキー ${KEY_NAMES[p.k]} のメジャースケールの ${i+1} 番目の音です。`:`${o} はキー ${KEY_NAMES[p.k]} のメジャースケールに入っていない音です。`}}
+  if(T===1)return oxNotesChord(o);
+  if(T===2||T===5||T===7){const k=p.k;return oxDegree(k,o,false)}
+  if(T===3&&p.a!=null){const iv=INTERVALS.find(x=>x[2]===o);if(iv){const a=oxKeyFromText(Q.q);const base=a?a.pc:p.a;return `${NAMES_S[mod(base)]} から${o}上は ${nm(base+iv[0],/♭/.test(Q.q))} です。${iv[3]}響きの音程です。`}}
+  if(T===6&&p.x!=null){const c=oxChord(o);if(c){return `${o} は ${nm(c.r+6,true)}7 の裏コードで、${nm(c.r+5,true)} へ向かうドミナントです。`}}
+  if(kind==='rh'&&t===4&&/^\d+つ$/.test(o)){const n=+o.replace('つ',''),M={2:'8分音符',3:'8分3連符',4:'16分音符',6:'16分3連符',8:'32分音符'};if(M[n])return `4分音符1拍に${n}つ入るのは ${M[n]} です。`}
+  if(/^\d+つ$/.test(o)){const n=+o.replace('つ',''),m=/(\d+分(?:3連符|音符))(?:は)?(?:いくつ|の数)/.exec(Q.q);if(m&&OX_UNIT[m[1]]){const s=n*OX_UNIT[m[1]],beats=s/4;return `${m[1]}が${n}つだと${OX_DUR[s]?OX_DUR[s]+'1つぶん（':'（'}4分音符${+beats.toFixed(2)}拍ぶん）です。`}}
+  if(/^約?[\d.]+秒$/.test(o)){const x=parseFloat(o.replace('約',''));return `${o} は、BPM${Math.round(60/x)} のときの4分音符1拍の長さです（60 ÷ BPM）。`}
+  if(kind==='dk'&&!Q.key.startsWith('th:')){if(t===1)return oxNamed(o);if(t===2)return oxDegree(p.k,o,false);if(t===3)return oxDegree(p.k,o,true)}
+  if(kind==='bs'){const pc=oxPc(o);if(pc!=null){if(t===0||t===1){const bm=/([A-G][♯♭]?)/.exec(Q.q),bn=bm?bm[1]:NAMES_S[mod(p.a)],bp=oxPc(bn),d=p.up?mod(pc-bp):mod(bp-pc);return `${o} は ${bn} から${p.up?'上':'下'}へ半音${d}個の音です。`}
+      const en=[NAMES_S[pc],NAMES_F[pc]].filter(x=>x!==o);const ex={C:'B♯',F:'E♯',B:'C♭',E:'F♭'};return en.length?`${o} は ${en[0]} と同じ鍵盤の音です。`:(ex[o]?`${o} は ${ex[o]} と同じ高さの白鍵です。`:`${o} は白鍵の音です。`)}}
+  if(kind==='mo'||kind==='sk'){const b=oxKeyFromText(Q.q);if(b&&t!==5&&!(kind==='sk'&&t===1)){const c=oxChord(o);if(c&&(c.suf===''||c.suf==='m'))return oxKeyRel(b,{pc:c.r,minor:c.suf==='m'},o)}
+    if(kind==='mo'&&t===5){const c=oxChord(o);if(c)return c.suf==='7'?`${o} は ${nm(c.r+5,true)} へ向かうドミナントです。`:`${o} はドミナント7th ではないので、次のキーへ引っぱる力が弱いコードです。`}
+    if(kind==='sk'&&t===1&&o==='なし')return 'なし（♯も♭もつかない）は、C メジャーと Am の調号です。';
+    if(kind==='sk'&&t===1&&oxPc(o)!=null&&/^[A-G][♯♭]?$/.test(o)){const S=['C','G','D','A','E','B','F♯','C♯'],F=['C','F','B♭','E♭','A♭','D♭','G♭','C♭'];let i=S.indexOf(o);if(i>0)return `${o} メジャーの調号は ♯${i}つです。`;i=F.indexOf(o);if(i>0)return `${o} メジャーの調号は ♭${i}つです。`;return `${o} メジャーの調号は ♯も♭もつきません。`}
+    if(kind==='sk'&&t===1){const m=/([♯♭])(\d)つ/.exec(o);if(m){const n=+m[2],S=['C','G','D','A','E','B','F♯','C♯'],F=['C','F','B♭','E♭','A♭','D♭','G♭','C♭'],k=(m[1]==='♯'?S:F)[n];return `${o} は ${k} メジャー（平行調 ${keyNm(oxPc(k)+9,true)}）の調号です。`}}}
+  if(kind==='pk'&&t===1){const k=p.k,fl=FLAT_MAJ.has(k);const P=PROGS.find(P=>P.c.map(([f,s])=>nm(k+f,fl)+s).join('→')===o);if(P)return `${o} は ${P.n}（${P.c.map(([f,s])=>romanOf(f)+s).join('→')}）です。`}
+  if(kind==='tm'){r=oxNamed(o);if(r)return r}
+  r=oxNamed(o,kind);
+  }catch(e){r=''}
+  return r}
+function oxMine(Q,chosen,ok){if(ok)return '';const x=optExplain(Q,chosen);return x?`<div class="wrongx"><b>あなたが選んだ「${chosen}」は…</b><p>${x}</p></div>`:''}
+function oxOthers(Q,chosen,ok){const others=Q.opts.filter(o=>o!==Q.ans&&(ok||o!==chosen)).map(o=>[o,optExplain(Q,o)]).filter(x=>x[1]);
+  return others.length?`<details class="othx"><summary>ほかの選択肢は何だった？（${others.length}）</summary><dl>${others.map(([o,x])=>`<div><dt>${o}</dt><dd>${x}</dd></div>`).join('')}</dl></details>`:''}
 
 /* ===== 起動 ===== */
 paintMascots();
