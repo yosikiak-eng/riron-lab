@@ -402,22 +402,26 @@ nav.tabs a.tab .ok{color:var(--ta);margin-left:4px;font-size:11px;font-weight:70
 .pg.nextp{text-align:right;border-color:var(--sa,var(--rule));box-shadow:inset 0 -3px 0 color-mix(in srgb,var(--sa,var(--rose)) 35%,transparent)}
 .pg:hover{background:var(--paper)}
 /* page transition */
-header.top{view-transition-name:apphead}
-nav.tabs{view-transition-name:appnav}
-::view-transition-image-pair(root){isolation:auto}
-::view-transition-old(root),::view-transition-new(root){mix-blend-mode:normal;animation-duration:.46s;transform-origin:left center}
-::view-transition-old(root){z-index:2;animation:turn-out .46s cubic-bezier(.45,.05,.55,.95) both}
-::view-transition-new(root){z-index:1;animation:under-in .46s ease both}
-html[data-dir="back"]::view-transition-old(root){z-index:1;animation:under-out .4s ease both}
-html[data-dir="back"]::view-transition-new(root){z-index:2;animation:turn-in .46s cubic-bezier(.2,.75,.3,1) both}
-@keyframes turn-out{0%{transform:perspective(1600px) rotateY(0);filter:brightness(1)}100%{transform:perspective(1600px) rotateY(-100deg);filter:brightness(.82)}}
-@keyframes turn-in{0%{transform:perspective(1600px) rotateY(-100deg);filter:brightness(.82)}100%{transform:perspective(1600px) rotateY(0);filter:brightness(1)}}
-@keyframes under-in{0%{opacity:.5;transform:scale(.985)}100%{opacity:1;transform:none}}
-@keyframes under-out{to{opacity:.4;transform:scale(.985)}}
-section.in-fwd{animation:sec-in .42s cubic-bezier(.2,.75,.3,1);transform-origin:left center}
-section.in-back{animation:sec-in-b .42s cubic-bezier(.2,.75,.3,1);transform-origin:right center}
-@keyframes sec-in{from{opacity:0;transform:perspective(1600px) rotateY(28deg)}}
-@keyframes sec-in-b{from{opacity:0;transform:perspective(1600px) rotateY(-28deg)}}
+/* page turn */
+.turnwrap{position:fixed;left:0;right:0;bottom:0;z-index:25;pointer-events:none;overflow:hidden;perspective:1700px}
+.turnpage{position:absolute;inset:0;background:var(--paper);transform-origin:left center;backface-visibility:hidden;-webkit-backface-visibility:hidden;will-change:transform}
+.turnwrap.back .turnpage{transform-origin:right center}
+.turnpage .shade{position:absolute;inset:0;opacity:0;background:linear-gradient(90deg,rgba(51,41,74,0) 30%,rgba(51,41,74,.28))}
+.turnwrap.back .turnpage .shade{background:linear-gradient(270deg,rgba(51,41,74,0) 30%,rgba(51,41,74,.28))}
+.turnwrap::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(51,41,74,.16),rgba(51,41,74,0) 45%);opacity:0}
+.turnwrap.back::before{background:linear-gradient(270deg,rgba(51,41,74,.16),rgba(51,41,74,0) 45%)}
+.turnwrap.go .turnpage{animation:pturn .62s cubic-bezier(.55,.05,.45,.95) forwards}
+.turnwrap.back.go .turnpage{animation-name:pturn-b}
+.turnwrap.go .shade{animation:pshade .62s ease forwards}
+.turnwrap.go::before{animation:pfloor .62s ease forwards}
+@keyframes pturn{0%{transform:rotateY(0);box-shadow:0 0 0 rgba(51,41,74,0)}35%{box-shadow:24px 0 40px rgba(51,41,74,.18)}100%{transform:rotateY(-118deg);box-shadow:0 0 0 rgba(51,41,74,0)}}
+@keyframes pturn-b{0%{transform:rotateY(0);box-shadow:0 0 0 rgba(51,41,74,0)}35%{box-shadow:-24px 0 40px rgba(51,41,74,.18)}100%{transform:rotateY(118deg);box-shadow:0 0 0 rgba(51,41,74,0)}}
+@keyframes pshade{0%{opacity:0}60%{opacity:1}100%{opacity:1}}
+@keyframes pfloor{0%{opacity:1}100%{opacity:0}}
+section.under{animation:under .62s ease}
+@keyframes under{0%{opacity:.55;transform:scale(.985)}100%{opacity:1;transform:none}}
+section.fadein{animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0}}
 .band a.here{animation:hop .55s .2s cubic-bezier(.3,1.6,.5,1) both}
 @keyframes hop{0%{transform:translateY(0)}40%{transform:translateY(-5px)}100%{transform:translateY(0)}}
 .band .no{animation:none}
@@ -740,7 +744,7 @@ section.in-back{animation:sec-in-b .42s cubic-bezier(.2,.75,.3,1);transform-orig
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 6</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -1159,9 +1163,21 @@ function refreshChips(){$$('.chips').forEach(el=>{if(!el._got)return;[...el.chil
 
 /* ===== ルーティング ===== */
 const ROUTES=['home','sounds',...SECS.map(s=>s.id)];
-let prevIdx=-1;
+let prevIdx=-1,prevId=null;
+function makeTurn(fromId,dir){
+  const old=document.getElementById(fromId);if(!old||!old.classList.contains('show'))return null;
+  const nb=Math.max(0,$('nav.tabs').getBoundingClientRect().bottom),r=old.getBoundingClientRect();
+  const wrap=document.createElement('div');wrap.className='turnwrap '+dir;wrap.style.top=nb+'px';
+  const page=document.createElement('div');page.className='turnpage';
+  const cl=old.cloneNode(true);cl.classList.add('show');cl.setAttribute('aria-hidden','true');
+  cl.style.position='absolute';cl.style.left=r.left+'px';cl.style.top=(r.top-nb)+'px';cl.style.width=r.width+'px';cl.style.margin='0';
+  old.querySelectorAll('canvas').forEach((c,i)=>{const cc=cl.querySelectorAll('canvas')[i];if(cc&&c.width){cc.width=c.width;cc.height=c.height;try{cc.getContext('2d').drawImage(c,0,0)}catch(e){}}});
+  const sh=document.createElement('div');sh.className='shade';
+  page.appendChild(cl);page.appendChild(sh);wrap.appendChild(page);document.body.appendChild(wrap);
+  return ()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{wrap.classList.add('go');setTimeout(()=>wrap.remove(),760)}));
+}
 function route(){
-  const id=curRoute(),idx=ROUTES.indexOf(id),dir=idx>=prevIdx?'fwd':'back',first=prevIdx<0;prevIdx=idx;
+  const id=curRoute(),idx=ROUTES.indexOf(id),dir=idx>=prevIdx?'fwd':'back',first=prevIdx<0,fromId=prevId;prevIdx=idx;prevId=id;
   const apply=()=>{
     ROUTES.forEach(r=>document.getElementById(r).classList.toggle('show',r===id));
     renderStaffs();
@@ -1171,12 +1187,13 @@ function route(){
     const a=$(`#nav a.tab[data-id="${id}"]`);if(a)a.scrollIntoView({block:'nearest',inline:'center'});
     scrollTo(0,0);
   };
+  if(first||fromId===id){apply();return}
+  pageSound(idx);
   const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  document.documentElement.dataset.dir=dir;
-  if(!first)pageSound(idx);
-  if(first||calm){apply();return}
-  if(document.startViewTransition){document.startViewTransition(apply)}
-  else{apply();const sec=document.getElementById(id);sec.classList.remove('in-fwd','in-back');void sec.offsetWidth;sec.classList.add('in-'+dir)}
+  if(calm){apply();const sec=document.getElementById(id);sec.classList.remove('fadein');void sec.offsetWidth;sec.classList.add('fadein');return}
+  const go=makeTurn(fromId,dir);apply();
+  const sec=document.getElementById(id);sec.classList.remove('under');void sec.offsetWidth;sec.classList.add('under');
+  if(go)go();
 }
 addEventListener('hashchange',route);
 
