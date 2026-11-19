@@ -17,7 +17,7 @@
 <title>音楽理論ラボ</title>
 <script>try{var _j=JSON.parse(localStorage.getItem("ongaku-riron-lab-v2")||"null");if(_j&&_j.theme)document.documentElement.dataset.theme=_j.theme}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Zen+Maru+Gothic:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;700&family=DotGothic16&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Zen+Maru+Gothic:wght@400;500;700&family=Zen+Kaku+Gothic+New:wght@400;700&family=DotGothic16&family=Shippori+Mincho:wght@500;700&family=RocknRoll+One&family=Yusei+Magic&display=swap" rel="stylesheet">
 <style>
 :root{
   /* 楽譜ノート：淡いライラックの紙、プラムのインク、ローズの差し色。見出しは五線の上、課題は付箋に書く */
@@ -473,28 +473,84 @@ section.settle{animation:settle .38s cubic-bezier(.2,.8,.3,1)}
 section.fadein{animation:fadein2 .3s ease}
 @keyframes fadein2{from{opacity:0;transform:translateY(8px)}}
 /* themes */
-html[data-theme="midnight"]{--paper:#16132A;--sheet:#211D37;--ink:#EEE9F8;--ink2:#D2CAE6;--mute:#A49CBB;--rule:#3A3456;--rose:#FF8FB5;--rose-soft:#4A2B47;--butter:#E9C962;--butter-soft:#3B3424;--soda:#8CC2F0;--soda-soft:#24324A;--mint:#7FD4B8;--mint-ink:#8FE3C6;--on-ink:#16132A;--keyw:#F1EEF8;--keyline:#3A3456;--keyb:#0D0B19;--today:#251F3D;--check:rgba(255,143,181,.07);--notemix:22%;color-scheme:dark}
-html[data-theme="soda"]{--paper:#F1FAF7;--sheet:#FFFFFF;--ink:#1F3B44;--ink2:#35575F;--mute:#6C8C92;--rule:#D3EAE4;--rose:#E25A78;--rose-soft:#FBDDE4;--butter:#F5D667;--butter-soft:#FCF4D2;--soda:#59B4D3;--soda-soft:#DAF0F6;--mint:#6CCBB0;--mint-ink:#24806A;--keyb:#1F3B44;--keyline:#CBE3DD;--today:#E2F5EF;--check:rgba(89,180,211,.13)}
-html[data-theme="ichigo"]{--paper:#FFF5F7;--sheet:#FFFFFF;--ink:#5A2E3E;--ink2:#6E4453;--mute:#A27E8A;--rule:#F5DCE3;--rose:#E2577D;--rose-soft:#FFDCE6;--keyb:#5A2E3E;--keyline:#F0CDD7;--today:#FFE4EC;--check:rgba(226,87,125,.08)}
-html[data-theme="mono"]{--paper:#F4F4F2;--sheet:#FFFFFF;--ink:#1C1C1C;--ink2:#3A3A3A;--mute:#77746F;--rule:#E2E0DC;--rose:#D9384F;--rose-soft:#F6DCE0;--butter:#E9D27A;--butter-soft:#F5F0DC;--soda:#7A7A7A;--soda-soft:#EAEAEA;--mint:#8A8A8A;--mint-ink:#2F6F55;--keyb:#1C1C1C;--keyline:#D2D0CB;--today:#ECECE9;--check:rgba(28,28,28,.045);--display:'Zen Kaku Gothic New',system-ui,sans-serif;--body:'Zen Kaku Gothic New',system-ui,sans-serif}
-html[data-theme="mono"] h2,html[data-theme="mono"] .big,html[data-theme="mono"] .tempo .word{font-weight:700;letter-spacing:.02em}
+[data-theme="note"]{--paper:#F7F5FA;--sheet:#FFFFFF;--ink:#33294A;--ink2:#4B4163;--mute:#7C7390;--rule:#E3DDEB;--rose:#D9658B;--rose-soft:#F8DCE6;--display:'Kiwi Maru','Zen Maru Gothic',serif;--body:'Zen Maru Gothic',system-ui,sans-serif}
+[data-theme="ichigo"]{--paper:#FFF5F7;--sheet:#FFFFFF;--ink:#5A2E3E;--ink2:#6E4453;--mute:#A27E8A;--rule:#F5DCE3;--rose:#E2577D;--rose-soft:#FFDCE6;--keyb:#5A2E3E;--keyline:#F0CDD7;--today:#FFE4EC;--check:rgba(226,87,125,.08)}
+[data-theme="soda"]{--paper:#F1FAF7;--sheet:#FFFFFF;--ink:#1F3B44;--ink2:#35575F;--mute:#6C8C92;--rule:#D3EAE4;--rose:#E25A78;--rose-soft:#FBDDE4;--butter:#F5D667;--butter-soft:#FCF4D2;--soda:#59B4D3;--soda-soft:#DAF0F6;--mint:#6CCBB0;--mint-ink:#24806A;--keyb:#1F3B44;--keyline:#CBE3DD;--today:#E2F5EF;--check:rgba(89,180,211,.13)}
+[data-theme="yume"]{--paper:#F6F2FF;--sheet:#FFFFFF;--ink:#4A3F75;--ink2:#5C5288;--mute:#9890B8;--rule:#E6DFF7;--rose:#D86CC0;--rose-soft:#FBE1F3;--butter:#FFE29A;--butter-soft:#FFF6DD;--soda:#8FC8F5;--soda-soft:#E1F0FD;--mint:#9EE3D6;--keyb:#4A3F75;--keyline:#E0D8F5;--today:#F1E8FF;--check:rgba(143,200,245,.16)}
+[data-theme="nordic"]{--paper:#F3EFE7;--sheet:#FBF9F4;--ink:#38372F;--ink2:#4D4B42;--mute:#878374;--rule:#E1DACC;--rose:#5F7F6E;--rose-soft:#DCE6DE;--butter:#E1C26A;--butter-soft:#F4EBCF;--soda:#7E9CB0;--soda-soft:#E0E8EE;--mint:#8DAF8F;--mint-ink:#3F6B4D;--keyb:#38372F;--keyline:#DDD5C5;--today:#EAE4D6;--check:rgba(95,127,110,.08);--display:'Zen Maru Gothic',system-ui,sans-serif;--body:'Zen Kaku Gothic New',system-ui,sans-serif}
+[data-theme="mono"]{--paper:#F4F4F2;--sheet:#FFFFFF;--ink:#1C1C1C;--ink2:#3A3A3A;--mute:#77746F;--rule:#E2E0DC;--rose:#D9384F;--rose-soft:#F6DCE0;--butter:#E9D27A;--butter-soft:#F5F0DC;--soda:#7A7A7A;--soda-soft:#EAEAEA;--mint:#8A8A8A;--mint-ink:#2F6F55;--keyb:#1C1C1C;--keyline:#D2D0CB;--today:#ECECE9;--check:rgba(28,28,28,.045);--display:'Zen Kaku Gothic New',system-ui,sans-serif;--body:'Zen Kaku Gothic New',system-ui,sans-serif}
+[data-theme="vintage"]{--paper:#EDE3CC;--sheet:#F6EEDC;--ink:#3B2A1E;--ink2:#52402F;--mute:#86725C;--rule:#D8C8A8;--rose:#8E3B2F;--rose-soft:#E8D0C0;--butter:#C9A04A;--butter-soft:#EFE0B8;--soda:#5D7A8C;--soda-soft:#DCE2E2;--mint:#7C9A6E;--mint-ink:#3F5E33;--keyw:#FBF6EA;--keyline:#CDBB98;--keyb:#2E2118;--today:#E6D9BC;--check:rgba(142,59,47,.07);--display:'Shippori Mincho',serif;--body:'Zen Kaku Gothic New',system-ui,sans-serif}
+[data-theme="washi"]{--paper:#F4F0E6;--sheet:#FBF8F0;--ink:#1F1D1A;--ink2:#3A3732;--mute:#7B756A;--rule:#DED7C8;--rose:#C0392B;--rose-soft:#F2D9D2;--butter:#D9A441;--butter-soft:#F3E6C6;--soda:#3E5C76;--soda-soft:#DCE4EC;--mint:#6B8E5A;--mint-ink:#3E6330;--keyb:#1F1D1A;--keyline:#D6CEBD;--today:#EFE8D8;--check:rgba(192,57,43,.05);--display:'Shippori Mincho',serif;--body:'Zen Kaku Gothic New',system-ui,sans-serif}
+[data-theme="midnight"]{--paper:#16132A;--sheet:#211D37;--ink:#EEE9F8;--ink2:#D2CAE6;--mute:#A49CBB;--rule:#3A3456;--rose:#FF8FB5;--rose-soft:#4A2B47;--butter:#E9C962;--butter-soft:#3B3424;--soda:#8CC2F0;--soda-soft:#24324A;--mint:#7FD4B8;--mint-ink:#8FE3C6;--on-ink:#16132A;--keyw:#F1EEF8;--keyline:#3A3456;--keyb:#0D0B19;--today:#251F3D;--check:rgba(255,143,181,.07);--notemix:22%;color-scheme:dark}
+[data-theme="jazz"]{--paper:#0F1A16;--sheet:#16241F;--ink:#F1E8D2;--ink2:#D8CDB2;--mute:#A39A82;--rule:#2A3B34;--rose:#D4A44C;--rose-soft:#3A3220;--butter:#E6C46B;--butter-soft:#38321C;--soda:#7FA7C9;--soda-soft:#1E2E38;--mint:#8CC7A6;--mint-ink:#9ED7B6;--on-ink:#0F1A16;--keyw:#F4EEDD;--keyline:#2A3B34;--keyb:#070D0B;--today:#172720;--check:rgba(212,164,76,.06);--notemix:20%;--display:'Shippori Mincho',serif;--body:'Zen Kaku Gothic New',system-ui,sans-serif;color-scheme:dark}
+[data-theme="neon"]{--paper:#05070F;--sheet:#0D1324;--ink:#E8EEFF;--ink2:#C6D0EE;--mute:#8B96BA;--rule:#253055;--rose:#FF4FD8;--rose-soft:#3A1642;--butter:#FFE14D;--butter-soft:#3A3519;--soda:#22E5FF;--soda-soft:#0F3443;--mint:#6CFFB0;--mint-ink:#6CFFB0;--on-ink:#0A0D1B;--keyw:#E9EEFF;--keyline:#253055;--keyb:#070914;--today:#111834;--check:rgba(34,229,255,.06);--notemix:20%;--display:'DotGothic16','Zen Kaku Gothic New',sans-serif;--body:'Zen Kaku Gothic New',system-ui,sans-serif;color-scheme:dark}
+[data-theme="pop"]{--paper:#FFFBEF;--sheet:#FFFFFF;--ink:#111111;--ink2:#222222;--mute:#555555;--rule:#111111;--rose:#FF3B5C;--rose-soft:#FFD6DE;--butter:#FFD400;--butter-soft:#FFF3B0;--soda:#1E6BFF;--soda-soft:#D6E4FF;--mint:#00C48C;--mint-ink:#007A57;--keyb:#111111;--keyline:#111111;--today:#FFF3B0;--check:rgba(255,59,92,.12);--display:'RocknRoll One','Zen Kaku Gothic New',sans-serif;--body:'Zen Kaku Gothic New',system-ui,sans-serif}
+[data-theme="retro"]{--paper:#0F0F1B;--sheet:#181830;--ink:#F8F8F8;--ink2:#DADADA;--mute:#9A9AB0;--rule:#34345A;--rose:#F83800;--rose-soft:#3A1A14;--butter:#F8B800;--butter-soft:#3A3010;--soda:#3CBCFC;--soda-soft:#102A3A;--mint:#58D854;--mint-ink:#58D854;--on-ink:#0F0F1B;--keyw:#F8F8F8;--keyline:#34345A;--keyb:#000000;--today:#151530;--check:rgba(248,184,0,.06);--notemix:20%;--display:'DotGothic16',monospace;--body:'DotGothic16','Zen Kaku Gothic New',monospace;color-scheme:dark}
+[data-theme="chalk"]{--paper:#22362E;--sheet:#2A4038;--ink:#F2F1EA;--ink2:#DCDBD2;--mute:#A9B8AE;--rule:#3E564C;--rose:#F5A3B5;--rose-soft:#4A4048;--butter:#F3E08A;--butter-soft:#47482F;--soda:#9CCCF0;--soda-soft:#2E4A56;--mint:#A8E0B8;--mint-ink:#BDEBCB;--on-ink:#22362E;--keyw:#EFEDE4;--keyline:#3E564C;--keyb:#121C18;--today:#2A4038;--check:rgba(242,241,234,.04);--notemix:22%;--display:'Yusei Magic','Zen Kaku Gothic New',sans-serif;--body:'Zen Kaku Gothic New',system-ui,sans-serif;color-scheme:dark}
+[data-theme="blueprint"]{--paper:#0E3A6B;--sheet:#124478;--ink:#EAF3FF;--ink2:#CFE0F7;--mute:#9DB8DA;--rule:#3A6597;--rose:#FFD166;--rose-soft:#3A5072;--butter:#FFD166;--butter-soft:#2F4E6E;--soda:#9AD1FF;--soda-soft:#1F5288;--mint:#8EE3C8;--mint-ink:#9EF0D6;--on-ink:#0E3A6B;--keyw:#EAF3FF;--keyline:#3A6597;--keyb:#082646;--today:#124478;--check:rgba(255,255,255,.04);--notemix:20%;--display:'Zen Kaku Gothic New',system-ui,sans-serif;--body:'Zen Kaku Gothic New',system-ui,sans-serif;color-scheme:dark}
+html[data-theme="yume"] body{background:linear-gradient(165deg,#F6F2FF 0%,#EAF4FF 50%,#FFF0F8 100%) fixed}
+html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,.10) 1.4px,transparent 1.6px);background-size:22px 22px}
+html[data-theme="washi"] body{background-image:radial-gradient(rgba(120,100,70,.06) 1px,transparent 1.2px),radial-gradient(rgba(120,100,70,.04) 1px,transparent 1.2px);background-size:7px 9px,13px 11px}
+html[data-theme="washi"] .card,html[data-theme="washi"] .band,html[data-theme="washi"] .today,html[data-theme="washi"] .missions{border-radius:4px}
+html[data-theme="washi"] h2{letter-spacing:.12em}
+html[data-theme="vintage"] body{background-image:radial-gradient(rgba(80,50,20,.05) 1px,transparent 1.3px);background-size:9px 9px}
+html[data-theme="vintage"] .card{box-shadow:0 1px 0 rgba(59,42,30,.08)}
+html[data-theme="mono"] h2,html[data-theme="mono"] .big,html[data-theme="mono"] .tempo .word,html[data-theme="blueprint"] h2,html[data-theme="blueprint"] .big{font-weight:700;letter-spacing:.02em}
 html[data-theme="mono"] .card,html[data-theme="mono"] .today,html[data-theme="mono"] .band{border-radius:10px}
-html[data-theme="neon"]{--paper:#05070F;--sheet:#0D1324;--ink:#E8EEFF;--ink2:#C6D0EE;--mute:#8B96BA;--rule:#253055;--rose:#FF4FD8;--rose-soft:#3A1642;--butter:#FFE14D;--butter-soft:#3A3519;--soda:#22E5FF;--soda-soft:#0F3443;--mint:#6CFFB0;--mint-ink:#6CFFB0;--on-ink:#0A0D1B;--keyw:#E9EEFF;--keyline:#253055;--keyb:#070914;--today:#111834;--check:rgba(34,229,255,.06);--notemix:20%;--display:'DotGothic16','Zen Kaku Gothic New',sans-serif;--body:'Zen Kaku Gothic New',system-ui,sans-serif;color-scheme:dark}
 html[data-theme="neon"] body{background-image:linear-gradient(rgba(34,229,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(34,229,255,.05) 1px,transparent 1px);background-size:28px 28px}
 html[data-theme="neon"] .card,html[data-theme="neon"] .missions{box-shadow:0 0 0 1px rgba(34,229,255,.12),0 0 24px rgba(34,229,255,.06)}
 html[data-theme="neon"] .band .no,html[data-theme="neon"] .wipe .wno{text-shadow:0 0 14px currentColor}
 html[data-theme="neon"] .btn.primary,html[data-theme="neon"] .pchord.now,html[data-theme="neon"] .goalsel button.sel{background:var(--soda);border-color:var(--soda);color:#05070F;box-shadow:0 0 16px rgba(34,229,255,.45)}
 html[data-theme="neon"] h2{text-shadow:2px 0 rgba(255,79,216,.45),-2px 0 rgba(34,229,255,.45)}
-html[data-theme="neon"] nav.tabs a.tab.active{box-shadow:0 0 12px var(--ta)}
 html[data-theme="neon"] .lvchip b{color:var(--soda);text-shadow:0 0 8px rgba(34,229,255,.6)}
-html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,.10) 1.4px,transparent 1.6px);background-size:22px 22px}
-.themes{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px}
-.th{text-align:left;border:1.5px solid var(--rule);border-radius:14px;padding:10px 12px;cursor:pointer;background:var(--tbg);color:var(--tink);line-height:1.45}
-.th.sel{border-color:var(--rose);box-shadow:0 0 0 2px color-mix(in srgb,var(--rose) 30%,transparent)}
-.th b{display:block;font-size:14px}
-.th small{display:block;font-size:11.5px;opacity:.75}
-.th .sw{display:flex;gap:4px;margin-bottom:6px}
-.th .sw i{width:16px;height:16px;border-radius:50%;border:1px solid rgba(128,128,128,.3)}
+html[data-theme="jazz"] .card{border-color:rgba(212,164,76,.25)}
+html[data-theme="jazz"] h2{letter-spacing:.08em}
+html[data-theme="pop"] body{background-image:radial-gradient(rgba(17,17,17,.07) 1.2px,transparent 1.5px);background-size:16px 16px}
+html[data-theme="pop"] .card,html[data-theme="pop"] .missions,html[data-theme="pop"] .today,html[data-theme="pop"] .band{border:2.5px solid #111;box-shadow:5px 5px 0 #111;border-radius:16px}
+html[data-theme="pop"] .btn,html[data-theme="pop"] .opt,html[data-theme="pop"] .pg,html[data-theme="pop"] .pchord{border:2px solid #111;box-shadow:3px 3px 0 #111}
+html[data-theme="pop"] .btn:active{box-shadow:0 0 0 #111;transform:translate(3px,3px)}
+html[data-theme="pop"] .btn.primary{background:var(--rose);color:#fff}
+html[data-theme="pop"] .panes{border:2px solid #111}
+html[data-theme="retro"] *{border-radius:0 !important}
+html[data-theme="retro"] .card,html[data-theme="retro"] .missions,html[data-theme="retro"] .band,html[data-theme="retro"] .today{border:3px solid var(--ink);box-shadow:none}
+html[data-theme="retro"] .btn,html[data-theme="retro"] .chip,html[data-theme="retro"] .opt{border:2px solid var(--ink)}
+html[data-theme="retro"] .btn.primary{background:var(--rose);color:#fff;border-color:var(--rose)}
+html[data-theme="retro"] body{background-image:linear-gradient(rgba(255,255,255,.025) 50%,transparent 50%);background-size:100% 4px}
+html[data-theme="chalk"] body{background-image:radial-gradient(rgba(255,255,255,.035) 1px,transparent 1.4px),radial-gradient(rgba(255,255,255,.02) 1px,transparent 1.4px);background-size:6px 7px,11px 13px}
+html[data-theme="chalk"] .card,html[data-theme="chalk"] .missions{border:1.5px dashed rgba(242,241,234,.28);background-color:transparent}
+html[data-theme="chalk"] .card{background:rgba(255,255,255,.03)}
+html[data-theme="chalk"] h2,html[data-theme="chalk"] .big{text-shadow:0 0 1px rgba(255,255,255,.5)}
+html[data-theme="blueprint"] body{background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:60px 60px,60px 60px,12px 12px,12px 12px}
+html[data-theme="blueprint"] .card,html[data-theme="blueprint"] .missions,html[data-theme="blueprint"] .band,html[data-theme="blueprint"] .today{border:1px solid rgba(234,243,255,.4);border-radius:3px;background-color:rgba(18,68,120,.85)}
+html[data-theme="blueprint"] .btn.primary{background:var(--rose);color:#0E3A6B}
+/* theme picker */
+.tgen{font-size:12px;color:var(--mute);margin:14px 0 6px}
+.themes{display:grid;grid-template-columns:repeat(auto-fill,minmax(146px,1fr));gap:8px}
+.th{text-align:left;border:1.5px solid var(--rule);border-radius:14px;padding:10px 12px;cursor:pointer;background:var(--paper);color:var(--ink);line-height:1.45;font-family:var(--body);position:relative;overflow:hidden}
+.th .smp{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.th .smp span{font-family:var(--display);font-size:19px;line-height:1}
+.th .smp i{width:12px;height:9px;border-radius:50%;background:var(--rose);transform:rotate(-20deg)}
+.th .smp em{flex:1;height:8px;border-radius:4px;background:var(--sheet);border:1px solid var(--rule);font-style:normal}
+.th b{display:block;font-size:13.5px}
+.th small{display:block;font-size:11px;color:var(--mute)}
+.th.sel{outline:3px solid var(--rose);outline-offset:1px}
+html .th.sel{outline-color:var(--rose)}
+/* panes */
+.panes{position:sticky;top:var(--navh,52px);z-index:20;display:flex;gap:2px;margin:14px 0 4px;padding:4px;border-radius:999px;background:color-mix(in srgb,var(--sheet) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--rule);overflow-x:auto;scrollbar-width:none;box-shadow:0 4px 14px color-mix(in srgb,var(--ink) 6%,transparent)}
+.panes::-webkit-scrollbar{display:none}
+.panes button{position:relative;z-index:1;flex:1 0 auto;border:none;background:none;color:var(--mute);font-size:13.5px;font-weight:700;padding:7px 14px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:color .2s}
+.panes button.on{color:var(--on-ink)}
+.panes .pc{font-size:11px;font-weight:500;margin-left:5px;opacity:.85}
+.panes .ind{position:absolute;z-index:0;top:4px;left:0;height:calc(100% - 8px);border-radius:999px;background:var(--sa,var(--ink));transition:transform .3s cubic-bezier(.3,1.3,.5,1),width .3s}
+#homeBody .panes .ind{background:var(--ink)}
+[data-pane][hidden]{display:none !important}
+.pw > :first-child{margin-top:12px}
+.tipgrp details summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tipgrp details summary::-webkit-details-marker{display:none}
+.tipgrp details summary::after{content:"＋";margin-left:auto;color:var(--mute);font-size:13px}
+.tipgrp details[open] summary::after{content:"－"}
+.tipgrp .hasdemo{font-size:11px;color:var(--sa,var(--rose));background:var(--sc,var(--rose-soft));border-radius:999px;padding:0 8px}
+.tipgrp li b{font-size:14px}
 @media (prefers-reduced-motion:reduce){*:not(.turnpage):not(.shade):not(.turnwrap):not(.wipe):not(.wipe *):not(section){animation:none !important;transition:none !important}.turnwrap::before{animation:none !important}}
 </style>
 </head>
@@ -510,12 +566,12 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
 
 <section id="sounds">
   <header class="sh"><div class="band"><span class="no">♪</span><canvas id="instViz" aria-hidden="true"></canvas></div><h2>楽器の音</h2><p class="lead">作曲でよく使う楽器の音を、鍵盤とフレーズで聴き比べられます。シンセで特徴をまねた音なので、本物の録音とは少し違います。楽器の役割や組み合わせを考えるのに使ってください。</p></header>
-  <div class="card">
+  <div class="card" data-pane="play">
     <div class="chips" id="instCats"></div>
     <div class="ilist" id="instList"></div>
   </div>
-  <div class="card" id="instDetail"></div>
-  <div class="card">
+  <div class="card" id="instDetail" data-pane="play"></div>
+  <div class="card" data-pane="ens">
     <h3>組み合わせて聴く</h3>
     <p class="sub" style="margin-top:0">C → Am → F → G の4小節を、いろいろな編成で鳴らします。</p>
     <div class="ctrl" id="ensList"></div>
@@ -524,20 +580,21 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
     <div class="ctrl"><button class="btn quiet" id="ensStop">■ 止める</button></div>
     <div class="tip"><b>編成づくりのコツ：</b>低音はベース、中音は和音（ピアノ・ギター・パッド）、高音はメロディ、と音域で役割を分けると、たくさん重ねても濁りません。同じ音域に楽器を重ねすぎない、歌がある間は伴奏を引き算する、の2つも覚えておくと便利です。</div>
   </div>
+  <div class="card tips" data-sec="sounds" data-pane="tips"></div>
 </section>
 
 <!-- 01 基礎 -->
 <section id="basics">
   <header class="sh"><div class="band"><span class="no">01</span><div class="staffslot" data-sec="basics"></div></div><h2>音の名前と鍵盤</h2><p class="lead">音楽理論の話は、ほとんどが「鍵盤のどこにあるか」と「何個はなれているか」で説明できます。まずは鍵盤を弾いて、音の並びに慣れましょう。</p></header>
-  <div class="missions" data-sec="basics"></div>
-  <div class="card">
+  <div class="missions" data-sec="basics" data-pane="tasks"></div>
+  <div class="card" data-pane="play">
     <h3>鍵盤を弾いてみる</h3>
     <div class="readout" id="bRead">鍵盤をタップしてね</div>
     <div class="kbwrap"><div id="bKb"></div></div>
     <div class="tip">隣り合う鍵盤（黒鍵も含む）の距離が <b>半音</b>。半音2つぶんが <b>全音</b>。E–F と B–C の間には黒鍵がないので、ここだけ白鍵どうしで半音。</div>
     <div class="ctrl"><button class="btn primary" id="bHalf">▶ 半音（E→F）</button><button class="btn primary" id="bWhole">▶ 全音（C→D）</button><button class="btn primary" id="bOct">▶ オクターブ</button></div>
   </div>
-  <div class="card">
+  <div class="card" data-pane="learn">
     <h3>音名の対応表</h3>
     <div class="tbl"><table>
       <tr><th>英米（コード名）</th><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>A</td><td>B</td></tr>
@@ -546,27 +603,27 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
     </table></div>
     <p style="font-size:14px">「ハ長調」＝Cメジャー、「イ短調」＝Aマイナー。DAW やコード表記では英語を使うので、C〜B に慣れておくと便利です。</p>
   </div>
-  <div class="card">
+  <div class="card" data-pane="learn">
     <h3>♯（シャープ）と ♭（フラット）</h3>
     <p>♯ は半音上げる、♭ は半音下げる記号。C♯ と D♭ は鍵盤上では同じ黒鍵（<b>異名同音</b>）。どちらで書くかはキー（調）で決まります。</p>
     <p>「C4」の数字はオクターブ番号。ピアノ中央のドが C4、その上の C が C5。DAW によっては C3 と表示されることもあるので注意。</p>
   </div>
-  <div class="card tips" data-sec="basics"></div>
+  <div class="card tips" data-sec="basics" data-pane="tips"></div>
   <nav class="pager" data-sec="basics" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 02 リズム -->
 <section id="rhythm">
   <header class="sh"><div class="band"><span class="no">02</span><div class="staffslot" data-sec="rhythm"></div></div><h2>リズムとビート</h2><p class="lead">音符の長さとテンポを確かめたら、ドラムを打ち込んでみましょう。1マスが16分音符、16マスで1小節です。</p></header>
-  <div class="missions" data-sec="rhythm"></div>
-  <div class="card">
+  <div class="missions" data-sec="rhythm" data-pane="tasks"></div>
+  <div class="card" data-pane="play">
     <h3>音符の長さ（4/4拍子・1小節）</h3>
     <p style="font-size:14px;margin-top:0">4/4拍子は「1小節に4分音符が4つ」。音符を細かくするほど、1小節に入る数が倍になります。</p>
     <div class="chips" id="lenChips"></div>
     <div class="leds" id="lenLeds"></div>
     <div class="readout" id="lenRead"></div>
   </div>
-  <div class="card">
+  <div class="card" data-pane="play">
     <h3>ステップシーケンサー</h3>
     <p style="font-size:14px;margin-top:0">1マス＝16分音符。4マスで1拍、16マスで1小節。マスをタップして打ち込もう。</p>
     <div class="ctrl"><label>プリセット</label><div class="chips" id="rPre"></div></div>
@@ -577,15 +634,15 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
     </div>
     <div class="tip"><b>4つ打ち</b>：キックを毎拍（1・5・9・13マス目）。ダンス系の基本。<br><b>8ビート</b>：ハイハットを8分（1つおき）、スネアを2・4拍目（5・13マス目）、キックは1拍目から。ロック・ポップスの基本。<br>速い曲は BPM 160〜200 くらいがよく使われます。</div>
   </div>
-  <div class="card tips" data-sec="rhythm"></div>
+  <div class="card tips" data-sec="rhythm" data-pane="tips"></div>
   <nav class="pager" data-sec="rhythm" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 03 音程 -->
 <section id="intervals">
   <header class="sh"><div class="band"><span class="no">03</span><div class="staffslot" data-sec="intervals"></div></div><h2>音程（インターバル）</h2><p class="lead">2つの音の距離を「度」で表します。半音いくつぶんか、どんな響きか、をセットで覚えます。</p></header>
-  <div class="missions" data-sec="intervals"></div>
-  <div class="card">
+  <div class="missions" data-sec="intervals" data-pane="tasks"></div>
+  <div class="card" data-pane="play">
     <div class="ctrl"><label>基準音</label><select id="iRoot"></select></div>
     <div class="chips" id="iChips"></div>
     <div style="margin-top:12px" class="big" id="iName"></div>
@@ -593,21 +650,21 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
     <div class="kbwrap"><div id="iKb"></div></div>
     <div class="ctrl"><button class="btn primary" id="iSeq">▶ 順番に</button><button class="btn" id="iHarm">▶ 同時に</button></div>
   </div>
-  <div class="card">
+  <div class="card" data-pane="learn">
     <h3>音程一覧</h3>
     <p style="font-size:14px;margin-top:0">行をタップすると、C からの音程が鳴ります。</p>
     <div class="tbl"><table id="iTable"></table></div>
     <div class="tip"><b>覚え方：</b>「長・短」は2・3・6・7度に、「完全」は1・4・5・8度に付く。長3度（明るい）と短3度（暗い）の違いが、メジャーとマイナーの違いそのもの。</div>
   </div>
-  <div class="card tips" data-sec="intervals"></div>
+  <div class="card tips" data-sec="intervals" data-pane="tips"></div>
   <nav class="pager" data-sec="intervals" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 04 スケール -->
 <section id="scales">
   <header class="sh"><div class="band"><span class="no">04</span><div class="staffslot" data-sec="scales"></div></div><h2>スケール（音階）</h2><p class="lead">曲で使う音のセットがスケールです。全音と半音の並び方が同じなら、どの音から始めても同じ種類になります。</p></header>
-  <div class="missions" data-sec="scales"></div>
-  <div class="card">
+  <div class="missions" data-sec="scales" data-pane="tasks"></div>
+  <div class="card" data-pane="play">
     <div class="ctrl"><label>ルート</label><select id="sRoot"></select></div>
     <div class="chips" id="sChips"></div>
     <div style="margin-top:12px" class="big" id="sName"></div>
@@ -617,21 +674,21 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
     <div class="kbwrap"><div id="sKb"></div></div>
     <div class="ctrl"><button class="btn primary" id="sUp">▶ 上がる</button><button class="btn" id="sUpDown">▶ 上がって下がる</button></div>
   </div>
-  <div class="card">
+  <div class="card" data-pane="learn">
     <h3>メジャーとマイナーは親戚</h3>
     <p>C メジャーと A マイナーは、使う音がまったく同じ（白鍵だけ）。始まる音が違うだけ。この関係を <b>平行調</b> と呼びます。</p>
     <div class="ctrl"><button class="btn primary" id="sRelC">▶ C メジャー</button><button class="btn primary" id="sRelA">▶ A マイナー</button></div>
     <div class="tip"><b>チャーチモード：</b>ドリアン・フリジアン・リディアン・ミクソリディアンは、メジャースケールを別の音から始めたもの。1音だけ違う「色」を感じてみよう。</div>
   </div>
-  <div class="card tips" data-sec="scales"></div>
+  <div class="card tips" data-sec="scales" data-pane="tips"></div>
   <nav class="pager" data-sec="scales" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 05 コード -->
 <section id="chords">
   <header class="sh"><div class="band"><span class="no">05</span><div class="staffslot" data-sec="chords"></div></div><h2>コード（和音）</h2><p class="lead">ルートから3度ずつ音を重ねたものがコードです。3度が長いか短いかで、明るさが決まります。</p></header>
-  <div class="missions" data-sec="chords"></div>
-  <div class="card">
+  <div class="missions" data-sec="chords" data-pane="tasks"></div>
+  <div class="card" data-pane="play">
     <div class="ctrl"><label>ルート</label><select id="cRoot"></select></div>
     <div class="chips" id="cChips"></div>
     <div style="margin-top:12px" class="big" id="cName"></div>
@@ -640,7 +697,7 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
     <div class="kbwrap"><div id="cKb"></div></div>
     <div class="ctrl"><button class="btn primary" id="cPlay">▶ 同時に</button><button class="btn" id="cArp">▶ アルペジオ</button><button class="btn" id="cCmp">▶ メジャー→マイナー比較</button></div>
   </div>
-  <div class="card">
+  <div class="card" data-pane="learn">
     <h3>コードネームの読み方</h3>
     <div class="tbl"><table>
       <tr><th>表記</th><th>意味</th></tr>
@@ -652,15 +709,15 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
       <tr><td><b>C/E</b></td><td>分数コード：C のコードで、一番下（ベース）を E にする</td></tr>
     </table></div>
   </div>
-  <div class="card tips" data-sec="chords"></div>
+  <div class="card tips" data-sec="chords" data-pane="tips"></div>
   <nav class="pager" data-sec="chords" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 06 ダイアトニック -->
 <section id="diatonic">
   <header class="sh"><div class="band"><span class="no">06</span><div class="staffslot" data-sec="diatonic"></div></div><h2>ダイアトニックコード</h2><p class="lead">スケールの音だけで作れる7つのコードです。ローマ数字で覚えておくと、キーが変わっても同じ考え方で使えます。</p></header>
-  <div class="missions" data-sec="diatonic"></div>
-  <div class="card">
+  <div class="missions" data-sec="diatonic" data-pane="tasks"></div>
+  <div class="card" data-pane="play">
     <div class="ctrl">
       <label>キー</label><select id="dKey"></select>
       <div class="chips" id="dMode"></div>
@@ -671,21 +728,21 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
     <div class="readout" id="dRead" style="margin-top:10px"></div>
     <div class="kbwrap"><div id="dKb"></div></div>
   </div>
-  <div class="card">
+  <div class="card" data-pane="learn">
     <h3>機能（ファンクション）の流れ</h3>
     <p><b style="color:#5F98CB">T</b> → <b style="color:var(--mint-ink)">SD</b> → <b style="color:var(--rose)">D</b> → <b style="color:#5F98CB">T</b> が基本の流れ。「安定 → 展開 → 緊張 → 解決」というストーリー。</p>
     <div class="ctrl"><button class="btn primary" id="dCad1">▶ Ⅰ→Ⅳ→Ⅴ→Ⅰ</button><button class="btn primary" id="dCad2">▶ Ⅴ→Ⅰ（解決）</button><button class="btn primary" id="dCad3">▶ Ⅴ→Ⅵm（偽終止）</button></div>
     <div class="tip"><b>代理コード：</b>同じ機能のコードは入れ替えOK。Ⅰ の代わりに Ⅵm、Ⅳ の代わりに Ⅱm を使うと、雰囲気だけ変えて流れはそのまま。</div>
   </div>
-  <div class="card tips" data-sec="diatonic"></div>
+  <div class="card tips" data-sec="diatonic" data-pane="tips"></div>
   <nav class="pager" data-sec="diatonic" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 07 コード進行 -->
 <section id="progressions">
   <header class="sh"><div class="band"><span class="no">07</span><div class="staffslot" data-sec="progressions"></div></div><h2>定番コード進行</h2><p class="lead">J-POPやボカロ曲でよく使われる進行を、好きなキーとテンポで聴けます。</p></header>
-  <div class="missions" data-sec="progressions"></div>
-  <div class="card">
+  <div class="missions" data-sec="progressions" data-pane="tasks"></div>
+  <div class="card" data-pane="play">
     <div class="ctrl">
       <label>キー</label><select id="pKey"></select>
       <label>BPM <span id="pBpmV" class="mono">100</span></label><input type="range" id="pBpm" min="60" max="180" value="100">
@@ -693,7 +750,7 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
     </div>
     <div class="plist" id="pList"></div>
   </div>
-  <div class="card">
+  <div class="card" data-pane="play">
     <div class="big" id="pName" style="font-size:22px"></div>
     <div class="lead" id="pDesc"></div>
     <div class="prow" id="pRow"></div>
@@ -701,15 +758,15 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
     <div class="kbwrap"><div id="pKb"></div></div>
     <div class="tip">青がベース音、黄色が上のコード音です。コードをタップすると単体で鳴ります。上の音がなるべく動かないように並べる（<b>ボイスリーディング</b>）と、なめらかに聴こえる。</div>
   </div>
-  <div class="card tips" data-sec="progressions"></div>
+  <div class="card tips" data-sec="progressions" data-pane="tips"></div>
   <nav class="pager" data-sec="progressions" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 08 メロディ -->
 <section id="melody">
   <header class="sh"><div class="band"><span class="no">08</span><div class="staffslot" data-sec="melody"></div></div><h2>メロディを作ってみよう</h2><p class="lead">黄色のマスが、その小節のコードの構成音です。小節の頭にコードトーンを置き、間を自由につなげてみましょう。</p></header>
-  <div class="missions" data-sec="melody"></div>
-  <div class="card">
+  <div class="missions" data-sec="melody" data-pane="tasks"></div>
+  <div class="card" data-pane="play">
     <div class="ctrl">
       <label>キー</label><select id="mKey"></select>
       <label>伴奏</label><div class="chips" id="mBack"></div>
@@ -723,7 +780,7 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
       <label><input type="checkbox" id="mLoop"> ループ</label>
     </div>
   </div>
-  <div class="card">
+  <div class="card" data-pane="learn">
     <h3>メロディ作りの基本</h3>
     <div class="tbl"><table>
       <tr><th>用語</th><th>意味</th></tr>
@@ -734,15 +791,15 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
     </table></div>
     <div class="tip"><b>ヒント：</b>同じリズムやフレーズを「くり返して」「少し変える」と覚えやすいメロディになります。</div>
   </div>
-  <div class="card tips" data-sec="melody"></div>
+  <div class="card tips" data-sec="melody" data-pane="tips"></div>
   <nav class="pager" data-sec="melody" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 09 転調・応用 -->
 <section id="modulation">
   <header class="sh"><div class="band"><span class="no">09</span><div class="staffslot" data-sec="modulation"></div></div><h2>転調と応用コード</h2><p class="lead">ラスサビでキーを上げる転調と、ダイアトニックの外から借りてくるコードを聴き比べます。</p></header>
-  <div class="missions" data-sec="modulation"></div>
-  <div class="card">
+  <div class="missions" data-sec="modulation" data-pane="tasks"></div>
+  <div class="card" data-pane="play">
     <div class="ctrl"><label>元のキー</label><select id="tKey"></select></div>
     <h3>ラスサビ転調</h3>
     <p style="font-size:14px;margin-top:0">Ⅳ→Ⅴ→Ⅲm→Ⅵm を1周したあと、キーを上げてもう1周します。</p>
@@ -750,28 +807,28 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
     <div class="prow" id="tRow"></div>
     <div class="tip"><b>Ⅴ7 経由：</b>新しいキーのⅤ7（ドミナント）を1つ挟むと、いきなり変わるより自然に転調できる。</div>
   </div>
-  <div class="card">
+  <div class="card" data-pane="learn">
     <h3>同主調と平行調</h3>
     <p style="font-size:14px;margin-top:0"><b>同主調</b>：ルートが同じでメジャー↔マイナー（C ↔ Cm）。<b>平行調</b>：使う音が同じ（C ↔ Am）。</p>
     <div class="ctrl"><button class="btn primary" id="tSame">▶ 同主調（C→Cm）</button><button class="btn primary" id="tRel">▶ 平行調（C→Am）</button></div>
   </div>
-  <div class="card">
+  <div class="card" data-pane="learn">
     <h3>応用コード（借用和音・セカンダリードミナント）</h3>
     <div class="acards" id="tApps"></div>
   </div>
-  <div class="card tips" data-sec="modulation"></div>
+  <div class="card tips" data-sec="modulation" data-pane="tips"></div>
   <nav class="pager" data-sec="modulation" aria-label="ステージの移動"></nav>
 </section>
 
 <!-- 10 クイズ -->
 <section id="quiz">
   <header class="sh"><div class="band"><span class="no">10</span><div class="staffslot" data-sec="quiz"></div></div><h2>クイズで力だめし</h2><p class="lead">耳で聴く問題と、知識の問題があります。5問続けて正解するとボーナスがつきます。</p></header>
-  <div class="missions" data-sec="quiz"></div>
-  <div class="card">
+  <div class="missions" data-sec="quiz" data-pane="tasks"></div>
+  <div class="card" data-pane="play">
     <div class="chips" id="qMode"></div>
     <div class="ctrl"><label for="qLevel">レベル</label><select id="qLevel"><option value="0">やさしい</option><option value="1" selected>ふつう</option><option value="2">むずかしい</option></select><span class="sub">ラウンドは10問。間違えた問題は復習ノートに入ります。</span></div>
   </div>
-  <div class="card">
+  <div class="card" data-pane="play">
     <div class="qtop"><div class="rdots" id="qDots"></div><span class="sub" id="qCount"></span></div>
     <div class="qtext" id="qText"></div>
     <div class="ctrl" id="qAudio"><button class="btn primary" id="qReplay">▶ もう一度聴く</button><button class="btn" id="qHarm">▶ 同時に鳴らす</button></div>
@@ -780,14 +837,14 @@ html[data-theme="ichigo"] body{background-image:radial-gradient(rgba(226,87,125,
     <div class="kbwrap" id="qKbWrap" hidden><div id="qKb"></div></div>
     <div class="ctrl" style="justify-content:flex-end"><button class="btn primary" id="qNext">始める</button></div>
   </div>
-  <div class="card"><h3>苦手チェック</h3><div id="qWeak"></div></div>
-  <div class="card tips" data-sec="quiz"></div>
+  <div class="card" data-pane="weak"><h3>苦手チェック</h3><div id="qWeak"></div></div>
+  <div class="card tips" data-sec="quiz" data-pane="tips"></div>
   <nav class="pager" data-sec="quiz" aria-label="ステージの移動"></nav>
 </section>
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 10</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 11</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -1137,6 +1194,7 @@ function renderHome(){
   const row=(k,v)=>`<div><dt>${k}</dt><dd>${v}</dd></div>`;
   const tip=HITOKOTO[Math.floor(Date.now()/864e5)%HITOKOTO.length];
   $('#homeBody').innerHTML=`
+  <div class="pw" data-pane="today">
   <div class="today">
     <div class="greetline"><div class="m">${mascot(d.goalHit?'wow':done===0?'happy':'wink')}</div><p>${greet}</p></div>
     <div class="rec${d.goalHit?' spin':''}">${recordSVG(pct)}</div>
@@ -1152,24 +1210,31 @@ function renderHome(){
     <a class="btn" href="#sounds">楽器の音を聴く</a>
   </div>
   <div class="hitokoto"><b>今日のひとこと</b>${tip}</div>
-  <div class="card"><div class="tempo"><span class="word">${L.title}</span><span class="gloss">Lv.${L.l+1}　${L.gloss}</span></div>
-    <span class="bar thick"><i style="width:${L.pct}%"></i></span>
-    <p class="sub">${S.xp}pt　${L.need?`次の ${LEVELS[L.l+1][1]} まで ${L.need}pt`:'最も速いテンポに到達しました'}。課題は ${done}/${total} 完了。</p></div>
   ${nextM?`<div class="card nextcard" style="--sa:${secAcc(SEC[nextM.sec])}"><div><p class="sub" style="margin:0">次の課題（${SEC[nextM.sec].n}）</p><p class="nm">${nextM.t}<span class="pt">${nextM.xp}pt</span></p></div><a class="btn primary" href="#${nextM.sec}">開く</a></div>`:''}
+  </div>
+  <div class="pw" data-pane="stages">
   <div class="card"><h3>ステージの譜面</h3><p class="sub">ステージをクリアすると、その音符が塗られます。10個そろうとドから上のミまでの旋律になります。</p>
     <div class="staffbig">${staffSVG(nextM?nextM.sec:null,true,false)}</div>
     ${cleared?'<button class="btn quiet" id="playStaff">▶ 書き込んだ旋律を聴く</button>':'<p class="sub">最初のステージをクリアすると、ここで旋律を聴けるようになります。</p>'}</div>
   <h3 class="home-h">ステージ一覧</h3>
   <div class="slist">${SECS.map((s,i)=>`<a href="#${s.id}" style="--sa:${secAcc(s)};--sc:${secSoft(s)}"><span class="num">${i+1}</span><span class="nm"><b>${s.n}</b><small>${s.sub}</small></span><span class="heads">${MISSIONS.filter(m=>m.sec===s.id).map(m=>`<i class="${S.done[m.id]?'on':''}"></i>`).join('')}</span></a>`).join('')}</div>
+  </div>
+  <div class="pw" data-pane="record">
+  <div class="card"><div class="tempo"><span class="word">${L.title}</span><span class="gloss">Lv.${L.l+1}　${L.gloss}</span></div>
+    <span class="bar thick"><i style="width:${L.pct}%"></i></span>
+    <p class="sub">${S.xp}pt　${L.need?`次の ${LEVELS[L.l+1][1]} まで ${L.need}pt`:'最も速いテンポに到達しました'}。課題は ${done}/${total} 完了。</p></div>
   <div class="card"><h3>スタンプ帳</h3><div class="stampbook">${SECS.map(s=>`<div>${stampHTML(s,'',!S.badges[s.id])}${s.n}</div>`).join('')}</div></div>
   <div class="card"><h3>記録</h3><dl class="stats">
     ${row('練習した日数',S.days.length+'日')}${row('最長連続',(S.best||0)+'日')}${row('クイズの正解数',c.qok)}${row('正答率',(c.qtot?Math.round(c.qok/c.qtot*100):0)+'%')}
     ${row('最高連続正解',c.qbest)}${row('復習ノート',S.wrong.length+'問')}${row('聴いた音程',c.iv.length+' / 13')}${row('鳴らしたコード',c.chord.length+' / 13')}
   </dl></div>
-  <div class="card"><b>デザイン</b><p class="sub" style="margin:0">画面の色と文字の雰囲気を選べます</p><div class="themes">${THEMES.map(t=>`<button class="th${curTheme().id===t.id?' sel':''}" data-th="${t.id}" style="--tbg:${t.sw[0]};--tink:${t.sw[1]}"><span class="sw">${t.sw.map(c=>`<i style="background:${c}"></i>`).join('')}</span><b>${t.n}</b><small>${t.d}</small></button>`).join('')}</div></div>
+  </div>
+  <div class="pw" data-pane="settings">
+  <div class="card"><b>デザイン</b><p class="sub" style="margin:0">画面の色と文字の雰囲気を選べます</p>${[...new Set(THEMES.map(t=>t.g))].map(g=>`<p class="tgen">${g}</p><div class="themes">${THEMES.filter(t=>t.g===g).map(t=>`<button class="th${curTheme().id===t.id?' sel':''}" data-th="${t.id}" data-theme="${t.id}"><span class="smp"><span>ドレミ</span><i></i><em></em></span><b>${t.n}</b><small>${t.d}</small></button>`).join('')}</div>`).join('')}</div>
   <div class="card"><b>画面の切り替え</b><p class="sub" style="margin:0 0 8px">ステージを移動するときの演出を選べます${RM()?'（この端末は「視差効果を減らす」がオンです）':''}</p><div class="chips" id="transSel">${[['wipe','五線ワイプ'],['fade','ふんわり'],['turn','ページめくり'],['none','なし']].map(([k,l])=>`<button class="chip${transMode()===k?' sel':''}" data-t="${k}">${l}</button>`).join('')}</div></div>
   <div class="card setrow"><div><b>切り替えの音</b><p class="sub" style="margin:0">ステージを移動するときに、小さな効果音とチャイムを鳴らします</p></div><button class="switch${S.pageSound===false?'':' on'}" id="psToggle" role="switch" aria-checked="${S.pageSound!==false}" aria-label="切り替えの音"><i></i></button></div>
-  <p style="text-align:center;margin-top:24px"><button class="btn quiet" id="resetBtn">記録をリセット</button></p>`;
+  <p style="text-align:center;margin-top:24px"><button class="btn quiet" id="resetBtn">記録をリセット</button></p>
+  </div>`;
   $$('.goalsel button').forEach(b=>b.onclick=()=>{S.goal=+b.dataset.g;const t=todayRec();if(!t.goalHit&&t.pts>=S.goal){t.goalHit=1;sfx('badge')}save();renderHome()});
   $$('.themes .th').forEach(b=>b.onclick=()=>{S.theme=b.dataset.th;save();applyTheme();renderProgress();renderTips&&0});
   $$('#transSel .chip').forEach(b=>b.onclick=()=>{S.trans=b.dataset.t;save();renderHome()});
@@ -1177,9 +1242,10 @@ function renderHome(){
   $('#qkRound').onclick=()=>startQuiz(qModeV==='review'||qModeV==='focus'?'interval':qModeV);
   if($('#qkReview'))$('#qkReview').onclick=()=>startQuiz('review');
   if(cleared)$('#playStaff').onclick=()=>{const mids=[60,62,64,65,67,69,71,72,74,76];const c2=ac();const t=c2.currentTime+0.05;SECS.forEach((s,i)=>{if(S.badges[s.id])tone(mids[i],t+i*0.34,0.3,1,'lead')})};
+  setupPanes($('#homeBody'));
   $('#resetBtn').onclick=()=>queueModal({html:`<div class="m">${mascot('oops')}</div><h4>記録をリセットしますか</h4><p>ポイント、課題、スタンプ、毎日の記録、復習ノートがすべて消えます。元には戻せません。</p><div class="mbtns"><button class="btn quiet" data-close>やめる</button><button class="btn primary" id="doReset">リセットする</button></div>`,bind:el=>{el.querySelector('#doReset').onclick=()=>{S=fresh();save();nextModal();renderProgress()}}});
 }
-function renderProgress(){renderNav();renderMissions();renderStaffs();refreshChips();if(curRoute()==='home')renderHome();if(curRoute()==='diatonic')dRender(true);if(curRoute()==='modulation')tRenderApps();if(curRoute()==='quiz')renderQModes()}
+function renderProgress(){renderNav();renderMissions();refreshPaneCounts();renderStaffs();refreshChips();if(curRoute()==='home')renderHome();if(curRoute()==='diatonic')dRender(true);if(curRoute()==='modulation')tRenderApps();if(curRoute()==='quiz')renderQModes()}
 /* ===== 鍵盤・UI部品 ===== */
 function kbRange(midis,minOct=2){const lo=Math.floor(Math.min(...midis)/12)*12;const hi=Math.max(lo+12*minOct-1,Math.ceil((Math.max(...midis)+1)/12)*12-1);return [lo,hi]}
 function keyboard(el,{lo,hi,marks={},onKey,flat=false,w=0,onDown=null}){
@@ -1249,6 +1315,7 @@ function route(){
     renderNav();
     const a=$(`#nav a.tab[data-id="${id}"]`);if(a)a.scrollIntoView({block:'nearest',inline:'center'});
     scrollTo(0,0);
+    requestAnimationFrame(()=>$$(`#${id} .panes`).forEach(moveInd));
   };
   if(first||fromId===id){apply();return}
   pageSound(idx);
@@ -1916,8 +1983,8 @@ const TIPS={
 function renderTips(){
   $$('.tips').forEach(box=>{
     const T=TIPS[box.dataset.sec];if(!T)return;
-    const item=(x,cls)=>`<li class="${cls}"><b>${x[0]}</b><p>${x[1]}</p>${x[2]?`<div class="demo">${x[2].map(([l,f])=>`<button class="btn quiet sm" data-demo="${f}">${l}</button>`).join('')}</div>`:''}</li>`;
-    box.innerHTML=`<h3>コツ・テクニック・タブー</h3>
+    const item=(x,cls)=>`<li class="${cls}"><details><summary><b>${x[0]}</b>${x[2]?'<span class="hasdemo">♪ 聴き比べ</span>':''}</summary><p>${x[1]}</p>${x[2]?`<div class="demo">${x[2].map(([l,f])=>`<button class="btn quiet sm" data-demo="${f}">${l}</button>`).join('')}</div>`:''}</details></li>`;
+    box.innerHTML=`<h3>コツ・テクニック・タブー</h3><p class="sub" style="margin:0">見出しをタップすると説明が開きます</p>
       <div class="tipgrp"><p class="tg kotsu">コツ</p><ul>${T.kotsu.map(x=>item(x,'k')).join('')}</ul></div>
       <div class="tipgrp"><p class="tg tech">テクニック</p><ul>${T.tech.map(x=>item(x,'t')).join('')}</ul></div>
       <div class="tipgrp"><p class="tg taboo">タブー</p><ul>${T.taboo.map(x=>item(x,'x')).join('')}</ul><p class="sub">タブーは「理由を知ったうえで、あえて破る」こともできます。効果をわかって使えば、それはテクニックです。</p></div>`;
@@ -1936,7 +2003,7 @@ function renderPagers(){
 let an=null,rvbIn=null,distCurve=null;
 function analyser(){ac();if(!an){an=ctx.createAnalyser();an.fftSize=128;an.smoothingTimeConstant=.75;master.connect(an)}return an}
 function reverbIn(){const c=ac();if(rvbIn)return rvbIn;const len=Math.floor(c.sampleRate*2.2),buf=c.createBuffer(2,len,c.sampleRate);for(let ch=0;ch<2;ch++){const d=buf.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.2)}const cv=c.createConvolver();cv.buffer=buf;rvbIn=c.createGain();rvbIn.connect(cv);cv.connect(master);return rvbIn}
-function vout(wet){const c=ac(),g=c.createGain();g.connect(master);if(wet){const s=c.createGain();s.gain.value=wet;g.connect(s);s.connect(reverbIn())}return g}
+function vout(wet){const c=ac(),g=c.createGain();if(curPan&&c.createStereoPanner){const pn=c.createStereoPanner();pn.pan.value=curPan;g.connect(pn);pn.connect(master)}else g.connect(master);if(wet){const s=c.createGain();s.gain.value=wet;g.connect(s);s.connect(reverbIn())}return g}
 const sO=(type,f,det=0)=>{const o=ac().createOscillator();o.type=type;o.frequency.value=f;if(det)o.detune.value=det;return o};
 const sG=(v=1)=>{const g=ac().createGain();g.gain.value=v;return g};
 const sF=(type,f,q=.7)=>{const x=ac().createBiquadFilter();x.type=type;x.frequency.value=f;x.Q.value=q;return x};
@@ -2148,6 +2215,49 @@ function sInitSounds(){
   $('#ensStop').onclick=instStop;
   $('#sounds').addEventListener('pointerdown',()=>{if(!vizRaf)vizLoop()});
 }
+/* ===== 編成のコツ（デモ） ===== */
+let curPan=0;
+function arrStart(){instStop();return {t0:ac().currentTime+.08,beat:60/100}}
+function arrBars(fn){const {t0,beat}=arrStart();PROG4.forEach(([r,ch],bar)=>fn({t:t0+bar*4*beat,beat,r:r>6?r-12:r,ch,bar}))}
+function withPan(p,fn){curPan=p;try{fn()}finally{curPan=0}}
+const MELO=[[76,2],[74,1],[72,1],[72,2],[76,2],[77,2],[76,1],[74,1],[74,4]];
+function melodyLine(inst,t0,beat,shift=0){let t=t0;MELO.forEach(([m,l])=>{nOn(inst,m+shift,t,l*beat*.92);t+=l*beat})}
+Object.assign(DEMO,{
+  arrSplit:()=>arrBars(({t,beat,r,ch})=>{nOn('ebass',36+r,t,beat*1.9);nOn('ebass',36+r,t+2*beat,beat*1.9);ch.forEach(n=>nOn('piano',60+n,t,beat*3.8,.8));}),
+  arrMud:()=>arrBars(({t,beat,r,ch})=>{nOn('ebass',36+r,t,beat*1.9);nOn('ebass',36+r,t+2*beat,beat*1.9);ch.forEach(n=>{nOn('piano',36+n+(n<0?12:0),t,beat*3.8,.9);nOn('pad',40+n+(n<0?12:0),t,beat*3.8,1)})}),
+  layerOne:()=>{const {t0,beat}=arrStart();melodyLine('piano',t0,beat*.55)},
+  layerOct:()=>{const {t0,beat}=arrStart();melodyLine('piano',t0,beat*.55);melodyLine('bell',t0,beat*.55,12)},
+  buildUp:()=>arrBars(({t,beat,r,ch,bar})=>{ch.forEach(n=>nOn('piano',60+n,t,beat*3.8,.75));if(bar>=1){[0,1,2,3].forEach(x=>nOn('ebass',36+r,t+x*beat,beat*.9))}if(bar>=2)drumBar(t,beat,{crash:bar===3});if(bar>=3)ch.forEach(n=>nOn('strings',72+n,t,beat*3.9,1))}),
+  panOff:()=>arrBars(({t,beat,r,ch})=>{for(let k=0;k<4;k++)[48+ch[0]-12+12,...ch.map(n=>60+n)].forEach((m,i)=>nOn('aguitar',m,t+k*beat+i*.025,beat*.95,.8));[0,1.5,2.5].forEach(x=>ch.forEach(n=>nOn('epiano',67+n,t+x*beat,beat*.9,.8)))}),
+  panOn:()=>arrBars(({t,beat,r,ch})=>{withPan(-.85,()=>{for(let k=0;k<4;k++)[48+ch[0],...ch.map(n=>60+n)].forEach((m,i)=>nOn('aguitar',m,t+k*beat+i*.025,beat*.95,.8))});withPan(.85,()=>{[0,1.5,2.5].forEach(x=>ch.forEach(n=>nOn('epiano',67+n,t+x*beat,beat*.9,.8)))})}),
+  stackMud:()=>arrBars(({t,beat,ch})=>{ch.forEach(n=>{nOn('pad',60+n,t,beat*3.9,1);nOn('strings',60+n,t,beat*3.9,1);nOn('supersaw',60+n,t,beat*3.9,1)})}),
+  stackClear:()=>arrBars(({t,beat,r,ch})=>{ch.forEach(n=>nOn('pad',48+n+(n<0?12:0),t,beat*3.9,.9));[0,1,2,3].forEach(x=>ch.forEach(n=>nOn('pluck',72+n,t+x*beat,beat*.5,.7)));nOn('strings',84+ch[2],t,beat*3.9,.8)}),
+  melClash:()=>{const {t0,beat}=arrStart();melodyLine('flute',t0,beat);PROG4.forEach(([r,ch],bar)=>{for(let k=0;k<8;k++)nOn('piano',72+[ch[0],ch[1],ch[2],ch[0]+12][k%4],t0+bar*4*beat+k*beat/2,beat*.45,.8)})},
+  melClear:()=>{const {t0,beat}=arrStart();melodyLine('flute',t0,beat);PROG4.forEach(([r,ch],bar)=>{for(let k=0;k<8;k++)nOn('piano',48+[ch[0],ch[1],ch[2],ch[0]+12][k%4]+(ch[0]<0?12:0),t0+bar*4*beat+k*beat/2,beat*.45,.8)})},
+  callResp:()=>{const {t0,beat}=arrStart();const b=beat*.8;[[76,3],[74,1],[72,4]].reduce((t,[m,l])=>{nOn('flute',m,t,l*b*.92);return t+l*b},t0);[[79,.5],[81,.5],[83,.5],[84,1.5]].reduce((t,[m,l])=>{nOn('bell',m,t,l*b*.9,.8);return t+l*b},t0+3*b);PROG4.slice(0,2).forEach(([r,ch],i)=>ch.forEach(n=>nOn('strings',60+n,t0+i*4*b,4*b,.8)))}
+});
+TIPS.sounds={
+  kotsu:[
+    ['音域で役割を分ける','低音（C3 より下）はベース、中音（C3〜C5）は和音、高音（C5 より上）はメロディと飾り。役割ごとに住む場所を分けると、楽器を増やしても濁りません。',[['▶ 分けた編成','arrSplit']]],
+    ['伸びる音と消える音を組み合わせる','パッドやストリングスのように伸びる音と、ピアノやギターのようにすぐ消える音を組み合わせると、厚みとリズムの両方が出ます。同じタイプばかりだと、ベタっとするか、スカスカになります。'],
+    ['主役を1つ決める','それぞれのセクションで、いちばん聴かせたいパート（歌やリード）を決めます。ほかの楽器は、主役と同じ音域や同じタイミングを避けて支えます。'],
+    ['キックとベースは相棒','低音を担当するのはこの2つ。タイミングをそろえ、ほかの楽器には低音を出させないのが基本です。']
+  ],
+  tech:[
+    ['オクターブ違いで重ねて音色を作る','同じフレーズを別の楽器で1〜2オクターブ上に重ねると、2つの音色が混ざって新しい音に聴こえます。ピアノ＋グロッケン、ストリングス＋シンセなどが定番です。',[['▶ ピアノだけ','layerOne'],['▶ グロッケンを重ねる','layerOct']]],
+    ['セクションごとに楽器を足していく','Aメロは少なく、Bメロで足し、サビで全員がそろうと、自然に盛り上がっていきます（ビルドアップ）。逆に、サビの直前で一度楽器を減らすのも効果的です。',[['▶ 1小節ずつ足す','buildUp']]],
+    ['左右に配置する（パンニング）','ギターを左、キーボードを右のように振り分けると、同じ音域で鳴っていても聴き分けやすくなります。イヤホンで聴き比べてみてください。',[['▶ 真ん中にまとめる','panOff'],['▶ 左右に分ける','panOn']]],
+    ['問いかけと返事（コール＆レスポンス）','主旋律が伸ばしている間に、別の楽器が短いフレーズで答えます。隙間が埋まり、会話のような楽しさが生まれます。',[['▶ フルートとグロッケンの掛け合い','callResp']]]
+  ],
+  taboo:[
+    ['低い音域で複数の楽器が和音を鳴らす','ベースの音域でピアノやパッドが和音を弾くと、音どうしが打ち消し合ってこもります（マスキング）。低音はベース1本にまかせ、和音は中音域へ上げます。',[['▶ 低音に和音を詰める','arrMud'],['▶ 和音を上に分ける','arrSplit']]],
+    ['同じ音域・同じ役割の楽器を重ねすぎる','パッド、ストリングス、スーパーソーを同じ高さで重ねると、輪郭が消えて1つのかたまりになります。音域かリズムをずらして役割を分けます。',[['▶ 同じ高さで3つ重ねる','stackMud'],['▶ 高さと役割を分ける','stackClear']]],
+    ['メロディと同じ音域で伴奏が動き回る','歌やリードと同じ高さで伴奏が細かく動くと、主役が聴こえなくなります。伴奏は1オクターブ下げるか、動きを減らします。',[['▶ 同じ音域でぶつかる','melClash'],['▶ 伴奏を下げる','melClear']]],
+    ['最初から最後まで全員が鳴りっぱなし','ずっと同じ厚みだと抑揚がなくなり、サビで盛り上がりません。「休む楽器」を決めることも編成づくりの一部です。'],
+    ['人間に弾けない編成のままにする','打ち込みだと、ギターが同時に7音鳴っていたり、管楽器が息継ぎなしで吹き続けていたりしがちです。実際の楽器の制約を意識すると、ぐっと本物らしくなります。']
+  ]
+};
+
 /* ===== ページをめくる音 ===== */
 function pageSound(toIdx){
   if(S.pageSound===false||!ctx)return;const c=ac(),t=c.currentTime+.02;
@@ -2157,25 +2267,55 @@ function pageSound(toIdx){
 
 /* ===== デザインテーマ ===== */
 const THEMES=[
- {id:'note',n:'楽譜ノート',d:'淡いライラックの紙とプラムのインク',sw:['#F7F5FA','#33294A','#D9658B']},
- {id:'midnight',n:'ミッドナイト',d:'夜の作業向けの、目にやさしい暗い画面',sw:['#16132A','#EEE9F8','#FF8FB5'],dark:true},
- {id:'soda',n:'クリームソーダ',d:'ミントの水色とさくらんぼの赤',sw:['#F1FAF7','#1F3B44','#E25A78']},
- {id:'ichigo',n:'いちごミルク',d:'ミルクピンクの甘めな画面',sw:['#FFF5F7','#5A2E3E','#E2577D']},
- {id:'mono',n:'モノトーン',d:'白と黒に赤をひとさじ。すっきり集中',sw:['#F4F4F2','#1C1C1C','#D9384F'],mono:true},
- {id:'neon',n:'ネオン',d:'暗い画面に光る色。電子音楽の雰囲気',sw:['#0A0D1B','#E8EEFF','#22E5FF'],dark:true}
+ {id:'note',g:'かわいい',n:'楽譜ノート',d:'淡いライラックの紙とプラムのインク'},
+ {id:'ichigo',g:'かわいい',n:'いちごミルク',d:'ミルクピンクに小さな水玉'},
+ {id:'soda',g:'かわいい',n:'クリームソーダ',d:'ミントの水色とさくらんぼの赤'},
+ {id:'yume',g:'かわいい',n:'ゆめかわ',d:'ラベンダーと空色のグラデーション'},
+ {id:'nordic',g:'ナチュラル',n:'北欧ナチュラル',d:'オーツ色の紙とセージグリーン',muted:true},
+ {id:'mono',g:'ナチュラル',n:'モノトーン',d:'白と黒に赤をひとさじ',mono:true},
+ {id:'vintage',g:'ナチュラル',n:'ヴィンテージ',d:'セピアの紙と明朝体、ワインレッド',muted:true},
+ {id:'washi',g:'和',n:'和紙と墨',d:'和紙の風合いに墨と朱。明朝体',muted:true},
+ {id:'midnight',g:'ダーク',n:'ミッドナイト',d:'夜の作業向けの紫紺とピンク',dark:true},
+ {id:'jazz',g:'ダーク',n:'ジャズバー',d:'深い緑と金色。大人の夜',dark:true},
+ {id:'neon',g:'ダーク',n:'ネオン',d:'真っ暗な画面に光るシアン',dark:true},
+ {id:'pop',g:'ポップ・個性派',n:'ポップアート',d:'太い線と原色。コミック風'},
+ {id:'retro',g:'ポップ・個性派',n:'レトロゲーム',d:'ドット文字と四角い世界',dark:true},
+ {id:'chalk',g:'ポップ・個性派',n:'黒板',d:'深緑の黒板にチョークの文字',dark:true},
+ {id:'blueprint',g:'ポップ・個性派',n:'設計図',d:'方眼の青図に白い線',dark:true}
 ];
 const curTheme=()=>THEMES.find(t=>t.id===S.theme)||THEMES[0];
 const SOUNDS_SEC={soft:'#F1E6D8',acc:'#9A6A3A'};
-function secSoft(s){const T=curTheme();if(T.mono)return '#ECEBE8';if(T.dark)return `color-mix(in srgb,${s.acc} 26%,var(--sheet))`;return s.soft}
+function secSoft(s){const T=curTheme();if(T.mono)return '#ECEBE8';if(T.muted)return `color-mix(in srgb,${s.soft} 55%,var(--paper))`;if(T.dark)return `color-mix(in srgb,${s.acc} 26%,var(--sheet))`;return s.soft}
 function secAcc(s){const T=curTheme();if(T.mono)return '#1C1C1C';if(T.id==='neon')return `color-mix(in srgb,${s.acc} 45%,#ffffff)`;if(T.dark)return `color-mix(in srgb,${s.acc} 65%,#ffffff)`;return s.acc}
 function applySecColors(){SECS.concat([{id:'sounds',...SOUNDS_SEC}]).forEach(x=>{const el=document.getElementById(x.id);if(el){el.style.setProperty('--sc',secSoft(x));el.style.setProperty('--sa',secAcc(x))}})}
-function applyTheme(){const T=curTheme();document.documentElement.dataset.theme=T.id;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=T.sw[0];applySecColors()}
+function applyTheme(){const T=curTheme();document.documentElement.dataset.theme=T.id;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=getComputedStyle(document.documentElement).getPropertyValue('--paper').trim()||'#F7F5FA';applySecColors()}
+/* ===== ページ内タブ ===== */
+const PANE_L={play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
+const PANE_O=['today','stages','record','settings','play','ens','learn','weak','tips','tasks'];
+const paneSel={};
+function setupPanes(root){
+  const key=root.id||'x',items=[...root.querySelectorAll(':scope > [data-pane]')];
+  const keys=PANE_O.filter(k=>items.some(c=>c.dataset.pane===k));if(keys.length<2)return;
+  let bar=root.querySelector(':scope > .panes');
+  if(!bar){bar=document.createElement('div');bar.className='panes';bar.setAttribute('role','tablist');const hd=root.querySelector(':scope > .sh');if(hd)hd.after(bar);else root.prepend(bar)}
+  const cur=keys.includes(paneSel[key])?paneSel[key]:keys[0];
+  bar.innerHTML=keys.map(k=>`<button role="tab" data-p="${k}" class="${k===cur?'on':''}" aria-selected="${k===cur}">${PANE_L[k]}${k==='tasks'&&SEC[key]?`<span class="pc">${secProgress(key).join('/')}</span>`:''}</button>`).join('')+'<i class="ind"></i>';
+  const show=(k,scroll)=>{paneSel[key]=k;items.forEach(c=>c.hidden=c.dataset.pane!==k);bar.querySelectorAll('button').forEach(b=>{b.classList.toggle('on',b.dataset.p===k);b.setAttribute('aria-selected',b.dataset.p===k)});moveInd(bar);
+    if(scroll){const top=bar.getBoundingClientRect().top;const nb=$('nav.tabs').getBoundingClientRect().bottom;if(top<nb)scrollTo({top:scrollY+top-nb-4})}};
+  bar.querySelectorAll('button').forEach(b=>b.onclick=()=>{show(b.dataset.p,true);const pg=root.querySelector('.pager');}) ;
+  show(cur,false);requestAnimationFrame(()=>moveInd(bar));
+}
+function moveInd(bar){const on=bar.querySelector('button.on'),ind=bar.querySelector('.ind');if(!on||!ind)return;ind.style.width=on.offsetWidth+'px';ind.style.transform=`translateX(${on.offsetLeft}px)`}
+function refreshPaneCounts(){SECS.forEach(s=>{const b=document.querySelector(`#${s.id} .panes button[data-p="tasks"] .pc`);if(b)b.textContent=secProgress(s.id).join('/')})}
+function setNavH(){document.documentElement.style.setProperty('--navh',($('nav.tabs').offsetHeight||52)+'px')}
+addEventListener('resize',()=>{setNavH();$$('.panes').forEach(moveInd)});
 /* ===== 起動 ===== */
 paintMascots();
 applyTheme();
 renderTips();renderPagers();
 
 sInitSounds();
+setNavH();['sounds',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();
 let lastW=innerWidth;

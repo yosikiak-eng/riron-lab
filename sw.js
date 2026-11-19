@@ -1,6 +1,6 @@
 // 音楽理論ラボ サービスワーカー
 // 内容を更新したら VERSION を上げてください（古いキャッシュが消え、新しい版が配られます）
-const VERSION = 'v10';
+const VERSION = 'v11';
 const APP_CACHE = `riron-lab-app-${VERSION}`;
 const FONT_CACHE = 'riron-lab-fonts';
 
