@@ -766,6 +766,25 @@ html[data-theme="gb"] .btn{border-radius:2px}
 .ico .it{font-size:10px;font-weight:800;fill:var(--sa,var(--rose));stroke:none;font-family:var(--body)}
 .ana-dl>div.hasico{grid-template-columns:48px 1fr;column-gap:12px;align-items:start}
 .anico{grid-row:1/span 2;width:48px;height:48px;border-radius:15px;background:color-mix(in srgb,var(--sa,var(--rose)) 9%,var(--sheet));display:grid;place-items:center;margin-top:2px}
+/* レベル */
+.lvb{display:inline-block;vertical-align:.12em;margin-left:8px;font-size:10.5px;font-weight:700;line-height:1;padding:3px 7px 3px;border-radius:999px;letter-spacing:.02em;font-family:var(--body)}
+.lvb.l1{background:color-mix(in srgb,var(--mint) 22%,var(--sheet));color:var(--mint-ink,#2F8A6C)}
+.lvb.l2{background:color-mix(in srgb,var(--soda) 24%,var(--sheet));color:color-mix(in srgb,var(--soda) 60%,var(--ink))}
+.lvb.l3{background:color-mix(in srgb,var(--rose) 20%,var(--sheet));color:color-mix(in srgb,var(--rose) 75%,var(--ink))}
+.card h3 .lvb{font-size:10.5px}
+html[data-lvmax="1"] [data-lv="2"],html[data-lvmax="1"] [data-lv="3"],html[data-lvmax="2"] [data-lv="3"]{display:none !important}
+.lvempty{display:none}
+html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-need="3"],html[data-lvmax="2"] .lvempty[data-need="3"]{display:block}
+.lvempty p{margin:0;color:var(--text2);font-size:14px}
+.lvsel{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:10px}
+.lvst{font-size:12px;color:var(--text2);font-weight:700;flex-basis:100%}.lvst .lvb{margin-left:4px}
+.lvlab{font-size:12px;color:var(--text2)}
+.seg{display:inline-flex;background:var(--sheet);border:1px solid var(--rule);border-radius:999px;padding:3px;gap:2px}
+.seg button{border:0;background:none;font:inherit;font-size:12px;font-weight:700;color:var(--text2);padding:5px 11px;border-radius:999px;cursor:pointer;line-height:1.2}
+.seg button.sel{background:var(--sa,var(--rose));color:#fff}
+.qfig{margin:12px 0 4px}.qfig .fig{background:color-mix(in srgb,var(--sa,var(--rose)) 5%,var(--sheet));border-radius:14px;padding:14px 12px 10px}
+.hotT{fill:var(--sa,var(--rose))!important;font-size:12.5px}.qstep{fill:color-mix(in srgb,var(--sa,var(--rose)) 35%,var(--sheet));stroke:var(--sa,var(--rose));stroke-width:1.2}
+.slist .nm b .lvb{margin-left:6px;font-size:9.5px;padding:2px 6px}
 </style>
 </head>
 <body>
@@ -1310,7 +1329,7 @@ html[data-theme="gb"] .btn{border-radius:2px}
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 30</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 31</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -1318,16 +1337,75 @@ html[data-theme="gb"] .btn{border-radius:2px}
 
 <script>
 /* ===== マスコット（オリジナル） ===== */
-function mascot(mood='happy'){
-  const I='#33294A';
+function mascot(mood='happy',voice){
+  voice=voice||(typeof curVoice==='function'?curVoice():'cute');
   const ln=(d,w=2.6)=>`<path d="${d}" class="ms" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
-  let eyes=`<circle cx="34" cy="62" r="3.2" class="mk"/><circle cx="54" cy="62" r="3.2" class="mk"/>`,mouth=ln('M40 70 q4 4 8 0',2.2),extra='';
-  if(mood==='happy')eyes=ln('M30 63 q4 -5 8 0')+ln('M50 63 q4 -5 8 0');
-  if(mood==='wink')eyes=`<circle cx="34" cy="62" r="3.2" class="mk"/>`+ln('M50 63 q4 -5 8 0');
-  if(mood==='wow'){eyes=`<circle cx="34" cy="61" r="3.7" class="mk"/><circle cx="54" cy="61" r="3.7" class="mk"/><circle cx="35.3" cy="59.7" r="1.2" fill="#fff"/><circle cx="55.3" cy="59.7" r="1.2" fill="#fff"/>`;mouth=`<ellipse cx="44" cy="71.5" rx="3.3" ry="3.8" class="mk"/>`}
-  if(mood==='oops'){eyes=ln('M30 61 l7 2.5')+ln('M58 61 l-7 2.5');mouth=ln('M39 72 q2.5 -2.5 5 0 q2.5 2.5 5 0',2);extra=`<path d="M74 46 q4 6 0 8.5 q-4 -2.5 0 -8.5z" fill="#7FB2DE"/>`}
-  return `<svg class="mascot" viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true"><rect x="66" y="12" width="4.5" height="50" rx="2.2" class="mk"/><path d="M70.5 13 c9 3 14 10 11 22 c-2.5 -7 -6 -9.5 -11 -10.5z" class="mk"/><ellipse class="mf" cx="44" cy="65" rx="28" ry="23" stroke-width="3"/><ellipse cx="26" cy="71" rx="5" ry="3" class="mc"/><ellipse cx="62" cy="71" rx="5" ry="3" class="mc"/>${eyes}${mouth}${extra}</svg>`;
+  const dot=(x,y,r=3.2)=>`<circle cx="${x}" cy="${y}" r="${r}" class="mk"/>`;
+  const shine=(x,y,r=3.7)=>`<circle cx="${x}" cy="${y}" r="${r}" class="mk"/><circle cx="${x+1.3}" cy="${y-1.4}" r="${r*.34}" fill="#fff"/>`;
+  const sparkle=(x,y,s=4,c='#F4D772')=>`<path d="M${x} ${y-s}Q${x} ${y} ${x+s} ${y}Q${x} ${y} ${x} ${y+s}Q${x} ${y} ${x-s} ${y}Q${x} ${y} ${x} ${y-s}z" fill="${c}"/>`;
+  const sweat=`<path d="M74 46 q4 6 0 8.5 q-4 -2.5 0 -8.5z" fill="#7FB2DE"/>`;
+  const blush=`<path d="M22 72l3-3M26 72l3-3M58 72l3-3M62 72l3-3" stroke="#E0708F" stroke-width="1.4" stroke-linecap="round"/>`;
+  const F={eyes:dot(34,62)+dot(54,62),mouth:ln('M40 70 q4 4 8 0',2.2),brow:'',extra:'',acc:'',cheek:''};
+  const base={
+    idle:()=>{},
+    happy:()=>{F.eyes=ln('M30 63 q4 -5 8 0')+ln('M50 63 q4 -5 8 0')},
+    wink:()=>{F.eyes=dot(34,62)+ln('M50 63 q4 -5 8 0');F.mouth=ln('M40 69.5 q4 4.5 8 0',2.2)},
+    wow:()=>{F.eyes=shine(34,61)+shine(54,61);F.mouth=`<ellipse cx="44" cy="71.5" rx="3.3" ry="3.8" class="mk"/>`;F.extra=sparkle(78,40,5)},
+    oops:()=>{F.eyes=ln('M30 61 l7 2.5')+ln('M58 61 l-7 2.5');F.mouth=ln('M39 72 q2.5 -2.5 5 0 q2.5 2.5 5 0',2);F.extra=sweat},
+    shy:()=>{F.eyes=ln('M30 62 q4 3 8 0')+ln('M50 62 q4 3 8 0');F.mouth=ln('M42 71 q2 1.5 4 0',2);F.cheek=blush},
+    think:()=>{F.eyes=dot(36,60)+dot(56,60);F.mouth=ln('M41 71 h6',2.2);F.extra=`<circle cx="80" cy="44" r="2" class="mk"/><circle cx="85" cy="37" r="2.8" class="mk"/>`}
+  };
+  (base[mood]||base.idle)();
+  /* キャラごとの顔と小物 */
+  const V={
+    cute:()=>{F.acc=`<path d="M25 47l-6-4v8zM25 47l6-4v8z" fill="#F08DAE"/><circle cx="25" cy="47" r="2" fill="#E0708F"/>`;
+      if(mood==='happy')F.extra+=sparkle(80,44,4,'#F4D772');if(mood==='idle')F.eyes=shine(34,62,3.4)+shine(54,62,3.4)},
+    tsun:()=>{F.acc=`<path d="M20 49l-7-5v10zM20 49l7-5v10z" fill="#D94A5E"/><circle cx="20" cy="49" r="2.2" fill="#B53247"/>`;
+      F.brow=ln('M29 55 l8 2.5',2)+ln('M59 55 l-8 2.5',2);
+      if(mood==='idle'){F.eyes=dot(37,62)+dot(57,62);F.mouth=ln('M40 71 q4 -3 8 0',2.2)}
+      if(mood==='happy'){F.eyes=ln('M30 62 q4 3 8 0')+ln('M50 62 q4 3 8 0');F.mouth=ln('M41 71 q3 -2 6 0',2.2);F.cheek=blush;F.brow=ln('M29 56 l8 1.5',2)+ln('M59 56 l-8 1.5',2)}
+      if(mood==='wink'){F.cheek=blush;F.mouth=ln('M40 71 q4 -2.5 8 0',2.2)}
+      if(mood==='wow'){F.cheek=blush;F.brow=''}
+      if(mood==='oops'){F.extra=`<path d="M74 44l6 6M80 44l-6 6M77 42v10M72 47h10" stroke="#D94A5E" stroke-width="2" stroke-linecap="round"/>`;F.mouth=ln('M39 72 l5 -2 l5 2',2.2)}
+      if(mood==='shy')F.mouth=ln('M41 71 q3 -2 6 0',2)},
+    kouhai:()=>{F.acc=sparkle(24,47,5.5,'#F4D772');
+      if(mood==='idle'||mood==='happy'||mood==='wink'){F.eyes=mood==='idle'?shine(34,61.5)+shine(54,61.5):F.eyes;F.mouth=`<path d="M39 68.5 q5 7 10 0z" class="mk"/>`}
+      if(mood==='oops'){F.eyes=shine(34,62)+shine(54,62);F.extra=`<path d="M31 66 q-1 4 1 6M57 66 q1 4 -1 6" stroke="#7FB2DE" stroke-width="2" fill="none" stroke-linecap="round"/>`;F.mouth=ln('M40 72 q4 -3 8 0',2.2)}},
+    downer:()=>{F.acc=`<path d="M16 66 C16 30, 72 30, 72 66" fill="none" class="ms" stroke-width="3.2"/><rect x="11" y="58" width="9" height="15" rx="4" class="mk"/><rect x="68" y="58" width="9" height="15" rx="4" class="mk"/>`;
+      const lid=(x)=>`<path d="M${x-4.5} 61 h9" class="ms" stroke-width="2.4" stroke-linecap="round"/><path d="M${x-3.5} 61.5 a3.5 3 0 0 0 7 0z" class="mk"/>`;
+      if(mood==='idle'||mood==='think'){F.eyes=lid(34)+lid(54);F.mouth=ln('M41 71 h6',2)}
+      if(mood==='idle')F.extra=`<text x="78" y="44" font-size="9" font-weight="700" class="mk">z</text><text x="84" y="36" font-size="7" font-weight="700" class="mk">z</text>`;
+      if(mood==='happy')F.mouth=ln('M41 70 q3 2.5 6 0',2);
+      if(mood==='wow'){F.eyes=dot(34,61,3.4)+dot(54,61,3.4);F.mouth=`<ellipse cx="44" cy="71" rx="2.2" ry="2.6" class="mk"/>`;F.extra=''}},
+    strict:()=>{F.acc=`<rect x="26" y="55.5" width="15" height="12" rx="4" fill="rgba(255,255,255,.35)" class="ms" stroke-width="2"/><rect x="47" y="55.5" width="15" height="12" rx="4" fill="rgba(255,255,255,.35)" class="ms" stroke-width="2"/><path d="M41 60 h6" class="ms" stroke-width="2"/>`;
+      F.brow=ln('M28 52 l9 1.5',2)+ln('M60 52 l-9 1.5',2);
+      if(mood==='idle')F.mouth=ln('M40 71 q4 2.5 8 -1',2.2);
+      if(mood==='oops'){F.eyes=dot(34,62,2.8)+dot(54,62,2.8);F.brow=ln('M28 50 l9 4',2.2)+ln('M60 50 l-9 4',2.2);F.mouth=ln('M40 72 h8',2.4);F.extra=''}
+      if(mood==='happy')F.brow=ln('M28 52 q4 -2 9 0',2)+ln('M51 52 q4 -2 9 0',2)},
+    polite:()=>{F.acc=[0,72,144,216,288].map(a=>{const r=a*Math.PI/180;return `<circle cx="${(22+4*Math.sin(r)).toFixed(1)}" cy="${(47-4*Math.cos(r)).toFixed(1)}" r="3" fill="#F6C1D1"/>`}).join('')+`<circle cx="22" cy="47" r="2" fill="#F4D772"/>`;
+      if(mood==='idle'||mood==='wink')F.eyes=ln('M30 63 q4 -4 8 0')+ln('M50 63 q4 -4 8 0');
+      if(mood==='idle')F.mouth=ln('M41.5 70 q2.5 2.5 5 0',2);
+      if(mood==='oops'){F.eyes=ln('M30 62 q4 2 8 0')+ln('M50 62 q4 2 8 0');F.mouth=ln('M41 71.5 q3 -1.5 6 0',2);F.extra=sweat}},
+    friend:()=>{F.acc=sparkle(22,48,5,'#F4D772')+sparkle(30,43,3,'#F08DAE');F.cheek=`<circle cx="23" cy="70" r="1" fill="#F4D772"/><circle cx="65" cy="70" r="1" fill="#F4D772"/>`;
+      const lash=(x)=>`<path d="M${x+2.5} 58.5 l3 -2.5" class="ms" stroke-width="1.6" stroke-linecap="round"/>`;
+      if(mood==='idle'){F.eyes=dot(34,62)+ln('M50 63 q4 -5 8 0')+lash(34);F.mouth=`<path d="M39 68.5 q5 7 10 0z" class="mk"/>`}
+      if(mood==='happy'){F.mouth=`<path d="M38 68 q6 9 12 0z" class="mk"/><path d="M42 71.5 q2 2.5 4 0" fill="#E0708F"/>`}
+      if(mood==='wow')F.extra+=sparkle(14,40,4,'#F08DAE')},
+    cool:()=>{F.acc=`<path d="M22 50 q6 -14 24 -12 q8 1 6 7 q-14 -4 -30 5z" class="mk"/><circle cx="46" cy="37" r="2" class="mk"/>`;
+      const half=(x)=>`<path d="M${x-4} 61.5 h8" class="ms" stroke-width="2.2" stroke-linecap="round"/><path d="M${x-3} 62 a3 2.6 0 0 0 6 0z" class="mk"/>`;
+      if(mood==='idle'||mood==='think'){F.eyes=half(34)+half(54);F.mouth=ln('M41 70.5 q3 1.5 7 -1',2)}
+      if(mood==='happy'){F.eyes=ln('M30 62.5 q4 -3 8 0')+ln('M50 62.5 q4 -3 8 0');F.mouth=ln('M41 70 q3 2.5 7 -.5',2)}
+      if(mood==='wow'){F.extra=''}},
+    kansai:()=>{F.acc=`<path d="M16 54 q28 -12 56 0" fill="none" stroke="#E86A3A" stroke-width="4" stroke-linecap="round"/><path d="M70 52 l7 -5 M70 54 l8 0" stroke="#E86A3A" stroke-width="3" stroke-linecap="round"/>`;
+      if(mood==='happy'||mood==='wow'){F.eyes=ln('M30 60 l6 2.5 l-6 2.5')+ln('M58 60 l-6 2.5 l6 2.5');F.mouth=`<path d="M37 68 q7 10 14 0z" class="mk"/><path d="M41 72 q3 2.5 6 0" fill="#E0708F"/>`}
+      if(mood==='idle')F.mouth=`<path d="M39 68.5 q5 6 10 0z" class="mk"/>`;
+      if(mood==='oops'){F.eyes=ln('M30 60 l6 2.5 l-6 2.5')+ln('M58 60 l-6 2.5 l6 2.5');F.mouth=ln('M39 72 q5 -4 10 0',2.4)}}
+  };
+  (V[voice]||V.cute)();
+  return `<svg class="mascot" viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true"><rect x="66" y="12" width="4.5" height="50" rx="2.2" class="mk"/><path d="M70.5 13 c9 3 14 10 11 22 c-2.5 -7 -6 -9.5 -11 -10.5z" class="mk"/><ellipse class="mf" cx="44" cy="65" rx="28" ry="23" stroke-width="3"/><ellipse cx="26" cy="71" rx="5" ry="3" class="mc"/><ellipse cx="62" cy="71" rx="5" ry="3" class="mc"/>${F.cheek}${F.brow}${F.eyes}${F.mouth}${F.acc}${F.extra}</svg>`;
 }
+const FACES=['idle','happy','wink','wow','shy','think'];
+
 function paintMascots(root=document){root.querySelectorAll('[data-mascot]').forEach(el=>el.innerHTML=mascot(el.dataset.mascot))}
 
 /* ===== 基本データ ===== */
@@ -1602,6 +1680,102 @@ const VO_DESC2={
 };
 Object.entries(VO_DESC2).forEach(([v,o])=>Object.assign(VO[v],o));
 Object.entries(VO_WHO).forEach(([v,x])=>VO[v].who=x);Object.entries(VO_CHAT).forEach(([v,x])=>VO[v].chat=x);
+/* ===== セリフの追加（レパートリー） ===== */
+const VO_ADD={
+ cute:{
+  praise:['きゃ〜っ、正解！今のかっこよすぎ♪','ねえ見た？ 一発で当てたよ！','正解っ！耳がきらきらしてるね〜','すごいすごい！拍手したくなっちゃう♪','当たり〜！ごほうびのぽんぽんしちゃう','はわわ、完璧…！惚れぼれしちゃう','その答え、100点満点のはなまるだよ♪','ぴったんこ！気持ちいい〜っ','今の、迷わなかったでしょ？ さすが〜','ねえねえ、もう先生できちゃうんじゃない？','正解〜！わたしまでうれしくなっちゃった','うんうん、そうなの！わかってる〜♪'],
+  miss:['あぅ、ちがった〜！でも惜しかったよ♪','ん〜、今のはむずかしかったね','あれ、そっちかぁ。次は当たるよ、ぜったい！','まちがえるのも練習のうちなの♪','だいじょぶ、わたしもよくまちがえるもん','ちょっとだけ休憩してから、もう1問いこ？','おっと〜！解説見たら、きっと「あっ」てなるよ','ふふ、ひっかけにまんまとかかったね〜'],
+  streak:[n=>`${n}問連続っ！もう止まんないね〜♪`,n=>`${n}連続！すごすぎて、ぴょんぴょんしちゃう`,n=>`まだ続くの！？ ${n}問連続だよ〜！`],
+  mission:['課題クリア〜！はなまるあげちゃう♪','ばっちりクリア！ちゃんと見てたよ〜','やった〜っ！一緒にお祝いしよ♪'],
+  levelL:['レベルアップ〜っ！ぱちぱちぱち♪','また1つ上手になったね！うれしい〜'],
+  r10:['ぜんぶ正解っ！？ もう、だいすきな耳だよ〜！'],r8:['あとちょっとで満点だった〜！すごいよ♪'],
+  greetBack:['あっ、来てくれた〜！うれしくてくるくるしちゃう♪','ねえねえ、今日はなに聴く？ わたしはなんでもいいよ〜','ちょうど会いたいなって思ってたの♪','今日もいっしょにがんばろ？ ちょっとだけでいいから♪'],
+  chat:['ねえねえ、メジャーは晴れ、マイナーは曇りって感じしない？','王道進行のこと、わたしは「エモの魔法」って呼んでるの♪','耳トレはね、1日5分でもぜんぜんちがうんだよ〜','好きな曲のベース、耳で追いかけてみて？ 楽しいよ♪','4つ打ちを聴くと、つい体が揺れちゃうの〜','Ⅴ7 → Ⅰ は「ただいま」の響きなんだよ。ほっとするよね','ハーフタイムって、ふわってスローになる魔法みたい♪','ねむい日は、クイズ1問だけでもえらいよ？','知ってた？ ドの3度上がミ、5度上がソ。これでドミソなの♪','カノン進行って、階段をとんとん下りてく感じでかわいいの','いい曲を聴いたら、どのコード使ってるか一緒に考えよ？','add9 のきらきら、星空っぽくて好き〜','音楽理論ってね、覚えるより「聴いて納得」がいちばんなの♪','ねえ、今日もがんばってるの、ちゃんと知ってるからね'],
+ },
+ tsun:{
+  praise:['は？当たってるし。…べつにびっくりしてないけど','今のは…まあ、褒めてあげなくもない','正解。…ちょ、こっち見ないでよ','やればできるじゃん。最初からそうしなよね','当然でしょ。わたしが教えてるんだから','…すご。い、今のは独り言だから','ふん、正解。調子に乗らないでよね','合ってるし。…ちょっとだけ見直したかも','べつに、うれしいとか思ってないし。…正解','耳、いいじゃん。…悔しいけど'],
+  miss:['ちがうし。…次、当てなよ','はぁ？そこ間違える？ …しょうがないな','ちがう。解説読んで出直してきなよ','ほら、ちゃんと聴かないから。…ほら、次','不正解。…べつに落ちこまなくていいし','ふーん、わざと間違えたんでしょ？ …ちがうの？','もう、見てられない。…解説、見せてあげる'],
+  streak:[n=>`${n}問連続とか…なまいき`,n=>`${n}連続。…ちょっと、かっこいいじゃん`,n=>`まだ続けるの？ ${n}問連続とか、べつにすごくないし`],
+  mission:['課題クリア。…まあ、できると思ってたし','ふーん、終わらせたんだ。…やるじゃん','クリア。…ほめてほしいなら、言いなよ'],
+  levelL:['レベルアップ。…べつに祝ってないし','また上がったの？ …ちょっとだけ、すごいかも'],
+  r10:['全問正解とか…ずるい。かっこよすぎでしょ'],r8:['ほぼ満点じゃん。…次は全部当てなよね'],
+  greetBack:['…来るの遅い。べつに待ってないけど','あ、来た。…べつに、ずっと見てたわけじゃないし','今日もやるの？ …しょうがない、付き合ってあげる','ふん、また来たんだ。…ちょっとだけ、うれしい'],
+  chat:['…なに。ひまなの？ じゃあ1問くらい解きなよ','王道進行がエモいのは認める。…べつに好きじゃないけど','べつに教えたいわけじゃないけど、Ⅴ7 は Ⅰ に帰りたがるの','つ、つつくなってば！','マイナーの曲ばっか聴いてる？ …わたしもだけど','休憩しなよ。…倒れられたら困るでしょ、わたしが','メロディは会話なんだから。問いかけたら、ちゃんと答えなよ','今日、がんばってたじゃん。…見てないけど','裏コードくらい使えたら、ちょっとは見直してあげる','…なんでずっと見てるの。照れるからやめて','耳トレ、毎日やってるの知ってる。…言ってないけど','ハモリは3度下。…覚えといて損はないでしょ'],
+ },
+ kouhai:{
+  praise:['せんぱいっ、天才すぎます！','わ〜っ、一発正解！メモしときます！','さすがせんぱい、ぶれないですね！','今のどうやって聴き分けたんですか！？ 教えてください！','正解です！わたしも負けてられないですっ','きゃー、かっこいいです…！','完璧です！せんぱいについてきてよかったです','はいっ、ばっちりです！今日も絶好調ですね！'],
+  miss:['あわわ、ちがいました…！でも次はいけますっ','せんぱい、ドンマイです！わたしなんてもっとまちがえてます','あっ、それひっかけでしたね…！くやしい〜','解説、いっしょに読みましょ！わたしも知りたいです','大丈夫です、せんぱいなら次は当てます！','む、むずかしかったですね…！'],
+  streak:[n=>`${n}問連続ですっ！せんぱい、止まらないです！`,n=>`${n}連続！わたし、ずっと見てました！`,n=>`すごいです、${n}問連続ですよ！？`],
+  mission:['課題クリアですっ！おめでとうございます！','せんぱいすごいです！もうクリアしちゃいました！'],
+  levelL:['せんぱい、またレベル上がりました！','レベルアップです！わたしも追いつけるようにがんばります！'],
+  r10:['全問正解です！？ せんぱい、伝説になってます！'],r8:['ほぼ満点です！あと1歩でしたね！'],
+  greetBack:['せんぱいっ！待ってました！','せんぱい、今日も来てくれたんですね！うれしいです！','せんぱい、聞いてください！今日はいい練習思いついたんです！','あっ、せんぱい！一緒にやりましょ！'],
+  chat:['せんぱい、好きなボカロ曲のキーって知ってます？','わたし、カノン進行聴くとなんか泣きそうになるんです…','せんぱいの耳、ほんとうらやましいです！','せんぱい、休憩も大事ですからね！お茶でもどうぞっ','知ってます？ 4つ打ちってBPM128くらいがいちばんノれるんですよ！','せんぱい、今日もかっこいいです！…あっ、音楽の話ですよ？','わたし、M7 の響き聴くとおしゃれな気分になれるんです！','せんぱい、つつくのは反則ですっ！','いつか、せんぱいの曲聴かせてくださいね！','裏コードって名前、なんかかっこよくないですか！？','せんぱい、サビから作ると迷わないらしいですよ！','わたしもハモリ練習します！せんぱいの3度下で！'],
+ },
+ downer:{
+  praise:['…ん、正解。いいね','すご…。ちゃんと聴こえてるんだ','合ってる。…なでてあげよっか','正解。…今の、ちょっとかっこよかった','ん…完璧。ねむいの、とんだかも','いいじゃん。そのままでいいよ','…当たり。ふふ','ん、えらい。…ほんとに'],
+  miss:['…ちがったね。まあ、いいよ','ん〜、おしい。ゆっくりでいいから','ひっかかっちゃったね…。わたしもよくある','…だいじょぶ。次、当たるよ','ちがうけど、気にしないで','ちょっと休む？ …わたしは休みたい'],
+  streak:[n=>`…${n}問連続。すごいね`,n=>`${n}連続…。目、覚めちゃった`,n=>`ん…${n}問続いてる。いい感じ`],
+  mission:['…課題クリア。おつかれ','ん、終わったね。えらいえらい'],
+  levelL:['…レベル上がったね。おめでと','ん、テンポアップ。ゆっくりでいいのに…ふふ'],
+  r10:['全部正解…？ ん、すごすぎ'],r8:['…ほぼ満点。えらいね'],
+  greetBack:['…ん、来たの。おはよ…','あ…待ってた。ちょっとだけ','今日も来たんだね。…うれしいよ','ふぁ…いっしょにやる？ ゆっくりね'],
+  chat:['…ローファイって、ずっと聴いてられるよね','ねむい…BPM70のビートで寝かせて','sus4 のふわふわ、ずっと浮いてたい','…今日も来てくれた。それだけでえらいよ','雨の日はマイナーキーの曲が聴きたくなる…','がんばりすぎないで。…わたしみたいに','ハーフタイム、好き。…ゆっくりになるから','…なに？ 呼んだ？','M7 の響きって、夕方の部屋っぽい…','耳トレ、1問だけやる？ …わたしは見てる','…つんつん、だめ','ゆっくりでも、ちゃんと上手くなってるよ'],
+ },
+ strict:{
+  praise:['正解。…今のは文句なし','よし、それでいいの','いい判断。根拠まで言えたら満点ね','正解。でも次も当てなきゃ意味ないよ','…やるじゃない。ちょっとだけ見直した','合格。その集中力をキープして','正解。ほら、やればできるでしょ？','よくできました。…一回だけ言っておくね'],
+  miss:['ちがう！どこで迷ったか、説明できる？','はい不正解。解説を読んでから次ね','ちがうよ。耳じゃなくて、焦りで答えたでしょ','落ち着いて。基準の音をちゃんと聴くこと','今のミスは覚えておいて。次は落とさないこと','ちがう。でも、ここで覚えれば強くなれる'],
+  streak:[n=>`${n}問連続。…調子に乗らないこと`,n=>`${n}連続。いいペースね、そのまま`,n=>`${n}問連続。…ちょっとだけ、ほめてあげる`],
+  mission:['課題クリア。次の課題も、すぐ取りかかって','よし、合格。…よくがんばったね'],
+  levelL:['レベルアップ。ここからが本番よ','テンポアップ。…ちゃんと成長してるじゃない'],
+  r10:['全問正解。…文句なし。よくやったね'],r8:['8割超え。次は満点しか認めないよ'],
+  greetBack:['来たね。今日のメニューはもう決まってるよ','遅刻よ。…まあいいわ、始めましょう','今日も来たのね。そこは評価してあげる','さ、ウォーミングアップに耳トレ5問ね'],
+  chat:['ほら、手が止まってる。1問解いてきて','音程は感覚じゃなくて、半音の数で覚えるの','王道進行は4つのディグリーで言えること。言える？','休憩もトレーニングのうち。サボりとはちがうからね','コード進行は、機能で考えるの。T・SD・D','メロディの最高音は、サビの一番いいところに置くこと','つつかない！…まったく','毎日10分。それを1か月続けたら、世界が変わるよ','ミスした問題は、復習ノートで2回正解するまでやること','…今日もよくがんばったね。それだけは言っておく','転調するなら、最高音が歌えるかまず確認','DAW でベロシティ全部同じは禁止。わかった？'],
+ },
+ polite:{
+  praise:['お見事です。ふふ、うれしくなってしまいます','正解です。とても丁寧に聴けていますね','すばらしいです。拍手をお送りしますね','その通りです。よくお分かりですね','正解です。今日は冴えていらっしゃいますね','まあ、完璧です。感心してしまいました','はい、正解です。安心して聴いていられます'],
+  miss:['惜しかったですね。次はきっと大丈夫ですよ','ちがいましたね。ゆっくりで大丈夫です','あら、ひっかけでしたね。わたしも迷いました','解説を一緒に読みましょうか','大丈夫ですよ。まちがいは上達の印です','少し深呼吸してから、もう一度いきましょう'],
+  streak:[n=>`${n}問連続です。すばらしいですね`,n=>`${n}連続、お見事です`,n=>`まあ、${n}問も続いていますよ`],
+  mission:['課題クリアです。おつかれさまでした','ふふ、課題達成ですね。おめでとうございます'],
+  levelL:['レベルが上がりましたね。おめでとうございます','また一段、上手になられましたね'],
+  r10:['全問正解です。本当にお見事でした'],r8:['ほとんど正解ですね。すばらしいです'],
+  greetBack:['ごきげんよう。今日もお会いできてうれしいです','いらっしゃいませ。お茶でも淹れましょうか','今日もお疲れさまです。少しだけご一緒しましょう','お待ちしていました。どのステージにいたしましょう'],
+  chat:['カノン進行は、穏やかな午後のような響きですね','ピアノの白鍵と黒鍵、並びがとてもきれいだと思いませんか','疲れたときは、ゆったりしたバラードもいいですよ','add9 の響き、朝の光のようで好きなんです','メロディは会話ですから、問いかけと答えを意識してみてくださいね','ふふ、くすぐったいです','長3度は晴れ、短3度は曇り。覚えやすいでしょう？','毎日少しずつ、それがいちばんの近道です','ハモリは3度下から。寄り添うような響きになりますよ','今日もがんばっていらっしゃいますね','ドミナントからトニックへ。おうちに帰るような安心感ですね','雨の日には、マイナーキーの曲が似合いますね'],
+ },
+ friend:{
+  praise:['え、正解！やば、天才じゃん！','ちょ、今の神すぎ〜！','はい優勝〜！最強〜！','それな！完璧すぎてウケる','耳よすぎん？ うらやましすぎ〜','バイブス合ってる〜！正解！','ガチで上手くなってるじゃん！','えぐ、一発で当てたし！','もうプロじゃん。サインちょうだい〜'],
+  miss:['あー惜しい！次いけるっしょ！','ちがったか〜。でもドンマイドンマイ！','え、そっちいく！？ わかるけど〜','ひっかけエグいよね〜！解説見よ！','大丈夫大丈夫、伸びしろってやつ！','ミスった問題こそアガるやつだから！'],
+  streak:[n=>`${n}問連続！？ ノリノリじゃん！`,n=>`${n}連続えぐ〜！止まんない！`,n=>`まだいく！？ ${n}問連続とか最強〜！`],
+  mission:['課題クリア〜！テンションあがる〜！','クリアじゃん！ハイタッチ〜！'],
+  levelL:['レベルアップ〜！アガる〜！','また上がった！成長エグ〜！'],
+  r10:['全問正解！？ 今日の主役じゃん！'],r8:['ほぼ満点！エグいって〜！'],
+  greetBack:['やほ〜！今日もやってこ〜！','あ、来た来た！待ってたし〜','おつ〜！今日も音楽しよ！','ねえねえ、今日なにやる？ ノリで決めよ！'],
+  chat:['ねえ、王道進行って聴いた瞬間エモくない？','4つ打ちってマジ踊れる。BPM128最強','ラスサビ転調、泣けるやつ〜','M7 ってなんかオシャレカフェの音しない？','ハモリ入れると一気にプロっぽくなるよね〜','休憩もだいじ！がんばりすぎ禁止〜','sus4 ってじらしてくる感じ、わかる？','ねえ、今日のコーデならぬ今日のコード決めよ','ちょ、つつきすぎ〜！くすぐったいって','ボカロの早口パート、マジ見せ場だよね','裏コードって名前、なんか強そうじゃない？','毎日続けてんのマジ尊敬〜'],
+ },
+ cool:{
+  praise:['正解。いい判断ね','見事ね。迷いがなかった','正確。この調子で','悪くない。むしろいいわ','正解。…ふふ、やるわね','その耳、信頼できるわ','いい集中ね。そのまま続けて'],
+  miss:['違うわ。でも、着眼点は悪くない','外れ。理由を確かめておきましょう','もう一度、基準の音を聴いて','惜しいわね。次は当てられるはずよ','焦らないで。音は逃げないわ'],
+  streak:[n=>`${n}問連続。いい流れね`,n=>`${n}連続。…少し感心したわ`,n=>`${n}問続いてる。集中できてるわね`],
+  mission:['課題クリア。よくやったわね','達成ね。次も期待してるわ'],
+  levelL:['レベルアップ。順調ね','テンポアップ。…成長してるわね'],
+  r10:['全問正解。完璧ね'],r8:['ほぼ完璧。あと少しね'],
+  greetBack:['来たのね。始めましょう','待ってたわ。…少しだけね','今日もやる気ね。いいことよ','ちょうどいいところに来たわね'],
+  chat:['夜に聴くジャズって、悪くないわね','M7 は都会の夜の響き。嫌いじゃないわ','裏コードを使うと、進行が一段洗練されるの','メロディは、引き算でよくなることもあるわ','…何？ 用があるなら言って','休憩も練習のうちよ','sus4 は、答えを待つ響き','転調は1曲に1〜2回まで。多すぎると迷子になるわ','ベースラインが良い曲は、だいたい名曲よ','…つつかないで。集中してるの','今日も来たのね。それで十分よ','耳トレは毎日少しずつ。それが一番の近道'],
+ },
+ kansai:{
+  praise:['正解やん！天才ちゃう！？','うわ、めっちゃええ耳しとるやん！','完璧や！うち拍手しとるで！','せやねん、それやねん！','すごすぎて声出たわ！','一発正解とか、かっこよすぎやろ〜','ええやんええやん！その調子や！','もう教えることあらへんやん〜'],
+  miss:['ちゃうちゃう！でも惜しいで！','なんでやねん〜！…って、うちもようまちがえるけどな','ドンマイや、次いこ次！','ひっかけやったなあ〜。解説見たらすぐわかるで','あかん、今のはむずかしかったなあ','気にせんでええ！まちがえた分だけ強なるで'],
+  streak:[n=>`${n}問連続やん！止まらへんな〜！`,n=>`${n}連続！？ もう天才確定やで！`,n=>`${n}問続いとるで！ノってるやん！`],
+  mission:['課題クリアや！おめでとさん！','やったやん！うちもうれしいわ〜'],
+  levelL:['レベルアップや！めでたいなあ！','また上がったやん！すごいで〜'],
+  r10:['全問正解！？ うち感動して泣きそうやわ'],r8:['ほぼ満点やん！すごいで！'],
+  greetBack:['おかえり〜！待っとったで！','お、来たな！今日もやろか！','今日も来てくれたん？ うれしいわ〜','ほな、今日もぼちぼちやろか！'],
+  chat:['なあなあ、カノン進行ってほんま泣けるよなあ','うち、ファンクのカッティング聴くと踊ってまうねん','BPM128の4つ打ち、体が勝手に動くわ〜','つかれたら休みや？ 無理はあかんで','裏コードって、裏道みたいでワクワクするやん','ちょ、つつかんといて〜！くすぐったいわ','メロディは会話やで。ボケたらツッコまなあかん','ラスサビの転調、ずるいわ〜。泣くやん','add9 のキラキラ、めっちゃ好きやねん','毎日来てくれるの、ほんまえらいで','ハモリは3度下からや。覚えとき〜','今日のごはん何やった？ うちは…音符やから食べへんけどな'],
+ }
+};
+Object.entries(VO_ADD).forEach(([v,o])=>Object.entries(o).forEach(([k,arr])=>{const t=VO[v];if(!t)return;
+  if(Array.isArray(t[k]))t[k]=t[k].concat(arr);else if(t[k]==null)t[k]=arr;else t[k]=[t[k]].concat(arr)}));
+
 const curVoice=()=>VO[S.voice]?S.voice:'cute';
 const STABLE=new Set(['greetGoal','greetStreak','greetBack','r10','r8','r5','r0']);
 let vNonce=0;
@@ -1938,7 +2112,7 @@ function renderHome(){
     <div class="staffbig">${staffSVG(nextM?nextM.sec:null,true,false)}</div>
     ${cleared?'<button class="btn quiet" id="playStaff">▶ 書き込んだ旋律を聴く</button>':`<p class="sub"><span class="vo-raw">${V('staffLocked')}</span></p>`}</div>
   <h3 class="home-h">ステージ一覧</h3>
-  <div class="slist">${SECS.map((s,i)=>`<a href="#${s.id}" style="--sa:${secAcc(s)};--sc:${secSoft(s)}"><span class="num">${i+1}</span><span class="nm"><b>${s.n}</b><small>${s.sub}</small></span><span class="heads">${MISSIONS.filter(m=>m.sec===s.id).map(m=>`<i class="${S.done[m.id]?'on':''}"></i>`).join('')}</span></a>`).join('')}</div>
+  <div class="slist">${SECS.map((s,i)=>`<a href="#${s.id}" style="--sa:${secAcc(s)};--sc:${secSoft(s)}"><span class="num">${i+1}</span><span class="nm"><b>${s.n}${LV_STAGE[s.id]?lvb(LV_STAGE[s.id]):''}</b><small>${s.sub}</small></span><span class="heads">${MISSIONS.filter(m=>m.sec===s.id).map(m=>`<i class="${S.done[m.id]?'on':''}"></i>`).join('')}</span></a>`).join('')}</div>
   </div>
   <div class="pw" data-pane="record">
   <div class="card"><div class="tempo"><span class="word">${L.title}</span><span class="gloss">Lv.${L.l+1}　${L.gloss}</span></div>
@@ -1966,7 +2140,7 @@ function renderHome(){
   if($('#qkReview'))$('#qkReview').onclick=()=>startQuiz('review');
   if(cleared)$('#playStaff').onclick=()=>{const mids=[60,62,64,65,67,69,71,72,74,76];const c2=ac();const t=c2.currentTime+0.05;SECS.forEach((s,i)=>{if(S.badges[s.id])tone(mids[i],t+i*0.34,0.3,1,'lead')})};
   setupPanes($('#homeBody'));setTimeout(()=>typeof refreshFades==='function'&&refreshFades(),30);
-  $$('#homeBody [data-chat]').forEach(m=>m.onclick=()=>{const p=m.parentElement.querySelector('p');let t;do{t=V('chat')}while(t===p.textContent&&VO[curVoice()].chat.length>1);p.textContent=t;m.classList.remove('boing');void m.offsetWidth;m.classList.add('boing')});
+  $$('#homeBody [data-chat]').forEach(m=>m.onclick=()=>{const p=m.parentElement.querySelector('p');let t;do{t=V('chat')}while(t===p.textContent&&VO[curVoice()].chat.length>1);p.textContent=t;m.innerHTML=mascot(FACES[Math.floor(Math.random()*FACES.length)]);m.classList.remove('boing');void m.offsetWidth;m.classList.add('boing')});
   $('#resetBtn').onclick=()=>queueModal({html:`<div class="m">${mascot('oops')}</div><h4>${V('resetH')}</h4><p>${V('resetP')}</p><div class="mbtns"><button class="btn quiet" data-close>${V('resetNo')}</button><button class="btn primary" id="doReset">リセットする</button></div>`,bind:el=>{el.querySelector('#doReset').onclick=()=>{S=fresh();save();nextModal();renderProgress()}}});
 }
 function renderProgress(){renderNav();renderMissions();refreshPaneCounts();renderStaffs();refreshChips();if(curRoute()==='home')renderHome();if(curRoute()==='diatonic')dRender(true);if(curRoute()==='modulation')tRenderApps();if(curRoute()==='quiz')renderQModes()}
@@ -2622,7 +2796,7 @@ function expHTML(ok,chosen,gain,bonus){
   return `<div class="exp"><div class="verdict"><div class="m">${mascot(ok?(bonus?'wow':'happy'):'oops')}</div><div>`+
    (ok?`<b>${V('praise')}<span class="pt">+${gain}pt</span>${bonus?`<span class="streak">${V('streak')(QS.st)}</span>`:''}</b>`:`<b>${V('miss')}</b><span>あなたの答え：${chosen}</span>`)+
    `<span>正解：<strong>${Q.ans}</strong></span></div></div>`+
-   `<h4>解説</h4><p>${linkTerms(Q.why,used)}</p>${anaFor(Q)?`<div class="ana"><b>たとえるなら</b><p>${linkTerms(anaFor(Q),used)}</p></div>`:''}<h4>答えまでの考え方</h4><ol>${Q.steps.map(s=>`<li>${linkTerms(s,used)}</li>`).join('')}</ol>`+
+   `${qFig(Q)?`<div class="qfig">${qFig(Q)}</div>`:''}<h4>解説</h4><p>${linkTerms(Q.why,used)}</p>${anaFor(Q)?`<div class="ana"><b>たとえるなら</b><p>${linkTerms(anaFor(Q),used)}</p></div>`:''}<h4>答えまでの考え方</h4><ol>${Q.steps.map(s=>`<li>${linkTerms(s,used)}</li>`).join('')}</ol>`+
    (Q.tip?`<p class="tipline">${linkTerms(Q.tip,used)}</p>`:'')+
    (used.size?`<p class="termhint">点線の言葉をタップすると、意味が表示されます。</p>`:'')+
    `<div class="gloss" hidden></div>`+
@@ -4967,12 +5141,60 @@ function renderFigs(){
   $$('[data-pane="jissen"] .jx li').forEach(li=>{if(li.querySelector('.fig'))return;const t=li.querySelector('b').textContent.trim(),f=JFIG[t];if(!f)return;
     const w=document.createElement('div');w.className='jfig';w.innerHTML=f();const p=li.querySelector('p');p.after(w)})}
 
+/* ===== 初級・中級・上級 ===== */
+const LVN=['','初級','中級','上級'];
+const LV_STAGE={basics:1,rhythm:1,intervals:1,scales:1,chords:2,diatonic:2,progressions:2,melody:2,modulation:3,reharm:3};
+const LV_CARD={'図で見る':1,'たとえで覚える':1,'音名の対応表':1,'♯（シャープ）と ♭（フラット）':1,'音程一覧':2,'メジャーとマイナーは親戚':2,'コードネームの読み方':1,'機能（ファンクション）の流れ':2,'メロディ作りの基本':1,'同主調と平行調':2,'応用コード':3,'リハーモナイズとは':2,'トニック・サブドミナント・ドミナント':2,'BPM とリハモの関係':3,'ジャンル別の定番リハモ':3,'技法の早見表':3,'テンションとアボイドの見分け方':3,
+ 'いいメロディの3つの条件':1,'作り方の手順':1,'モチーフを育てる技':2,'メロディの形（輪郭）':2,'リズムで差をつける':2,'Aメロ・Bメロ・サビの作り分け':2,'終わり方で印象が変わる':2,'歌声合成（ボカロ）でメロディを作るとき':2,'行き詰まったときの抜け出し方':1,'できたメロディのチェックリスト':1};
+const LV_J={'真ん中のドは「C3」か「C4」か':1,'ノート番号で考えると速い':2,'黒鍵の名前は、曲のキーで決める':2,'黒鍵の2つと3つのかたまり':1,'白鍵どうしの半音は2か所だけ':1,
+ 'ボカロロック（BPM 170〜200）':1,'エレクトロ・ダンス（BPM 120〜130）':1,'バラード（BPM 65〜85）':1,'トラップ（BPM 130〜150）':2,'サビ前のハーフタイム':2,'フィルは小節の後半2拍に':2,'歌の強い言葉とキックを合わせる':3,
+ '基本は3度下':1,'6度下はやわらかく、広く':2,'5度の平行は溶けすぎる':3,'サビ頭の跳躍は6度や8度':2,'短2度は一瞬だけ':3,
+ '歌える最高音から逆算する':1,'耳コピでキーを当てるには':2,'和風にしたい':2,'南国・沖縄っぽくしたい':2,'中東・エキゾチックにしたい':3,'ソロやフレーズで外したくない':1,
+ '転回形でなめらかにつなぐ':2,'低い音域で和音を重ねない':2,'add9 と sus4 で今っぽく':1,'分数コード（オンコード）':2,'パワーコードは3度を抜く':1,
+ 'まず7つのコードだけで作る':1,'耳コピはベースから':2,'Ⅵm は「切ないⅠ」':1,'Ⅲm はつなぎ役':2,'マイナーキーでは Ⅴ を7にする':3,
+ 'リズムを変える':1,'キーとテンポを変える':1,'Aメロは安定から':1,'Bメロは浮かせる':2,'サビは王道か小室':1,'進行に迷ったら':1,
+ '1音に1文字が基本':1,'言葉のアクセントに気をつける':2,'サビの1行目は短く、覚えやすく':1,'早口は見せ場に絞る':2,'高音のロングトーンは決めどころに':2,'作る順番はサビから':1,
+ '① どれだけ上げるか決める':2,'② 直前のつなぎを作る':2,'③ DAW では全部まとめて上げる':2,'間奏だけ転調して戻る':3,'サビだけ平行調へ':3,'転調しすぎない':2,
+ '2番のサビだけ変える':2,'落ちサビをしっとりさせる':2,'ラストのコードを変える':3,'① まず4和音にする':2,'② 同じ機能の代理コード':2,'③ セカンダリードミナントや裏コード':3,'④ メロディの長い音で確かめる':2};
+const lvb=l=>`<span class="lvb l${l}">${LVN[l]}</span>`;
+const lvMax=()=>S.lvMax||3;
+function lvOfCard(h){const t=h.textContent.trim();if(LV_CARD[t])return LV_CARD[t];const k=Object.keys(LV_CARD).find(x=>t.startsWith(x));return k?LV_CARD[k]:0}
+function initLevels(){
+  SECS.forEach(s=>{const sec=document.getElementById(s.id);if(!sec||!LV_STAGE[s.id])return;
+    sec.querySelectorAll('[data-pane="learn"],[data-pane="howto"]').forEach(c=>{const h=c.querySelector('h3');if(!h||c.dataset.lv)return;const l=lvOfCard(h);if(l){c.dataset.lv=l;h.insertAdjacentHTML('beforeend',lvb(l))}});
+    sec.querySelectorAll('[data-pane="jissen"]').forEach(c=>{let mn=3;c.querySelectorAll('.jx li').forEach(li=>{const b=li.querySelector('b'),l=LV_J[b.textContent.trim()]||1;li.dataset.lv=l;mn=Math.min(mn,l);b.insertAdjacentHTML('beforeend',lvb(l))});c.dataset.lv=mn});
+    ['learn','howto','jissen'].forEach(p=>{const cards=[...sec.querySelectorAll(`[data-pane="${p}"]`)];if(!cards.length)return;const need=Math.min(...cards.map(c=>+c.dataset.lv||1));if(need<2)return;
+      const d=document.createElement('div');d.className='card lvempty';d.dataset.pane=p;d.dataset.need=need;d.innerHTML=`<p>このタブの内容は ${lvb(need)} からだよ。上の「表示する内容」を切り替えると読めるの。</p>`;cards[cards.length-1].after(d)});
+    sec.querySelectorAll('.tipgrp .tg.tech').forEach(t=>{const g=t.closest('.tipgrp');g.dataset.lv=2;t.insertAdjacentHTML('beforeend',lvb(2))});
+    const lead=sec.querySelector('header.sh .lead');if(lead&&!sec.querySelector('.lvsel')){const L=LV_STAGE[s.id];
+      lead.insertAdjacentHTML('afterend',`<div class="lvsel"><span class="lvst">このステージ ${lvb(L)}</span><span class="lvlab">表示する内容</span><div class="seg" role="group" aria-label="表示するレベル">${[1,2,3].map(l=>`<button data-l="${l}" class="l${l}">${['','初級だけ','中級まで','ぜんぶ'][l]}</button>`).join('')}</div></div>`)}});
+  document.addEventListener('click',e=>{const b=e.target.closest('.lvsel [data-l]');if(!b)return;S.lvMax=+b.dataset.l;save();applyLevels()});
+  applyLevels()}
+function applyLevels(){const m=lvMax();document.documentElement.dataset.lvmax=m;$$('.lvsel [data-l]').forEach(b=>b.classList.toggle('sel',+b.dataset.l===m))}
+/* ===== クイズ解説の図 ===== */
+const IVN=['完全1度','短2度','長2度','短3度','長3度','完全4度','増4度','完全5度','短6度','長6度','短7度','長7度','完全8度'];
+function qFig(Q){const n=Q.notes;if(!n||n.length<2)return '';const nmS=m=>typeof nm==='function'?nm(m):String(m);
+  const ns=[...n];
+  if(ns.length===2){const [a,b]=ns,lo=Math.min(a,b),hi=Math.max(a,b),d=hi-lo;if(d>12)return '';const W=320,dx=(W-40)/Math.max(d,1);let o='';
+    for(let i=0;i<=d;i++){const x=20+i*dx,end=i===0||i===d;o+=`<circle cx="${x}" cy="56" r="${end?15:6}" class="${end?'dg root':'qstep'}"/>`;if(end)o+=`<text x="${x}" y="61" text-anchor="middle" class="ft sm">${nmS(i===0?lo:hi)}</text>`;else o+=`<text x="${x}" y="82" text-anchor="middle" class="gn">${i}</text>`}
+    o+=`<path d="M20 36 Q${10+d*dx/2} 14 ${20+d*dx} 36" class="arc hot"/><text x="${W/2}" y="14" text-anchor="middle" class="ft hotT">半音 ${d} 個ぶん → ${IVN[d]}</text>`;
+    return fig(fsvg(W,88,o),'丸ひとつが半音1つ。いくつ進んだかを数えると、音程の名前が決まります。')}
+  if(ns.length<=4){const W=320,cx=110;let o='';const srt=[...ns].sort((a,b)=>a-b),H=srt.length*40+10;
+    o+=`<line x1="${cx}" x2="${cx}" y1="4" y2="${H-2}" class="stick"/>`;
+    srt.slice().reverse().forEach((m,i)=>{const y=24+i*40;o+=`<circle cx="${cx}" cy="${y}" r="17" class="dg${i===srt.length-1?' root':''}"/><text x="${cx}" y="${y+4.5}" text-anchor="middle" class="ft sm">${nmS(m)}</text>`});
+    srt.slice(1).reverse().forEach((m,i)=>{const lower=srt[srt.length-2-i],d=m-lower,y=44+i*40;o+=`<text x="${cx+26}" y="${y+4}" class="fs">${IVN[d]||d+'半音'}</text>`});
+    o+=`<text x="${cx+110}" y="${H/2-6}" class="ft">${Q.ans.length<14?Q.ans:''}</text><text x="${cx+110}" y="${H/2+12}" class="fs">いちばん下がルート</text>`;
+    return fig(fsvg(W,H,o),'下から順に、音と音のすきま（音程）を見ると、コードの性格がわかります。')}
+  const srt=[...ns].sort((a,b)=>a-b);const marks={};srt.forEach((m,i)=>marks[m]={l:nmS(m),c:i===0?'a':'b'});
+  const arcs=srt.slice(1).map((m,i)=>[srt[i],m,m-srt[i]===1?'半':m-srt[i]===2?'全':m-srt[i]===3?'1音半':'',m-srt[i]===1?'hot':'']);
+  return fig(kbFig({lo:srt[0]-(FWH.includes(srt[0]%12)?0:1),hi:srt[srt.length-1]+(FWH.includes(srt[srt.length-1]%12)?0:1),marks,arcs}),'となり同士の間が「全（全音）」か「半（半音）」か。この並び方がスケールの性格です。')}
+
 /* ===== 起動 ===== */
 paintMascots();
 applyTheme();
 renderTips();renderPagers();
 
-sInitSounds();renderGenres();rhInit();renderDTM();renderFX();initTools();initMelHow();renderJissen();renderFigs();
+sInitSounds();renderGenres();rhInit();renderDTM();renderFX();initTools();initMelHow();renderJissen();renderFigs();initLevels();
 setNavH();['sounds','tools',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();applyVoiceText();setTimeout(refreshFades,50);
