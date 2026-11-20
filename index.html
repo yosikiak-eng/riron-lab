@@ -877,6 +877,11 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 .othx[open] summary::after{transform:rotate(-135deg)}
 .othx dl{margin:0;padding:0 14px 10px;display:grid;gap:8px}.othx dl>div{padding-top:8px;border-top:1px dashed var(--rule)}
 .othx dt{font-weight:700;font-size:14px}.othx dd{margin:2px 0 0;font-size:13.5px;line-height:1.7;color:var(--text2)}
+/* ダサい原因 */
+.ngfig{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 4px}
+.ngfig .fig{background:var(--sheet);border-radius:12px;padding:8px 8px 4px;margin:0}
+@media (max-width:520px){.ngfig{grid-template-columns:1fr}}
+.ngh{margin:12px 0 4px;font-size:13.5px}
 </style>
 </head>
 <body>
@@ -1425,7 +1430,7 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 38</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 39</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -3605,8 +3610,8 @@ function updateIcons(){
     const c2=document.createElement('canvas');c2.width=c2.height=32;c2.getContext('2d').drawImage(img,0,0,32,32);setL('link[rel="icon"][sizes="32x32"]',c2.toDataURL('image/png'));window.__iconPng=png}catch(e){}};img.src=url;
 }
 /* ===== ページ内タブ ===== */
-const PANE_L={prog:'進行メーカー',key:'キー早見',trans:'移調',bpm:'BPM計算',form:'曲の構成',range:'音域',fx:'エフェクト',howto:'作り方',jissen:'実戦',deep:'深掘り',lbase:'基本',lmake:'書き方',ltech:'テクニック',lvoc:'ボカロ',ltool:'ツール',lcheck:'チェック',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
-const PANE_O=['lbase','lmake','ltech','lvoc','ltool','lcheck','today','stages','record','settings','prog','key','trans','bpm','form','range','play','genre','ens','fx','dtm','learn','howto','jissen','deep','weak','tips','tasks'];
+const PANE_L={prog:'進行メーカー',key:'キー早見',trans:'移調',bpm:'BPM計算',form:'曲の構成',range:'音域',fx:'エフェクト',howto:'作り方',jissen:'実戦',deep:'深掘り',ng:'ダサい原因',lbase:'基本',lmake:'書き方',ltech:'テクニック',lvoc:'ボカロ',ltool:'ツール',lcheck:'チェック',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
+const PANE_O=['lbase','lmake','ltech','lvoc','ltool','lcheck','today','stages','record','settings','prog','key','trans','bpm','form','range','play','genre','ens','fx','dtm','learn','howto','ng','jissen','deep','weak','tips','tasks'];
 const paneSel={};
 function setupPanes(root){
   const key=root.id||'x',items=[...root.querySelectorAll(':scope > [data-pane]')];
@@ -5280,7 +5285,7 @@ function initLevels(){
   SECS.forEach(s=>{const sec=document.getElementById(s.id);if(!sec||!LV_STAGE[s.id])return;
     sec.querySelectorAll('[data-pane="learn"],[data-pane="howto"]').forEach(c=>{const h=c.querySelector('h3');if(!h||c.dataset.lv)return;const l=lvOfCard(h);if(l){c.dataset.lv=l;h.insertAdjacentHTML('beforeend',lvb(l))}});
     sec.querySelectorAll('[data-pane="jissen"]').forEach(c=>{let mn=3;c.querySelectorAll('.jx li').forEach(li=>{const b=li.querySelector('b'),l=LV_J[b.textContent.trim()]||1;li.dataset.lv=l;mn=Math.min(mn,l);b.insertAdjacentHTML('beforeend',lvb(l))});c.dataset.lv=mn});
-    ['learn','howto','jissen','deep'].forEach(p=>{const cards=[...sec.querySelectorAll(`[data-pane="${p}"]`)];if(!cards.length)return;const need=Math.min(...cards.map(c=>+c.dataset.lv||1));if(need<2)return;
+    ['learn','howto','ng','jissen','deep'].forEach(p=>{const cards=[...sec.querySelectorAll(`[data-pane="${p}"]`)];if(!cards.length)return;const need=Math.min(...cards.map(c=>+c.dataset.lv||1));if(need<2)return;
       const d=document.createElement('div');d.className='card lvempty';d.dataset.pane=p;d.dataset.need=need;d.innerHTML=`<p>このタブの内容は ${lvb(need)} からだよ。上の「表示する内容」を切り替えると読めるの。</p>`;cards[cards.length-1].after(d)});
     sec.querySelectorAll('.tipgrp .tg.tech').forEach(t=>{const g=t.closest('.tipgrp');g.dataset.lv=2;t.insertAdjacentHTML('beforeend',lvb(2))});
     const lead=sec.querySelector('header.sh .lead');if(lead&&!sec.querySelector('.lvsel')){const L=LV_STAGE[s.id];
@@ -5791,12 +5796,59 @@ function oxMine(Q,chosen,ok){if(ok)return '';const x=optExplain(Q,chosen);return
 function oxOthers(Q,chosen,ok){const others=Q.opts.filter(o=>o!==Q.ans&&(ok||o!==chosen)).map(o=>[o,optExplain(Q,o)]).filter(x=>x[1]);
   return others.length?`<details class="othx"><summary>ほかの選択肢は何だった？（${others.length}）</summary><dl>${others.map(([o,x])=>`<div><dt>${o}</dt><dd>${x}</dd></div>`).join('')}</dl></details>`:''}
 
+/* ===== メロディがダサくなる原因 ===== */
+const NG=[
+ ['うろうろして山がない',1,'となりの音を行ったり来たりするだけで、いちばん高い場所（山）がありません。聴き手は「どこが盛り上がり？」と迷い、印象に残りません。',['いちばん高い音を1か所だけ決め、そこに向かって少しずつ上がる','山の手前で一度下がると、上がったときの気持ちよさが増す'],
+  'E5:1 D5:1 E5:1 D5:1 C5:1 D5:1 C5:1 D5:1 C5:1 D5:1 C5:1 D5:1 D5:1 C5:1 D5:1 B4:1','E5:1 G5:1 A5:2 C5:1 E5:1 A5:2 F5:1 A5:1 C6:2 B5:1 A5:1 G5:2'],
+ ['同じ音の連打が長い（棒読み）',1,'同じ高さの音が続くと、お経やセリフのように聴こえます。ラップや早口の演出なら効果的ですが、歌メロでは平らで退屈になりがちです。',['連打は2〜4音までにして、最後の音だけ上げ下げする','言葉の大事なところで、ぱっと高い音へ跳ぶ'],
+  'E5:.5 E5:.5 E5:.5 E5:.5 E5:.5 E5:.5 E5:1 E5:.5 E5:.5 E5:.5 E5:.5 E5:2 F5:.5 F5:.5 F5:.5 F5:.5 F5:2 D5:.5 D5:.5 D5:.5 D5:.5 D5:2','E5:.5 E5:.5 G5:.5 E5:.5 D5:.5 C5:.5 E5:1 C5:.5 C5:.5 E5:.5 A5:.5 G5:2 A5:.5 A5:.5 C6:.5 A5:.5 F5:2 D5:.5 D5:.5 G5:.5 B5:.5 D6:2'],
+ ['リズムがずっと同じ長さ',1,'全部4分音符のように、同じ長さの音が並ぶと、行進曲や練習曲のように聴こえます。メロディの個性は、音の高さよりもリズムで決まることが多いです。',['長い音と短い音を混ぜる（付点、タイ）','休符を入れて、言葉にすき間を作る','拍の裏から歌い始める'],
+  'C5:1 E5:1 G5:1 E5:1 C5:1 E5:1 A5:1 E5:1 C5:1 F5:1 A5:1 F5:1 B4:1 D5:1 G5:1 D5:1','C5:.75 E5:.25 G5:1 r:.5 E5:1.5 C5:.5 E5:.5 A5:1.5 G5:1.5 r:.5 F5:.5 A5:.5 C6:.5 A5:2 B5:.75 A5:.25 G5:3'],
+ ['コードの音をなぞるだけ',1,'ドミソ、ラドミ…とコードの音を順番に弾くだけだと、伴奏のアルペジオのように聴こえ、歌としての流れが生まれません。',['コードトーンの間を、経過音でなめらかにつなぐ','強拍はコードトーン、弱拍で寄り道する'],
+  'C5:1 E5:1 G5:1 C6:1 A4:1 C5:1 E5:1 A5:1 F4:1 A4:1 C5:1 F5:1 G4:1 B4:1 D5:1 G5:1','E5:1 D5:.5 E5:.5 G5:2 C5:1 B4:.5 C5:.5 E5:2 A5:1 G5:.5 F5:.5 E5:1 F5:1 D5:1 E5:.5 F5:.5 D5:2'],
+ ['毎回「ド」で終わる',2,'フレーズの終わりが全部主音（キーの1番目の音）だと、毎回そこで曲が終わったように感じます。続きが聴きたくなりません。',['途中のフレーズは、ミやレ、シで止めて「問いかけ」にする','主音で終わるのは、セクションの最後だけ'],
+  'E5:1 D5:1 C5:2 A5:1 G5:1 C5:2 A5:1 G5:1 C5:2 D5:1 E5:1 C5:2','E5:1 D5:1 G5:2 A5:1 G5:1 E5:2 A5:1 C6:1 A5:2 G5:1 A5:1 B5:2'],
+ ['いつも小節の頭から歌う',2,'すべてのフレーズが1拍目から始まると、ぎこちなく、ノリのない歌になります。今の曲は、拍の裏から入ったり、次の小節を少し先取り（食い）したりするのが普通です。',['フレーズを8分音符1つぶん前から始める（弱起）','長い音を次の小節の頭より少し前に置く（食い）'],
+  'E5:1 E5:1 G5:2 E5:1 D5:1 C5:2 F5:1 F5:1 A5:2 G5:1 F5:1 D5:2','r:.5 E5:.5 E5:.5 G5:2.5 r:.5 E5:.5 D5:.5 C5:2.5 r:.5 F5:.5 F5:.5 A5:2.5 r:.5 G5:.5 F5:.5 D5:2.5'],
+ ['サビが低い・Aメロと同じ高さ',1,'サビの音域がAメロと変わらないと、盛り上がったように聴こえません。歌詞や伴奏をがんばっても、メロディが平らだと届きません。',['サビの最高音は、それまでのセクションより高くする','サビの1音目を、Bメロの最後より高い音にする'],
+  'E4:.5 G4:.5 A4:1 G4:2 E4:.5 G4:.5 A4:1 E4:2 F4:.5 A4:.5 C5:1 A4:2 G4:.5 B4:.5 D5:1 B4:2','C5:1 E5:1 G5:1 A5:1 C6:2 A5:1 G5:1 F5:1 A5:1 C6:1 D6:1 D6:2 B5:2'],
+ ['跳躍しっぱなし',2,'大きく跳ぶ音程が続くと、歌いにくく、聴き手もついていけません。跳躍は「ここぞ」で使うから効きます。',['大きく跳んだら、反対方向へ順番に戻る','跳躍は1フレーズに1〜2回まで'],
+  'C5:1 A5:1 D5:1 B5:1 E5:1 C6:1 A4:1 G5:1 C5:1 A5:1 F4:1 D5:1 G4:1 F5:1 B4:1 G5:1','C5:1 A5:1 G5:1 E5:1 E5:1 C6:1 B5:.5 A5:.5 E5:1 F5:1 A5:1 G5:1 F5:1 D5:1 E5:1 F5:.5 G5:1.5'],
+ ['ドレミファソをそのまま上下',1,'音階を順番に上がって下がるだけだと、練習曲のように聴こえます。方向が予想どおりすぎて、驚きがありません。',['3〜4音進んだら、一度反対へ戻る','途中で1つだけ音を飛ばす'],
+  'C5:.5 D5:.5 E5:.5 F5:.5 G5:.5 A5:.5 B5:.5 C6:.5 C6:.5 B5:.5 A5:.5 G5:.5 F5:.5 E5:.5 D5:.5 C5:.5 C5:.5 D5:.5 E5:.5 F5:.5 G5:.5 A5:.5 B5:.5 C6:.5 C6:.5 B5:.5 A5:.5 G5:.5 F5:.5 E5:.5 D5:.5 C5:.5','C5:.5 D5:.5 E5:.5 G5:.5 E5:2 A5:.5 G5:.5 E5:.5 C5:.5 E5:2 F5:.5 G5:.5 A5:.5 C6:.5 A5:2 G5:.5 F5:.5 D5:.5 B4:.5 D5:2'],
+ ['毎回ちがって覚えられない',2,'フレーズごとに形もリズムもばらばらだと、どれも印象に残りません。いいメロディは、同じ形（モチーフ）を少しずつ変えてくり返しています。',['2〜4音のモチーフを決めて、2回くり返す','3回目は高さやリズムを少し変える'],
+  'G5:.5 C5:1 F5:.5 A5:2 D5:.25 E5:.25 B4:1.5 C6:1 G5:1 E5:.5 A4:1.5 D5:.5 F5:1.5 C6:.75 G5:.25 B4:1 D5:1 F5:.5 G5:.5','E5:.5 G5:.5 A5:1 G5:2 E5:.5 G5:.5 A5:1 E5:2 F5:.5 A5:.5 C6:1 A5:2 G5:.5 B5:.5 D6:1 B5:2'],
+ ['息継ぎがない',1,'音がずっと続いて休符がないと、歌う人は苦しく、聴く人も息苦しくなります。歌声合成でも、すき間がない歌は機械っぽく聴こえます。',['2小節に1回くらい、4分音符1つぶんの休符を入れる','言葉の区切りと休符の位置をそろえる'],
+  'E5:.5 D5:.5 C5:.5 D5:.5 E5:.5 G5:.5 E5:.5 D5:.5 C5:.5 E5:.5 A5:.5 G5:.5 E5:.5 C5:.5 E5:.5 G5:.5 A5:.5 G5:.5 F5:.5 A5:.5 C6:.5 A5:.5 G5:.5 F5:.5 D5:.5 E5:.5 F5:.5 G5:.5 B5:.5 A5:.5 G5:.5 D5:.5','E5:.5 D5:.5 C5:.5 D5:.5 E5:1 r:1 C5:.5 E5:.5 A5:.5 G5:.5 E5:1 r:1 A5:.5 G5:.5 F5:.5 A5:.5 C6:1 r:1 B5:.5 A5:.5 G5:.5 F5:.5 G5:2'],
+ ['長い音がコードとぶつかる',2,'長く伸ばす音が、その下のコードにない音だと、にごって「音を外した」ように聴こえます。短い音なら気になりませんが、伸ばすほど目立ちます。',['伸ばす音は、コードトーン（特に3度や5度）にする','ぶつけたいときは、すぐとなりの音へ解決させる'],
+  'D5:3 E5:1 B4:3 C5:1 B4:3 A4:1 C5:3 D5:1','E5:3 D5:1 E5:3 D5:1 C5:3 E5:1 D5:3 G5:1']
+];
+function ngRoll(str,cls){const sc=score(str),ns=[];sc.forEach(e=>{if(e.ms)ns.push([e.ms[0],e.at,e.len,cls])});const ms=ns.map(n=>n[0]),lo=Math.min(...ms)-1,hi=Math.max(...ms)+1;
+  return rollFig({lo,hi,beats:16,rh:Math.max(4,Math.min(7,90/(hi-lo+1))),line:cls==='a',chords:[[0,'C'],[4,'Am'],[8,'F'],[12,'G']],notes:ns})}
+function ngBalanceFig(){const W=320;let o=`<defs><linearGradient id="ngGrad" x1="0" x2="1"><stop offset="0" style="stop-color:var(--soda);stop-opacity:.35"/><stop offset=".5" style="stop-color:var(--mint);stop-opacity:.55"/><stop offset="1" style="stop-color:var(--rose);stop-opacity:.35"/></linearGradient></defs>`;
+  o+=`<rect x="0" y="30" width="${W}" height="26" rx="13" fill="url(#ngGrad)"/><rect x="${W*.36}" y="26" width="${W*.28}" height="34" rx="15" class="fbx fSD" style="fill-opacity:.0"/>`;
+  o+=`<text x="8" y="20" class="ft sm">予想どおりすぎる</text><text x="${W-8}" y="20" text-anchor="end" class="ft sm">予想を裏切りすぎる</text><text x="${W/2}" y="48" text-anchor="middle" class="ft sm">いいメロディ</text>`;
+  o+=`<text x="8" y="78" class="fs">退屈・棒読み・練習曲っぽい</text><text x="${W-8}" y="78" text-anchor="end" class="fs">覚えられない・歌えない</text>`;
+  o+=`<text x="${W/2}" y="98" text-anchor="middle" class="fs">「くり返し」と「ちょっとの裏切り」のバランス</text>`;
+  return fsvg(W,104,o)}
+function renderNG(){const host=document.getElementById('melody');if(!host||host.querySelector('[data-pane="ng"]'))return;const anchor=host.querySelector('.card.tips')||host.querySelector('.pager');
+  let h=`<div class="card" data-pane="ng" data-lv="1"><h3>ダサいの正体${lvb(1)}</h3>${fig(ngBalanceFig(),'ダサく聴こえるメロディは、ほとんどが「予想どおりすぎる」か「予想を裏切りすぎる」のどちらかです。くり返しで安心させて、ところどころで少しだけ裏切るのがコツです。')}
+    <p class="sub">下のカードは、ダサい例と直した例を聴き比べできます。図のうすい色がダサい例、濃い色が直した例です。</p></div>`;
+  NG.forEach(([t,lv,why,fix,bad,good],i)=>{h+=`<div class="card" data-pane="ng" data-lv="${lv}"><h3>${t}${lvb(lv)}</h3><p>${why}</p>
+    <div class="ngfig">${fig(ngRoll(bad,'b'),'','ダサい例')}${fig(ngRoll(good,'a'),'','直した例')}</div>
+    <div class="ctrl"><button class="btn quiet" data-ng="${i}" data-w="b">▶ ダサい例</button><button class="btn primary" data-ng="${i}" data-w="a">▶ 直した例</button></div>
+    <h4 class="ngh">直し方</h4><ul class="itips">${fix.map(x=>`<li>${x}</li>`).join('')}</ul></div>`});
+  h+=`<div class="card" data-pane="ng" data-lv="1"><h3>ダサさチェックリスト${lvb(1)}</h3><ul class="lcheck">${['いちばん高い音（山）が1か所に決まっている','同じ音の連打が5音以上続いていない','長い音と短い音が混ざっている','コードの音を順番になぞるだけになっていない','途中のフレーズが毎回主音で終わっていない','拍の裏から入るフレーズがある','サビがAメロより高い','跳躍のあとは反対方向へ戻っている','モチーフ（短い形）をくり返している','2小節に1回くらい休符がある','伸ばす音がコードとぶつかっていない'].map((t,i)=>`<li><label><input type="checkbox" data-ngc="${i}"><span>${t}</span></label></li>`).join('')}</ul></div>`;
+  const w=document.createElement('div');w.innerHTML=h;[...w.children].forEach(c=>host.insertBefore(c,anchor));
+  host.querySelectorAll('[data-ng]').forEach(b=>b.onclick=()=>{const N=NG[+b.dataset.ng];mplay(CAFG,b.dataset.w==='b'?N[4]:N[5])});
+  const ck=[...host.querySelectorAll('[data-ngc]')];(S.ngChk||[]).forEach((v,i)=>{if(ck[i])ck[i].checked=!!v});ck.forEach(c=>c.onchange=()=>{S.ngChk=ck.map(x=>x.checked?1:0);save()})}
+
 /* ===== 起動 ===== */
 paintMascots();
 applyTheme();
 renderTips();renderPagers();
 
-sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderLyrics();initLevels();foldPanes();
+sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderNG();renderLyrics();initLevels();foldPanes();
 setNavH();['sounds','tools','lyrics',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();applyVoiceText();setTimeout(refreshFades,50);
