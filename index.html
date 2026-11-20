@@ -1430,7 +1430,7 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 39</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 40</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -2532,7 +2532,7 @@ const PROGS=[
 ];
 let pKeyV=0,pSel=0,pIdx=0,pTimer=null,pBpm=100;
 function voice(pc,suf){const bass=40+mod(pc-4);const up=[...new Set(CHORDS[suf].iv.map(i=>{const p=mod(pc+i);return 58+mod(p-58)}))].sort((a,b)=>a-b);return {bass,up}}
-function playVoiced(pc,suf,dur,kb,delay=0){const v=voice(mod(pc),suf);playChord([v.bass],dur,kb,delay,'pluck');playChord(v.up,dur,kb,delay,'pad')}
+function playVoiced(pc,suf,dur,kb,delay=0){const v=voice(mod(pc),suf),t=ac().currentTime+.03+delay;nOn('ebass',v.bass,t,dur,.9);keysChord(v.up,t,dur,.72);[v.bass,...v.up].forEach(m=>setTimeout(()=>flashKey(kb,m,Math.min(dur*1000,700)),delay*1000))}
 function pRenderList(){
   const flat=FLAT_MAJ.has(pKeyV);
   $('#pList').innerHTML=PROGS.map((p,i)=>`<button class="pitem${i===pSel?' sel':''}" data-i="${i}"><div class="pn"><b>${p.n}</b><span class="mono">${p.c.map(c=>romanOf(c[0])+c[1]).join(' → ')}<br>${p.c.map(c=>nm(pKeyV+c[0],flat)+c[1]).join(' → ')}</span></div><span class="pk">${S.c.prog.includes(i)?'✓':'▶'}</span></button>`).join('');
@@ -3119,8 +3119,8 @@ const INST={
   desc:'エレクトリックピアノ。金属の棒を叩いて鳴らす、丸く柔らかい音です。',
   range:'C3〜C6',role:'おしゃれなコード伴奏',genre:'シティポップ、R&B、Lo-fi',
   tips:['M7 や m7 などの4和音と相性がいい','和音の音をほんの少しずらして弾くと、柔らかい雰囲気が出る'],
-  play(m,t,v=1){const f=freq(m),out=vout(.16),amp=sG(0),c=sO('sine',f),mo=sO('sine',f),mg=sG(0),ti=sO('sine',f*14),tg=sG(0),c2=sO('sine',f*2,3),g2=sG(.12*v);mo.connect(mg);mg.connect(c.frequency);ti.connect(tg);tg.connect(c.frequency);mg.gain.setValueAtTime(f*(1+1.4*v),t);mg.gain.setTargetAtTime(f*.12,t,.45);tg.gain.setValueAtTime(f*.7*v,t);tg.gain.setTargetAtTime(0,t,.025);c2.connect(g2);g2.connect(amp);c.connect(amp);
-   let last=amp,ex=[];if(ac().createStereoPanner&&!curPan){const pn=ac().createStereoPanner(),l=sO('sine',4.2),lg=sG(.32);l.connect(lg);lg.connect(pn.pan);amp.connect(pn);last=pn;ex=[l]}last.connect(out);return sVoice([c,mo,ti,c2,...ex],amp,t,{a:.003,peak:.26*v,dec:Math.max(1.2,3.4-(m-48)*.04)},.3)}},
+  play(m,t,v=1){const f=freq(m),out=vout(.16),amp=sG(0),c=sO('sine',f),mo=sO('sine',f),mg=sG(0),ti=sO('sine',f*14),tg=sG(0),c2=sO('sine',f*2,3),g2=sG(.12*v);mo.connect(mg);mg.connect(c.frequency);ti.connect(tg);tg.connect(c.frequency);mg.gain.setValueAtTime(f*(.6+1.05*v),t);mg.gain.setTargetAtTime(f*.1,t,.32);tg.gain.setValueAtTime(f*.7*v,t);tg.gain.setTargetAtTime(0,t,.025);c2.connect(g2);g2.connect(amp);c.connect(amp);
+   let last=amp,ex=[];if(ac().createStereoPanner&&!curPan){const pn=ac().createStereoPanner(),l=sO('sine',4.2),lg=sG(.16);l.connect(lg);lg.connect(pn.pan);amp.connect(pn);last=pn;ex=[l]}last.connect(out);return sVoice([c,mo,ti,c2,...ex],amp,t,{a:.003,peak:.26*v,dec:Math.max(1.2,3.4-(m-48)*.04)},.3)}},
  organ:{n:'オルガン',cat:'keys',kind:'poly',base:48,
   desc:'鍵盤を押している間、同じ音量で鳴り続ける楽器です。いくつもの倍音を混ぜて音色を作ります。',
   range:'C2〜C6',role:'和音を長く伸ばす、厚みを足す',genre:'ゴスペル、ロック、ファンク',
@@ -3779,8 +3779,27 @@ function rhInit(){
   rhRender();
 }
 /* 解説用のデモ */
-function chordAt(bass,ups,t,dur,v=.7){nOn('ebass',bass,t,dur*.95,.9);ups.forEach(m=>nOn('epiano',m,t,dur*.95,v))}
-function seqAt(list,bpm,beatsEach=4){const b=60/bpm,t=ac().currentTime+.06;let x=0;list.forEach(([r,s,len])=>{const L=(len||beatsEach)*b,v=voice(mod(r),s);chordAt(v.bass,v.up,t+x,L);x+=L});return {t,b,total:x}}
+/* コード伴奏専用の軽い鍵盤の音（1音につき発振器2つ）：ピアノに近い倍音を最初に作っておき、明るさが少しずつ落ちていく */
+let KEYS_WAVE=null;
+function keysWave(){if(KEYS_WAVE)return KEYS_WAVE;const A=[0,1,.55,.3,.22,.13,.09,.065,.045,.032,.022,.015,.01,.007,.005,.003],re=new Float32Array(A.length),im=Float32Array.from(A);KEYS_WAVE=ac().createPeriodicWave(re,im);return KEYS_WAVE}
+function keyNote(m,t,dur,v=.7){const c=ac(),f=freq(m),out=vout(.17,kpan(m)*.6),amp=sG(0),b0=Math.min(11000,f*(4+7*v)),lp=sF('lowpass',b0,.5);
+  lp.frequency.setValueAtTime(b0,t);lp.frequency.setTargetAtTime(Math.min(4200,f*2.2+350),t+.01,.32);
+  const os=[-3,4].map((d,i)=>{const o=c.createOscillator();o.setPeriodicWave(keysWave());o.frequency.value=f;o.detune.value=d;const g=sG(i?.55:1);o.connect(g);g.connect(lp);return o});
+  lp.connect(amp);amp.connect(out);const D=Math.max(1.3,Math.min(5,4.6-(m-48)*.06));
+  const h=sVoice(os,amp,t,{a:.004,peak:.19*v,dec:D},.28);instVoices.push(h);h.stop(t+dur);return h}
+function padNote(m,t,dur,v=.4){const c=ac(),f=freq(m),out=vout(.4),amp=sG(0),lp=sF('lowpass',900,.7);const os=[-8,8].map((d,i)=>{const o=sO('sawtooth',f,d);pp(o,i?.4:-.4).connect(lp);return o});
+  lp.connect(amp);amp.connect(out);const h=sVoice(os,amp,t,{a:.45,peak:.05*v},1);instVoices.push(h);h.stop(t+dur);return h}
+/* コード伴奏：ほんの少しずらして弾き、いちばん上の音を少し強く。長いコードはうすいパッドで伸ばす */
+function keysChord(ups,t,dur,v=.7,{roll=.012,pad=true}={}){const srt=[...ups].sort((a,b)=>a-b),top=srt[srt.length-1];
+  srt.forEach((m,i)=>keyNote(m,t+i*roll+Math.random()*.004,dur,v*(m===top?1.06:.84)*(.94+Math.random()*.1)));
+  if(pad&&dur>1)srt.forEach(m=>padNote(m,t,dur,v*.9))}
+function chordAt(bass,ups,t,dur,v=.7){nOn('ebass',bass,t,dur*.95,.9);keysChord(ups,t,dur*.97,v)}
+/* となりのコードへ、いちばん近い形（転回形）で移る */
+function vlead(pc,suf,prev){const pcs=[...new Set(CHORDS[suf].iv.map(i=>mod(pc+i)))],n=pcs.length,C=[];
+  for(let low=55;low<=67;low++){if(!pcs.includes(mod(low)))continue;const vs=[low];let cur=low;for(let k=1;k<n;k++){let nx=cur+1;while(!pcs.includes(mod(nx))||vs.some(x=>mod(x)===mod(nx)))nx++;vs.push(nx);cur=nx}if(vs[vs.length-1]<=77)C.push(vs)}
+  const sc=vs=>prev?vs.reduce((a,m,i)=>a+Math.abs(m-prev[Math.min(i,prev.length-1)]),0)+.5*Math.abs(vs[vs.length-1]-prev[prev.length-1]):Math.abs(vs[vs.length-1]-71);
+  return C.sort((a,b)=>sc(a)-sc(b))[0]||voice(pc,suf).up}
+function seqAt(list,bpm,beatsEach=4,{lead=true}={}){const b=60/bpm,t=ac().currentTime+.06;let x=0,prev=null;list.forEach(([r,s,len])=>{const L=(len||beatsEach)*b,v=voice(mod(r),s),up=lead?vlead(mod(r),s,prev):v.up;prev=up;chordAt(v.bass,up,t+x,L);x+=L});return {t,b,total:x}}
 function clickTrack(t,b,beats){for(let i=0;i<beats;i++)hit(i%4===0?'accent':'click',t+i*b,.5)}
 const RDEMO={
  fT:()=>seqAt([[0,'',6]],90),fSD:()=>seqAt([[5,'',6]],90),fD:()=>seqAt([[7,'7',6]],90),fDres:()=>seqAt([[7,'7',3],[0,'',5]],90),
@@ -4546,8 +4565,12 @@ const qOk=k=>(S.qstat[k]||[0])[0];
 
 
 /* ===== メロディの作り方：デモ ===== */
-const MCH={C:'C3 G3 E4',Am:'A2 E3 C4',F:'F2 C3 A3',G:'G2 D3 B3',GB:'B2 G3 D4',EmG:'G2 E3 B3'};
-function mplay(ch,mel,{bpm=96,harm=null,lead='flute'}={}){const b=60/bpm,t=ac().currentTime+.08;comp('epiano',t,b,ch.map(c=>MCH[c]),'half',.4);ps('ebass',t,b,ch.map(c=>MCH[c].split(' ')[0].replace(/\d/,d=>+d-1)+':4').join(' '),{vm:.7});ps(lead,t,b,mel,{vm:1});if(harm)ps('piano',t,b,harm,{vm:.55});runViz()}
+const MCH={C:'C3 G3 C4 E4 G4',Am:'A2 E3 A3 C4 E4',F:'F2 C3 F3 A3 C4',G:'G2 D3 G3 B3 D4',GB:'B2 G3 B3 D4 G4',EmG:'G2 E3 G3 B3 E4'};
+/* メロディの伴奏：ポップスのピアノの刻み（1拍目・2拍目の裏・3拍目・4拍目の裏）＋うすいパッド */
+function keysComp(t,b,bars,v=.5){bars.forEach((c,i)=>{const ms=c.split(' ').map(nmid),T=t+i*4*b,up=ms.slice(1);
+  keysChord(ms,T,1.9*b,v,{pad:false});keysChord(up,T+1.5*b,.42*b,v*.5,{pad:false,roll:.006});keysChord(ms,T+2*b,1.45*b,v*.78,{pad:false});keysChord(up,T+3.5*b,.4*b,v*.48,{pad:false,roll:.006});
+  up.slice(-3).forEach(m=>padNote(m,T,4*b,v*1.2))})}
+function mplay(ch,mel,{bpm=96,harm=null,lead='flute'}={}){const b=60/bpm,t=ac().currentTime+.08;keysComp(t,b,ch.map(c=>MCH[c]));ps('ebass',t,b,ch.map(c=>MCH[c].split(' ')[0].replace(/\d/,d=>+d-1)+':4').join(' '),{vm:.7});ps(lead,t,b,mel,{vm:1});if(harm)ps('piano',t,b,harm,{vm:.55});runViz()}
 const CAFG=['C','Am','F','G'];
 const MDEMO={
  rep:()=>mplay(CAFG,'E5:.5 G5:.5 A5:1 G5:2 E5:.5 G5:.5 A5:1 E5:2 F5:.5 A5:.5 C6:1 A5:2 G5:.5 B5:.5 D6:1 B5:2'),
@@ -5049,7 +5072,7 @@ const JDEMO={
  miyako:()=>{const t=ac().currentTime+.06;ps('koto',t,.32,'E4:1 F4:1 A4:1 B4:1 C5:1 E5:1 F5:1 E5:1 C5:1 B4:1 A4:1 F4:1 E4:3')},
  ryukyu:()=>{const t=ac().currentTime+.06;ps('pluck',t,.32,'C5:1 E5:1 F5:1 G5:1 B5:1 C6:1 B5:1 G5:1 F5:1 E5:1 C5:3')},
  harmMin:()=>{const t=ac().currentTime+.06;ps('flute',t,.3,'A4:1 B4:1 C5:1 D5:1 E5:1 F5:1 G#5:1 A5:2 G#5:1 F5:1 E5:3')},
- vJump:()=>seqAt([[0,''],[5,''],[7,''],[0,'']],90),
+ vJump:()=>{const b=60/90,t=ac().currentTime+.06;[[36,[60,64,67]],[41,[65,69,72]],[43,[67,71,74]],[36,[60,64,67]]].forEach(([bs,up],i)=>chordAt(bs,up,t+i*4*b,4*b))},
  vSmooth:()=>{const b=60/90,t=ac().currentTime+.06;[[36,[64,67,72]],[41,[65,69,72]],[43,[62,67,71]],[36,[64,67,72]]].forEach(([bs,up],i)=>chordAt(bs,up,t+i*4*b,4*b))},
  plainC:()=>{const t=ac().currentTime+.06;chordAt(36,[60,64,67,72],t,2.4)},
  add9:()=>{const t=ac().currentTime+.06;chordAt(36,[60,64,67,74],t,2.4)},
