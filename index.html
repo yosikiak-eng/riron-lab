@@ -892,6 +892,18 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 .mbpm{display:grid;grid-template-columns:auto 1fr 3.2em auto;align-items:center;gap:10px;margin:10px 0 2px;padding:10px 12px;border-radius:14px;background:var(--sheet);border:1px solid var(--rule)}
 .mbpm label{font-size:12.5px;font-weight:700;color:var(--text2)}.mbpm input{width:100%;accent-color:var(--sa,var(--rose));margin:0}
 .mbpm output{font-weight:800;font-variant-numeric:tabular-nums;text-align:right;font-size:15px}
+/* ぶつからないコツ */
+.fkw.m-o,.fkb.m-o{fill:#F0A35E}.fkw.m-n,.fkb.m-n{fill:color-mix(in srgb,var(--mute) 30%,var(--keyw))}.kt.on-o{fill:#3A2414}.kt.on-n{fill:var(--mute)}
+.clleg{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-top:10px}
+.clleg>div{padding:8px 10px;border-radius:12px;border-left:5px solid;background:var(--sheet)}
+.clleg b{display:block;font-size:13px}.clleg small{display:block;font-size:11.5px;color:var(--text2);line-height:1.45}
+.cl-ct{border-color:var(--sa,var(--rose))!important}.cl-tn{border-color:var(--butter)!important}.cl-av{border-color:#F0A35E!important}.cl-out{border-color:color-mix(in srgb,var(--mute) 45%,transparent)!important}
+.clnotes{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
+.clnote{font:inherit;border:1px solid var(--rule);border-bottom-width:4px;border-radius:12px;background:var(--sheet);color:var(--ink);padding:7px 2px 6px;cursor:pointer;display:grid;gap:1px;justify-items:center}
+.clnote b{font-size:14px}.clnote small{font-size:10px;color:var(--text2);white-space:nowrap}
+.clnote.cl-ct{background:color-mix(in srgb,var(--sa,var(--rose)) 14%,var(--sheet))}.clnote.cl-av{background:color-mix(in srgb,#F0A35E 16%,var(--sheet))}.clnote.cl-out{opacity:.75}
+.clnote:active{transform:translateY(2px)}
+@media (max-width:340px){.clnotes{grid-template-columns:repeat(4,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -1440,7 +1452,7 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 43</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 44</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -3620,8 +3632,8 @@ function updateIcons(){
     const c2=document.createElement('canvas');c2.width=c2.height=32;c2.getContext('2d').drawImage(img,0,0,32,32);setL('link[rel="icon"][sizes="32x32"]',c2.toDataURL('image/png'));window.__iconPng=png}catch(e){}};img.src=url;
 }
 /* ===== ページ内タブ ===== */
-const PANE_L={prog:'進行メーカー',key:'キー早見',trans:'移調',bpm:'BPM計算',form:'曲の構成',range:'音域',fx:'エフェクト',howto:'作り方',jissen:'実戦',deep:'深掘り',ng:'ダサい原因',mood:'雰囲気',lbase:'基本',lmake:'書き方',ltech:'テクニック',lvoc:'ボカロ',ltool:'ツール',lcheck:'チェック',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
-const PANE_O=['lbase','lmake','ltech','lvoc','ltool','lcheck','today','stages','record','settings','prog','key','trans','bpm','form','range','play','genre','ens','fx','dtm','learn','howto','mood','ng','jissen','deep','weak','tips','tasks'];
+const PANE_L={prog:'進行メーカー',key:'キー早見',trans:'移調',bpm:'BPM計算',form:'曲の構成',range:'音域',fx:'エフェクト',howto:'作り方',jissen:'実戦',deep:'深掘り',ng:'ダサい原因',mood:'雰囲気',clash:'ぶつからないコツ',lbase:'基本',lmake:'書き方',ltech:'テクニック',lvoc:'ボカロ',ltool:'ツール',lcheck:'チェック',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
+const PANE_O=['lbase','lmake','ltech','lvoc','ltool','lcheck','today','stages','record','settings','prog','key','trans','bpm','form','range','play','genre','ens','fx','dtm','learn','howto','mood','ng','clash','jissen','deep','weak','tips','tasks'];
 const paneSel={};
 function setupPanes(root){
   const key=root.id||'x',items=[...root.querySelectorAll(':scope > [data-pane]')];
@@ -5328,7 +5340,7 @@ function initLevels(){
   SECS.forEach(s=>{const sec=document.getElementById(s.id);if(!sec||!LV_STAGE[s.id])return;
     sec.querySelectorAll('[data-pane="learn"],[data-pane="howto"]').forEach(c=>{const h=c.querySelector('h3');if(!h||c.dataset.lv)return;const l=lvOfCard(h);if(l){c.dataset.lv=l;h.insertAdjacentHTML('beforeend',lvb(l))}});
     sec.querySelectorAll('[data-pane="jissen"]').forEach(c=>{let mn=3;c.querySelectorAll('.jx li').forEach(li=>{const b=li.querySelector('b'),l=LV_J[b.textContent.trim()]||1;li.dataset.lv=l;mn=Math.min(mn,l);b.insertAdjacentHTML('beforeend',lvb(l))});c.dataset.lv=mn});
-    ['learn','howto','mood','ng','jissen','deep'].forEach(p=>{const cards=[...sec.querySelectorAll(`[data-pane="${p}"]`)];if(!cards.length)return;const need=Math.min(...cards.map(c=>+c.dataset.lv||1));if(need<2)return;
+    ['learn','howto','mood','ng','clash','jissen','deep'].forEach(p=>{const cards=[...sec.querySelectorAll(`[data-pane="${p}"]`)];if(!cards.length)return;const need=Math.min(...cards.map(c=>+c.dataset.lv||1));if(need<2)return;
       const d=document.createElement('div');d.className='card lvempty';d.dataset.pane=p;d.dataset.need=need;d.innerHTML=`<p>このタブの内容は ${lvb(need)} からだよ。上の「表示する内容」を切り替えると読めるの。</p>`;cards[cards.length-1].after(d)});
     sec.querySelectorAll('.tipgrp .tg.tech').forEach(t=>{const g=t.closest('.tipgrp');g.dataset.lv=2;t.insertAdjacentHTML('beforeend',lvb(2))});
     const lead=sec.querySelector('header.sh .lead');if(lead&&!sec.querySelector('.lvsel')){const L=LV_STAGE[s.id];
@@ -5968,12 +5980,62 @@ function renderMood(){const host=document.getElementById('melody');if(!host||hos
   host.querySelectorAll('[data-mb]').forEach(r=>r.onchange=()=>{const M=MOODS_M[+r.dataset.mb];if(ctx&&MOOD_NOW&&MOOD_NOW.M===M&&ctx.currentTime<MOOD_NOW.end){stopAll();moodPlay(M,+r.value)}});
   host.querySelectorAll('[data-mr]').forEach(b=>b.onclick=()=>{const i=+b.dataset.mr,r=host.querySelector(`[data-mb="${i}"]`);r.value=MOODS_M[i].bpm;r.oninput()})}
 
+/* ===== メロディがぶつからないコツ ===== */
+const CL_CH=[['C',0,''],['Dm',2,'m'],['Em',4,'m'],['F',5,''],['G',7,''],['Am',9,'m'],['G7',7,'7'],['FM7',5,'M7'],['Am7',9,'m7']];
+function clClass(r,suf,pc){const ct=CHORDS[suf].iv.map(i=>mod(r+i));if(ct.includes(pc))return 'ct';if(!MAJ.includes(pc))return 'out';
+  if(ct.some(c=>mod(c+1)===pc))return 'av';const third=mod(r+CHORDS[suf].iv[1]);if(suf.startsWith('m')&&mod(pc-third)===6)return 'av';return 'tn'}
+const CL_N={ct:['コードトーン','いちばん安全。強拍や長い音に'],tn:['使える音','短い音、経過音なら OK。伸ばすとおしゃれな響き'],av:['アボイド','コードの音と半音でぶつかる。伸ばさず、すぐとなりへ'],out:['キーの外','通り道で一瞬だけ']};
+const CL_CLS={ct:'a',tn:'c',av:'o',out:'n'};
+function clFig(i){const [nmC,r,suf]=CL_CH[i],marks={};for(let m=60;m<=71;m++){const k=clClass(r,suf,mod(m));marks[m]={c:CL_CLS[k],l:k==='ct'||k==='av'?NAMES_S[mod(m)].replace('♯','♯'):''}}return kbFig({lo:60,hi:71,marks,H:84})}
+const CLASH=[
+ ['強拍と長い音はコードトーンに',1,'拍の頭や長く伸ばす音は、耳がいちばんよく聴いている場所です。ここがコードの音（コードトーン）だと、メロディとコードがきれいに溶け合います。',['小節の頭と、2拍以上伸ばす音を、まずコードトーンにする','コードトーン以外の音は、その間を短くつなぐのに使う'],
+  CAFG,'F5:1.5 E5:.5 G5:2 B4:1.5 C5:.5 E5:2 E5:1.5 F5:.5 A5:2 C6:1.5 B5:.5 D6:2','E5:1.5 F5:.5 G5:2 C5:1.5 B4:.5 A4:2 F5:1.5 E5:.5 C5:2 B4:1.5 C5:.5 D5:2'],
+ ['アボイドは伸ばさず、すぐとなりへ',1,'コードの音の半音上にある音（アボイド）は、伸ばすとにごります。でも、すぐとなりのコードトーンへ動けば、かえって切ない味になります。',['アボイドは8分音符くらいの短い音で使う','使ったら、半音か全音でとなりのコードトーンへ解決する'],
+  CAFG,'E5:1 F5:3 A5:1 F5:3 A5:1 B5:3 D5:1 C5:3','E5:1 F5:.5 E5:2.5 A5:1 F5:.5 E5:2.5 A5:1 B5:.5 C6:2.5 D5:1 C5:.5 B4:2.5'],
+ ['キーの外の音は、通り道にだけ',2,'キーにない音（黒鍵など）を長く鳴らすと、「音を外した」ように聴こえます。となり合う音の間を半音で通り抜ける「経過音」としてなら、色っぽいアクセントになります。',['キーの外の音は、前後をキーの音ではさむ','上がるときは♯、下がるときは♭の方向で通り抜ける'],
+  CAFG,'F#5:2 G5:2 C#5:2 C5:2 G#5:2 A5:2 D#5:2 D5:2','E5:1 F5:.5 F#5:.5 G5:2 E5:1 D5:.5 C#5:.5 C5:2 A5:1 G5:.5 G#5:.5 A5:2 B5:1 C6:.5 C#6:.5 D6:2'],
+ ['コードが変わったら、伸ばしている音を確かめる',2,'同じ音を伸ばしたまま次のコードに入ると、さっきまで合っていた音が急にぶつかることがあります。特にコードの変わり目をまたぐ長い音は要注意です。',['小節線をまたぐ音は、次のコードのコードトーンか確認する','ぶつかるなら、コードが変わる瞬間に音を動かす'],
+  ['C','F','C','G'],'C5:1 E5:1 G5:1 E5:3 D5:1 C5:1 E5:1 G5:1 E5:1 C5:3 D5:1 B4:1','C5:1 E5:1 G5:1 F5:1 A5:2 G5:1 F5:1 E5:1 G5:1 E5:1 D5:1 B4:2 C5:1 D5:1'],
+ ['ベースと半音でぶつけない',2,'分数コード（オンコード）では、ベースがコードのルート以外の音になります。メロディをベースの半音上に置くと、低い音と高い音がこすれて、にごって聴こえます。',['分数コードの上では、ベースの音も見る','ベースの半音上（短9度）を長く伸ばさない'],
+  ['C','GB','Am','GB'],'E5:1 D5:1 E5:2 C6:4 A5:1 G5:1 E5:2 C5:4','E5:1 D5:1 E5:2 D6:4 A5:1 G5:1 E5:2 D5:4']
+];
+function clRoll(str,cls,ch){const sc=score(str),ns=[];sc.forEach(e=>{if(e.ms)ns.push([e.ms[0],e.at,e.len,cls])});const ms=ns.map(n=>n[0]),lo=Math.min(...ms)-1,hi=Math.max(...ms)+1;
+  const lab={C:'C',Am:'Am',F:'F',G:'G',GB:'G/B',EmG:'Em/G'};return rollFig({lo,hi,beats:16,rh:Math.max(4,Math.min(7,90/(hi-lo+1))),line:cls==='a',chords:ch.map((c,i)=>[i*4,lab[c]||c]),notes:ns})}
+function clTable(){const R=[['C','C・E・G','D（9th）・A（13th）','F'],['Dm','D・F・A','E（9th）・G（11th）','B'],['Em','E・G・B','D（7th）・A（11th）','F・C'],['F','F・A・C','G（9th）・E（M7）・B（♯11）','なし'],['G','G・B・D','A（9th）・E（13th）・F（7th）','C'],['Am','A・C・E','B（9th）・D（11th）・G（7th）','F']];
+  return `<div class="tblwrap"><table class="tbl mtbl" style="min-width:480px"><thead><tr><th>コード</th><th>コードトーン</th><th>使える音（テンション）</th><th>避けたい音</th></tr></thead><tbody>${R.map(r=>`<tr><th>${r[0]}</th><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</tbody></table></div>`}
+let clSel=0;
+function clChecker(){return `<div class="clchk"><div class="chips" id="clChips">${CL_CH.map(([n],i)=>`<button class="chip keep${i===clSel?' sel':''}" data-cl="${i}">${n}</button>`).join('')}</div>
+  <div id="clFig">${fig(clFig(clSel))}</div><div class="clleg">${Object.entries(CL_N).map(([k,[a,b]])=>`<div class="cl-${k}"><b>${a}</b><small>${b}</small></div>`).join('')}</div>
+  <p class="sub" style="margin:10px 0 6px">音を押すと、コードといっしょに鳴らして確かめられます。</p><div class="clnotes" id="clNotes"></div></div>`}
+function clPaint(host){const [n,r,suf]=CL_CH[clSel];host.querySelector('#clFig').innerHTML=fig(clFig(clSel));
+  host.querySelectorAll('#clChips .chip').forEach((b,i)=>b.classList.toggle('sel',i===clSel));
+  host.querySelector('#clNotes').innerHTML=Array.from({length:12},(_,k)=>{const m=72+k,c=clClass(r,suf,mod(m));return `<button class="clnote cl-${c}" data-m="${m}" aria-label="${NAMES_S[mod(m)]}（${CL_N[c][0]}）"><b>${NAMES_S[mod(m)]}</b><small>${({ct:'安全',tn:'OK',av:'注意',out:'キー外'})[c]}</small></button>`}).join('');
+  host.querySelectorAll('#clNotes [data-m]').forEach(b=>fastTap(b,()=>{const v=voice(r,suf),t=ac().currentTime+.04;chordFeel(v.bass,v.up,t,2.2,.6,0);nOn('flute',+b.dataset.m,t+.15,1.9,.95);runViz()}))}
+function renderClash(){const host=document.getElementById('melody');if(!host||host.querySelector('[data-pane="clash"]'))return;const anchor=host.querySelector('.card.tips')||host.querySelector('.pager');
+  let h=`<div class="card" data-pane="clash" data-lv="1" data-open="1"><h3>ぶつかりチェッカー${lvb(1)}</h3><p class="sub" style="margin:0 0 10px">コードを選ぶと、その上で安全な音・気をつける音が色でわかります。</p>${clChecker()}</div>`;
+  h+=`<div class="card" data-pane="clash" data-lv="1"><h3>ぶつかるかどうかの決まり方${lvb(1)}</h3><dl class="ifacts">
+    <div><dt>半音でとなり合うとぶつかる</dt><dd>メロディとコードの音が半音（短2度・短9度）で重なると、こすれてにごります。全音（長2度）なら、ぶつかりは弱く、おしゃれな響き（テンション）になります。</dd></div>
+    <div><dt>長さと位置で目立ち方が変わる</dt><dd>同じ音でも、拍の頭で長く伸ばすと目立ち、拍の裏で短く通り過ぎるとほとんど気になりません。</dd></div>
+    <div><dt>低い音ほどにごりやすい</dt><dd>ベースのような低い音と半音でぶつかると、特に強くにごります。高い音どうしのぶつかりは、きらっとした響きになることもあります。</dd></div>
+    <div><dt>ぶつけて解決するのは技</dt><dd>わざとぶつけて、すぐとなりのコードトーンへ動くと、切なさや緊張感が生まれます（倚音・掛留音）。</dd></div></dl></div>`;
+  CLASH.forEach(([t,lv,why,fix,ch,bad,good],i)=>{h+=`<div class="card" data-pane="clash" data-lv="${lv}"><h3>${t}${lvb(lv)}</h3><p>${why}</p>
+    <div class="ngfig">${fig(clRoll(bad,'b',ch),'','ぶつかる例')}${fig(clRoll(good,'a',ch),'','直した例')}</div>
+    <div class="ctrl"><button class="btn quiet" data-cs="${i}" data-w="b">▶ ぶつかる例</button><button class="btn primary" data-cs="${i}" data-w="a">▶ 直した例</button></div>
+    <h4 class="ngh">直し方</h4><ul class="itips">${fix.map(x=>`<li>${x}</li>`).join('')}</ul></div>`});
+  h+=`<div class="card" data-pane="clash" data-lv="2"><h3>コードごとの安全な音（キー C）${lvb(2)}</h3>${clTable()}<p class="sub" style="margin-top:8px">ほかのキーでも、ずらして考えれば同じです（Ⅰ・Ⅱm・Ⅲm・Ⅳ・Ⅴ・Ⅵm）。</p></div>`;
+  h+=`<div class="card" data-pane="clash" data-lv="1"><h3>ぶつかりチェックリスト${lvb(1)}</h3><ul class="lcheck">${['小節の頭の音が、そのコードのコードトーンになっている','2拍以上伸ばす音が、コードトーンかテンションになっている','アボイド（コードの音の半音上）を長く伸ばしていない','キーの外の音は、短い経過音としてだけ使っている','小節線をまたいで伸ばす音が、次のコードとぶつかっていない','分数コードの上で、ベースの半音上を伸ばしていない','わざとぶつけた音は、すぐとなりの音へ解決している'].map((t,i)=>`<li><label><input type="checkbox" data-clc="${i}"><span>${t}</span></label></li>`).join('')}</ul></div>`;
+  const w=document.createElement('div');w.innerHTML=h;[...w.children].forEach(c=>host.insertBefore(c,anchor));
+  const ck=host.querySelector('#clChips').closest('.card');clPaint(ck);
+  ck.querySelectorAll('#clChips .chip').forEach(b=>b.onclick=()=>{clSel=+b.dataset.cl;clPaint(ck);const [,r,suf]=CL_CH[clSel],v=voice(r,suf);stopAll();chordFeel(v.bass,v.up,ac().currentTime+.04,1.6,.6,0)});
+  host.querySelectorAll('[data-cs]').forEach(b=>fastTap(b,()=>{const C=CLASH[+b.dataset.cs];mplay(C[4],b.dataset.w==='b'?C[5]:C[6])}));
+  const cc=[...host.querySelectorAll('[data-clc]')];(S.clChk||[]).forEach((v,i)=>{if(cc[i])cc[i].checked=!!v});cc.forEach(c=>c.onchange=()=>{S.clChk=cc.map(x=>x.checked?1:0);save()})}
+
 /* ===== 起動 ===== */
 paintMascots();
 applyTheme();
 renderTips();renderPagers();
 
-sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderMood();renderNG();renderLyrics();initLevels();foldPanes();
+sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderMood();renderNG();renderClash();renderLyrics();initLevels();foldPanes();
 setNavH();['sounds','tools','lyrics',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();applyVoiceText();setTimeout(refreshFades,50);
