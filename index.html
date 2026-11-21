@@ -923,6 +923,12 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 .prl{font:inherit;text-align:left;cursor:pointer;padding:10px 12px;border-radius:14px;border:1px solid color-mix(in srgb,var(--sa,var(--rose)) 20%,var(--rule));background:color-mix(in srgb,var(--sa,var(--rose)) 6%,var(--sheet));color:var(--ink)}
 .prl b{display:block;font-size:14px}.prl small{display:block;font-size:11.5px;color:var(--text2);line-height:1.45;margin-top:2px}
 .prmeta{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 10px}.prmeta span{font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;background:color-mix(in srgb,var(--sa,var(--rose)) 10%,var(--sheet));color:var(--text2)}
+.tkeff{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-weight:700;font-size:14px}
+.tkeff span{font-size:11.5px;padding:2px 9px;border-radius:99px;background:color-mix(in srgb,var(--sa,var(--rose)) 16%,var(--sheet));color:var(--sa,var(--rose))}
+.tkchips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
+.tkchip{font:inherit;font-size:13px;cursor:pointer;padding:7px 12px;border-radius:99px;border:1px solid color-mix(in srgb,var(--sa,var(--rose)) 24%,var(--rule));background:color-mix(in srgb,var(--sa,var(--rose)) 6%,var(--sheet));color:var(--ink);text-align:left;line-height:1.4}
+.tkchip:active{transform:scale(.97)}
+.fgs .tkhl{stroke:var(--ink);stroke-width:1.6}
 .prtip{margin:10px 0 4px;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--butter) 22%,var(--sheet));font-size:13.5px;line-height:1.75}
 .ptwrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
 .ptring{--p:0;width:132px;height:132px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--sa,var(--rose)) calc(var(--p)*360deg),color-mix(in srgb,var(--mute) 18%,var(--sheet)) 0);position:relative}
@@ -1006,6 +1012,10 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 
 <section id="practice">
   <header class="sh"><div class="band"><span class="no">✦</span><p class="bandtxt">毎日少しずつ、曲が作れるようになる</p></div><h2>作曲の練習</h2><p class="lead">上達のサイクル、10の練習メニュー、1週間のプラン、お題ジェネレーターとタイマー、練習の記録をまとめました。</p></header>
+</section>
+
+<section id="tricks">
+  <header class="sh"><div class="band"><span class="no">✧</span><p class="bandtxt">ひとさじで、曲がぐっとよくなる</p></div><h2>作曲の小技</h2><p class="lead">メロディ・コード・アレンジ・構成・アイデア出し・ボカロの小技を、効果別にまとめました。どのカードも「なし」と「あり」を聴き比べられます。</p></header>
 </section>
 
 <section id="lyrics">
@@ -1486,7 +1496,7 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 46</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 47</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -2204,6 +2214,7 @@ function renderNav(){
    `<a class="tab" href="#tools" data-id="tools" style="--tc:${secSoft(TOOLS_SEC)};--ta:${secAcc(TOOLS_SEC)}"><span class="sw"></span>ツール</a>`+
    `<a class="tab" href="#lyrics" data-id="lyrics" style="--tc:${secSoft(LYRICS_SEC)};--ta:${secAcc(LYRICS_SEC)}"><span class="sw"></span>歌詞</a>`+
    `<a class="tab" href="#practice" data-id="practice" style="--tc:${secSoft(PRACTICE_SEC)};--ta:${secAcc(PRACTICE_SEC)}"><span class="sw"></span>練習</a>`+
+   `<a class="tab" href="#tricks" data-id="tricks" style="--tc:${secSoft(TRICKS_SEC)};--ta:${secAcc(TRICKS_SEC)}"><span class="sw"></span>小技</a>`+
    SECS.map((s,i)=>`<a class="tab" href="#${s.id}" data-id="${s.id}" style="--tc:${secSoft(s)};--ta:${secAcc(s)}"><span class="sw"></span>${i+1}. ${s.n}${S.badges[s.id]?'<span class="ok" aria-label="クリア済み">✓</span>':''}</a>`).join('');
   $$('#nav a.tab').forEach(a=>a.classList.toggle('active',a.dataset.id===cur));
 }
@@ -2345,7 +2356,7 @@ function chips(el,items,selKey,onSel,gotFn){
 function refreshChips(){$$('.chips').forEach(el=>{if(!el._got)return;[...el.children].forEach(b=>{const g=b.querySelector('.got');if(g)g.textContent=el._got(b._k)?'✓':''})})}
 
 /* ===== ルーティング ===== */
-const ROUTES=['home','sounds','tools','lyrics','practice',...SECS.map(s=>s.id)];
+const ROUTES=['home','sounds','tools','lyrics','practice','tricks',...SECS.map(s=>s.id)];
 let prevIdx=-1,prevId=null;
 function makeTurn(fromId,dir){
   const old=document.getElementById(fromId);if(!old||!old.classList.contains('show'))return null;
@@ -2364,9 +2375,9 @@ const RM=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const transMode=()=>S.trans||(RM()?'fade':'wipe');
 function makeWipe(toId,dir){
   const s=SEC[toId],i=SECS.findIndex(x=>x.id===toId);
-  const XS=toId==='sounds'?SOUNDS_SEC:toId==='tools'?TOOLS_SEC:toId==='lyrics'?LYRICS_SEC:toId==='practice'?PRACTICE_SEC:null;
+  const XS=toId==='sounds'?SOUNDS_SEC:toId==='tools'?TOOLS_SEC:toId==='lyrics'?LYRICS_SEC:toId==='practice'?PRACTICE_SEC:toId==='tricks'?TRICKS_SEC:null;
   const soft=s?secSoft(s):XS?secSoft(XS):'var(--rose-soft)',acc=s?secAcc(s):XS?secAcc(XS):'var(--rose)';
-  const lab=s?String(i+1).padStart(2,'0'):toId==='sounds'?'♪':toId==='tools'?'⚙':toId==='lyrics'?'✎':toId==='practice'?'✦':'Home',name=s?s.n:toId==='sounds'?'楽器の音':toId==='tools'?'ツール':toId==='lyrics'?'歌詞':toId==='practice'?'練習':'ホーム';
+  const lab=s?String(i+1).padStart(2,'0'):toId==='sounds'?'♪':toId==='tools'?'⚙':toId==='lyrics'?'✎':toId==='practice'?'✦':toId==='tricks'?'✧':'Home',name=s?s.n:toId==='sounds'?'楽器の音':toId==='tools'?'ツール':toId==='lyrics'?'歌詞':toId==='practice'?'練習':toId==='tricks'?'小技':'ホーム';
   const off=s?48-i*8:0;
   const w=document.createElement('div');w.className='wipe '+dir;w.style.setProperty('--wc',soft);w.style.setProperty('--wa',acc);
   w.style.top='0px';
@@ -3635,7 +3646,7 @@ const curTheme=()=>THEMES.find(t=>t.id===S.theme)||THEMES[0];
 const SOUNDS_SEC={soft:'#F1E6D8',acc:'#9A6A3A'};
 function secSoft(s){const T=curTheme();if(T.mono)return '#ECEBE8';if(T.id==='gb')return '#B3C682';if(T.id==='cyber')return `color-mix(in srgb,${s.acc} 22%,#141418)`;if(T.muted)return `color-mix(in srgb,${s.soft} 55%,var(--paper))`;if(T.dark)return `color-mix(in srgb,${s.acc} 26%,var(--sheet))`;return s.soft}
 function secAcc(s){const T=curTheme();if(T.mono)return '#1C1C1C';if(T.id==='gb')return '#0F380F';if(T.id==='neon')return `color-mix(in srgb,${s.acc} 45%,#ffffff)`;if(T.dark)return `color-mix(in srgb,${s.acc} 65%,#ffffff)`;return s.acc}
-function applySecColors(){SECS.concat([{id:'sounds',...SOUNDS_SEC},{id:'tools',...TOOLS_SEC},{id:'lyrics',...LYRICS_SEC},{id:'practice',...PRACTICE_SEC}]).forEach(x=>{const el=document.getElementById(x.id);if(el){el.style.setProperty('--sc',secSoft(x));el.style.setProperty('--sa',secAcc(x))}})}
+function applySecColors(){SECS.concat([{id:'sounds',...SOUNDS_SEC},{id:'tools',...TOOLS_SEC},{id:'lyrics',...LYRICS_SEC},{id:'practice',...PRACTICE_SEC},{id:'tricks',...TRICKS_SEC}]).forEach(x=>{const el=document.getElementById(x.id);if(el){el.style.setProperty('--sc',secSoft(x));el.style.setProperty('--sa',secAcc(x))}})}
 function applyTheme(){const T=curTheme();document.documentElement.dataset.theme=T.id;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=getComputedStyle(document.documentElement).getPropertyValue('--paper').trim()||'#F7F5FA';applySecColors();updateIcons()}
 
 /* ===== テーマに合わせたアプリアイコン ===== */
@@ -3667,8 +3678,8 @@ function updateIcons(){
     const c2=document.createElement('canvas');c2.width=c2.height=32;c2.getContext('2d').drawImage(img,0,0,32,32);setL('link[rel="icon"][sizes="32x32"]',c2.toDataURL('image/png'));window.__iconPng=png}catch(e){}};img.src=url;
 }
 /* ===== ページ内タブ ===== */
-const PANE_L={prog:'進行メーカー',key:'キー早見',trans:'移調',bpm:'BPM計算',form:'曲の構成',range:'音域',fx:'エフェクト',howto:'作り方',jissen:'実戦',deep:'深掘り',ng:'ダサい原因',mood:'雰囲気',clash:'ぶつからないコツ',pbase:'基本',pmenu:'練習メニュー',pplan:'プラン',pcheck:'困ったとき',lbase:'基本',lmake:'書き方',ltech:'テクニック',lvoc:'ボカロ',ltool:'ツール',ptool:'ツール',lcheck:'チェック',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
-const PANE_O=['pbase','pmenu','pplan','ptool','pcheck','lbase','lmake','ltech','lvoc','ltool','lcheck','today','stages','record','settings','prog','key','trans','bpm','form','range','play','genre','ens','fx','dtm','learn','howto','mood','ng','clash','jissen','deep','weak','tips','tasks'];
+const PANE_L={prog:'進行メーカー',key:'キー早見',trans:'移調',bpm:'BPM計算',form:'曲の構成',range:'音域',fx:'エフェクト',howto:'作り方',jissen:'実戦',deep:'深掘り',ng:'ダサい原因',mood:'雰囲気',clash:'ぶつからないコツ',pbase:'基本',pmenu:'練習メニュー',pplan:'プラン',pcheck:'困ったとき',kbase:'使い方',kmel:'メロディ',kchd:'コード',karr:'アレンジ',kform:'構成',kidea:'アイデア',kvoc:'ボカロ',lbase:'基本',lmake:'書き方',ltech:'テクニック',lvoc:'ボカロ',ltool:'ツール',ptool:'ツール',lcheck:'チェック',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
+const PANE_O=['pbase','pmenu','pplan','ptool','pcheck','kbase','kmel','kchd','karr','kform','kidea','kvoc','lbase','lmake','ltech','lvoc','ltool','lcheck','today','stages','record','settings','prog','key','trans','bpm','form','range','play','genre','ens','fx','dtm','learn','howto','mood','ng','clash','jissen','deep','weak','tips','tasks'];
 const paneSel={};
 function setupPanes(root){
   const key=root.id||'x',items=[...root.querySelectorAll(':scope > [data-pane]')];
@@ -5685,7 +5696,7 @@ function renderDeep(){
     let h='';cards.forEach(([t,f,l])=>{const out=f();h+=`<div class="card" data-pane="${pane}"><h3>${t}${lvb(l)}</h3>${out}</div>`});last.insertAdjacentHTML('afterend',h)})}
 /* ===== 長いタブを見やすく：折りたたみ・目次・上へ ===== */
 const FOLD_SKIP=new Set(['ptool','ltool','play','tasks','today','stages','record','settings','prog','key','trans','bpm','form','range','weak']);
-function foldPanes(){['sounds','tools','lyrics','practice',...SECS.map(s=>s.id)].forEach(id=>{const sec=document.getElementById(id);if(!sec)return;
+function foldPanes(){['sounds','tools','lyrics','practice','tricks',...SECS.map(s=>s.id)].forEach(id=>{const sec=document.getElementById(id);if(!sec)return;
   const panes=[...new Set([...sec.querySelectorAll(':scope > [data-pane]')].map(e=>e.dataset.pane))];
   panes.forEach(p=>{if(FOLD_SKIP.has(p))return;const cards=[...sec.querySelectorAll(`:scope > .card[data-pane="${p}"]`)].filter(c=>c.querySelector(':scope > h3')&&!c.classList.contains('lvempty'));if(cards.length<3)return;
     cards.forEach((c,i)=>{if(c.classList.contains('fold'))return;const h=c.querySelector(':scope > h3');const body=document.createElement('div');body.className='fbody';
@@ -6254,13 +6265,226 @@ function renderPractice(){const sec=document.getElementById('practice');if(!sec|
   sec.querySelector('#ptGo').onclick=ptStart;sec.querySelector('#ptReset').onclick=()=>{if(PT.iv){clearInterval(PT.iv);PT.iv=null}PT.left=PT.set;ptPaint()};
   sec.querySelectorAll('[data-lm]').forEach(b=>b.onclick=()=>prLogAdd(+b.dataset.lm,'記録'));ptPaint();prLogPaint()}
 
+/* ===== 作曲の小技 ===== */
+const TRICKS_SEC={soft:'#EEF0D2',acc:'#7A8220'};
+const TK_PC={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+function tkPc(s){return mod(TK_PC[s[0]]+(s[1]==='#'?1:s[1]==='b'?-1:0))}
+/* "C Am:2 ~F G/B:2 r:2" → [{pc,suf,bass,len,soft,lab}] */
+function tkChords(str){return str.trim().split(/\s+/).map(tok=>{let soft=false;if(tok[0]==='~'){soft=true;tok=tok.slice(1)}
+  let len=4;const i=tok.indexOf(':');if(i>0){len=+tok.slice(i+1);tok=tok.slice(0,i)}
+  if(tok==='r')return {rest:true,len};const m=tok.match(/^([A-G][#b]?)([^/]*)(?:\/([A-G][#b]?))?$/);
+  return {pc:tkPc(m[1]),suf:m[2],bass:m[3]!=null?tkPc(m[3]):null,len,soft,lab:tok.replace('b','♭').replace('#','♯')}})}
+function tkParts(sp){return sp.parts||(sp.mel?[{s:sp.mel}]:[])}
+function tkPlay(sp){const b=60/sp.bpm,t=ac().currentTime+.08;let x=0,prev=null;
+  tkChords(sp.ch).forEach(c=>{if(!c.rest){const v=voice(c.pc,c.suf),up=vlead(c.pc,c.suf,prev);prev=up;
+      chordFeel(c.bass!=null?40+mod(c.bass-4):v.bass,up,t+x*b,c.len*b,sp.cv||.68,c.soft?0:b)}x+=c.len});
+  (sp.dr||'').trim().split(/\s+/).filter(Boolean).forEach((tok,i)=>{const T=t+i*4*b,dv=sp.dv||.5;let crash=tok.endsWith('!');if(crash)tok=tok.slice(0,-1);
+    if(tok==='-')return;
+    if(tok==='roll'){for(let k=0;k<4;k++)hit(1,T+k*b/2,(.3+.06*k)*dv*2);for(let k=0;k<8;k++)hit(1,T+2*b+k*b/4,(.5+.06*k)*dv*2);for(let k=0;k<4;k++)hit(0,T+k*b,.8*dv*2);return}
+    if(tok==='stop2'){for(let k=0;k<4;k++)hit(2,T+k*b/2,(k%2?.45:.8)*dv*2);hit(0,T,dv*2);hit(1,T+b,dv*2);hit(0,T+2*b,dv*2);hit(1,T+2*b,dv*2);hit('cr',T+2*b,.5*dv*2);return}
+    if(tok==='fill'){beat('pop',T,b,1,{fill:true,crash,v:dv});return}
+    beat(tok,T,b,1,{crash,v:dv})});
+  tkParts(sp).forEach(p=>ps(p.inst||sp.lead||'pluck',t+(p.at||0)*b,b,p.s,{vm:p.vm||1,tr:p.tr||0}));runViz()}
+function tkLabs(sp){let x=0;return tkChords(sp.ch).map(c=>{const o=[x,c.rest?'':c.lab];x+=c.len;return o}).filter(o=>o[1])}
+function tkBeats(sp){return tkChords(sp.ch).reduce((a,c)=>a+c.len,0)}
+function tkRoll(sp,cls){const ns=[];tkParts(sp).slice(0,1).forEach(p=>score(p.s).forEach(e=>{if(e.ms)ns.push([e.ms[0]+(p.tr||0),e.at+(p.at||0),e.len,cls])}));
+  const ms=ns.map(n=>n[0]),lo=Math.min(...ms)-1,hi=Math.max(...ms)+1,beats=tkBeats(sp);
+  return rollFig({lo,hi,beats,rh:Math.max(4,Math.min(7,90/(hi-lo+1))),line:cls==='a',chords:tkLabs(sp),notes:ns})}
+/* パートの出番図 */
+function tkLane(sp){const W=320,L=54,rh=20,beats=tkBeats(sp),bw=(W-L)/beats,rows=[];
+  const drs=(sp.dr||'').trim().split(/\s+/).filter(Boolean),dseg=[];drs.forEach((d,i)=>{const k=d.replace('!','');if(k==='-')return;dseg.push([i*4,k==='stop2'?2.6:4,k==='roll'?'fD':'fT',k==='roll'?'連打':k==='half'?'ハーフ':k==='four'?'4つ打ち':''])});
+  rows.push(['ドラム',dseg]);let x=0;const cs=[];tkChords(sp.ch).forEach(c=>{if(!c.rest)cs.push([x,c.len,c.soft?'soft':'fSD',c.soft?'のばし':''] );x+=c.len});rows.push(['コード',cs]);
+  const grp={};tkParts(sp).forEach(p=>{const n=p.lab||'メロディ';if(!grp[n])grp[n]=[];const seg=grp[n];score(p.s).forEach(e=>{if(!e.ms)return;const a=e.at+(p.at||0),last=seg[seg.length-1];if(last&&a-(last[0]+last[1])<.3)last[1]=a+e.len-last[0];else seg.push([a,e.len,n==='メロディ'?'fD':'fbx2',''])})});Object.entries(grp).forEach(([n,seg])=>rows.push([n,seg]));
+  let o='';for(let k=0;k<=beats;k+=4)o+=`<line x1="${L+k*bw}" x2="${L+k*bw}" y1="2" y2="${rows.length*rh+2}" class="${k%16===0?'bl':'btl'}"/>`;
+  rows.forEach(([n,seg],r)=>{const y=r*rh+4;o+=`<text x="0" y="${y+12}" class="fs">${n}</text>`;seg.forEach(([s,l,c,lab])=>{o+=`<rect x="${L+s*bw+1}" y="${y}" width="${Math.max(3,l*bw-2)}" height="${rh-6}" rx="5" class="fbx ${c==='soft'?'fSD':c==='fbx2'?'fT':c}"${c==='soft'?' style="fill-opacity:.35"':''}/>`;if(lab&&l*bw>34)o+=`<text x="${L+s*bw+5}" y="${y+11}" class="fs">${lab}</text>`})});
+  return fsvg(W,rows.length*rh+6,o)}
+/* コード進行の比べ図 */
+function tkChFig(a,b2){const W=320,L=34,rh=30,rows=[['なし',tkChords(a.ch)],['あり',tkChords(b2.ch)]],beats=Math.max(tkBeats(a),tkBeats(b2)),bw=(W-L)/beats;let o='';
+  const at=cs=>{let x=0;return cs.map(c=>{const o2={...c,x};x+=c.len;return o2})},A=at(rows[0][1]);
+  rows.forEach(([n,cs],r)=>{const y=r*(rh+8)+2;o+=`<text x="0" y="${y+19}" class="fs">${n}</text>`;at(cs).forEach(c=>{if(c.rest){o+=`<text x="${L+c.x*bw+c.len*bw/2}" y="${y+19}" text-anchor="middle" class="fs">休み</text>`;return}
+    const same=r===0||A.some(q=>q.x===c.x&&q.lab===c.lab&&q.len===c.len);o+=`<rect x="${L+c.x*bw+1.5}" y="${y}" width="${c.len*bw-3}" height="${rh}" rx="8" class="fbx ${same?'':'fD'}"/><text x="${L+c.x*bw+c.len*bw/2}" y="${y+19}" text-anchor="middle" class="ft sm">${c.lab}</text>`})});
+  return fsvg(W,2*(rh+8),o)}
+/* 曲の構成の比べ図 [名前,小節,種類(i/a/b/s/c),新しい?] */
+function tkForm(rows){const W=320,L=34,rh=26,tot=Math.max(...rows.map(r=>r[1].reduce((a,x)=>a+x[1],0))),bw=(W-L)/tot,C={i:'',a:'fT',b:'fSD',s:'fD',c:'fT'};let o='';
+  rows.forEach(([n,bs],r)=>{const y=r*(rh+8)+2;let x=0;o+=`<text x="0" y="${y+17}" class="fs">${n}</text>`;bs.forEach(([nm,l,k,nw])=>{o+=`<rect x="${L+x*bw+1.5}" y="${y}" width="${l*bw-3}" height="${rh}" rx="8" class="fbx ${C[k]}${nw?' tkhl':''}"${k==='c'?' style="fill-opacity:.45"':''}/>`;if(l*bw>22)o+=`<text x="${L+x*bw+l*bw/2}" y="${y+17}" text-anchor="middle" class="ft sm">${nm}</text>`;x+=l})});
+  return fsvg(W,rows.length*(rh+8),o)}
+
+/* 共通の素材 */
+const TK_CHO='C6:.75 A5:.25 C6:.5 D6:.5 C6:1 A5:1 B5:.75 G5:.25 B5:.5 C6:.5 D6:2 D6:.5 B5:.5 G5:.5 E5:.5 G5:1 B5:1 C6:1 B5:.5 A5:.5 A5:2';
+const TK_AME='G4:.5 C5:.5 C5:.5 D5:.5 E5:1 C5:1 A4:.5 C5:.5 C5:.5 D5:.5 E5:2 F4:.5 A4:.5 A4:.5 C5:.5 D5:1 C5:1 B4:.5 D5:.5 D5:.5 E5:.5 D5:2';
+const TK_AME2='G4:.5 C5:.5 C5:.5 D5:.5 E5:1 C5:1 A4:.5 C5:.5 C5:.5 D5:.5 E5:2';
+const TK_PRE='D5:.5 F5:.5 A5:1 G5:2 B4:.5 D5:.5 G5:1 r:2';
+const P4='C Am F G',R4='F G Em Am';
+
+/* 小技 [key,pane,lv,タイトル,効果,説明,やり方,注意,{a:なし,b:あり,fig}] */
+const TRICKS=[
+ ['motif','kmel',1,'リズムの形を決めて、高さだけ動かす','覚えやすくなる','短いリズムの形（モチーフ）を1つ決めて、コードが変わるたびに高さだけ移します。聴き手は2回目で形を覚え、3回目で一緒に口ずさめるようになります。最後の1回だけ形を変えると、フレーズがきれいに締まります。',
+  ['1小節ぶんのリズムを1つ決める（例：タタ・ター・ターー）','次の小節も同じリズムで、そのコードの音に高さを合わせる','4回目だけリズムか向きを変えて締める'],'',
+  {a:{bpm:112,ch:P4,dr:'pop! pop pop pop',lead:'pluck',mel:'E5:1 G5:.5 D5:.5 C5:2 A4:.5 C5:1.5 B4:.5 E5:1.5 F5:.25 A5:.75 G5:1 r:.5 C5:1.5 D5:1.5 B4:.5 G4:1 D5:1'},
+   b:{bpm:112,ch:P4,dr:'pop! pop pop pop',lead:'pluck',mel:'E5:.5 D5:.5 E5:1 G5:2 C5:.5 B4:.5 C5:1 E5:2 A5:.5 G5:.5 A5:1 C6:2 B5:.5 C6:.5 D6:1 B5:2'},fig:'roll'}],
+ ['long','kmel',1,'決めの1音を長くのばす','サビが大きく聴こえる','短い音が続いたあとに、高い音を長くのばすと、そこが「決め」になります。歌詞のいちばん伝えたい言葉を、この長い音にのせるのが定番です。',
+  ['フレーズの最後の1〜2拍を、長い音にする','のばす音はコードの音（その小節のコードに含まれる音）にする','いちばん高いロングトーンは、サビの最後に1回だけ'],'のばす音がコードとぶつかると、長いぶん目立ちます。「ぶつからないコツ」もあわせて見てください。',
+  {a:{bpm:116,ch:P4,dr:'pop! pop pop pop',lead:'pluck',mel:'E5:.5 G5:.5 A5:.5 G5:.5 E5:.5 D5:.5 C5:.5 D5:.5 E5:.5 C5:.5 E5:.5 A5:.5 G5:.5 E5:.5 C5:.5 E5:.5 F5:.5 A5:.5 C6:.5 A5:.5 G5:.5 F5:.5 A5:.5 C6:.5 B5:.5 A5:.5 G5:.5 D5:.5 B4:.5 D5:.5 G5:.5 B5:.5'},
+   b:{bpm:116,ch:P4,dr:'pop! pop pop pop',lead:'pluck',mel:'E5:.5 G5:.5 A5:.5 G5:.5 C6:2 r:.5 A5:.5 C6:.5 B5:.5 A5:2 F5:.5 A5:.5 C6:.5 A5:.5 C6:2 B5:.5 C6:.5 D6:3'},fig:'roll'}],
+ ['leap','kmel',2,'同じ音で溜めてから、大きく跳ぶ','ハッとさせる','同じ高さの音を数回続けて「溜め」を作り、そこから6度やオクターブ上へ跳びます。溜めがあるぶん、跳んだ瞬間の開放感が大きくなります。跳んだあとは、反対方向へ順番に下りると自然です。',
+  ['同じ音を3〜4回続ける（ここが溜め）','そこから5度〜オクターブ上のコードの音へ跳ぶ','跳んだあとは、となりの音へ下りていく'],'',
+  {a:{bpm:112,ch:P4,dr:'pop! pop pop pop',lead:'pluck',mel:'C5:.5 D5:.5 E5:.5 F5:.5 G5:2 A5:.5 G5:.5 E5:.5 D5:.5 C5:2 F5:.5 G5:.5 A5:.5 B5:.5 C6:2 B5:.5 A5:.5 G5:.5 F5:.5 D5:2'},
+   b:{bpm:112,ch:P4,dr:'pop! pop pop pop',lead:'pluck',mel:'E5:.5 E5:.5 E5:.5 E5:.5 C6:2 B5:.5 A5:.5 G5:.5 A5:.5 E5:2 F5:.5 F5:.5 F5:.5 F5:.5 C6:2 D6:.5 C6:.5 B5:.5 A5:.5 G5:2'},fig:'roll'}],
+ ['trip','kmel',2,'3連符を1か所だけ入れる','リズムに表情がつく','8分音符がずっと続くところに、1拍だけ3連符（1拍を3つに分ける）を入れると、ふっとリズムがゆれて表情が出ます。入れすぎると落ち着かないので、2小節に1回くらいまでです。',
+  ['8分音符が続いている拍を1つ選ぶ','その拍を3つの音（タタタ）に分ける','3連符のあとは、長い音で落ち着かせる'],'',
+  {a:{bpm:100,ch:P4,dr:'pop! pop pop pop',lead:'pluck',mel:'E5:.5 G5:.5 E5:.5 D5:.5 C5:1 E5:1 A5:.5 G5:.5 E5:.5 C5:.5 E5:2 F5:.5 A5:.5 F5:.5 E5:.5 F5:1 A5:1 B5:.5 A5:.5 G5:.5 D5:.5 G5:2'},
+   b:{bpm:100,ch:P4,dr:'pop! pop pop pop',lead:'pluck',mel:'E5:.5 G5:.5 E5:.5 D5:.5 C5:1 E5:1 A5:1/3 B5:1/3 A5:1/3 G5:1/3 A5:1/3 G5:1/3 E5:2 F5:.5 A5:.5 F5:.5 E5:.5 F5:1 A5:1 B5:1/3 C6:1/3 B5:1/3 A5:1/3 B5:1/3 A5:1/3 G5:2'},fig:'roll'}],
+ ['chrom','kmel',2,'半音下から、目的の音に近づく','なめらかで、おしゃれになる','次の小節の頭の音へ、半音下からすべりこむように入ります（クロマチック・アプローチ）。キーの外の音ですが、弱い拍に短く置くので、ぶつからずに「おしゃれな寄り道」に聴こえます。',
+  ['次の小節の1拍目の音を確認する','その直前の8分音符を、半音下の音にする','寄り道の音は短く、弱い拍（裏）に置く'],'長くのばしたり、強い拍に置いたりすると、ただのはずれた音に聴こえます。',
+  {a:{bpm:104,ch:P4,dr:'pop! pop pop pop',lead:'pluck',mel:'G5:1 E5:1 D5:1 C5:1 E5:1 C5:1 A4:2 A4:1 C5:1 F5:1 A5:1 G5:3 r:1'},
+   b:{bpm:104,ch:P4,dr:'pop! pop pop pop',lead:'pluck',mel:'G5:1 E5:1 D5:1 C5:.5 D#5:.5 E5:1 C5:1 A4:1.5 G#4:.5 A4:1 C5:1 F5:1.5 F#5:.5 G5:3 r:1'},fig:'roll'}],
+ ['appo','kmel',3,'となりの音から入って、コードの音へ解決する','切なさが出る','強い拍に、コードの音のひとつ上の音（倚音）を置いて、すぐ下のコードの音へ下ります。一瞬ぶつかってからほどける動きが「ため息」のように聴こえ、バラードの切なさが出ます。',
+  ['1拍目に、コードの音のすぐ上の音を置く','次の拍で、となりのコードの音へ下りる','解決した音（コードの音）を長めにのばす'],'1拍目のぶつかりは、すぐ解決するから美しく聴こえます。解決しないままのばすと、ただの不協和音です。',
+  {a:{bpm:80,ch:R4,lead:'flute',mel:'A5:3 C6:1 B5:3 D6:1 G5:3 B5:1 C6:4'},
+   b:{bpm:80,ch:R4,lead:'flute',mel:'Bb5:1 A5:2 C6:1 C6:1 B5:2 D6:1 A5:1 G5:2 B5:1 D6:1 C6:3'},fig:'roll'}],
+ ['blue','kmel',3,'ブルーノートを1音だけ混ぜる','色っぽさ、大人っぽさが出る','キーのミ・ソ・シを半音下げた音（ブルーノート）から、本来の音へすべり上げます。ジャズやブルース、ファンクの色っぽさが、メロディ1音だけで出ます。',
+  ['キーの3番目（C なら ミ）の半音下（ミ♭）を短く置く','すぐに本来の音（ミ）へすべらせる','使うのは1フレーズに1〜2回まで'],'',
+  {a:{bpm:96,ch:P4,dr:'pop! pop pop pop',lead:'epiano',mel:'E5:1 G5:1 A5:.5 G5:.5 E5:1 C5:1 E5:1 D5:.5 C5:.5 A4:1 C5:1 F5:1 A5:1 G5:1 G5:2 D5:1 G5:1'},
+   b:{bpm:96,ch:P4,dr:'pop! pop pop pop',lead:'epiano',mel:'Eb5:.5 ^E5:.5 G5:1 A5:.5 G5:.5 E5:1 C5:1 E5:1 D5:.5 C5:.5 A4:1 C5:1 F5:1 Ab5:.5 ^A5:.5 G5:1 G5:1.5 Bb5:.5 ^B5:1 G5:1'},fig:'roll'}],
+
+ ['sus','kchd',1,'Ⅴの前に sus4 をはさむ','解決の気持ちよさが増す','Ⅴ（C キーなら G）を、半分だけ Gsus4 にしてから G へ。3度の音が4度に吊り上がった「宙ぶらりん」の響きが、Ⅴ→Ⅰの解決をもっと気持ちよくします。サビ前の最後の1小節にぴったりです。',
+  ['Ⅴのコードを2拍＋2拍に分ける','前半を sus4、後半をふつうのⅤにする','メロディはその間、4度→3度（ド→シ）と動くとより効く'],'',
+  {a:{bpm:100,ch:'C F G C',dr:'pop! pop pop pop'},b:{bpm:100,ch:'C F Gsus4:2 G:2 C',dr:'pop! pop pop pop'},fig:'ch'}],
+ ['iv','kchd',2,'Ⅳ のあとに Ⅳm をはさむ','切なさ、なつかしさが出る','Ⅳ（F）の次に、同じ根音のマイナー Ⅳm（Fm）を置きます。明るいキーの中に一瞬だけ影がさして、J-POP らしい「泣き」の響きになります（サブドミナントマイナー）。',
+  ['Ⅳ→Ⅰ と進むところを探す','Ⅳ と Ⅰ の間に Ⅳm を入れる（Ⅳ→Ⅳm→Ⅰ）','メロディのラは、Ⅳm の間だけラ♭にする'],'',
+  {a:{bpm:92,ch:'C F F C',dr:'pop! pop pop pop'},b:{bpm:92,ch:'C F Fm C',dr:'pop! pop pop pop'},fig:'ch'}],
+ ['secdom','kchd',2,'Ⅵm の前を Ⅲ7 に変える','ドラマチックになる','Ⅵm（Am）へ進む直前のコードを、Ⅲ7（E7）に変えます。Am へ強く引っぱられる響き（セカンダリードミナント）になり、切なく力強い流れが生まれます。',
+  ['Ⅵm へ進むところを探す','その直前のコードを Ⅲ7 に変える','メロディにソがあれば、その間だけソ♯にする'],'',
+  {a:{bpm:96,ch:'C Em Am F',dr:'pop! pop pop pop'},b:{bpm:96,ch:'C E7 Am F',dr:'pop! pop pop pop'},fig:'ch'}],
+ ['cliche','kchd',2,'ベースだけ、1音ずつ下げていく','なめらかで、エモくなる','上のコードはほとんど変えずに、ベースだけをド→シ→ラ→ソ…と順に下げます（分数コード）。下で流れる線ができて、ゆったりした切なさが出ます。バラードやサビ前の定番です。',
+  ['ベースを1音ずつ下げる線を決める（ド・シ・ラ・ソ・ファ・ミ・レ）','それぞれの音に合うコードを選ぶ（G/B は「ベースがシのG」）','最後は Ⅴ で次へつなぐ'],'',
+  {a:{bpm:96,ch:'C:2 G:2 Am:2 Am:2 F:2 C:2 Dm:2 G:2',dr:'pop! pop pop pop'},b:{bpm:96,ch:'C:2 G/B:2 Am:2 Am/G:2 F:2 C/E:2 Dm:2 G:2',dr:'pop! pop pop pop'},fig:'ch'}],
+ ['pedal','kchd',3,'ベースを動かさずに、上のコードだけ変える','緊張感と浮遊感が出る','ベースをドに固定したまま、上のコードだけ C→F→G と変えます（ペダルポイント）。土台が動かないので、変化がじわじわと積み上がり、イントロやサビ前の「溜め」に効きます。',
+  ['ベースの音を1つ決めて、ずっと同じにする','上のコードはふつうに進行させる','最後にベースが動くと、解放感が出る'],'',
+  {a:{bpm:100,ch:'C F G C',dr:'pop! pop pop pop'},b:{bpm:100,ch:'C F/C G/C C',dr:'pop! pop pop pop'},fig:'ch'}],
+ ['start','kchd',1,'同じ進行を、Ⅵm から始める','明るい曲が、切なく聴こえる','C→Am→F→G を、Am→F→G→C と始まる場所だけずらします。使うコードは同じなのに、マイナーから始まるので、ぐっと切なく聴こえます。',
+  ['気に入っている進行を1つ選ぶ','並びはそのまま、始めるコードを Ⅵm に変える','メロディも、ラから始めると雰囲気がそろう'],'',
+  {a:{bpm:100,ch:'C Am F G',dr:'pop! pop pop pop'},b:{bpm:100,ch:'Am F G C',dr:'pop! pop pop pop'},fig:'ch'}],
+ ['add9','kchd',1,'コードに 9th や 7th を足す','今っぽく、おしゃれになる','C を Cadd9、F を FM7 のように、音を1つ足します。響きがやわらかく広がり、シティポップや今どきのボカロっぽい透明感が出ます。',
+  ['まずはⅠを add9、Ⅳを M7 にしてみる','Ⅵm は m7 にすると、やわらかくなる','メロディがその足した音を歌うと、さらにきれい'],'全部のコードに足すと、ぼやけて芯がなくなります。サビの頭はシンプルなままでもOKです。',
+  {a:{bpm:96,ch:'C F Am G',dr:'pop! pop pop pop'},b:{bpm:96,ch:'Cadd9 FM7 Am7 Gadd9',dr:'pop! pop pop pop'},fig:'ch'}],
+
+ ['break','karr',1,'サビの直前を、一瞬だけ無音にする','サビの入りが爆発する','サビの直前の2拍だけ、伴奏もドラムも止めます。静かになった耳に、サビの1音目とシンバルが飛びこんでくるので、ただ続けるより何倍も大きく聴こえます。',
+  ['サビの前の小節を探す','その後半の2拍を、全部の楽器で休む','サビの頭でクラッシュシンバルを鳴らす'],'毎回やると読まれます。1サビかラスサビ、どちらか1回にしぼると効きます。',
+  {a:{bpm:120,ch:'Dm G F G Em Am',dr:'pop! pop pop! pop pop pop',lead:'pluck',parts:[{s:TK_PRE},{s:TK_CHO,at:8}]},
+   b:{bpm:120,ch:'Dm G:2 r:2 F G Em Am',dr:'pop! stop2 pop! pop pop pop',lead:'pluck',parts:[{s:TK_PRE},{s:TK_CHO,at:8}]},fig:'lane'}],
+ ['roll','karr',1,'スネアの連打で、サビへ駆けのぼる','期待感が高まる','サビの前の1小節で、スネアを8分→16分と細かくしながら、だんだん強く叩きます（ビルドアップ）。音が細かくなるほど「来るぞ」という期待がふくらみます。',
+  ['サビ前の1小節のドラムを、スネアだけにする','前半は8分、後半は16分で叩く','だんだん強くして、サビ頭でクラッシュ'],'',
+  {a:{bpm:120,ch:'Dm G F G Em Am',dr:'pop! pop pop! pop pop pop',lead:'pluck',parts:[{s:TK_PRE},{s:TK_CHO,at:8}]},
+   b:{bpm:120,ch:'Dm G F G Em Am',dr:'pop! roll pop! pop pop pop',lead:'pluck',parts:[{s:TK_PRE},{s:TK_CHO,at:8}]},fig:'lane'}],
+ ['less','karr',1,'Aメロは楽器を減らす','サビとの差で、サビが広がる','Aメロからドラムも伴奏も全部鳴らすと、サビで足せるものがなくなります。Aメロはコードをのばすだけ、ドラムなし、のように減らしておくと、サビで全部が入った瞬間に景色が広がります。',
+  ['Aメロはドラムを抜くか、キックとハイハットだけにする','コードは刻まずに、のばすだけにする','サビで、ドラム・刻み・重ねを一気に入れる'],'',
+  {a:{bpm:120,ch:'C Am F G Em Am',dr:'pop! pop pop! pop pop pop',lead:'pluck',parts:[{s:TK_AME2},{s:TK_CHO,at:8}]},
+   b:{bpm:120,ch:'~C ~Am F G Em Am',dr:'- - pop! pop pop pop',lead:'pluck',parts:[{s:TK_AME2},{s:TK_CHO,at:8}]},fig:'lane'}],
+ ['half','karr',2,'ドラムだけ、テンポを半分に感じさせる','壮大で、大きく聴こえる','曲のテンポはそのままで、スネアを2拍目・4拍目から3拍目だけに減らします（ハーフタイム）。メロディの速さは変わらないのに、ノリがゆったり大きくなり、サビやラスサビが壮大に聴こえます。',
+  ['サビのドラムを、スネアが3拍目だけのパターンにする','キックは1拍目と、2拍目の裏くらいに','ハイハットは8分のまま残すと、止まった感じにならない'],'',
+  {a:{bpm:120,ch:R4,dr:'pop! pop pop pop',lead:'pluck',mel:TK_CHO},b:{bpm:120,ch:R4,dr:'half! half half half',lead:'pluck',mel:TK_CHO},fig:'lane'}],
+ ['oct','karr',2,'メロディを1オクターブ下でも重ねる','太く、力強くなる','サビのメロディを、別の楽器で1オクターブ下にも重ねます。同じ線が2本になるので、音が太くなり、遠くまで届くように聴こえます。ボカロなら、同じメロディを低いオクターブの別ボイスで重ねるのも定番です。',
+  ['サビのメロディをコピーする','1オクターブ下げて、ちがう音色にする','下の音量は、上の半分くらいにする'],'',
+  {a:{bpm:120,ch:R4,dr:'pop! pop pop pop',lead:'pluck',mel:TK_CHO},b:{bpm:120,ch:R4,dr:'pop! pop pop pop',lead:'pluck',parts:[{s:TK_CHO},{s:TK_CHO,tr:-12,inst:'lead',vm:.55,lab:'1oct下'}]},fig:'lane'}],
+ ['counter','karr',2,'歌が休むところで、楽器が答える','すき間が埋まり、会話のようになる','メロディが休んでいる拍に、ベルやギターで短いフレーズを入れます（カウンターメロディ・合いの手）。歌と楽器が問いと答えのように会話して、曲がにぎやかになります。',
+  ['メロディが休んでいる場所（1〜2拍）を探す','そこにだけ、高い音域で短いフレーズを置く','歌っている間は、楽器は控えめにする'],'歌と同時に動くと、ぶつかって聴き取りにくくなります。答えるのは、すき間だけです。',
+  {a:{bpm:112,ch:P4,dr:'pop! pop pop pop',lead:'flute',mel:'E5:.5 D5:.5 C5:.5 D5:.5 E5:1 r:1 C5:.5 B4:.5 A4:.5 B4:.5 C5:1 r:1 A4:.5 C5:.5 F5:.5 E5:.5 F5:1 r:1 D5:.5 E5:.5 F5:.5 E5:.5 D5:2'},
+   b:{bpm:112,ch:P4,dr:'pop! pop pop pop',lead:'flute',parts:[{s:'E5:.5 D5:.5 C5:.5 D5:.5 E5:1 r:1 C5:.5 B4:.5 A4:.5 B4:.5 C5:1 r:1 A4:.5 C5:.5 F5:.5 E5:.5 F5:1 r:1 D5:.5 E5:.5 F5:.5 E5:.5 D5:2'},{s:'r:3 G5:.25 A5:.25 C6:.5 r:3 E5:.25 G5:.25 A5:.5 r:3 C6:.25 A5:.25 F5:.5',inst:'bell',vm:.7,lab:'答え'}]},fig:'lane'}],
+ ['upkey','karr',2,'ラスサビで、キーを半音上げる','最後にもう一段、盛り上がる','最後のサビだけ、キーを半音（または全音）上げます。同じメロディなのに、一段明るく高く聴こえて、クライマックス感が出ます。直前にドラムのフィルを入れると、自然に飛びこめます。',
+  ['ラスサビの直前に、ドラムのフィルを入れる','ラスサビのコードとメロディを、全部半音上げる','歌声合成なら、上げたあとの最高音が出しやすいか確認する'],'くわしいやり方は「転調・応用」ステージにあります。',
+  {a:{bpm:120,ch:R4+' '+R4,dr:'pop! pop pop fill pop! pop pop pop',lead:'pluck',parts:[{s:TK_CHO},{s:TK_CHO,at:16}]},
+   b:{bpm:120,ch:R4+' Gb Ab Fm Bbm',dr:'pop! pop pop fill pop! pop pop pop',lead:'pluck',parts:[{s:TK_CHO},{s:TK_CHO,at:16,tr:1}]},fig:'lane'}],
+
+ ['hookfirst','kform',1,'サビから始める','最初の数秒で心をつかむ','いちばんおいしいサビを、曲の最初に短く聴かせてしまいます。動画やショートで流れてきたとき、最初の数秒で「この曲だ」と覚えてもらえます。ボカロ曲でも定番の始まり方です。',
+  ['サビの最初の4〜8小節を、曲の頭に置く','そのあとイントロ（楽器だけ）をはさんで、Aメロへ','頭のサビは、楽器を少なめにすると本番のサビと差がつく'],'',
+  {form:[['なし',[['イントロ',4,'i'],['A',8,'a'],['B',8,'b'],['サビ',8,'s']]],['あり',[['サビ',4,'s',1],['イントロ',4,'i'],['A',8,'a'],['B',8,'b'],['サビ',8,'s']]]]}],
+ ['intro','kform',1,'イントロで、サビのメロディを楽器で弾く','聴き終わったあとも頭に残る','イントロに、サビのメロディ（の一部）をギターやシンセで弾いておきます。歌が来る前に一度聴いているので、サビが来た瞬間「これだ！」と気持ちよくなり、記憶にも残ります。',
+  ['サビのメロディの最初の2小節を取り出す','楽器で、少しリズムを変えて弾く','アウトロでも同じフレーズを使うと、曲がまとまる'],'',
+  {form:[['なし',[['イントロ',4,'i'],['A',8,'a'],['B',8,'b'],['サビ',8,'s']]],['あり',[['サビの断片',4,'s',1],['A',8,'a'],['B',8,'b'],['サビ',8,'s']]]]}],
+ ['ochi','kform',1,'落ちサビ（静かなサビ）をはさむ','ラスサビが最大の盛り上がりになる','ラスサビの前に、楽器をピアノだけ・声だけのように減らした「落ちサビ」を入れます。静かにしてから全部の楽器が戻ってくるので、ラスサビがいちばん大きく聴こえます。',
+  ['2番のサビのあと、またはラスサビの前半を静かにする','楽器は1〜2つだけ、ドラムは抜く','ラスサビの頭で、全部の楽器を一気に戻す'],'',
+  {form:[['なし',[['サビ',8,'s'],['間奏',4,'i'],['ラスサビ',8,'s']]],['あり',[['サビ',8,'s'],['間奏',4,'i'],['落ちサビ',4,'c',1],['ラスサビ',8,'s']]]]}],
+ ['short2','kform',2,'2番は短くする','中だるみしない','1番と2番を同じ長さにすると、2番の途中で飽きられがちです。2番のAメロを半分にしたり、Bメロを省いたりして、早めにサビへ行くと、曲全体がひきしまります。',
+  ['1番の構成を書き出す','2番のAメロを半分（8小節→4小節）にする','それでも長ければ、2番のBメロを省く'],'',
+  {form:[['なし',[['A',8,'a'],['B',8,'b'],['サビ',8,'s'],['A',8,'a'],['B',8,'b'],['サビ',8,'s']]],['あり',[['A',8,'a'],['B',8,'b'],['サビ',8,'s'],['A',4,'a',1],['B',8,'b'],['サビ',8,'s']]]]}],
+ ['cmelo','kform',2,'Cメロで、まだ見せていない景色を出す','曲に奥行きが出る','2番のサビのあとに、今までと全然ちがうメロディとコードの「Cメロ（大サビ）」を入れます。新しい場面が見えてから最後のサビに戻ると、同じサビがちがって聴こえます。',
+  ['今まで使っていないコードから始める（Ⅳ・Ⅵm・♭Ⅵなど）','メロディは、低めか、ぐっと高めのどちらかに振る','最後はⅤやsus4で溜めて、ラスサビへ'],'',
+  {form:[['なし',[['サビ',8,'s'],['間奏',4,'i'],['ラスサビ',8,'s']]],['あり',[['サビ',8,'s'],['Cメロ',8,'c',1],['ラスサビ',8,'s']]]]}],
+ ['circle','kform',1,'アウトロをイントロと同じにする','1曲が「円」になって、まとまる','最後に、イントロと同じフレーズで終わります。始まりと終わりがつながって、物語が閉じたように感じられます。リピート再生したときにも自然につながります。',
+  ['イントロのフレーズをコピーする','アウトロに置き、最後の音だけ主音で長くのばす','少し楽器を減らすと、余韻が出る'],'',
+  {form:[['なし',[['イントロ',4,'i'],['…',12,'a'],['サビ',8,'s'],['終わり',2,'i']]],['あり',[['イントロ',4,'i'],['…',12,'a'],['サビ',8,'s'],['イントロ',4,'i',1]]]]}],
+
+ ['hum','kidea',1,'思いついた鼻歌は、すぐ録音する','アイデアを逃さない','メロディは、ふとした瞬間に思いつきます。そして驚くほど早く忘れます。スマホのボイスメモに、10秒でいいので鼻歌を残す習慣をつけると、アイデアのストックが自然にたまります。',
+  ['ボイスメモをホーム画面のすぐ押せる場所に置く','思いついたら、うまく歌えなくても録る','週に1回聴き直して、使えそうなものに印をつける'],'',null],
+ ['words','kidea',1,'言葉のリズムから、メロディを作る','歌詞がはまりやすい','先に歌詞の一節を声に出して読み、その言葉のリズムをそのままメロディのリズムにします。言葉の高い・低いの抑揚も、メロディの上下のヒントになります。',
+  ['歌詞を1行、声に出して何度か読む','読んだときの長い音・短い音をリズムにする','強く言いたい言葉を、高い音か長い音にする'],'「歌詞」ページの「音数カウンター」で、1行の音の数を数えられます。',null],
+ ['loop','kidea',1,'4小節のループを鳴らしながら歌う','手が止まらない','ドラムとコードだけの4小節を、ずっとくり返し鳴らします。その上で、鼻歌を何回も歌ってみて、気に入ったものだけ残します。考えるより、たくさん試すほうが早いです。',
+  ['コード進行とドラムを4小節だけ作る','ループ再生にして、5分間ひたすら鼻歌を録る','いちばんよかった1回を、打ち込みに起こす'],'',null],
+ ['invert','kidea',3,'モチーフを、上下さかさまにする','同じ素材で、変化がつく','上がる形のモチーフを、下がる形にひっくり返します（反行）。同じリズムでできているので統一感はそのまま、ちがう表情が出ます。後半のフレーズや、Bメロに使うと便利です。',
+  ['前半のモチーフの動き（上・上・下…）を書き出す','向きを全部反対にして、後半に使う','コードの音に合うように、少しだけ高さを調整する'],'',
+  {a:{bpm:108,ch:P4,dr:'pop! pop pop pop',lead:'pluck',mel:'C5:.5 E5:.5 G5:1 E5:2 A4:.5 C5:.5 E5:1 C5:2 F4:.5 A4:.5 C5:1 A4:2 G4:.5 B4:.5 D5:1 B4:2'},
+   b:{bpm:108,ch:P4,dr:'pop! pop pop pop',lead:'pluck',mel:'C5:.5 E5:.5 G5:1 E5:2 A4:.5 C5:.5 E5:1 C5:2 C6:.5 A5:.5 F5:1 A5:2 D6:.5 B5:.5 G5:1 B5:2'},fig:'roll'}],
+ ['tempo','kidea',2,'テンポを大きく変えて聴いてみる','メロディの別の顔が見える','作ったメロディを、BPM 70 と 150 のように極端に変えて鳴らします。速くして元気になるなら疾走曲向き、遅くして泣けるならバラード向き。意外な方向性が見つかります。',
+  ['作ったメロディのBPMを半分くらいにする','次に1.5倍くらいにする','いちばんしっくりきたテンポで、アレンジを考える'],'「メロディ」ステージの「雰囲気」タブで、BPMを変えてお手本を聴き比べられます。',null],
+ ['borrow1','kidea',1,'好きな曲の進行を、1つだけ変えて使う','ゼロから考えずにすむ','好きな曲のコード進行を借りて、どこか1つだけ変えます（Ⅳ→Ⅳm、Ⅴ→Ⅴsus4、始める場所をずらす…）。それだけで自分の進行になり、その上でメロディ作りに集中できます。',
+  ['好きな曲のサビの進行を、ディグリー（Ⅰ・Ⅳ…）で書き出す','1か所だけ、このページの「コード」の小技で変える','キーとテンポも変えると、元の曲から離れる'],'',null],
+
+ ['fast','kvoc',2,'人間には難しい速いフレーズを、1か所だけ','ボカロらしい疾走感','歌声合成は息つぎがいらないので、16分音符が続く速いフレーズも歌えます。サビの中に1か所だけ速いパートを入れると、ボカロならではの疾走感が出ます。',
+  ['サビの1小節だけ、16分音符で細かく動かす','速いパートの前後は、長めの音で聴き取りやすくする','言葉は短く、母音がはっきりした言葉を選ぶ'],'全部を速くすると、歌詞が聴き取れなくなります。速い1小節と、ゆったりした1小節を並べて差を作ります。',
+  {a:{bpm:140,ch:R4,dr:'pop! pop pop pop',lead:'flute',mel:'A5:.5 G5:.5 A5:.5 C6:.5 A5:1 F5:1 G5:.5 A5:.5 B5:.5 D6:.5 B5:2 B5:.5 A5:.5 G5:.5 E5:.5 G5:1 B5:1 C6:2 A5:2'},
+   b:{bpm:140,ch:R4,dr:'pop! pop pop pop',lead:'flute',mel:'A5:.5 G5:.5 A5:.5 C6:.5 A5:1 F5:1 G5:.5 A5:.5 B5:.5 D6:.5 B5:2 B5:.25 A5:.25 G5:.25 A5:.25 B5:.25 A5:.25 G5:.25 E5:.25 G5:.25 A5:.25 B5:.25 D6:.25 E6:1 C6:2 A5:2'},fig:'roll'}],
+ ['harm','kvoc',2,'サビだけ、3度下のハモリを重ねる','サビが厚く、華やかになる','サビのメロディの3度下（キーの音で2つ下）に、もう1本メロディを重ねます。ボカロなら同じボイスか別のボイスで打ちこむだけ。Aメロは1本、サビは2本にすると、サビが一段華やかになります。',
+  ['サビのメロディをコピーする','キーの音で2つ下（ドならラ、ミならド）に下げる','ぶつかる音や、終わりの音だけ、コードの音に直す'],'ハモリの音量は、主メロの6〜7割くらいが目安です。',
+  {a:{bpm:120,ch:R4,dr:'pop! pop pop pop',lead:'flute',mel:TK_CHO},
+   b:{bpm:120,ch:R4,dr:'pop! pop pop pop',lead:'flute',parts:[{s:TK_CHO},{s:'A5:.75 F5:.25 A5:.5 B5:.5 A5:1 F5:1 G5:.75 E5:.25 G5:.5 A5:.5 B5:2 B5:.5 G5:.5 E5:.5 C5:.5 E5:1 G5:1 A5:1 G5:.5 E5:.5 E5:2',vm:.6,lab:'ハモリ'}]},fig:'lane'}],
+ ['talk','kvoc',2,'語るように刻んでから、サビで歌い上げる','サビが一気に開ける','Aメロをあえて同じ高さで細かく刻み、セリフやラップのように聴かせます。サビで急に音域とのばす音が増えると、その差で一気に視界が開けたように聴こえます。',
+  ['Aメロは、同じ音を中心に16分で刻む','フレーズの終わりに休みを作って、息をつかせる','サビは高い音と長い音を増やして、音域を広げる'],'刻みのパートは、言葉の子音がはっきり聴こえるように調声すると、聴き取りやすくなります。',
+  {a:{bpm:120,ch:P4,dr:'pop! pop pop pop',lead:'flute',mel:TK_AME},
+   b:{bpm:120,ch:P4,dr:'pop! pop pop! pop',lead:'flute',mel:'E5:.25 E5:.25 E5:.25 E5:.25 E5:.25 E5:.25 D5:.25 E5:.25 r:.5 E5:.25 E5:.25 E5:.25 E5:.25 G5:.5 E5:.25 E5:.25 E5:.25 E5:.25 C5:.25 C5:.25 D5:.25 E5:.25 r:2 F5:.5 A5:.5 C6:2 D6:.5 C6:.5 D6:3 r:1'},fig:'roll'}]
+];
+const TK_PANES={kmel:'メロディ',kchd:'コード',karr:'アレンジ',kform:'構成',kidea:'アイデア',kvoc:'ボカロ'};
+const TK_WANT=[
+ ['サビをもっと盛り上げたい',['break','roll','less','half','upkey','long']],
+ ['覚えやすくしたい',['motif','hookfirst','intro','circle']],
+ ['切なくしたい',['iv','appo','start','cliche']],
+ ['今っぽく、おしゃれにしたい',['add9','chrom','blue','pedal']],
+ ['飽きさせたくない',['trip','leap','counter','short2','cmelo','invert']],
+ ['ボカロらしさを出したい',['fast','talk','harm','oct']],
+ ['アイデアが出ない',['hum','words','loop','borrow1','tempo']]
+];
+const TKI=Object.fromEntries(TRICKS.map((T,i)=>[T[0],i]));
+function tkFig(T){const D=T[8];if(!D)return '';
+  if(D.form)return fig(tkForm(D.form),'色の濃いところが、小技で変えたところです。');
+  if(D.fig==='roll')return `<div class="ngfig">${fig(tkRoll(D.a,'b'),'','なし')}${fig(tkRoll(D.b,'a'),'','あり')}</div>`;
+  if(D.fig==='ch')return fig(tkChFig(D.a,D.b),'色の濃いコードが、変えたところです。');
+  if(D.fig==='lane')return `<div class="ngfig">${fig(tkLane(D.a),'','なし')}${fig(tkLane(D.b),'','あり')}</div>`;return ''}
+function tkJump(k){const c=document.getElementById('tk-'+k);if(!c)return;if(+c.dataset.lv>lvMax()){S.lvMax=3;save();applyLevels()}
+  const b=document.querySelector(`#tricks .panes [data-p="${c.dataset.pane}"]`);if(b&&!b.classList.contains('on')&&b.getAttribute('aria-selected')!=='true')b.click();
+  setTimeout(()=>{c.classList.remove('shut');const h=c.querySelector('h3');if(h)h.setAttribute('aria-expanded','true');scrollTo({top:c.getBoundingClientRect().top+scrollY-($('nav.tabs')?.offsetHeight||0)-60,behavior:'smooth'})},80)}
+let tkCur=null;
+function tkGacha(){const pool=TRICKS.filter(T=>T[2]<=lvMax()&&T[0]!==tkCur);const T=pool[Math.floor(Math.random()*pool.length)];tkCur=T[0];
+  const el=document.getElementById('tkGacha');if(el)el.innerHTML=`<div class="od tkod"><small>${TK_PANES[T[1]]}の小技・${T[4]}</small><b>${T[3]}</b><button class="keep" id="tkRe" aria-label="もう1回引く">↻</button></div><div class="ctrl"><button class="btn quiet keep" data-tkj="${T[0]}">このカードを開く</button></div>`;
+  const r=document.getElementById('tkRe');if(r)r.onclick=tkGacha;el.querySelectorAll('[data-tkj]').forEach(b=>b.onclick=()=>tkJump(b.dataset.tkj))}
+function renderTricks(){const sec=document.getElementById('tricks');if(!sec||sec.dataset.done)return;sec.dataset.done=1;let h='';
+  h+=`<div class="card" data-pane="kbase"><h3>小技の使い方</h3><dl class="ifacts"><div><dt>1曲に2〜3個まで</dt><dd>小技は「ここぞ」で使うから効きます。全部入れると、どれも目立たなくなります。</dd></div><div><dt>効果から選ぶ</dt><dd>「サビを盛り上げたい」「切なくしたい」のように、ほしい効果から逆に選ぶと迷いません。下の早見表が便利です。</dd></div><div><dt>なし・ありを聴き比べる</dt><dd>各カードの「▶ なし」と「▶ あり」で、同じフレーズの小技なし版とあり版を聴き比べられます。</dd></div></dl></div>`;
+  h+=`<div class="card" data-pane="kbase"><h3>今日の小技ガチャ</h3><p class="sub" style="margin:0 0 8px">迷ったら、今日はこれを1つだけ試してみてください。</p><div id="tkGacha"></div></div>`;
+  h+=`<div class="card" data-pane="kbase"><h3>やりたいこと別の早見表</h3>${TK_WANT.map(([w,ks])=>`<h4 class="ngh">${w}</h4><div class="tkchips">${ks.map(k=>{const T=TRICKS[TKI[k]];return `<button class="tkchip keep" data-tkj="${k}" data-lv="${T[2]}">${T[3]}</button>`}).join('')}</div>`).join('')}</div>`;
+  TRICKS.forEach((T,i)=>{const [k,p,lv,ttl,eff,why,how,note,D]=T;
+    h+=`<div class="card" data-pane="${p}" data-lv="${lv}" id="tk-${k}"><h3>${ttl}${lvb(lv)}</h3><p class="tkeff"><span>効果</span>${eff}</p><p>${why}</p>${tkFig(T)}
+      ${D&&D.a?`<div class="ctrl"><button class="btn quiet" data-tk="${i}" data-w="a">▶ なし</button><button class="btn primary" data-tk="${i}" data-w="b">▶ あり</button></div>`:''}
+      <h4 class="ngh">やり方</h4><ol class="vochain">${how.map((x,n)=>`<li><b>${['①','②','③','④'][n]} ${x}</b></li>`).join('')}</ol>${note?`<p class="prtip">${note}</p>`:''}</div>`});
+  sec.insertAdjacentHTML('beforeend',h);
+  sec.querySelectorAll('[data-tk]').forEach(b=>fastTap(b,()=>{const D=TRICKS[+b.dataset.tk][8];tkPlay(D[b.dataset.w])}));
+  sec.querySelectorAll('[data-tkj]').forEach(b=>b.onclick=()=>tkJump(b.dataset.tkj));tkGacha()}
+
 /* ===== 起動 ===== */
 paintMascots();
 applyTheme();
 renderTips();renderPagers();
 
-sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderMood();renderNG();renderClash();renderLyrics();renderPractice();renderArr();initLevels();foldPanes();
-setNavH();['sounds','tools','lyrics','practice',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
+sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderMood();renderNG();renderClash();renderLyrics();renderPractice();renderTricks();renderArr();initLevels();foldPanes();
+setNavH();['sounds','tools','lyrics','practice','tricks',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();applyVoiceText();setTimeout(refreshFades,50);
 stopFns=[progStop,rStop,mStop,tClear,()=>{lenTimers.forEach(clearTimeout);lenTimers=[];$$('#lenLeds i').forEach(x=>x.classList.remove('on'))},rhStop,()=>{if(ctx)instStop()}];
