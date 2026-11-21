@@ -888,6 +888,10 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 .mk6{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;margin-top:12px}
 .mk6>div{padding:8px 10px;border-radius:12px;background:color-mix(in srgb,var(--sa,var(--rose)) 6%,var(--sheet));border:1px solid color-mix(in srgb,var(--sa,var(--rose)) 14%,var(--rule))}
 .mk6 small{display:block;font-size:11px;color:var(--text2)}.mk6 b{display:block;font-size:13.5px;line-height:1.45;margin-top:1px}
+/* 雰囲気のBPM */
+.mbpm{display:grid;grid-template-columns:auto 1fr 3.2em auto;align-items:center;gap:10px;margin:10px 0 2px;padding:10px 12px;border-radius:14px;background:var(--sheet);border:1px solid var(--rule)}
+.mbpm label{font-size:12.5px;font-weight:700;color:var(--text2)}.mbpm input{width:100%;accent-color:var(--sa,var(--rose));margin:0}
+.mbpm output{font-weight:800;font-variant-numeric:tabular-nums;text-align:right;font-size:15px}
 </style>
 </head>
 <body>
@@ -1436,7 +1440,7 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 42</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 43</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -1981,7 +1985,7 @@ function buildMaster(c,inp){const bq=(type,f,g=0,q=.7)=>{const x=c.createBiquadF
   inp.connect(hp);hp.connect(low);low.connect(mud);mud.connect(pres);pres.connect(air);air.connect(glue);glue.connect(pre);pre.connect(sat);sat.connect(lim);lim.connect(c.destination)}
 function ac(){
   if(!ctx){ctx=new (window.AudioContext||window.webkitAudioContext)();master=ctx.createGain();master.gain.value=MASTER_GAIN;buildMaster(ctx,master)}
-  if(ctx.state==='suspended')ctx.resume();return ctx;
+  if(ctx.state!=='running'){try{const p=ctx.resume();p&&p.catch&&p.catch(()=>{})}catch(e){}}return ctx;
 }
 const freq=m=>440*Math.pow(2,(m-69)/12);
 /* 再生ごとの出力バス：止める・別の再生を始めると、前のバスをすぐ消す */
@@ -5102,7 +5106,7 @@ const JDEMO={
 function renderJissen(){Object.entries(JISSEN).forEach(([sec,groups])=>{const host=document.getElementById(sec);if(!host)return;
   const html=groups.map(g=>`<div class="card" data-pane="jissen"><h3>${g.h}</h3><ul class="jx">${g.it.map(([t,d,dm])=>`<li><b>${t}</b><p>${d}</p>${dm?`<div class="demo">${dm.map(([l,k])=>`<button class="btn quiet sm" data-jd="${k}">${l}</button>`).join('')}</div>`:''}</li>`).join('')}</ul></div>`).join('');
   const anchor=host.querySelector('.card.tips')||host.querySelector('.pager');const wrap=document.createElement('div');wrap.innerHTML=html;[...wrap.children].forEach(c=>host.insertBefore(c,anchor))});
-  $$('[data-jd]').forEach(b=>b.onclick=()=>{JDEMO[b.dataset.jd]();runViz()})}
+  $$('[data-jd]').forEach(b=>fastTap(b,()=>{JDEMO[b.dataset.jd]();runViz()}))}
 
 /* ===== 図とイラスト ===== */
 const FWH=[0,2,4,5,7,9,11],FWN={0:'C',2:'D',4:'E',5:'F',7:'G',9:'A',11:'B'};
@@ -5879,7 +5883,7 @@ function renderNG(){const host=document.getElementById('melody');if(!host||host.
     <h4 class="ngh">直し方</h4><ul class="itips">${fix.map(x=>`<li>${x}</li>`).join('')}</ul></div>`});
   h+=`<div class="card" data-pane="ng" data-lv="1"><h3>ダサさチェックリスト${lvb(1)}</h3><ul class="lcheck">${['いちばん高い音（山）が1か所に決まっている','同じ音の連打が5音以上続いていない','長い音と短い音が混ざっている','コードの音を順番になぞるだけになっていない','途中のフレーズが毎回主音で終わっていない','拍の裏から入るフレーズがある','サビがAメロより高い','跳躍のあとは反対方向へ戻っている','モチーフ（短い形）をくり返している','2小節に1回くらい休符がある','伸ばす音がコードとぶつかっていない'].map((t,i)=>`<li><label><input type="checkbox" data-ngc="${i}"><span>${t}</span></label></li>`).join('')}</ul></div>`;
   const w=document.createElement('div');w.innerHTML=h;[...w.children].forEach(c=>host.insertBefore(c,anchor));
-  host.querySelectorAll('[data-ng]').forEach(b=>b.onclick=()=>{const N=NG[+b.dataset.ng];mplay(CAFG,b.dataset.w==='b'?N[4]:N[5])});
+  host.querySelectorAll('[data-ng]').forEach(b=>fastTap(b,()=>{const N=NG[+b.dataset.ng];mplay(CAFG,b.dataset.w==='b'?N[4]:N[5])}));
   const ck=[...host.querySelectorAll('[data-ngc]')];(S.ngChk||[]).forEach((v,i)=>{if(ck[i])ck[i].checked=!!v});ck.forEach(c=>c.onchange=()=>{S.ngChk=ck.map(x=>x.checked?1:0);save()})}
 
 /* ===== メロディの雰囲気の出し方 ===== */
@@ -5940,7 +5944,8 @@ const MOODS_M=[
   k:[['スケール','リディアン（♯4）'],['動き','全音のつながり'],['リズム','長い音、ゆったり'],['音域','高め'],['テンポ','BPM 70〜90'],['コード','Ⅰ→Ⅱ（メジャー）のくり返し']],
   t:['主音で終わらず、2番目や5番目の音で伸ばして終わる','リバーブを深めにすると、さらに浮かぶ']}
 ];
-function moodPlay(M){const r=seqAt(M.ch,M.bpm);ps(M.lead,r.t,r.b,M.mel,{vm:1});if(M.dr)beat(M.dr,r.t,r.b,4,{v:.5});runViz()}
+let MOOD_NOW=null;
+function moodPlay(M,bpm){const r=seqAt(M.ch,bpm||M.bpm);MOOD_NOW={M,end:r.t+r.total};ps(M.lead,r.t,r.b,M.mel,{vm:1});if(M.dr)beat(M.dr,r.t,r.b,4,{v:.5});runViz()}
 function moodFig(M){const sc=score(M.mel),ns=[];sc.forEach(e=>{if(e.ms)ns.push([e.ms[0],e.at,e.len,'a'])});const ms=ns.map(n=>n[0]),lo=Math.min(...ms)-1,hi=Math.max(...ms)+1;
   let x=0;const chs=M.ch.map(([r,s,l])=>{const o=[x,KEY_NAMES[mod(r)]+s];x+=l||4;return o});
   return rollFig({lo,hi,beats:16,rh:Math.max(4,Math.min(7,96/(hi-lo+1))),line:true,chords:chs,notes:ns})}
@@ -5951,12 +5956,17 @@ function renderMood(){const host=document.getElementById('melody');if(!host||hos
     <p class="sub" style="margin-top:10px">下のカードで、雰囲気ごとの作り方とお手本を聴けます。</p></div>`;
   h+=`<div class="card" data-pane="mood" data-lv="1"><h3>雰囲気の早見表${lvb(1)}</h3>${moodTable()}</div>`;
   MOODS_M.forEach((M,i)=>{h+=`<div class="card" data-pane="mood" data-lv="${M.lv}"><h3>${M.n}${lvb(M.lv)}</h3><p>${M.d}</p>
-    ${fig(moodFig(M),`BPM ${M.bpm}・${INST[M.lead].n}`)}
+    ${fig(moodFig(M),INST[M.lead].n)}
+    <div class="mbpm"><label for="mb${i}">BPM</label><input type="range" id="mb${i}" data-mb="${i}" min="${Math.max(50,M.bpm-50)}" max="${Math.min(220,M.bpm+50)}" step="1" value="${M.bpm}"><output data-mo="${i}">${M.bpm}</output><button class="btn quiet sm keep" data-mr="${i}">元に戻す</button></div>
     <div class="ctrl"><button class="btn primary" data-mood="${i}">▶ お手本を聴く</button></div>
     <div class="mk6">${M.k.map(([a,b])=>`<div><small>${a}</small><b>${b}</b></div>`).join('')}</div>
     <h4 class="ngh">もうひと工夫</h4><ul class="itips">${M.t.map(x=>`<li>${x}</li>`).join('')}</ul></div>`});
   const w=document.createElement('div');w.innerHTML=h;[...w.children].forEach(c=>host.insertBefore(c,anchor));
-  host.querySelectorAll('[data-mood]').forEach(b=>b.onclick=()=>moodPlay(MOODS_M[+b.dataset.mood]))}
+  const bpmOf=i=>+host.querySelector(`[data-mb="${i}"]`).value;
+  host.querySelectorAll('[data-mood]').forEach(b=>fastTap(b,()=>moodPlay(MOODS_M[+b.dataset.mood],bpmOf(+b.dataset.mood))));
+  host.querySelectorAll('[data-mb]').forEach(r=>r.oninput=()=>{host.querySelector(`[data-mo="${r.dataset.mb}"]`).textContent=r.value});
+  host.querySelectorAll('[data-mb]').forEach(r=>r.onchange=()=>{const M=MOODS_M[+r.dataset.mb];if(ctx&&MOOD_NOW&&MOOD_NOW.M===M&&ctx.currentTime<MOOD_NOW.end){stopAll();moodPlay(M,+r.value)}});
+  host.querySelectorAll('[data-mr]').forEach(b=>b.onclick=()=>{const i=+b.dataset.mr,r=host.querySelector(`[data-mb="${i}"]`);r.value=MOODS_M[i].bpm;r.oninput()})}
 
 /* ===== 起動 ===== */
 paintMascots();
