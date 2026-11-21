@@ -918,6 +918,22 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 .axs{all:unset;cursor:pointer;padding:0 12px;font-size:12px;font-weight:700;color:var(--text2);border-left:1px solid var(--rule)}
 .axdot{transition:opacity .25s}
 .rdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:.05em}
+/* 作曲の練習 */
+.prlinks{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.prl{font:inherit;text-align:left;cursor:pointer;padding:10px 12px;border-radius:14px;border:1px solid color-mix(in srgb,var(--sa,var(--rose)) 20%,var(--rule));background:color-mix(in srgb,var(--sa,var(--rose)) 6%,var(--sheet));color:var(--ink)}
+.prl b{display:block;font-size:14px}.prl small{display:block;font-size:11.5px;color:var(--text2);line-height:1.45;margin-top:2px}
+.prmeta{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 10px}.prmeta span{font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;background:color-mix(in srgb,var(--sa,var(--rose)) 10%,var(--sheet));color:var(--text2)}
+.prtip{margin:10px 0 4px;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--butter) 22%,var(--sheet));font-size:13.5px;line-height:1.75}
+.ptwrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.ptring{--p:0;width:132px;height:132px;border-radius:50%;flex:none;display:grid;place-items:center;background:conic-gradient(var(--sa,var(--rose)) calc(var(--p)*360deg),color-mix(in srgb,var(--mute) 18%,var(--sheet)) 0);position:relative}
+.ptring::before{content:'';position:absolute;inset:10px;border-radius:50%;background:var(--paper)}
+.ptring b{position:relative;font-size:28px;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.ptctl{display:grid;gap:8px;flex:1;min-width:180px}
+.plgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:12px;max-width:340px}
+.plh{font-size:10.5px;color:var(--text2);text-align:center}
+.pl{display:block;width:100%;aspect-ratio:1;border-radius:6px;background:color-mix(in srgb,var(--mute) 12%,var(--sheet))}
+.pl.l1{background:color-mix(in srgb,var(--sa,var(--rose)) 25%,var(--sheet))}.pl.l2{background:color-mix(in srgb,var(--sa,var(--rose)) 45%,var(--sheet))}.pl.l3{background:color-mix(in srgb,var(--sa,var(--rose)) 70%,var(--sheet))}.pl.l4{background:var(--sa,var(--rose))}
+.pl.today{outline:2px solid var(--ink);outline-offset:1px}
 </style>
 </head>
 <body>
@@ -986,6 +1002,10 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
   <div class="card" data-pane="bpm" id="tBpm"></div>
   <div class="card" data-pane="form" id="tForm"></div>
   <div class="card" data-pane="range" id="tRange"></div>
+</section>
+
+<section id="practice">
+  <header class="sh"><div class="band"><span class="no">✦</span><p class="bandtxt">毎日少しずつ、曲が作れるようになる</p></div><h2>作曲の練習</h2><p class="lead">上達のサイクル、10の練習メニュー、1週間のプラン、お題ジェネレーターとタイマー、練習の記録をまとめました。</p></header>
 </section>
 
 <section id="lyrics">
@@ -1466,7 +1486,7 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 45</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 46</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -2183,6 +2203,7 @@ function renderNav(){
    `<a class="tab" href="#sounds" data-id="sounds" style="--tc:${secSoft(SOUNDS_SEC)};--ta:${secAcc(SOUNDS_SEC)}"><span class="sw"></span>楽器の音</a>`+
    `<a class="tab" href="#tools" data-id="tools" style="--tc:${secSoft(TOOLS_SEC)};--ta:${secAcc(TOOLS_SEC)}"><span class="sw"></span>ツール</a>`+
    `<a class="tab" href="#lyrics" data-id="lyrics" style="--tc:${secSoft(LYRICS_SEC)};--ta:${secAcc(LYRICS_SEC)}"><span class="sw"></span>歌詞</a>`+
+   `<a class="tab" href="#practice" data-id="practice" style="--tc:${secSoft(PRACTICE_SEC)};--ta:${secAcc(PRACTICE_SEC)}"><span class="sw"></span>練習</a>`+
    SECS.map((s,i)=>`<a class="tab" href="#${s.id}" data-id="${s.id}" style="--tc:${secSoft(s)};--ta:${secAcc(s)}"><span class="sw"></span>${i+1}. ${s.n}${S.badges[s.id]?'<span class="ok" aria-label="クリア済み">✓</span>':''}</a>`).join('');
   $$('#nav a.tab').forEach(a=>a.classList.toggle('active',a.dataset.id===cur));
 }
@@ -2324,7 +2345,7 @@ function chips(el,items,selKey,onSel,gotFn){
 function refreshChips(){$$('.chips').forEach(el=>{if(!el._got)return;[...el.children].forEach(b=>{const g=b.querySelector('.got');if(g)g.textContent=el._got(b._k)?'✓':''})})}
 
 /* ===== ルーティング ===== */
-const ROUTES=['home','sounds','tools','lyrics',...SECS.map(s=>s.id)];
+const ROUTES=['home','sounds','tools','lyrics','practice',...SECS.map(s=>s.id)];
 let prevIdx=-1,prevId=null;
 function makeTurn(fromId,dir){
   const old=document.getElementById(fromId);if(!old||!old.classList.contains('show'))return null;
@@ -2343,9 +2364,9 @@ const RM=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const transMode=()=>S.trans||(RM()?'fade':'wipe');
 function makeWipe(toId,dir){
   const s=SEC[toId],i=SECS.findIndex(x=>x.id===toId);
-  const XS=toId==='sounds'?SOUNDS_SEC:toId==='tools'?TOOLS_SEC:toId==='lyrics'?LYRICS_SEC:null;
+  const XS=toId==='sounds'?SOUNDS_SEC:toId==='tools'?TOOLS_SEC:toId==='lyrics'?LYRICS_SEC:toId==='practice'?PRACTICE_SEC:null;
   const soft=s?secSoft(s):XS?secSoft(XS):'var(--rose-soft)',acc=s?secAcc(s):XS?secAcc(XS):'var(--rose)';
-  const lab=s?String(i+1).padStart(2,'0'):toId==='sounds'?'♪':toId==='tools'?'⚙':toId==='lyrics'?'✎':'Home',name=s?s.n:toId==='sounds'?'楽器の音':toId==='tools'?'ツール':toId==='lyrics'?'歌詞':'ホーム';
+  const lab=s?String(i+1).padStart(2,'0'):toId==='sounds'?'♪':toId==='tools'?'⚙':toId==='lyrics'?'✎':toId==='practice'?'✦':'Home',name=s?s.n:toId==='sounds'?'楽器の音':toId==='tools'?'ツール':toId==='lyrics'?'歌詞':toId==='practice'?'練習':'ホーム';
   const off=s?48-i*8:0;
   const w=document.createElement('div');w.className='wipe '+dir;w.style.setProperty('--wc',soft);w.style.setProperty('--wa',acc);
   w.style.top='0px';
@@ -3614,7 +3635,7 @@ const curTheme=()=>THEMES.find(t=>t.id===S.theme)||THEMES[0];
 const SOUNDS_SEC={soft:'#F1E6D8',acc:'#9A6A3A'};
 function secSoft(s){const T=curTheme();if(T.mono)return '#ECEBE8';if(T.id==='gb')return '#B3C682';if(T.id==='cyber')return `color-mix(in srgb,${s.acc} 22%,#141418)`;if(T.muted)return `color-mix(in srgb,${s.soft} 55%,var(--paper))`;if(T.dark)return `color-mix(in srgb,${s.acc} 26%,var(--sheet))`;return s.soft}
 function secAcc(s){const T=curTheme();if(T.mono)return '#1C1C1C';if(T.id==='gb')return '#0F380F';if(T.id==='neon')return `color-mix(in srgb,${s.acc} 45%,#ffffff)`;if(T.dark)return `color-mix(in srgb,${s.acc} 65%,#ffffff)`;return s.acc}
-function applySecColors(){SECS.concat([{id:'sounds',...SOUNDS_SEC},{id:'tools',...TOOLS_SEC},{id:'lyrics',...LYRICS_SEC}]).forEach(x=>{const el=document.getElementById(x.id);if(el){el.style.setProperty('--sc',secSoft(x));el.style.setProperty('--sa',secAcc(x))}})}
+function applySecColors(){SECS.concat([{id:'sounds',...SOUNDS_SEC},{id:'tools',...TOOLS_SEC},{id:'lyrics',...LYRICS_SEC},{id:'practice',...PRACTICE_SEC}]).forEach(x=>{const el=document.getElementById(x.id);if(el){el.style.setProperty('--sc',secSoft(x));el.style.setProperty('--sa',secAcc(x))}})}
 function applyTheme(){const T=curTheme();document.documentElement.dataset.theme=T.id;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=getComputedStyle(document.documentElement).getPropertyValue('--paper').trim()||'#F7F5FA';applySecColors();updateIcons()}
 
 /* ===== テーマに合わせたアプリアイコン ===== */
@@ -3646,8 +3667,8 @@ function updateIcons(){
     const c2=document.createElement('canvas');c2.width=c2.height=32;c2.getContext('2d').drawImage(img,0,0,32,32);setL('link[rel="icon"][sizes="32x32"]',c2.toDataURL('image/png'));window.__iconPng=png}catch(e){}};img.src=url;
 }
 /* ===== ページ内タブ ===== */
-const PANE_L={prog:'進行メーカー',key:'キー早見',trans:'移調',bpm:'BPM計算',form:'曲の構成',range:'音域',fx:'エフェクト',howto:'作り方',jissen:'実戦',deep:'深掘り',ng:'ダサい原因',mood:'雰囲気',clash:'ぶつからないコツ',lbase:'基本',lmake:'書き方',ltech:'テクニック',lvoc:'ボカロ',ltool:'ツール',lcheck:'チェック',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
-const PANE_O=['lbase','lmake','ltech','lvoc','ltool','lcheck','today','stages','record','settings','prog','key','trans','bpm','form','range','play','genre','ens','fx','dtm','learn','howto','mood','ng','clash','jissen','deep','weak','tips','tasks'];
+const PANE_L={prog:'進行メーカー',key:'キー早見',trans:'移調',bpm:'BPM計算',form:'曲の構成',range:'音域',fx:'エフェクト',howto:'作り方',jissen:'実戦',deep:'深掘り',ng:'ダサい原因',mood:'雰囲気',clash:'ぶつからないコツ',pbase:'基本',pmenu:'練習メニュー',pplan:'プラン',pcheck:'困ったとき',lbase:'基本',lmake:'書き方',ltech:'テクニック',lvoc:'ボカロ',ltool:'ツール',ptool:'ツール',lcheck:'チェック',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
+const PANE_O=['pbase','pmenu','pplan','ptool','pcheck','lbase','lmake','ltech','lvoc','ltool','lcheck','today','stages','record','settings','prog','key','trans','bpm','form','range','play','genre','ens','fx','dtm','learn','howto','mood','ng','clash','jissen','deep','weak','tips','tasks'];
 const paneSel={};
 function setupPanes(root){
   const key=root.id||'x',items=[...root.querySelectorAll(':scope > [data-pane]')];
@@ -5663,8 +5684,8 @@ function renderDeep(){
   const snd=document.getElementById('sounds');if(snd)Object.entries(DEEP_SOUNDS).forEach(([pane,cards])=>{const last=[...snd.querySelectorAll(`:scope > [data-pane="${pane}"]`)].pop();if(!last)return;
     let h='';cards.forEach(([t,f,l])=>{const out=f();h+=`<div class="card" data-pane="${pane}"><h3>${t}${lvb(l)}</h3>${out}</div>`});last.insertAdjacentHTML('afterend',h)})}
 /* ===== 長いタブを見やすく：折りたたみ・目次・上へ ===== */
-const FOLD_SKIP=new Set(['ltool','play','tasks','today','stages','record','settings','prog','key','trans','bpm','form','range','weak']);
-function foldPanes(){['sounds','tools','lyrics',...SECS.map(s=>s.id)].forEach(id=>{const sec=document.getElementById(id);if(!sec)return;
+const FOLD_SKIP=new Set(['ptool','ltool','play','tasks','today','stages','record','settings','prog','key','trans','bpm','form','range','weak']);
+function foldPanes(){['sounds','tools','lyrics','practice',...SECS.map(s=>s.id)].forEach(id=>{const sec=document.getElementById(id);if(!sec)return;
   const panes=[...new Set([...sec.querySelectorAll(':scope > [data-pane]')].map(e=>e.dataset.pane))];
   panes.forEach(p=>{if(FOLD_SKIP.has(p))return;const cards=[...sec.querySelectorAll(`:scope > .card[data-pane="${p}"]`)].filter(c=>c.querySelector(':scope > h3')&&!c.classList.contains('lvempty'));if(cards.length<3)return;
     cards.forEach((c,i)=>{if(c.classList.contains('fold'))return;const h=c.querySelector(':scope > h3');const body=document.createElement('div');body.className='fbody';
@@ -6164,13 +6185,82 @@ function renderArr(){const snd=document.getElementById('sounds');if(!snd||$('#ax
    <div class="card" data-pane="ens"><h3>ジャンル別の編成早見表</h3>${axSummary()}</div>`;
   first.insertAdjacentHTML('beforebegin',h);axBind()}
 
+/* ===== 作曲の練習 ===== */
+const PRACTICE_SEC={soft:'#E4EEDF',acc:'#5E8F4E'};
+function goTo(sec,pane){location.hash='#'+sec;setTimeout(()=>{const b=document.querySelector(`#${sec} .panes [data-p="${pane}"]`);if(b)b.click();const p=document.querySelector(`#${sec} .panes`);if(p)scrollTo({top:p.getBoundingClientRect().top+scrollY-($('nav.tabs')?.offsetHeight||0)-4})},450)}
+function prCycleFig(){const W=320,H=236,cx=160,cy=118,rx=104,ry=82;const N=[['聴く','好きな曲を分解','fT'],['まねる','進行やリズムを借りる','fSD'],['作る','1曲を最後まで','fD'],['ふり返る','よかった所と課題','']];let o='';
+  const pt=(deg,k=1)=>[cx+rx*k*Math.cos(deg*Math.PI/180),cy+ry*k*Math.sin(deg*Math.PI/180)];
+  [[-90,0],[0,90],[90,180],[180,270]].forEach(([a1,a2])=>{const g=34,[x1,y1]=pt(a1+g),[x2,y2]=pt(a2-g),[mx,my]=pt((a1+a2)/2,1.18);o+=`<path d="M${x1} ${y1}Q${mx} ${my} ${x2} ${y2}" class="fa"/>`;const ang=Math.atan2(y2-my,x2-mx),h=7;o+=`<path d="M${x2-h*Math.cos(ang-.5)} ${y2-h*Math.sin(ang-.5)}L${x2} ${y2}L${x2-h*Math.cos(ang+.5)} ${y2-h*Math.sin(ang+.5)}" class="fa"/>`});
+  N.forEach(([t,d,c],i)=>{const [x,y]=pt(i*90-90);o+=`<rect x="${x-60}" y="${y-22}" width="120" height="44" rx="14" class="fbx ${c}"/><text x="${x}" y="${y-3}" text-anchor="middle" class="ft sm">${t}</text><text x="${x}" y="${y+13}" text-anchor="middle" class="fs">${d}</text>`});
+  o+=`<text x="${cx}" y="${cy-4}" text-anchor="middle" class="gl">この輪を</text><text x="${cx}" y="${cy+12}" text-anchor="middle" class="gl">何周もする</text>`;
+  return fsvg(W,H,o)}
+const PR_MENU=[
+ {n:'毎日8小節',lv:1,min:15,g:'作る筋肉をつける',s:['コード進行を1つ決める（迷ったら王道か小室）','その上に8小節だけメロディを作る','完成度は気にせず、その日のうちに保存する'],tip:'「1曲作る」より「8小節」のほうが毎日続きます。30日で240小節、サビのストックが30個になります。',go:['melody','play'],gl:'メロディを作ってみる'},
+ {n:'耳コピ（ベースから）',lv:2,min:30,g:'耳と分析力を鍛える',s:['好きな曲のサビを4小節だけ選ぶ','いちばん低いベースの音を拾う','ベースの音から、ダイアトニックコードを当てはめる','最後にメロディを拾う'],tip:'いきなりメロディから拾うより、ベース→コード→メロディの順だと迷いません。',go:['diatonic','deep'],gl:'耳コピの手順を見る'},
+ {n:'好きな曲の分析シート',lv:1,min:20,g:'ヒット曲の「型」を知る',s:['BPM・キー・構成（A・B・サビの長さ）を書き出す','サビのコード進行を、ディグリー（Ⅰ・Ⅳ…）で書く','使われている楽器と、サビで増える楽器を書く','「いちばん好きな瞬間」とその理由を1行で'],tip:'5曲分析すると、自分の好きなパターンが見えてきます。それがあなたの作風の種です。',go:['tools','key'],gl:'キー早見表を開く'},
+ {n:'同じ進行でメロディ3つ',lv:1,min:20,g:'引き出しを増やす',s:['コード進行を1つ固定する','明るい・切ない・かっこいい、の3つの雰囲気でメロディを作る','3つを聴き比べて、ちがいを言葉にする'],tip:'同じ材料から別の料理を作る練習です。「雰囲気」タブのお手本が参考になります。',go:['melody','mood'],gl:'雰囲気の出し方を見る'},
+ {n:'しばり作曲',lv:2,min:15,g:'発想力を鍛える',s:['ルールを1つ決める（3音だけ／ペンタトニックだけ／休符から始める…）','そのルールで4〜8小節作る','ルールを外して、もっとよくできるか試す'],tip:'自由すぎると手が止まります。しばりがあるほうが、意外なアイデアが出ます。',go:['practice','ptool'],gl:'お題ジェネレーターで決める'},
+ {n:'リハモ練習',lv:3,min:20,g:'コードの選び方を広げる',s:['知っている曲のメロディを1つ選ぶ','元のコード進行を書き出す','1か所だけ、代理コードやセカンダリードミナントに変える','元と聴き比べる'],tip:'変えるのは1か所だけ。全部変えると、何が効いたのかわからなくなります。',go:['reharm','play'],gl:'リハモ・ラボを開く'},
+ {n:'借りて作る（模写）',lv:2,min:40,g:'プロの組み立てを体で覚える',s:['好きな曲のBPM・進行・ドラムパターンだけを借りる','メロディと歌詞は自分で作る','完成したら、元の曲と並べて聴く'],tip:'メロディや歌詞をそのまま使わなければ、進行やリズムを借りるのは作曲の王道の練習です。',go:['sounds','ens'],gl:'ジャンル別の編成を見る'},
+ {n:'15分スケッチ',lv:1,min:15,g:'考えすぎを止める',s:['タイマーを15分にセット','鳴ったら途中でもやめる','次の日、続きを作るか捨てるかを決める'],tip:'時間を区切ると、完璧主義のブレーキが外れます。',go:['practice','ptool'],gl:'タイマーを使う'},
+ {n:'ジャンル変換',lv:3,min:30,g:'アレンジ力をつける',s:['自分のメロディか童謡を1つ選ぶ','テンポ・ドラム・コードの色を変えて、別ジャンルにする（バラード→ロックなど）','どこを変えるとジャンルが変わったか書き出す'],tip:'メロディは同じでも、テンポとビートと楽器でまったく別の曲になります。',go:['sounds','genre'],gl:'ジャンルの特徴を見る'},
+ {n:'1曲を完成させる',lv:2,min:60,g:'最後までやりきる力',s:['1分半でいいので、イントロからエンディングまで作る','気になるところがあっても、まず最後まで並べる','直すのは、全部並べてから'],tip:'未完成の名曲10曲より、完成した普通の1曲のほうが上達します。完成させるたびに、次の曲がうまくなります。',go:['tools','form'],gl:'曲の構成ツールを開く'}
+];
+const PR_PLAN={1:['毎日8小節','耳トレクイズ 10問','分析シート 1曲','毎日8小節','同じ進行でメロディ3つ','15分スケッチ','1週間の8小節を聴き直す'],
+ 2:['毎日8小節','耳コピ（4小節）','しばり作曲','借りて作る（前半）','借りて作る（後半）','耳トレクイズ 10問','ふり返りノート'],
+ 3:['耳コピ（8小節）','リハモ練習','ジャンル変換','1曲を完成させる（構成）','1曲を完成させる（打ち込み）','1曲を完成させる（仕上げ）','ふり返り＋次の曲のテーマ決め']};
+const PR_DAY=['月','火','水','木','金','土','日'];
+/* お題ジェネレーター */
+const PR_ODAI={key:['C','G','D','A','F','B♭','E♭','Am','Em','Dm','F♯m','Cm'],bpm:['72','88','100','112','124','140','160','178','190'],
+ prog:['王道進行（Ⅳ→Ⅴ→Ⅲm→Ⅵm）','小室進行（Ⅵm→Ⅳ→Ⅴ→Ⅰ）','カノン進行','Ⅰ→Ⅴ→Ⅵm→Ⅳ','丸サ進行（ⅣM7→Ⅲ7→Ⅵm7→Ⅰ7）','ツーファイブ（Ⅱm7→Ⅴ7→ⅠM7）','Ⅵm→Ⅳ→Ⅰ→Ⅴ','Ⅰ→Ⅳ→Ⅵm→Ⅴ'],
+ mood:['明るい・元気','切ない','かっこいい','かわいい','壮大','不穏','和風','おしゃれ','疾走感','懐かしい','浮遊感'],
+ rule:['使う音は5つだけ','サビを休符から始める','同じリズムを3回くり返す','最高音は1回だけ','8分音符を使わない','1小節目で6度跳ぶ','最後を主音以外で終える','ベースを半音ずつ下げる','全部の小節に休符を入れる','メロディを3音のモチーフだけで作る']};
+const PR_ODAI_N={key:'キー',bpm:'BPM',prog:'コード進行',mood:'雰囲気',rule:'しばり'};
+let prCur={};
+/* タイマー */
+let PT={left:15*60,set:15*60,iv:null};
+function ptFmt(s){return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`}
+function ptPaint(){const d=$('#ptDisp');if(d)d.textContent=ptFmt(PT.left);const b=$('#ptGo');if(b)b.textContent=PT.iv?'一時停止':(PT.left<PT.set?'再開':'スタート');const r=$('#ptRing');if(r)r.style.setProperty('--p',1-PT.left/PT.set)}
+function ptStart(){if(PT.iv){clearInterval(PT.iv);PT.iv=null;ptPaint();return}PT.iv=setInterval(()=>{PT.left--;if(PT.left<=0){clearInterval(PT.iv);PT.iv=null;PT.left=0;ptDone()}ptPaint()},1000);ptPaint()}
+function ptDone(){try{const t=ac().currentTime+.05;[76,79,84].forEach((m,i)=>keyNote(m,t+i*.18,1.2,.8))}catch(e){}prLogAdd(Math.round(PT.set/60),'タイマー');PT.left=PT.set;ptPaint();const m=$('#ptMsg');if(m){m.textContent=vconv('おつかれさまでした。練習の記録に追加しました。',curVoice());setTimeout(()=>{m.textContent=''},6000)}}
+/* 練習の記録 */
+const todayKey=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+function prLogAdd(min,what){S.plog=S.plog||{};const k=todayKey();const e=S.plog[k]||{m:0,w:[]};e.m+=min;if(what&&!e.w.includes(what))e.w.push(what);S.plog[k]=e;save();prLogPaint()}
+function prLogPaint(){const box=$('#prLog');if(!box)return;const L=S.plog||{},days=[];const now=new Date();for(let i=27;i>=0;i--){const d=new Date(now);d.setDate(now.getDate()-i);const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;days.push([k,d,L[k]])}
+  let streak=0;for(let i=days.length-1;i>=0;i--){if(days[i][2]&&days[i][2].m>0)streak++;else if(i===days.length-1)continue;else break}
+  const tot=days.reduce((a,d)=>a+(d[2]?d[2].m:0),0),act=days.filter(d=>d[2]&&d[2].m>0).length;
+  box.innerHTML=`<div class="nums"><div><small>連続</small><b>${streak}日</b></div><div><small>この4週間</small><b>${act}日・${tot}分</b></div><div><small>今日</small><b>${(L[todayKey()]||{m:0}).m}分</b></div></div>
+   <div class="plgrid">${PR_DAY.map(d=>`<span class="plh">${d}</span>`).join('')}${(()=>{const first=days[0][1],off=(first.getDay()+6)%7;return '<span></span>'.repeat(off)})()}${days.map(([k,d,e])=>{const m=e?e.m:0,lvl=m>=60?4:m>=30?3:m>=15?2:m>0?1:0;return `<span class="pl l${lvl}${k===todayKey()?' today':''}" title="${d.getMonth()+1}/${d.getDate()} ${m}分${e&&e.w.length?'（'+e.w.join('・')+'）':''}"></span>`}).join('')}</div>
+   <p class="sub" style="margin:6px 0 0">色が濃いほど長く練習した日です。</p>`}
+function prToolHTML(){return `
+ <div class="card" data-pane="ptool" id="prOdaiCard"><h3>作曲お題ジェネレーター</h3><p class="sub" style="margin:0 0 8px">キー・テンポ・進行・雰囲気・しばりを引いて、今日の練習テーマを決めます。気に入らない項目だけ引き直せます。</p><div id="prOdai" class="odai"></div><button class="btn primary keep" id="prOdaiAll">ぜんぶ引く</button></div>
+ <div class="card" data-pane="ptool" id="prTimerCard"><h3>練習タイマー</h3><div class="ptwrap"><div class="ptring" id="ptRing"><b id="ptDisp">15:00</b></div><div class="ptctl"><div class="seg keep" id="ptSet">${[5,15,25,45].map(m=>`<button class="keep${m===15?' sel':''}" data-m="${m}">${m}分</button>`).join('')}</div><div class="ctrl"><button class="btn primary keep" id="ptGo">スタート</button><button class="btn quiet keep" id="ptReset">リセット</button></div><p class="sub" id="ptMsg" aria-live="polite"></p></div></div><p class="sub">時間になると音が鳴って、練習の記録に自動で追加されます。ほかのページを見ていても動き続けます。</p></div>
+ <div class="card" data-pane="ptool" id="prLogCard"><h3>練習の記録</h3><div id="prLog"></div><p class="figt">今日の練習を記録する</p><div class="chips" id="prLogAdd">${[5,15,30,60].map(m=>`<button class="chip keep" data-lm="${m}">＋${m}分</button>`).join('')}</div></div>`}
+function renderPractice(){const sec=document.getElementById('practice');if(!sec||sec.dataset.done)return;sec.dataset.done=1;let h='';
+  h+=`<div class="card" data-pane="pbase"><h3>上達のサイクル</h3>${fig(prCycleFig(),'作曲は、聴く・まねる・作る・ふり返るのくり返しで上達します。どれか1つだけでは伸びにくく、輪を回すほど速くなります。')}</div>`;
+  h+=`<div class="card" data-pane="pbase"><h3>練習の3つの約束</h3><dl class="ifacts"><div><dt>短く、毎日</dt><dd>週に1回3時間より、毎日15分のほうが上達します。耳と手が忘れる前に、次の練習が来るからです。</dd></div><div><dt>完成させる</dt><dd>短くても、最後まで作りきる経験がいちばんの練習です。途中で止めた曲は、何が足りないかを教えてくれません。</dd></div><div><dt>記録して聴き直す</dt><dd>1週間前の自分の曲を聴くと、成長と課題が両方見えます。下手でも消さずに残しておきます。</dd></div></dl></div>`;
+  h+=`<div class="card" data-pane="pbase"><h3>このアプリでできる練習</h3><div class="prlinks">${[['耳トレクイズ','quiz','play','音程やコードを聴き分ける'],['進行メーカー','tools','prog','雰囲気からコード進行を探す'],['メロディを作る','melody','play','進行の上でメロディを打ち込む'],['リハモ・ラボ','reharm','play','コードを差し替えて聴き比べる'],['編成ミキサー','sounds','ens','ジャンルごとの楽器の役割'],['歌詞のお題ガチャ','lyrics','ltool','歌詞の種を作る']].map(([n,s,p,d])=>`<button class="prl" data-gs="${s}" data-gp="${p}"><b>${n}</b><small>${d}</small></button>`).join('')}</div></div>`;
+  PR_MENU.forEach((M,i)=>{h+=`<div class="card" data-pane="pmenu" data-lv="${M.lv}"><h3>${M.n}${lvb(M.lv)}</h3><div class="prmeta"><span>約${M.min}分</span><span>ねらい：${M.g}</span></div><ol class="vochain">${M.s.map((x,k)=>`<li><b>${['①','②','③','④'][k]} ${x}</b></li>`).join('')}</ol><p class="prtip">${M.tip}</p><div class="ctrl"><button class="btn quiet sm" data-gs="${M.go[0]}" data-gp="${M.go[1]}">${M.gl} →</button><button class="btn quiet sm keep" data-done="${i}">やった！（${M.min}分を記録）</button></div></div>`});
+  h+=`<div class="card" data-pane="pplan"><h3>1週間の練習プラン</h3><p class="sub" style="margin:0 0 8px">1日15〜40分くらいの目安です。曜日は好きにずらして大丈夫です。</p><div class="tblwrap"><table class="tbl mtbl" style="min-width:560px"><thead><tr><th></th>${[1,2,3].map(l=>`<th>${lvb(l)}</th>`).join('')}</tr></thead><tbody>${PR_DAY.map((d,i)=>`<tr><th>${d}</th>${[1,2,3].map(l=>`<td>${PR_PLAN[l][i]}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`;
+  h+=`<div class="card" data-pane="pplan"><h3>30日チャレンジ</h3><ol class="vochain">${[['1〜7日目','毎日8小節。進行は王道か小室に固定して、メロディだけに集中します。'],['8〜14日目','好きな曲を3曲分析し、その進行で8小節ずつ作ります。'],['15〜21日目','しばり作曲。毎日ちがうルールで作り、気に入ったものに印をつけます。'],['22〜30日目','印をつけた8小節を1つ選び、1分半の曲に仕上げて完成させます。']].map(([t,d])=>`<li><b>${t}</b><p>${d}</p></li>`).join('')}</ol></div>`;
+  h+=`<div class="card" data-pane="pcheck"><h3>困ったときの処方箋</h3><dl class="ifacts"><div><dt>続かない</dt><dd>時間を短くします。5分でも「やった」に数えて、記録を途切れさせないことを優先します。</dd></div><div><dt>完成しない</dt><dd>長さを短くします。1分半、Aメロとサビだけ、でも完成は完成です。直すのは最後まで並べてから。</dd></div><div><dt>何を作ればいいかわからない</dt><dd>お題ジェネレーターで、キー・テンポ・進行を決めてしまいます。決めることが減ると、作ることに集中できます。</dd></div><div><dt>同じような曲ばかりになる</dt><dd>しばり作曲とジャンル変換を試します。いつもと違うテンポとキーにするだけでも変わります。</dd></div><div><dt>上達している気がしない</dt><dd>1か月前の曲と今の曲を並べて聴きます。成長は毎日だと見えませんが、1か月だとはっきり聴こえます。</dd></div><div><dt>理論が難しい</dt><dd>全部覚えなくて大丈夫です。作っていて困ったときに、そのステージだけ読みに行くのがいちばん身につきます。</dd></div></dl></div>`;
+  h+=prToolHTML();sec.insertAdjacentHTML('beforeend',h);
+  sec.querySelectorAll('[data-gs]').forEach(b=>b.onclick=()=>goTo(b.dataset.gs,b.dataset.gp));
+  sec.querySelectorAll('[data-done]').forEach(b=>b.onclick=()=>{const M=PR_MENU[+b.dataset.done];prLogAdd(M.min,M.n);b.textContent=vconv('記録しました',curVoice());setTimeout(()=>b.textContent=`やった！（${M.min}分を記録）`,2500)});
+  const OK=Object.keys(PR_ODAI),draw=k=>{const a=PR_ODAI[k];let x;do{x=a[Math.floor(Math.random()*a.length)]}while(x===prCur[k]&&a.length>1);prCur[k]=x};
+  const paint=()=>{sec.querySelector('#prOdai').innerHTML=OK.map(k=>`<div class="od"><small>${PR_ODAI_N[k]}</small><b>${prCur[k]}</b><button class="keep" data-k="${k}" aria-label="${PR_ODAI_N[k]}を引き直す">↻</button></div>`).join('');sec.querySelectorAll('#prOdai [data-k]').forEach(b=>b.onclick=()=>{draw(b.dataset.k);paint()})};
+  OK.forEach(draw);paint();sec.querySelector('#prOdaiAll').onclick=()=>{OK.forEach(draw);paint()};
+  sec.querySelectorAll('#ptSet [data-m]').forEach(b=>b.onclick=()=>{if(PT.iv){clearInterval(PT.iv);PT.iv=null}PT.set=PT.left=+b.dataset.m*60;sec.querySelectorAll('#ptSet button').forEach(x=>x.classList.toggle('sel',x===b));ptPaint()});
+  sec.querySelector('#ptGo').onclick=ptStart;sec.querySelector('#ptReset').onclick=()=>{if(PT.iv){clearInterval(PT.iv);PT.iv=null}PT.left=PT.set;ptPaint()};
+  sec.querySelectorAll('[data-lm]').forEach(b=>b.onclick=()=>prLogAdd(+b.dataset.lm,'記録'));ptPaint();prLogPaint()}
+
 /* ===== 起動 ===== */
 paintMascots();
 applyTheme();
 renderTips();renderPagers();
 
-sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderMood();renderNG();renderClash();renderLyrics();renderArr();initLevels();foldPanes();
-setNavH();['sounds','tools','lyrics',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
+sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderMood();renderNG();renderClash();renderLyrics();renderPractice();renderArr();initLevels();foldPanes();
+setNavH();['sounds','tools','lyrics','practice',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();applyVoiceText();setTimeout(refreshFades,50);
 stopFns=[progStop,rStop,mStop,tClear,()=>{lenTimers.forEach(clearTimeout);lenTimers=[];$$('#lenLeds i').forEach(x=>x.classList.remove('on'))},rhStop,()=>{if(ctx)instStop()}];
