@@ -904,6 +904,20 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 .clnote.cl-ct{background:color-mix(in srgb,var(--sa,var(--rose)) 14%,var(--sheet))}.clnote.cl-av{background:color-mix(in srgb,#F0A35E 16%,var(--sheet))}.clnote.cl-out{opacity:.75}
 .clnote:active{transform:translateY(2px)}
 @media (max-width:340px){.clnotes{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* 編成ミキサー */
+.axd{margin:10px 0 4px;font-size:14.5px;line-height:1.8}
+.axparts{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin:12px 0 6px}
+.axp{display:flex;align-items:stretch;border-radius:14px;border:1px solid var(--rule);background:color-mix(in srgb,var(--rc) 10%,var(--sheet));border-left:5px solid var(--rc);overflow:hidden;transition:opacity .2s,filter .2s}
+.axp.off{opacity:.5;filter:grayscale(.7)}
+.axt{all:unset;cursor:pointer;flex:1;display:flex;align-items:center;gap:10px;padding:9px 10px}
+.axt i{width:30px;height:18px;border-radius:99px;flex:none;background:var(--rc);position:relative;transition:background .2s}
+.axt i::after{content:'';position:absolute;top:2px;left:14px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .2s}
+.axp.off .axt i{background:color-mix(in srgb,var(--mute) 35%,transparent)}.axp.off .axt i::after{left:2px}
+.axt b{display:block;font-size:13.5px}.axt small{display:block;font-size:11px;color:var(--text2)}
+.axt:focus-visible,.axs:focus-visible{outline:2px solid var(--rc);outline-offset:-2px}
+.axs{all:unset;cursor:pointer;padding:0 12px;font-size:12px;font-weight:700;color:var(--text2);border-left:1px solid var(--rule)}
+.axdot{transition:opacity .25s}
+.rdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:.05em}
 </style>
 </head>
 <body>
@@ -1452,7 +1466,7 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 44</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 45</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -6030,12 +6044,132 @@ function renderClash(){const host=document.getElementById('melody');if(!host||ho
   host.querySelectorAll('[data-cs]').forEach(b=>fastTap(b,()=>{const C=CLASH[+b.dataset.cs];mplay(C[4],b.dataset.w==='b'?C[5]:C[6])}));
   const cc=[...host.querySelectorAll('[data-clc]')];(S.clChk||[]).forEach((v,i)=>{if(cc[i])cc[i].checked=!!v});cc.forEach(c=>c.onchange=()=>{S.clChk=cc.map(x=>x.checked?1:0);save()})}
 
+/* ===== ジャンル別の楽器編成（編成ミキサー） ===== */
+const ROLE={rh:['リズム','var(--soda)'],lo:['低音','var(--rose)'],hm:['ハーモニー','var(--mint)'],me:['メロディ','#E8955B'],fx:['飾り・空間','#B48AD8']};
+const ARR=[
+ {n:'ボカロロック',bpm:180,ch:[[9,'m'],[5,''],[7,''],[0,'']],
+  d:'歪んだギター2本を左右に広げ、真ん中にドラム・ベース・歌。ピアノの16分アルペジオで疾走感を足すのが定番です。',
+  p:[{n:'ドラム',i:'drums',r:'rh',k:'drum',s:'rock',pan:0,h:.5,v:.8},{n:'ベース',i:'ebass',r:'lo',k:'bass',s:'root8',pan:0,h:.1},{n:'ギター（左）',i:'eguitar',r:'hm',k:'power',pan:-.7,h:.35},{n:'ギター（右）',i:'eguitar',r:'hm',k:'power',pan:.7,h:.38,v:.9},{n:'ピアノ',i:'piano',r:'fx',k:'comp',s:'arp16',pan:.35,h:.75,o:1,v:.45},{n:'歌（リード）',i:'lead',r:'me',k:'mel',pan:0,h:.68,mel:'A4:.5 C5:.5 E5:.5 G5:.5 A5:1 G5:.5 E5:.5 F5:.5 A5:.5 C6:1 A5:.5 G5:.5 F5:1 G5:.5 B5:.5 D6:1 C6:.5 B5:.5 G5:1 C6:1.5 B5:.5 C6:2'}],
+  sec:[[.6,.7,.8,1],[.6,1,1,1],[1,.5,.8,1],[1,0,.8,1],[0,0,.6,1],[0,1,1,1]],
+  t:['ギターは同じフレーズを2回録って左右に振る（ダブリング）','Aメロはギターを片方だけ、サビで両方そろえる','ピアノは小さめに。聴こえるか聴こえないかで疾走感が出る']},
+ {n:'J-POP',bpm:112,ch:[[5,'M7'],[7,''],[4,'m7'],[9,'m']],
+  d:'ピアノとアコギで和音、ベースとドラムで土台、ストリングスで広がり。歌がいちばん前に来るように、楽器は少し控えめにまとめます。',
+  p:[{n:'ドラム',i:'drums',r:'rh',k:'drum',s:'pop',pan:0,h:.5,v:.7},{n:'ベース',i:'ebass',r:'lo',k:'bass',s:'pop',pan:0,h:.1},{n:'ピアノ',i:'piano',r:'hm',k:'keys',pan:.25,h:.5},{n:'アコギ',i:'aguitar',r:'hm',k:'strum',pan:-.55,h:.45,v:.7},{n:'ストリングス',i:'strings',r:'fx',k:'comp',s:'hold',pan:.45,h:.72,o:1,v:.32},{n:'歌（リード）',i:'flute',r:'me',k:'mel',pan:0,h:.66,mel:'A5:1 G5:.5 A5:.5 C6:1 A5:1 B5:1 A5:.5 G5:.5 D5:2 G5:1 E5:.5 G5:.5 B5:1 A5:.5 G5:.5 A5:1.5 G5:.5 E5:2'}],
+  sec:[[.5,.6,.7,1],[0,.8,.8,1],[1,1,.8,1],[0,.8,1,1],[.8,0,.6,1],[0,1,1,1]],
+  t:['ピアノとアコギは同じ高さで弾かせない（どちらかをオクターブ上か下へ）','ストリングスはBメロから入れて、サビで厚くする','歌の間はギターのフレーズを休ませる']},
+ {n:'バラード',bpm:72,ch:[[0,''],[7,'',4,11],[9,'m'],[5,'']],
+  d:'ピアノのアルペジオが主役。ストリングスで包み、ベースは長い音で支えます。ドラムは控えめに、後半から入れることも多い編成です。',
+  p:[{n:'ドラム',i:'drums',r:'rh',k:'drum',s:'half',pan:0,h:.5,v:.4},{n:'ベース',i:'ebass',r:'lo',k:'bass',s:'long',pan:0,h:.1,v:.8},{n:'ピアノ',i:'piano',r:'hm',k:'comp',s:'arp',pan:.1,h:.45,v:.5},{n:'ストリングス',i:'strings',r:'fx',k:'comp',s:'hold',pan:-.35,h:.62,v:.35},{n:'チェロ',i:'cello',r:'lo',k:'bass',s:'long',pan:.4,h:.25,o:1,v:.5},{n:'歌（リード）',i:'flute',r:'me',k:'mel',pan:0,h:.66,mel:'E5:1.5 D5:.5 C5:1 D5:1 D5:1.5 C5:.5 B4:1 G4:1 C5:1.5 B4:.5 A4:1 E5:1 F5:1.5 E5:.5 D5:1 C5:1'}],
+  sec:[[0,0,.5,1],[0,.6,.8,1],[1,1,1,1],[0,.5,.8,1],[0,0,.6,1],[0,1,1,1]],
+  t:['1番はピアノと歌だけ、2番からベースとストリングス、という足し算が効く','ストリングスは和音の上の音を長く伸ばす','ドラムはブラシやハーフタイムで静かに']},
+ {n:'EDM・フューチャーベース',bpm:128,ch:[[5,''],[7,''],[4,'m'],[9,'m']],
+  d:'4つ打ちのキックを土台に、スーパーソーの和音を刻み、プラックのアルペジオで細かさを足します。キックに合わせて他の音を下げる（サイドチェイン）のが特徴です。',
+  p:[{n:'ドラム',i:'drums',r:'rh',k:'drum',s:'four',pan:0,h:.5,v:.85},{n:'シンセベース',i:'synbass',r:'lo',k:'bass',s:'off',pan:0,h:.12},{n:'スーパーソー',i:'supersaw',r:'hm',k:'comp',s:'stab',pan:0,h:.55,v:.4},{n:'プラック',i:'pluck',r:'fx',k:'comp',s:'arp16',pan:.4,h:.78,o:1,v:.4},{n:'シンセリード',i:'lead',r:'me',k:'mel',pan:0,h:.7,mel:'C6:.75 A5:.75 G5:.5 A5:1 C6:1 D6:.75 B5:.75 A5:.5 G5:2 B5:.75 G5:.75 E5:.5 G5:1 B5:1 C6:.75 A5:.75 E5:.5 A5:2'}],
+  sec:[[.6,.8,.6,1],[0,.6,0,1],[1,0,.8,1],[.8,.6,1,1],[0,0,.8,1]],
+  t:['ベースはキックと同時に鳴らさず、裏拍に置く','サビ前はキックを抜いて、ローパスフィルターを開いていく','和音は3和音より、add9 や sus2 で透明感を出す']},
+ {n:'シティポップ',bpm:104,ch:[[5,'M7'],[4,'7'],[9,'m7'],[7,'m7',2],[0,'7',2]],
+  d:'エレピの4和音、16分のギターカッティング、動くベース。ブラスの短いキメで華やかさを足す、大人っぽい編成です。',
+  p:[{n:'ドラム',i:'drums',r:'rh',k:'drum',s:'funk',pan:0,h:.5,v:.6},{n:'ベース',i:'ebass',r:'lo',k:'bass',s:'synco',pan:0,h:.1},{n:'エレピ',i:'epiano',r:'hm',k:'comp',s:'neo',pan:-.3,h:.45,v:.55},{n:'カッティング',i:'cleangt',r:'rh',k:'comp',s:'cut',pan:.6,h:.55,v:.5},{n:'ブラス',i:'brass',r:'fx',k:'comp',s:'kime',pan:.25,h:.62,v:.45},{n:'サックス',i:'sax',r:'me',k:'mel',pan:0,h:.66,mel:'E5:.5 G5:.5 A5:1.5 G5:.5 E5:1 D5:.5 E5:.5 G#5:1 B5:1.5 r:.5 C6:.75 B5:.25 A5:.5 G5:.5 E5:2 F5:.5 E5:.5 D5:1 E5:.5 A#5:1.5'}],
+  sec:[[.6,.8,.8,1],[1,1,1,1],[1,1,.8,1],[0,1,1,1],[1,0,.6,1],[1,1,1,1]],
+  t:['ベースは休符とオクターブの跳躍でうねらせる','ギターはミュートしたカッティングで、リズム楽器として使う','ブラスは毎小節ではなく、区切りでだけ鳴らす']},
+ {n:'Lo-fi',bpm:80,ch:[[2,'m7'],[7,'7'],[0,'M7'],[9,'m7']],
+  d:'ゆるく揺れるドラムに、エレピの4和音とウッドベース。高い音を少し削って、古いレコードのようなこもった音にまとめます。',
+  p:[{n:'ドラム',i:'drums',r:'rh',k:'drum',s:'lofi',pan:0,h:.45,v:.65},{n:'ウッドベース',i:'woodbass',r:'lo',k:'bass',s:'pop',pan:0,h:.1},{n:'エレピ',i:'epiano',r:'hm',k:'comp',s:'neo',pan:-.25,h:.45,v:.55},{n:'ビブラフォン',i:'vibes',r:'me',k:'mel',pan:.35,h:.7,mel:'F5:1.5 E5:.5 C5:2 D5:1 F5:1 B4:2 E5:1.5 D5:.5 B4:1 G4:1 C5:2 r:2'}],
+  sec:[[.6,.8,.8,1],[0,1,1,1],[1,1,1,1],[0,.6,.8,1]],
+  t:['和音は M7・m7・9th を使う','ドラムはクオンタイズを弱めて、少しもたらせる','全体にローパスをかけて、ハイを削る']},
+ {n:'ジャズ（ピアノトリオ）',bpm:132,ch:[[2,'m7'],[7,'7'],[0,'M7'],[9,'7']],
+  d:'ピアノ・ウッドベース・ドラムの3人編成。ベースが4分音符で歩き（ウォーキング）、ドラムはライドシンバルでスウィングを刻みます。',
+  p:[{n:'ドラム',i:'drums',r:'rh',k:'drum',s:'ride',pan:0,h:.6,v:.55},{n:'ウッドベース',i:'woodbass',r:'lo',k:'bass',s:'walk',pan:-.15,h:.1},{n:'ピアノ（左手）',i:'piano',r:'hm',k:'comp',s:'charleston',pan:.25,h:.45,v:.5},{n:'ピアノ（右手）',i:'piano',r:'me',k:'mel',pan:.25,h:.7,mel:'F5:.66 E5:.34 D5:.66 C5:.34 A4:1 C5:1 B4:.66 D5:.34 F5:.66 A5:.34 G5:2 E5:.66 D5:.34 E5:.66 G5:.34 B5:1 A5:1 C#6:.66 A5:.34 G5:.66 E5:.34 C#5:2'}],
+  sec:[[1,.8,.8,1],[0,1,1,1],[1,1,1,1],[1,1,1,1]],
+  t:['ベースは「ルート→3度→5度→次のルートの半音となり」で歩く','ピアノの左手はルートを省いて、3度と7度だけで十分','8分音符はハネ（スウィング）させる']},
+ {n:'和ロック',bpm:168,ch:[[9,'m'],[5,''],[7,''],[4,'m']],
+  d:'ロックバンドの上に、琴のアルペジオと尺八のメロディを重ねます。和楽器は高い音域を担当させると、バンドとぶつからずに映えます。',
+  p:[{n:'ドラム',i:'drums',r:'rh',k:'drum',s:'rock',pan:0,h:.5,v:.75},{n:'ベース',i:'ebass',r:'lo',k:'bass',s:'root8',pan:0,h:.1},{n:'ギター',i:'eguitar',r:'hm',k:'power',pan:-.6,h:.35},{n:'琴',i:'koto',r:'fx',k:'comp',s:'arp16',pan:.55,h:.72,o:1,v:.45},{n:'三味線',i:'shamisen',r:'rh',k:'comp',s:'off',pan:.35,h:.55,v:.5},{n:'尺八',i:'shakuhachi',r:'me',k:'mel',pan:0,h:.68,mel:'E5:1 F5:.5 E5:.5 C5:1 B4:1 A4:.5 B4:.5 C5:1 E5:2 F5:1 E5:.5 C5:.5 B4:1 A4:1 B4:1 C5:.5 B4:.5 E4:2'}],
+  sec:[[.7,.7,.8,1],[.6,1,1,1],[1,.5,.8,1],[1,0,.6,1],[0,.8,.8,1],[1,1,1,1]],
+  t:['和楽器のフレーズは、都節音階やヨナ抜き音階で','琴や三味線は、ギターと違う高さ・違うタイミングで鳴らす','イントロで和楽器だけを聴かせると、雰囲気が一気に伝わる']}
+];
+const SEC_N=['イントロ','Aメロ','Bメロ','サビ'];
+/* --- 1つのパートを1ループ分（4小節）予約する --- */
+function arrSegs(A){let x=0;return A.ch.map(([r,suf,len,bass])=>{const L=len||4,o={at:x,len:L,r,suf,bass};x+=L;return o})}
+function arrPart(P,A,t,b){const segs=arrSegs(A),v=P.v||.75;let prev=null;
+  if(P.k==='drum'){beat(P.s,t,b,4,{v,crash:false});return}
+  if(P.k==='mel'){ps(P.i,t,b,P.mel,{vm:1});return}
+  segs.forEach(S=>{const T=t+S.at*b,L=S.len,pc=mod(S.r);let br=36+pc;if(br>43)br-=12;if(S.bass!=null){br=36+mod(S.bass);if(br>43)br-=12}
+    const up=vlead(pc,S.suf,prev).map(m=>m+12*(P.o||0));prev=up.map(m=>m-12*(P.o||0));
+    const at=(ps2,fn)=>ps2.forEach(p=>{if(p[0]<L-.01)fn(p)});
+    if(P.k==='bass'){const R=br+12*(P.o||0),N=(m,p,l,vv=1)=>nOn(P.i,m,T+p*b,Math.min(l,L-p)*b*.95,v*vv);
+      ({root8:()=>{for(let k=0;k<L*2;k++)N(R,k/2,.45,k%2?.75:1)},pop:()=>at([[0,1.4],[2,1],[3.5,.45]],([p,l])=>N(R,p,l,p?.8:1)),long:()=>N(R,0,L),
+        off:()=>{for(let k=0;k<L;k++)N(R,k+.5,.42,.95)},synco:()=>at([[0,.7,0],[.75,.25,12],[1.5,1,0],[2.5,.5,7],[3,.5,12],[3.5,.5,10]],([p,l,iv])=>N(R+iv,p,l,iv?.75:1)),
+        walk:()=>{const third=CHORDS[S.suf].iv[1],nx=segs[(segs.indexOf(S)+1)%segs.length];let nb=36+mod(nx.r);if(nb>43)nb-=12;const ap=nb>R?nb-1:nb+1;[R,R+third,R+7,ap].forEach((m,k)=>{if(k<L)N(m,k,.9,k?.8:1)})}})[P.s]();return}
+    if(P.k==='power'){const pw=[br+12,br+19,br+24];for(let k=0;k<L*2;k++)pw.forEach(m=>nOn(P.i,m,T+k*b/2,b*.42,v*(k%2?.75:.95)));return}
+    if(P.k==='keys'){const all=up;at([[0,1.4,1],[1.5,.4,.55],[2,1,.8],[3,.45,.5],[3.5,.4,.45]],([p,l,vv])=>keysChord(p===0||p===2?all:all.slice(1),T+p*b,Math.min(l,L-p)*b,.8*vv,{pad:false,roll:.01}));return}
+    if(P.k==='strum'){const gv=[br+12,...up.filter(m=>m>br+12)].slice(0,6).map(String).join(' ');const ms=gv.split(' ').map(Number);
+      at([[0,1],[1,1],[1.5,-1],[2.5,-1],[3,1],[3.5,-1]],([p,d])=>strumAt(P.i,d>0?ms:ms.slice(-4),T+p*b,d,d>0?v:v*.75,.016,b*.95));return}
+    if(P.k==='comp'){const ms=up,N=(m,p,l,vv=1)=>nOn(P.i,m,T+p*b,Math.min(l,L-p)*b,v*vv);
+      ({hold:()=>ms.forEach(m=>N(m,0,L*.98)),arp:()=>{for(let k=0;k<L*2;k++)N(ms[[0,1,2,3,2,1,2,3][k%8]%ms.length],k/2,1.6,k%2?.7:1)},
+        arp16:()=>{for(let k=0;k<L*4;k++)N(ms[[0,1,2,3,2,3,1,2][k%8]%ms.length],k/4,.22,k%4===0?1:.65)},
+        stab:()=>at([[0],[.75],[1.5],[2.5],[3],[3.5]],([p])=>ms.forEach(m=>N(m,p,.3,p%1?.75:1))),
+        off:()=>{for(let k=0;k<L;k++)ms.slice(-2).forEach(m=>N(m,k+.5,.2))},
+        neo:()=>{ms.forEach((m,i)=>N(m,i*.02,Math.min(2.3,L)));if(L>2.5)ms.slice(1).forEach((m,i)=>N(m,2.5+i*.02,1.3,.75))},
+        cut:()=>{for(let k=0;k<L*4;k++){const acc=k%8===4,gh=k%2===1;ms.slice(-3).forEach(m=>N(m,k/4,.08,acc?1:gh?.35:.55))}},
+        charleston:()=>at([[0,.8],[1.5,.4],[2,.8],[3.5,.4]],([p,l])=>ms.slice(-3).forEach(m=>N(m,p,l,p%1?.8:1))),
+        kime:()=>{if(S===segs[segs.length-1]||S.at===4)at([[2.5,.3],[3,.5]],([p,l])=>ms.slice(-3).forEach(m=>N(m+12,p,l)))}})[P.s]()}})}
+/* --- ループ再生（パートごとに音量のつまみ） --- */
+let AX=null,axSel=0,axMute={};
+function axStart(build){axStop();const c=ac(),A=ARR[axSel],b=60/A.bpm,len=16*b;
+  const out=c.createGain();out.gain.value=0;out.connect(master);if(!revBuf)revBuf=makeRevBuf();const cv=c.createConvolver();cv.buffer=revBuf;const rvHp=c.createBiquadFilter();rvHp.type='highpass';rvHp.frequency.value=250;rvHp.connect(cv);cv.connect(out);
+  const pg=A.p.map((P,i)=>{const g=c.createGain();g.gain.value=axMute[i]?0:1;g.connect(out);const s=c.createGain();s.gain.value=P.k==='drum'?.08:.18;g.connect(s);s.connect(rvHp);return g});
+  AX={A,pg,out,timers:[],on:true,loop:0,build:!!build};out.gain.setTargetAtTime(1,c.currentTime,.02);
+  let next=c.currentTime+.1;
+  const sched=()=>{if(!AX||!AX.on)return;const L=AX.loop;if(AX.build){A.p.forEach((P,i)=>{const on=i<=L;axMute[i]=!on;AX.pg[i].gain.setValueAtTime(on?1:0,next)});setTimeout(()=>axPaintMute(),Math.max(0,(next-c.currentTime)*1000))}
+    A.p.forEach((P,i)=>{const pd=drumOut,pc=curPan;drumOut=pg[i];curPan=P.pan;try{withWet(0,()=>arrPart(P,A,next,b))}finally{drumOut=pd;curPan=pc}});
+    next+=len;AX.loop++;if(AX.build&&AX.loop>=A.p.length+1){AX.build=false}AX.timers.push(setTimeout(sched,(next-c.currentTime-.35)*1000))};
+  sched();if(!stopFns.includes(axStop))stopFns.push(axStop);axPaintPlay();runViz()}
+function axStop(){if(!AX)return;const X=AX;AX=null;X.on=false;X.timers.forEach(clearTimeout);const t=ctx.currentTime;X.out.gain.cancelScheduledValues(t);X.out.gain.setTargetAtTime(0,t,.03);setTimeout(()=>{try{X.out.disconnect()}catch(e){}},500);if(ctx)instStop();axPaintPlay()}
+function axToggle(i){axMute[i]=!axMute[i];if(AX){AX.build=false;AX.pg[i].gain.setTargetAtTime(axMute[i]?0:1,ctx.currentTime,.02)}axPaintMute()}
+function axSolo(i){ARR[axSel].p.forEach((_,k)=>axMute[k]=k!==i);if(AX){AX.build=false;AX.pg.forEach((g,k)=>g.gain.setTargetAtTime(axMute[k]?0:1,ctx.currentTime,.02))}axPaintMute()}
+/* --- 図 --- */
+function axMap(A){const W=320,H=236,L=34,R=10,T=10,B=26;let o=`<rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}" rx="12" class="rbg"/>`;
+  o+=`<line x1="${(L+W-R)/2}" x2="${(L+W-R)/2}" y1="${T}" y2="${H-B}" class="btl"/>`;
+  [['左',L+6,'start'],['真ん中',(L+W-R)/2,'middle'],['右',W-R-6,'end']].forEach(([t,x,a])=>o+=`<text x="${x}" y="${H-8}" text-anchor="${a}" class="gn">${t}</text>`);
+  [['高',T+12],['中',(T+H-B)/2+4],['低',H-B-6]].forEach(([t,y])=>o+=`<text x="${L-8}" y="${y}" text-anchor="end" class="gn">${t}</text>`);
+  A.p.forEach((P,i)=>{const hh=P.k==='drum'?.3:P.k==='mel'?.86:P.h,x=L+18+(P.pan+1)/2*(W-L-R-36),y=T+16+(1-hh)*(H-T-B-32),rr=P.k==='mel'?16:P.k==='drum'?17:13;
+    o+=`<g class="axdot" data-ai="${i}"><circle cx="${x}" cy="${y}" r="${rr}" style="fill:color-mix(in srgb,${ROLE[P.r][1]} 30%,var(--sheet));stroke:${ROLE[P.r][1]}" stroke-width="2"/><text x="${x}" y="${y+4}" text-anchor="middle" class="fml">${P.n.replace(/（.+）/,'')}</text></g>`});
+  return fsvg(W,H,o)}
+function axSecFig(A){const W=320,lab=96,cw=(W-lab)/4,rh=20;let o='';SEC_N.forEach((s,i)=>o+=`<text x="${lab+i*cw+cw/2}" y="10" text-anchor="middle" class="gn">${s}</text>`);
+  A.p.forEach((P,r)=>{const y=16+r*rh;o+=`<text x="${lab-8}" y="${y+13}" text-anchor="end" class="gl">${P.n}</text>`;A.sec[r].forEach((x,i)=>{o+=x?`<rect x="${lab+i*cw+2}" y="${y+2}" width="${cw-4}" height="${rh-5}" rx="5" style="fill:color-mix(in srgb,${ROLE[P.r][1]} ${Math.round(20+x*60)}%,var(--sheet))"/>`:`<circle cx="${lab+i*cw+cw/2}" cy="${y+9}" r="1.6" class="gd"/>`})});
+  return fsvg(W,16+A.p.length*rh+2,o)}
+/* --- 画面 --- */
+function axUI(){const A=ARR[axSel];
+  return `<div class="chips" id="axGenres">${ARR.map((g,i)=>`<button class="chip keep${i===axSel?' sel':''}" data-ag="${i}">${g.n}</button>`).join('')}</div>
+   <p class="axd">${A.d}</p>
+   <div class="ctrl"><button class="btn primary keep" id="axPlay">▶ ループ再生</button><button class="btn quiet keep" id="axBuild">1つずつ重ねる</button><button class="btn quiet sm keep" id="axAll">全部オン</button><span class="sub">BPM ${A.bpm}</span></div>
+   <div class="axparts" id="axParts">${A.p.map((P,i)=>`<div class="axp" data-pi="${i}" style="--rc:${ROLE[P.r][1]}"><button class="axt keep" data-at="${i}" aria-pressed="true"><i></i><span><b>${P.n}</b><small>${INST[P.i]?INST[P.i].n:''}・${ROLE[P.r][0]}</small></span></button><button class="axs keep" data-as="${i}">だけ</button></div>`).join('')}</div>
+   <p class="figt">どこで鳴っているか（左右と高さ）</p>${fig(axMap(A),'丸の位置が、左右（パン）と音の高さ。真ん中には低音とメロディ、左右には和音の楽器を置くと、ぶつからずに広がります。')}
+   <p class="figt">セクションごとの出番</p>${fig(axSecFig(A),'色が濃いほど前に出ている。サビに向けて少しずつ増やしていきます。')}
+   <h4 class="ngh">この編成のコツ</h4><ul class="itips">${A.t.map(x=>`<li>${x}</li>`).join('')}</ul>`}
+function axPaintMute(){const host=$('#axCard');if(!host)return;ARR[axSel].p.forEach((_,i)=>{const on=!axMute[i];const el=host.querySelector(`[data-pi="${i}"]`);if(el){el.classList.toggle('off',!on);el.querySelector('.axt').setAttribute('aria-pressed',on)}const d=host.querySelector(`.axdot[data-ai="${i}"]`);if(d)d.style.opacity=on?1:.22})}
+function axPaintPlay(){const b=$('#axPlay');if(b)b.textContent=AX?'■ 止める':'▶ ループ再生'}
+function axBind(){const host=$('#axCard');host.querySelector('.axbody').innerHTML=axUI();
+  host.querySelectorAll('[data-ag]').forEach(b=>b.onclick=()=>{const was=!!AX;axStop();axSel=+b.dataset.ag;axMute={};axBind();if(was)axStart()});
+  host.querySelector('#axPlay').onclick=()=>{AX?axStop():axStart()};host.querySelector('#axBuild').onclick=()=>{axStart(true)};
+  host.querySelector('#axAll').onclick=()=>{axMute={};if(AX){AX.build=false;AX.pg.forEach(g=>g.gain.setTargetAtTime(1,ctx.currentTime,.02))}axPaintMute()};
+  host.querySelectorAll('[data-at]').forEach(b=>b.onclick=()=>axToggle(+b.dataset.at));host.querySelectorAll('[data-as]').forEach(b=>b.onclick=()=>axSolo(+b.dataset.as));
+  axPaintMute();axPaintPlay()}
+function axSummary(){const R=['rh','lo','hm','me','fx'];return `<div class="tblwrap"><table class="tbl mtbl" style="min-width:620px"><thead><tr><th>ジャンル</th>${R.map(r=>`<th><span class="rdot" style="background:${ROLE[r][1]}"></span>${ROLE[r][0]}</th>`).join('')}</tr></thead><tbody>${ARR.map(A=>`<tr><th>${A.n}</th>${R.map(r=>`<td>${A.p.filter(P=>P.r===r).map(P=>P.n.replace('（リード）','')).join('、')||'—'}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+function renderArr(){const snd=document.getElementById('sounds');if(!snd||$('#axCard'))return;const first=snd.querySelector(':scope > [data-pane="ens"]');if(!first)return;
+  const h=`<div class="card" data-pane="ens" id="axCard" data-open="1"><h3>ジャンル別の編成ミキサー</h3><p class="sub" style="margin:0 0 10px">ジャンルを選んでループ再生し、楽器を1つずつオン・オフして役割を聴き分けられます。「だけ」でその楽器だけを鳴らせます。</p><div class="axbody"></div></div>
+   <div class="card" data-pane="ens"><h3>編成の5つの役割</h3><div class="nums">${Object.entries(ROLE).map(([k,[n,c]])=>`<div style="border-left:5px solid ${c}"><b>${n}</b><small style="margin-top:3px">${{rh:'ドラム・カッティングなど。曲の速さとノリを決める',lo:'ベース。和音の土台と、キックといっしょに体をゆらす',hm:'ピアノ・ギター・シンセ。コードの響きを鳴らす',me:'歌やリード楽器。いちばん前で聴かせる主役',fx:'ストリングス・アルペジオ・効果音。すき間を埋めて広げる'}[k]}</small></div>`).join('')}</div>
+   <p class="sub" style="margin-top:10px">どのジャンルも、この5つを誰が担当するかの組み合わせです。同じ役割の楽器が同じ高さで重なると、ごちゃごちゃします。</p></div>
+   <div class="card" data-pane="ens"><h3>ジャンル別の編成早見表</h3>${axSummary()}</div>`;
+  first.insertAdjacentHTML('beforebegin',h);axBind()}
+
 /* ===== 起動 ===== */
 paintMascots();
 applyTheme();
 renderTips();renderPagers();
 
-sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderMood();renderNG();renderClash();renderLyrics();initLevels();foldPanes();
+sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderMood();renderNG();renderClash();renderLyrics();renderArr();initLevels();foldPanes();
 setNavH();['sounds','tools','lyrics',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();applyVoiceText();setTimeout(refreshFades,50);
