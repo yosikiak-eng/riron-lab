@@ -882,6 +882,12 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 .ngfig .fig{background:var(--sheet);border-radius:12px;padding:8px 8px 4px;margin:0}
 @media (max-width:520px){.ngfig{grid-template-columns:1fr}}
 .ngh{margin:12px 0 4px;font-size:13.5px}
+/* 雰囲気 */
+.tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+.mtbl{min-width:560px;font-size:12.5px}.mtbl th:first-child{white-space:nowrap}.mtbl tbody th{text-align:left;font-weight:700}
+.mk6{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;margin-top:12px}
+.mk6>div{padding:8px 10px;border-radius:12px;background:color-mix(in srgb,var(--sa,var(--rose)) 6%,var(--sheet));border:1px solid color-mix(in srgb,var(--sa,var(--rose)) 14%,var(--rule))}
+.mk6 small{display:block;font-size:11px;color:var(--text2)}.mk6 b{display:block;font-size:13.5px;line-height:1.45;margin-top:1px}
 </style>
 </head>
 <body>
@@ -1430,7 +1436,7 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 40</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 41</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -2034,7 +2040,7 @@ function drum(type,t){
 function flashKey(kb,m,ms){if(!kb)return;const k=kb.querySelector(`[data-m="${m}"]`);if(k){k.classList.add('flash');setTimeout(()=>k.classList.remove('flash'),ms)}}
 function playChord(midis,dur=1.4,kb=null,delay=0,type='pluck'){
   const c=ac();const t=c.currentTime+0.03+delay;const v=midis.length>2?0.6:midis.length>1?0.8:1;
-  midis.forEach(m=>{tone(m,t,dur,v,type);setTimeout(()=>flashKey(kb,m,Math.min(dur*1000,700)),delay*1000)});
+  const sm=[...midis].sort((a,b)=>a-b);midis.forEach(m=>{const k=midis.length>2?sm.indexOf(m)*.03:0;tone(m,t+k,Math.max(.2,dur-k),v*(midis.length>2&&m===sm[sm.length-1]?1.08:1),type);setTimeout(()=>flashKey(kb,m,Math.min(dur*1000,700)),delay*1000)});
 }
 function playSeq(midis,step=0.38,kb=null,delay=0){
   const c=ac();const t=c.currentTime+0.03+delay;
@@ -2532,7 +2538,7 @@ const PROGS=[
 ];
 let pKeyV=0,pSel=0,pIdx=0,pTimer=null,pBpm=100;
 function voice(pc,suf){const bass=40+mod(pc-4);const up=[...new Set(CHORDS[suf].iv.map(i=>{const p=mod(pc+i);return 58+mod(p-58)}))].sort((a,b)=>a-b);return {bass,up}}
-function playVoiced(pc,suf,dur,kb,delay=0){const v=voice(mod(pc),suf),t=ac().currentTime+.03+delay;nOn('ebass',v.bass,t,dur,.9);keysChord(v.up,t,dur,.72);[v.bass,...v.up].forEach(m=>setTimeout(()=>flashKey(kb,m,Math.min(dur*1000,700)),delay*1000))}
+function playVoiced(pc,suf,dur,kb,delay=0){const v=voice(mod(pc),suf),t=ac().currentTime+.03+delay;chordFeel(v.bass,v.up,t,dur,.72,0);[v.bass,...v.up].forEach(m=>setTimeout(()=>flashKey(kb,m,Math.min(dur*1000,700)),delay*1000))}
 function pRenderList(){
   const flat=FLAT_MAJ.has(pKeyV);
   $('#pList').innerHTML=PROGS.map((p,i)=>`<button class="pitem${i===pSel?' sel':''}" data-i="${i}"><div class="pn"><b>${p.n}</b><span class="mono">${p.c.map(c=>romanOf(c[0])+c[1]).join(' → ')}<br>${p.c.map(c=>nm(pKeyV+c[0],flat)+c[1]).join(' → ')}</span></div><span class="pk">${S.c.prog.includes(i)?'✓':'▶'}</span></button>`).join('');
@@ -3610,8 +3616,8 @@ function updateIcons(){
     const c2=document.createElement('canvas');c2.width=c2.height=32;c2.getContext('2d').drawImage(img,0,0,32,32);setL('link[rel="icon"][sizes="32x32"]',c2.toDataURL('image/png'));window.__iconPng=png}catch(e){}};img.src=url;
 }
 /* ===== ページ内タブ ===== */
-const PANE_L={prog:'進行メーカー',key:'キー早見',trans:'移調',bpm:'BPM計算',form:'曲の構成',range:'音域',fx:'エフェクト',howto:'作り方',jissen:'実戦',deep:'深掘り',ng:'ダサい原因',lbase:'基本',lmake:'書き方',ltech:'テクニック',lvoc:'ボカロ',ltool:'ツール',lcheck:'チェック',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
-const PANE_O=['lbase','lmake','ltech','lvoc','ltool','lcheck','today','stages','record','settings','prog','key','trans','bpm','form','range','play','genre','ens','fx','dtm','learn','howto','ng','jissen','deep','weak','tips','tasks'];
+const PANE_L={prog:'進行メーカー',key:'キー早見',trans:'移調',bpm:'BPM計算',form:'曲の構成',range:'音域',fx:'エフェクト',howto:'作り方',jissen:'実戦',deep:'深掘り',ng:'ダサい原因',mood:'雰囲気',lbase:'基本',lmake:'書き方',ltech:'テクニック',lvoc:'ボカロ',ltool:'ツール',lcheck:'チェック',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
+const PANE_O=['lbase','lmake','ltech','lvoc','ltool','lcheck','today','stages','record','settings','prog','key','trans','bpm','form','range','play','genre','ens','fx','dtm','learn','howto','mood','ng','jissen','deep','weak','tips','tasks'];
 const paneSel={};
 function setupPanes(root){
   const key=root.id||'x',items=[...root.querySelectorAll(':scope > [data-pane]')];
@@ -3793,13 +3799,23 @@ function padNote(m,t,dur,v=.4){const c=ac(),f=freq(m),out=vout(.4),amp=sG(0),lp=
 function keysChord(ups,t,dur,v=.7,{roll=.012,pad=true}={}){const srt=[...ups].sort((a,b)=>a-b),top=srt[srt.length-1];
   srt.forEach((m,i)=>keyNote(m,t+i*roll+Math.random()*.004,dur,v*(m===top?1.06:.84)*(.94+Math.random()*.1)));
   if(pad&&dur>1)srt.forEach(m=>padNote(m,t,dur,v*.9))}
-function chordAt(bass,ups,t,dur,v=.7){nOn('ebass',bass,t,dur*.95,.9);keysChord(ups,t,dur*.97,v)}
+/* 「ジャーン」と全部いっしょに伸ばさない：テンポがわかるときはピアノの刻みか分散和音、わからない短いコードは下から順にポロンと */
+let SEQ_B=0;
+function chordFeel(bass,ups,t,dur,v=.7,b=SEQ_B){const srt=[...ups].sort((a,c)=>a-c),n=srt.length;
+  if(b&&dur/b>=1.8){const beats=dur/b,bpm=60/b;
+    if(bpm>=88){[[0,'a',1.4,1],[1.5,'u',.4,.55],[2,'a',1,.8],[3,'u',.45,.5],[3.5,'u',.4,.45]].forEach(([p,w,l,vv])=>{if(p>=beats-.1)return;keysChord(w==='a'?srt:srt.slice(1),t+p*b,Math.min(l,beats-p)*b,v*vv,{pad:false,roll:w==='a'?.012:.006})});
+      [[0,Math.min(2,beats)],[2,Math.min(2,beats-2)]].forEach(([p,l])=>{if(l>.1)nOn('ebass',bass,t+p*b,l*b*.92,p?.75:.9)})}
+    else{nOn('ebass',bass,t,dur*.95,.9);const ord=[0,1,2,1,n-1,1,2,1].map(i=>srt[Math.min(i,n-1)]);for(let k=0;k<Math.floor(beats*2+.01);k++)keyNote(ord[k%8],t+k*b/2,b*1.6,v*(k%2?.58:.82))}
+    srt.slice(-3).forEach(m=>padNote(m,t,dur,v*.75));return}
+  nOn('ebass',bass,t,dur*.95,.9);const gap=dur>=1.2?Math.min(.1,dur/(n+5)):.028;
+  srt.forEach((m,i)=>keyNote(m,t+.015+i*gap,Math.max(.2,dur-i*gap),v*(i===n-1?1:.8)));if(dur>=1.2)srt.slice(-3).forEach(m=>padNote(m,t,dur,v*.55))}
+function chordAt(bass,ups,t,dur,v=.7){chordFeel(bass,ups,t,dur,v)}
 /* となりのコードへ、いちばん近い形（転回形）で移る */
 function vlead(pc,suf,prev){const pcs=[...new Set(CHORDS[suf].iv.map(i=>mod(pc+i)))],n=pcs.length,C=[];
   for(let low=55;low<=67;low++){if(!pcs.includes(mod(low)))continue;const vs=[low];let cur=low;for(let k=1;k<n;k++){let nx=cur+1;while(!pcs.includes(mod(nx))||vs.some(x=>mod(x)===mod(nx)))nx++;vs.push(nx);cur=nx}if(vs[vs.length-1]<=77)C.push(vs)}
   const sc=vs=>prev?vs.reduce((a,m,i)=>a+Math.abs(m-prev[Math.min(i,prev.length-1)]),0)+.5*Math.abs(vs[vs.length-1]-prev[prev.length-1]):Math.abs(vs[vs.length-1]-71);
   return C.sort((a,b)=>sc(a)-sc(b))[0]||voice(pc,suf).up}
-function seqAt(list,bpm,beatsEach=4,{lead=true}={}){const b=60/bpm,t=ac().currentTime+.06;let x=0,prev=null;list.forEach(([r,s,len])=>{const L=(len||beatsEach)*b,v=voice(mod(r),s),up=lead?vlead(mod(r),s,prev):v.up;prev=up;chordAt(v.bass,up,t+x,L);x+=L});return {t,b,total:x}}
+function seqAt(list,bpm,beatsEach=4,{lead=true}={}){const b=60/bpm,t=ac().currentTime+.06;let x=0,prev=null;SEQ_B=b;try{list.forEach(([r,s,len])=>{const L=(len||beatsEach)*b,v=voice(mod(r),s),up=lead?vlead(mod(r),s,prev):v.up;prev=up;chordAt(v.bass,up,t+x,L);x+=L})}finally{SEQ_B=0}return {t,b,total:x}}
 function clickTrack(t,b,beats){for(let i=0;i<beats;i++)hit(i%4===0?'accent':'click',t+i*b,.5)}
 const RDEMO={
  fT:()=>seqAt([[0,'',6]],90),fSD:()=>seqAt([[5,'',6]],90),fD:()=>seqAt([[7,'7',6]],90),fDres:()=>seqAt([[7,'7',3],[0,'',5]],90),
@@ -5072,8 +5088,8 @@ const JDEMO={
  miyako:()=>{const t=ac().currentTime+.06;ps('koto',t,.32,'E4:1 F4:1 A4:1 B4:1 C5:1 E5:1 F5:1 E5:1 C5:1 B4:1 A4:1 F4:1 E4:3')},
  ryukyu:()=>{const t=ac().currentTime+.06;ps('pluck',t,.32,'C5:1 E5:1 F5:1 G5:1 B5:1 C6:1 B5:1 G5:1 F5:1 E5:1 C5:3')},
  harmMin:()=>{const t=ac().currentTime+.06;ps('flute',t,.3,'A4:1 B4:1 C5:1 D5:1 E5:1 F5:1 G#5:1 A5:2 G#5:1 F5:1 E5:3')},
- vJump:()=>{const b=60/90,t=ac().currentTime+.06;[[36,[60,64,67]],[41,[65,69,72]],[43,[67,71,74]],[36,[60,64,67]]].forEach(([bs,up],i)=>chordAt(bs,up,t+i*4*b,4*b))},
- vSmooth:()=>{const b=60/90,t=ac().currentTime+.06;[[36,[64,67,72]],[41,[65,69,72]],[43,[62,67,71]],[36,[64,67,72]]].forEach(([bs,up],i)=>chordAt(bs,up,t+i*4*b,4*b))},
+ vJump:()=>{const b=60/90,t=ac().currentTime+.06;[[36,[60,64,67]],[41,[65,69,72]],[43,[67,71,74]],[36,[60,64,67]]].forEach(([bs,up],i)=>chordFeel(bs,up,t+i*4*b,4*b,.7,b))},
+ vSmooth:()=>{const b=60/90,t=ac().currentTime+.06;[[36,[64,67,72]],[41,[65,69,72]],[43,[62,67,71]],[36,[64,67,72]]].forEach(([bs,up],i)=>chordFeel(bs,up,t+i*4*b,4*b,.7,b))},
  plainC:()=>{const t=ac().currentTime+.06;chordAt(36,[60,64,67,72],t,2.4)},
  add9:()=>{const t=ac().currentTime+.06;chordAt(36,[60,64,67,74],t,2.4)},
  onchord:()=>{const b=60/80,t=ac().currentTime+.06;[[36,[64,67,72]],[35,[64,67,72]],[34,[64,67,72]],[33,[65,69,72]]].forEach(([bs,up],i)=>chordAt(bs,up,t+i*4*b,4*b))},
@@ -5308,7 +5324,7 @@ function initLevels(){
   SECS.forEach(s=>{const sec=document.getElementById(s.id);if(!sec||!LV_STAGE[s.id])return;
     sec.querySelectorAll('[data-pane="learn"],[data-pane="howto"]').forEach(c=>{const h=c.querySelector('h3');if(!h||c.dataset.lv)return;const l=lvOfCard(h);if(l){c.dataset.lv=l;h.insertAdjacentHTML('beforeend',lvb(l))}});
     sec.querySelectorAll('[data-pane="jissen"]').forEach(c=>{let mn=3;c.querySelectorAll('.jx li').forEach(li=>{const b=li.querySelector('b'),l=LV_J[b.textContent.trim()]||1;li.dataset.lv=l;mn=Math.min(mn,l);b.insertAdjacentHTML('beforeend',lvb(l))});c.dataset.lv=mn});
-    ['learn','howto','ng','jissen','deep'].forEach(p=>{const cards=[...sec.querySelectorAll(`[data-pane="${p}"]`)];if(!cards.length)return;const need=Math.min(...cards.map(c=>+c.dataset.lv||1));if(need<2)return;
+    ['learn','howto','mood','ng','jissen','deep'].forEach(p=>{const cards=[...sec.querySelectorAll(`[data-pane="${p}"]`)];if(!cards.length)return;const need=Math.min(...cards.map(c=>+c.dataset.lv||1));if(need<2)return;
       const d=document.createElement('div');d.className='card lvempty';d.dataset.pane=p;d.dataset.need=need;d.innerHTML=`<p>このタブの内容は ${lvb(need)} からだよ。上の「表示する内容」を切り替えると読めるの。</p>`;cards[cards.length-1].after(d)});
     sec.querySelectorAll('.tipgrp .tg.tech').forEach(t=>{const g=t.closest('.tipgrp');g.dataset.lv=2;t.insertAdjacentHTML('beforeend',lvb(2))});
     const lead=sec.querySelector('header.sh .lead');if(lead&&!sec.querySelector('.lvsel')){const L=LV_STAGE[s.id];
@@ -5866,12 +5882,88 @@ function renderNG(){const host=document.getElementById('melody');if(!host||host.
   host.querySelectorAll('[data-ng]').forEach(b=>b.onclick=()=>{const N=NG[+b.dataset.ng];mplay(CAFG,b.dataset.w==='b'?N[4]:N[5])});
   const ck=[...host.querySelectorAll('[data-ngc]')];(S.ngChk||[]).forEach((v,i)=>{if(ck[i])ck[i].checked=!!v});ck.forEach(c=>c.onchange=()=>{S.ngChk=ck.map(x=>x.checked?1:0);save()})}
 
+/* ===== メロディの雰囲気の出し方 ===== */
+const MOODS_M=[
+ {n:'明るい・元気',lv:1,bpm:132,lead:'pluck',dr:'pop',ch:[[0,''],[5,''],[7,''],[0,'']],
+  mel:'C5:.5 E5:.5 G5:.75 A5:.25 G5:1 E5:1 F5:.5 A5:.5 C6:.75 A5:.25 C6:2 B5:.5 G5:.5 D6:.75 B5:.25 D6:1 B5:1 C6:3 r:1',
+  d:'上に向かって跳ねる線と、付点のはずむリズムが主役です。高めの音域で、フレーズの頭を強拍にそろえると、まっすぐな元気さが出ます。',
+  k:[['スケール','メジャー'],['動き','3度・5度で上へ跳ねる'],['リズム','付点（タッ・タ）ではずむ'],['音域','高め'],['テンポ','BPM 120〜150'],['コード','Ⅰ・Ⅳ・Ⅴ']],
+  t:['フレーズの最後を上がって終わると、前向きに聴こえる','短い休符で区切ると、息がはずんだ感じが出る']},
+ {n:'切ない',lv:1,bpm:84,lead:'flute',ch:[[5,'M7'],[7,''],[4,'m7'],[9,'m']],
+  mel:'A5:1.5 G5:.5 E5:1 C5:1 B4:.5 D5:.5 G5:2.5 F5:.5 E5:1 D5:.5 E5:.5 G5:1 B4:1 C5:2 B4:1 A4:1',
+  d:'高いところから、ため息のようにゆっくり下りていく線が切なさの正体です。長く伸ばす音をコードの7thや9thにすると、胸がきゅっとする響きになります。',
+  k:[['スケール','メジャーでも Ⅵm（マイナー）に着地'],['動き','6度上がって、ゆっくり下りる'],['リズム','長い音と、言葉を詰める短い音の対比'],['音域','中音域から少しずつ上へ'],['テンポ','BPM 70〜100'],['コード','王道進行、Ⅳ→Ⅴ→Ⅲm→Ⅵm']],
+  t:['伸ばす音の直前に、半音や全音で寄りかかる音（倚音）を置く','フレーズの最後をマイナーコードの上で終わらせる']},
+ {n:'かっこいい・クール',lv:1,bpm:112,lead:'lead',dr:'funk',ch:[[9,'m7'],[2,'m7'],[9,'m7'],[4,'m7']],
+  mel:'A4:.25 C5:.25 r:.25 D5:.25 E5:.5 G5:.5 r:.5 E5:.25 D5:.25 C5:.5 A4:.5 r:.5 D5:.25 F5:.25 r:.25 G5:.75 A5:1 G5:.5 E5:.5 A4:.25 C5:.25 r:.25 D5:.25 E5:.5 G5:.5 r:.5 E5:.25 D5:.25 C5:.5 A4:.5 G4:.5 A4:.5 r:.5 B4:.5 E5:2',
+  d:'短いフレーズを休符で切って、16分の食いでリズムを立てると、クールに聴こえます。音はマイナーペンタトニックに絞り、言いすぎないのがコツです。',
+  k:[['スケール','マイナーペンタトニック'],['動き','同じ音のくり返し＋小さな跳躍'],['リズム','16分の食い、休符でキメる'],['音域','中低音'],['テンポ','BPM 100〜130'],['コード','m7 のループ（Ⅰm7→Ⅳm7）']],
+  t:['同じフレーズを2回くり返し、2回目の最後だけ変える','音を伸ばさず、短く切る']},
+ {n:'かわいい',lv:1,bpm:128,lead:'bell',dr:'shaker',ch:[[0,''],[9,'m'],[5,''],[7,'']],
+  mel:'E6:.5 G6:.5 E6:.5 D6:.5 C6:1 r:1 C6:.5 E6:.5 C6:.5 B5:.5 A5:1 r:1 A5:.5 C6:.5 F6:.5 E6:.5 D6:.5 C6:.5 A5:1 B5:.5 D6:.5 G6:.75 F6:.25 D6:2',
+  d:'高い音域で、となりの音とくるくる往復する小さな動きが「かわいい」を作ります。音を短く切って、ところどころに休符を入れると、はずむようなかわいさになります。',
+  k:[['スケール','メジャー（ペンタトニック寄り）'],['動き','となりの音と往復、小さな跳躍'],['リズム','短く切る、付点で跳ねる'],['音域','高め'],['テンポ','BPM 120〜140'],['楽器','グロッケン・オルゴール・プラック']],
+  t:['1小節に1回、休符で「ひと呼吸」を入れる','最後を高い音でふわっと終わる']},
+ {n:'壮大・感動',lv:1,bpm:76,lead:'violin',ch:[[5,''],[7,''],[9,'m'],[0,'']],
+  mel:'C5:2 F5:1 G5:1 G5:2 D6:2 C6:3 B5:.5 A5:.5 G5:4',
+  d:'音の数を減らして、1つ1つを長く伸ばします。5度やオクターブの大きな跳躍で、ゆっくり頂点へ上がっていくと、景色が広がるような感動が生まれます。',
+  k:[['スケール','メジャー'],['動き','5度・オクターブの大きな跳躍'],['リズム','長い音、少ない音数'],['音域','広く使い、最後に頂点'],['テンポ','BPM 60〜90'],['楽器','ストリングス、ブラス、クワイア']],
+  t:['跳躍のあとは、ゆっくり順番に下りて余韻を作る','サビ頭の1音目を、曲でいちばん長く伸ばす']},
+ {n:'不穏・ダーク',lv:2,bpm:90,lead:'cello',ch:[[9,'m'],[10,''],[9,'m'],[4,'7']],
+  mel:'A3:1 B3:.5 C4:.5 B3:1 A3:1 A#3:1 D4:1 F4:1.5 E4:.5 A3:1 B3:.5 C4:.5 D#4:2 E4:1 F4:1 G#3:2',
+  d:'半音でじわじわ動く線と、増4度（3全音）のぶつかりが不穏さを作ります。主音の半音上（♭2）や、低い音域の同じ形のくり返しも効果的です。',
+  k:[['スケール','ハーモニックマイナー、フリジアン'],['動き','半音の動き、増4度'],['リズム','同じ形のくり返し'],['音域','低め'],['テンポ','BPM 70〜100'],['コード','Ⅰm→♭Ⅱ、Ⅴ7']],
+  t:['解決しないまま終わる','一瞬だけメジャーの音を混ぜると、かえって怖くなる']},
+ {n:'和風',lv:2,bpm:88,lead:'koto',ch:[[9,'m'],[9,'m'],[5,''],[4,'m']],
+  mel:'E5:1 F5:.5 E5:.5 C5:1 B4:1 A4:.5 B4:.5 C5:1 E5:2 F5:1 E5:.5 C5:.5 B4:1 A4:1 B4:1 C5:.5 B4:.5 E4:2',
+  d:'都節音階（ミ・ファ・ラ・シ・ド）の5音だけで作ると、一気に和の響きになります。半音（ミ→ファ、シ→ド）が2か所あるのが、哀しさの正体です。',
+  k:[['スケール','都節音階、ヨナ抜き音階'],['動き','4度・5度の跳躍、半音の装飾'],['リズム','ゆったり、こぶし（細かい装飾）'],['音域','中音域'],['テンポ','BPM 70〜100'],['楽器','琴、三味線、尺八']],
+  t:['伸ばす音の頭に、となりの音から素早く入る（こぶし）','コードは3和音か、3度を抜いた空の響きに']},
+ {n:'おしゃれ・シティポップ',lv:2,bpm:96,lead:'sax',ch:[[5,'M7'],[4,'7'],[9,'m7'],[7,'m7',2],[0,'7',2]],
+  mel:'E5:.5 G5:.5 A5:1.5 G5:.5 E5:1 D5:.5 E5:.5 G#5:1 B5:1.5 r:.5 C6:.75 B5:.25 A5:.5 G5:.5 E5:2 F5:.5 E5:.5 D5:1 E5:.5 A#5:1.5',
+  d:'長く伸ばす音を、コードの7thや9thに置くのがおしゃれの近道です。シンコペーションで少しずらし、半音の経過音で都会的な色をつけます。',
+  k:[['スケール','メジャー＋半音の経過音'],['動き','7th・9th に着地'],['リズム','シンコペーション'],['音域','中音域'],['テンポ','BPM 90〜110'],['コード','M7・m7、丸サ進行']],
+  t:['ルート（コードの名前の音）で長く伸ばさない','フレーズの終わりを少し食って、拍の前に置く']},
+ {n:'疾走感',lv:1,bpm:176,lead:'lead',dr:'rock',ch:[[9,'m'],[5,''],[7,''],[0,'']],
+  mel:'A4:.5 A4:.5 C5:.5 A4:.5 G4:.5 A4:.5 C5:.5 D5:.5 C5:.5 C5:.5 A4:.5 C5:.5 F5:1 E5:.5 C5:.5 D5:.5 D5:.5 B4:.5 D5:.5 G5:1 F5:.5 D5:.5 E5:.5 D5:.5 C5:.5 B4:.5 C5:2',
+  d:'8分音符で言葉を詰め、同じリズムの形を1段ずつ上げていく（シーケンス）と、前へ前へと走る感じになります。最後だけ長く伸ばすと、走りきった爽快感が出ます。',
+  k:[['スケール','マイナー（Ⅵm始まり）'],['動き','同じ形を1段ずつ上げる'],['リズム','8分で詰める、食い'],['音域','中音域から高音へ'],['テンポ','BPM 160〜200'],['ドラム','8ビート、16分のハット']],
+  t:['休符を減らし、息継ぎは短く','小節の最後の音を次の小節へ食わせる']},
+ {n:'懐かしい・ノスタルジック',lv:2,bpm:80,lead:'piano',ch:[[0,''],[9,'m'],[5,''],[7,'']],
+  mel:'E5:1.5 D5:.5 C5:1 D5:1 E5:1 G5:1 A5:2 G5:1.5 E5:.5 D5:1 C5:1 D5:2 C5:2',
+  d:'ファとシを使わないヨナ抜き音階で、なだらかに上り下りすると、童謡や昔の歌謡曲のような懐かしさが出ます。付点のゆったりしたリズムもポイントです。',
+  k:[['スケール','ヨナ抜き長音階（ド・レ・ミ・ソ・ラ）'],['動き','2度・3度中心のなだらかな線'],['リズム','付点のゆったりしたリズム'],['音域','中音域'],['テンポ','BPM 70〜90'],['楽器','ピアノ、アコギ、口笛']],
+  t:['音を飾りすぎず、素朴に','くり返しを多めにして、口ずさみやすく']},
+ {n:'夢・浮遊感',lv:2,bpm:80,lead:'vibes',ch:[[0,'M7'],[2,''],[0,'M7'],[2,'']],
+  mel:'G5:1 A5:1 B5:2 A5:1 F#5:1 D5:2 E5:1 F#5:1 G5:1 B5:1 A5:4',
+  d:'リディアン（メジャーの4番目を半音上げた音、キー C なら F♯）を使うと、地面から少し浮いたような響きになります。全音のつながりと、解決しない長い音がふわふわ感を作ります。',
+  k:[['スケール','リディアン（♯4）'],['動き','全音のつながり'],['リズム','長い音、ゆったり'],['音域','高め'],['テンポ','BPM 70〜90'],['コード','Ⅰ→Ⅱ（メジャー）のくり返し']],
+  t:['主音で終わらず、2番目や5番目の音で伸ばして終わる','リバーブを深めにすると、さらに浮かぶ']}
+];
+function moodPlay(M){const r=seqAt(M.ch,M.bpm);ps(M.lead,r.t,r.b,M.mel,{vm:1});if(M.dr)beat(M.dr,r.t,r.b,4,{v:.5});runViz()}
+function moodFig(M){const sc=score(M.mel),ns=[];sc.forEach(e=>{if(e.ms)ns.push([e.ms[0],e.at,e.len,'a'])});const ms=ns.map(n=>n[0]),lo=Math.min(...ms)-1,hi=Math.max(...ms)+1;
+  let x=0;const chs=M.ch.map(([r,s,l])=>{const o=[x,KEY_NAMES[mod(r)]+s];x+=l||4;return o});
+  return rollFig({lo,hi,beats:16,rh:Math.max(4,Math.min(7,96/(hi-lo+1))),line:true,chords:chs,notes:ns})}
+function moodTable(){const cols=['スケール','動き','リズム','テンポ'];
+  return `<div class="tblwrap"><table class="tbl mtbl"><thead><tr><th>雰囲気</th>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>${MOODS_M.map(M=>`<tr><th>${M.n}</th>${cols.map(c=>`<td>${(M.k.find(x=>x[0]===c)||['',''])[1]}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`}
+function renderMood(){const host=document.getElementById('melody');if(!host||host.querySelector('[data-pane="mood"]'))return;const anchor=host.querySelector('.card.tips')||host.querySelector('.pager');
+  let h=`<div class="card" data-pane="mood" data-lv="1"><h3>雰囲気を決める6つのつまみ${lvb(1)}</h3><div class="nums">${[['スケール','どの音を使うか。明るさや国っぽさが決まります'],['動き','跳ぶか、となりへ進むか。上がるか、下がるか'],['リズム','長い音か短い音か、食うか、休むか'],['音域','高いと明るく軽く、低いと落ち着いて重く'],['テンポ','速いと元気・疾走、遅いと切ない・壮大'],['コードと楽器','同じメロディでも、下の響きと音色で印象が変わります']].map(([k,v])=>`<div><b>${k}</b><small style="margin-top:3px">${v}</small></div>`).join('')}</div>
+    <p class="sub" style="margin-top:10px">下のカードで、雰囲気ごとの作り方とお手本を聴けます。</p></div>`;
+  h+=`<div class="card" data-pane="mood" data-lv="1"><h3>雰囲気の早見表${lvb(1)}</h3>${moodTable()}</div>`;
+  MOODS_M.forEach((M,i)=>{h+=`<div class="card" data-pane="mood" data-lv="${M.lv}"><h3>${M.n}${lvb(M.lv)}</h3><p>${M.d}</p>
+    ${fig(moodFig(M),`BPM ${M.bpm}・${INST[M.lead].n}`)}
+    <div class="ctrl"><button class="btn primary" data-mood="${i}">▶ お手本を聴く</button></div>
+    <div class="mk6">${M.k.map(([a,b])=>`<div><small>${a}</small><b>${b}</b></div>`).join('')}</div>
+    <h4 class="ngh">もうひと工夫</h4><ul class="itips">${M.t.map(x=>`<li>${x}</li>`).join('')}</ul></div>`});
+  const w=document.createElement('div');w.innerHTML=h;[...w.children].forEach(c=>host.insertBefore(c,anchor));
+  host.querySelectorAll('[data-mood]').forEach(b=>b.onclick=()=>moodPlay(MOODS_M[+b.dataset.mood]))}
+
 /* ===== 起動 ===== */
 paintMascots();
 applyTheme();
 renderTips();renderPagers();
 
-sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderNG();renderLyrics();initLevels();foldPanes();
+sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderMood();renderNG();renderLyrics();initLevels();foldPanes();
 setNavH();['sounds','tools','lyrics',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();applyVoiceText();setTimeout(refreshFades,50);
