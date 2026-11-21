@@ -923,6 +923,25 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 .prl{font:inherit;text-align:left;cursor:pointer;padding:10px 12px;border-radius:14px;border:1px solid color-mix(in srgb,var(--sa,var(--rose)) 20%,var(--rule));background:color-mix(in srgb,var(--sa,var(--rose)) 6%,var(--sheet));color:var(--ink)}
 .prl b{display:block;font-size:14px}.prl small{display:block;font-size:11.5px;color:var(--text2);line-height:1.45;margin-top:2px}
 .prmeta{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 10px}.prmeta span{font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;background:color-mix(in srgb,var(--sa,var(--rose)) 10%,var(--sheet));color:var(--text2)}
+.sminp{width:84px;font:inherit;font-size:16px;padding:6px 10px;border-radius:10px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink)}
+.smtext{width:100%;font:inherit;font-size:16px;padding:10px 12px;border-radius:12px;border:1px solid var(--rule);background:var(--sheet);color:var(--ink)}
+.smout{display:grid;grid-template-columns:1fr auto;column-gap:10px;align-items:center;margin:12px 0 4px;padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--sa,var(--rose)) 8%,var(--sheet));border:1px solid color-mix(in srgb,var(--sa,var(--rose)) 22%,var(--rule))}
+.smout small{grid-column:1;font-size:11.5px;color:var(--text2)}.smout b{grid-column:1;font-size:17px;word-break:break-word;line-height:1.45}.smout span{grid-column:1;font-size:12.5px;color:var(--text2);margin-top:2px}
+.smout button{grid-column:2;grid-row:1/span 3}
+.smdec{display:grid;gap:6px;margin-top:12px}.smdec:empty{display:none}
+.smrow{display:grid;grid-template-columns:86px 1fr;gap:8px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--paper)}
+.smrow small{font-size:12px;color:var(--text2);padding-top:3px}.smrow div{display:flex;flex-wrap:wrap;gap:5px}
+.smtag{font-size:13.5px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--sheet);border:1px solid color-mix(in srgb,var(--sa,var(--rose)) 24%,var(--rule))}
+.smfit{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.smfit>div{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:14px;background:var(--paper)}
+.smfit label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text2)}.smfit select,.smfit .sminp{width:100%;max-width:none;box-sizing:border-box}
+.smfo{display:grid;gap:8px;margin-top:12px}
+.smres{padding:10px 14px;border-radius:14px;border-left:5px solid var(--rule);background:var(--sheet);border-top:1px solid var(--rule);border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.smres small{display:block;font-size:11.5px;color:var(--text2)}.smres b{display:block;font-size:16.5px;margin:2px 0}.smres p{margin:2px 0 0;font-size:13.5px;line-height:1.7}
+.smres.l0{border-left-color:var(--mint)}.smres.l1{border-left-color:var(--soda)}.smres.l2{border-left-color:var(--butter)}.smres.l3{border-left-color:var(--rose)}
+.smdict{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px}
+.smdict div{padding:7px 10px;border-radius:10px;background:var(--paper)}.smdict b{display:block;font-size:14px}.smdict span{display:block;font-size:12px;color:var(--text2);line-height:1.45}
+.smtree{margin:0;padding:12px 14px;border-radius:12px;background:var(--paper);font-size:13px;line-height:1.65;overflow-x:auto;white-space:pre}
 .tkeff{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-weight:700;font-size:14px}
 .tkeff span{font-size:11.5px;padding:2px 9px;border-radius:99px;background:color-mix(in srgb,var(--sa,var(--rose)) 16%,var(--sheet));color:var(--sa,var(--rose))}
 .tkchips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
@@ -1016,6 +1035,10 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 
 <section id="tricks">
   <header class="sh"><div class="band"><span class="no">✧</span><p class="bandtxt">ひとさじで、曲がぐっとよくなる</p></div><h2>作曲の小技</h2><p class="lead">メロディ・コード・アレンジ・構成・アイデア出し・ボカロの小技を、効果別にまとめました。どのカードも「なし」と「あり」を聴き比べられます。</p></header>
+</section>
+
+<section id="samples">
+  <header class="sh"><div class="band"><span class="no">◎</span><p class="bandtxt">ほしい音に、早くたどり着くために</p></div><h2>素材さがし</h2><p class="lead">ワンショットやループ素材を探すときの検索ワード、ファイル名の読み方、キーとBPMの合わせ方、選び方、整理のしかた、規約のチェックをまとめました。</p></header>
 </section>
 
 <section id="lyrics">
@@ -1496,7 +1519,7 @@ html[data-lvmax="1"] .lvempty[data-need="2"],html[data-lvmax="1"] .lvempty[data-
 
 </main>
 <div class="install" id="installBox" hidden><p class="sub" id="installText"></p><button class="btn primary" id="installBtn" hidden>ホーム画面に追加</button></div>
-<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 47</footer>
+<footer>鍵盤やボタンをタップすると音が鳴ります。マナーモードのときは聞こえないことがあります。<br>進み具合はこのブラウザに保存されます。<br>バージョン 48</footer>
 
 <canvas id="fx"></canvas>
 <div class="toasts" id="toasts"></div>
@@ -2215,6 +2238,7 @@ function renderNav(){
    `<a class="tab" href="#lyrics" data-id="lyrics" style="--tc:${secSoft(LYRICS_SEC)};--ta:${secAcc(LYRICS_SEC)}"><span class="sw"></span>歌詞</a>`+
    `<a class="tab" href="#practice" data-id="practice" style="--tc:${secSoft(PRACTICE_SEC)};--ta:${secAcc(PRACTICE_SEC)}"><span class="sw"></span>練習</a>`+
    `<a class="tab" href="#tricks" data-id="tricks" style="--tc:${secSoft(TRICKS_SEC)};--ta:${secAcc(TRICKS_SEC)}"><span class="sw"></span>小技</a>`+
+   `<a class="tab" href="#samples" data-id="samples" style="--tc:${secSoft(SAMPLES_SEC)};--ta:${secAcc(SAMPLES_SEC)}"><span class="sw"></span>素材</a>`+
    SECS.map((s,i)=>`<a class="tab" href="#${s.id}" data-id="${s.id}" style="--tc:${secSoft(s)};--ta:${secAcc(s)}"><span class="sw"></span>${i+1}. ${s.n}${S.badges[s.id]?'<span class="ok" aria-label="クリア済み">✓</span>':''}</a>`).join('');
   $$('#nav a.tab').forEach(a=>a.classList.toggle('active',a.dataset.id===cur));
 }
@@ -2356,7 +2380,7 @@ function chips(el,items,selKey,onSel,gotFn){
 function refreshChips(){$$('.chips').forEach(el=>{if(!el._got)return;[...el.children].forEach(b=>{const g=b.querySelector('.got');if(g)g.textContent=el._got(b._k)?'✓':''})})}
 
 /* ===== ルーティング ===== */
-const ROUTES=['home','sounds','tools','lyrics','practice','tricks',...SECS.map(s=>s.id)];
+const ROUTES=['home','sounds','tools','lyrics','practice','tricks','samples',...SECS.map(s=>s.id)];
 let prevIdx=-1,prevId=null;
 function makeTurn(fromId,dir){
   const old=document.getElementById(fromId);if(!old||!old.classList.contains('show'))return null;
@@ -2375,9 +2399,9 @@ const RM=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const transMode=()=>S.trans||(RM()?'fade':'wipe');
 function makeWipe(toId,dir){
   const s=SEC[toId],i=SECS.findIndex(x=>x.id===toId);
-  const XS=toId==='sounds'?SOUNDS_SEC:toId==='tools'?TOOLS_SEC:toId==='lyrics'?LYRICS_SEC:toId==='practice'?PRACTICE_SEC:toId==='tricks'?TRICKS_SEC:null;
+  const XS=toId==='sounds'?SOUNDS_SEC:toId==='tools'?TOOLS_SEC:toId==='lyrics'?LYRICS_SEC:toId==='practice'?PRACTICE_SEC:toId==='tricks'?TRICKS_SEC:toId==='samples'?SAMPLES_SEC:null;
   const soft=s?secSoft(s):XS?secSoft(XS):'var(--rose-soft)',acc=s?secAcc(s):XS?secAcc(XS):'var(--rose)';
-  const lab=s?String(i+1).padStart(2,'0'):toId==='sounds'?'♪':toId==='tools'?'⚙':toId==='lyrics'?'✎':toId==='practice'?'✦':toId==='tricks'?'✧':'Home',name=s?s.n:toId==='sounds'?'楽器の音':toId==='tools'?'ツール':toId==='lyrics'?'歌詞':toId==='practice'?'練習':toId==='tricks'?'小技':'ホーム';
+  const lab=s?String(i+1).padStart(2,'0'):toId==='sounds'?'♪':toId==='tools'?'⚙':toId==='lyrics'?'✎':toId==='practice'?'✦':toId==='tricks'?'✧':toId==='samples'?'◎':'Home',name=s?s.n:toId==='sounds'?'楽器の音':toId==='tools'?'ツール':toId==='lyrics'?'歌詞':toId==='practice'?'練習':toId==='tricks'?'小技':toId==='samples'?'素材':'ホーム';
   const off=s?48-i*8:0;
   const w=document.createElement('div');w.className='wipe '+dir;w.style.setProperty('--wc',soft);w.style.setProperty('--wa',acc);
   w.style.top='0px';
@@ -3646,7 +3670,7 @@ const curTheme=()=>THEMES.find(t=>t.id===S.theme)||THEMES[0];
 const SOUNDS_SEC={soft:'#F1E6D8',acc:'#9A6A3A'};
 function secSoft(s){const T=curTheme();if(T.mono)return '#ECEBE8';if(T.id==='gb')return '#B3C682';if(T.id==='cyber')return `color-mix(in srgb,${s.acc} 22%,#141418)`;if(T.muted)return `color-mix(in srgb,${s.soft} 55%,var(--paper))`;if(T.dark)return `color-mix(in srgb,${s.acc} 26%,var(--sheet))`;return s.soft}
 function secAcc(s){const T=curTheme();if(T.mono)return '#1C1C1C';if(T.id==='gb')return '#0F380F';if(T.id==='neon')return `color-mix(in srgb,${s.acc} 45%,#ffffff)`;if(T.dark)return `color-mix(in srgb,${s.acc} 65%,#ffffff)`;return s.acc}
-function applySecColors(){SECS.concat([{id:'sounds',...SOUNDS_SEC},{id:'tools',...TOOLS_SEC},{id:'lyrics',...LYRICS_SEC},{id:'practice',...PRACTICE_SEC},{id:'tricks',...TRICKS_SEC}]).forEach(x=>{const el=document.getElementById(x.id);if(el){el.style.setProperty('--sc',secSoft(x));el.style.setProperty('--sa',secAcc(x))}})}
+function applySecColors(){SECS.concat([{id:'sounds',...SOUNDS_SEC},{id:'tools',...TOOLS_SEC},{id:'lyrics',...LYRICS_SEC},{id:'practice',...PRACTICE_SEC},{id:'tricks',...TRICKS_SEC},{id:'samples',...SAMPLES_SEC}]).forEach(x=>{const el=document.getElementById(x.id);if(el){el.style.setProperty('--sc',secSoft(x));el.style.setProperty('--sa',secAcc(x))}})}
 function applyTheme(){const T=curTheme();document.documentElement.dataset.theme=T.id;const m=document.querySelector('meta[name="theme-color"]');if(m)m.content=getComputedStyle(document.documentElement).getPropertyValue('--paper').trim()||'#F7F5FA';applySecColors();updateIcons()}
 
 /* ===== テーマに合わせたアプリアイコン ===== */
@@ -3678,8 +3702,8 @@ function updateIcons(){
     const c2=document.createElement('canvas');c2.width=c2.height=32;c2.getContext('2d').drawImage(img,0,0,32,32);setL('link[rel="icon"][sizes="32x32"]',c2.toDataURL('image/png'));window.__iconPng=png}catch(e){}};img.src=url;
 }
 /* ===== ページ内タブ ===== */
-const PANE_L={prog:'進行メーカー',key:'キー早見',trans:'移調',bpm:'BPM計算',form:'曲の構成',range:'音域',fx:'エフェクト',howto:'作り方',jissen:'実戦',deep:'深掘り',ng:'ダサい原因',mood:'雰囲気',clash:'ぶつからないコツ',pbase:'基本',pmenu:'練習メニュー',pplan:'プラン',pcheck:'困ったとき',kbase:'使い方',kmel:'メロディ',kchd:'コード',karr:'アレンジ',kform:'構成',kidea:'アイデア',kvoc:'ボカロ',lbase:'基本',lmake:'書き方',ltech:'テクニック',lvoc:'ボカロ',ltool:'ツール',ptool:'ツール',lcheck:'チェック',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
-const PANE_O=['pbase','pmenu','pplan','ptool','pcheck','kbase','kmel','kchd','karr','kform','kidea','kvoc','lbase','lmake','ltech','lvoc','ltool','lcheck','today','stages','record','settings','prog','key','trans','bpm','form','range','play','genre','ens','fx','dtm','learn','howto','mood','ng','clash','jissen','deep','weak','tips','tasks'];
+const PANE_L={prog:'進行メーカー',key:'キー早見',trans:'移調',bpm:'BPM計算',form:'曲の構成',range:'音域',fx:'エフェクト',howto:'作り方',jissen:'実戦',deep:'深掘り',ng:'ダサい原因',mood:'雰囲気',clash:'ぶつからないコツ',pbase:'基本',pmenu:'練習メニュー',pplan:'プラン',pcheck:'困ったとき',kbase:'使い方',kmel:'メロディ',kchd:'コード',karr:'アレンジ',kform:'構成',kidea:'アイデア',kvoc:'ボカロ',sbase:'基本',sword:'検索ワード',sfile:'ファイル名',sfit:'キー・BPM',spick:'選び方',sorg:'整理',slic:'規約',lbase:'基本',lmake:'書き方',ltech:'テクニック',lvoc:'ボカロ',ltool:'ツール',ptool:'ツール',lcheck:'チェック',dtm:'打ち込み',genre:'ジャンル',play:'体験',learn:'解説',tips:'コツ・タブー',tasks:'課題',weak:'苦手チェック',ens:'編成',today:'今日',stages:'ステージ',record:'記録',settings:'設定'};
+const PANE_O=['pbase','pmenu','pplan','ptool','pcheck','kbase','kmel','kchd','karr','kform','kidea','kvoc','sbase','sword','sfile','sfit','spick','sorg','slic','lbase','lmake','ltech','lvoc','ltool','lcheck','today','stages','record','settings','prog','key','trans','bpm','form','range','play','genre','ens','fx','dtm','learn','howto','mood','ng','clash','jissen','deep','weak','tips','tasks'];
 const paneSel={};
 function setupPanes(root){
   const key=root.id||'x',items=[...root.querySelectorAll(':scope > [data-pane]')];
@@ -5696,7 +5720,7 @@ function renderDeep(){
     let h='';cards.forEach(([t,f,l])=>{const out=f();h+=`<div class="card" data-pane="${pane}"><h3>${t}${lvb(l)}</h3>${out}</div>`});last.insertAdjacentHTML('afterend',h)})}
 /* ===== 長いタブを見やすく：折りたたみ・目次・上へ ===== */
 const FOLD_SKIP=new Set(['ptool','ltool','play','tasks','today','stages','record','settings','prog','key','trans','bpm','form','range','weak']);
-function foldPanes(){['sounds','tools','lyrics','practice','tricks',...SECS.map(s=>s.id)].forEach(id=>{const sec=document.getElementById(id);if(!sec)return;
+function foldPanes(){['sounds','tools','lyrics','practice','tricks','samples',...SECS.map(s=>s.id)].forEach(id=>{const sec=document.getElementById(id);if(!sec)return;
   const panes=[...new Set([...sec.querySelectorAll(':scope > [data-pane]')].map(e=>e.dataset.pane))];
   panes.forEach(p=>{if(FOLD_SKIP.has(p))return;const cards=[...sec.querySelectorAll(`:scope > .card[data-pane="${p}"]`)].filter(c=>c.querySelector(':scope > h3')&&!c.classList.contains('lvempty'));if(cards.length<3)return;
     cards.forEach((c,i)=>{if(c.classList.contains('fold'))return;const h=c.querySelector(':scope > h3');const body=document.createElement('div');body.className='fbody';
@@ -6478,13 +6502,180 @@ function renderTricks(){const sec=document.getElementById('tricks');if(!sec||sec
   sec.querySelectorAll('[data-tk]').forEach(b=>fastTap(b,()=>{const D=TRICKS[+b.dataset.tk][8];tkPlay(D[b.dataset.w])}));
   sec.querySelectorAll('[data-tkj]').forEach(b=>b.onclick=()=>tkJump(b.dataset.tkj));tkGacha()}
 
+/* ===== 素材さがし（ワンショット・ループ） ===== */
+const SAMPLES_SEC={soft:'#EFE1DA',acc:'#9A5843'};
+const SM_TYPE=[['os','ワンショット','one shot'],['loop','ループ','loop']];
+const SM_PART=[
+ ['kick','キック','kick','kick drum, bd, 808 kick',0],['snare','スネア','snare','snr, rim, rimshot',0],['clap','クラップ','clap','snap, handclap',0],
+ ['hat','ハイハット','hi hat','hihat, hh, closed hat, open hat',0],['808','808（ベース）','808','808 bass, sub bass, 808 glide',1],['perc','パーカッション','percussion','perc, shaker, tambourine, conga',0],
+ ['drumloop','ドラムループ','drum loop','drum break, beat, full drums',0],['toploop','トップループ（キック抜き）','top loop','hat loop, percussion loop, no kick',0],
+ ['bass','ベース','bass','bassline, synth bass, reese',1],['piano','ピアノ・鍵盤','piano','keys, rhodes, electric piano',1],['guitar','ギター','guitar','acoustic guitar, electric guitar, guitar chords',1],
+ ['synth','シンセ','synth','lead, pluck, arp',1],['pad','パッド','pad','atmosphere, texture, ambient',1],['vocal','ボーカルチョップ','vocal chop','vox, vocal, adlib, vocal phrase',1],
+ ['riser','ライザー（上がる効果音）','riser','uplifter, build up, sweep up',0],['impact','インパクト（ドーン）','impact','hit, boom, downlifter, sub drop',0],['fx','効果音・つなぎ','fx','transition, whoosh, glitch, reverse',0]];
+const SM_GENRE=[['','指定なし',''],['trap','トラップ','trap'],['lofi','ローファイ','lofi'],['fb','フューチャーベース','future bass'],['house','ハウス','house'],['edm','EDM','edm'],['hyper','ハイパーポップ','hyperpop'],['dnb','ドラムンベース','drum and bass'],['phonk','フォンク','phonk'],['rnb','R&B','rnb'],['pop','ポップ','pop'],['rock','ロック','rock'],['city','シティポップ','city pop'],['kawaii','カワイイ系','kawaii']];
+const SM_MOOD=[['punchy','パンチがある・アタックが強い'],['tight','短く締まった'],['fat','太い'],['crisp','シャキッとした'],['warm','温かい・丸い'],['dark','暗い'],['bright','明るい・きらきら'],['airy','空気感がある'],['gritty','ざらついた'],['distorted','歪んだ'],['lofi','古っぽい・こもった'],['vintage','ビンテージ'],['analog','アナログっぽい'],['clean','クリーンな'],['wet','響き（リバーブ）多め'],['dry','響きなし'],['wide','左右に広い'],['emotional','エモい'],['dreamy','夢っぽい'],['aggressive','攻撃的'],['chill','まったり'],['organic','生っぽい'],['processed','加工済み'],['glitchy','グリッチ（ぶつ切れ）'],['chopped','切り刻んだ'],['reversed','逆再生'],['pitched','ピッチを変えた'],['layered','重ねた']];
+const SM_KEYS=['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B'];
+const SM_KEYJ=['C','C♯/D♭','D','E♭','E','F','F♯/G♭','G','A♭','A','B♭','B'];
+let SMB={type:'os',part:'kick',genre:'trap',mood:['punchy'],bpm:'',key:'',mode:'min'};
+function smQuery(){const P=SM_PART.find(p=>p[0]===SMB.part),G=SM_GENRE.find(g=>g[0]===SMB.genre),T=SM_TYPE.find(t=>t[0]===SMB.type);
+  SMB.mood=SMB.mood.filter(m=>SM_MOOD.some(x=>x[0]===m));const w=[G[2],...SMB.mood,P[2]];if(!/loop/.test(P[2]))w.push(T[2]);
+  if(SMB.type==='loop'&&SMB.bpm)w.push(SMB.bpm+' bpm');if(SMB.key!==''&&P[4])w.push(SM_KEYS[+SMB.key]+(SMB.mode==='min'?' minor':' major'));
+  const ja=[G[0]?G[1]:'',...SMB.mood.map(m=>SM_MOOD.find(x=>x[0]===m)[1].split('・')[0]),P[1]+(/loop/.test(P[2])?'':'（'+T[1]+'）')].filter(Boolean).join(' ・ ');
+  return {en:w.filter(Boolean).join(' '),ja,syn:P[3].split(', '),P}}
+function smBuilderHTML(){return `<div class="card" data-pane="sword" id="smBuild" data-open="1"><h3>検索ワードビルダー</h3><p class="sub" style="margin:0 0 8px">素材サイトの多くは英語のタグで探します。ほしい音を選ぶと、そのまま貼れる検索ワードを作ります。</p>
+  <h4 class="ngh">種類</h4><div class="chips" id="smT">${SM_TYPE.map(t=>`<button class="chip keep" data-v="${t[0]}">${t[1]}</button>`).join('')}</div>
+  <h4 class="ngh">パート</h4><div class="chips" id="smP">${SM_PART.map(p=>`<button class="chip keep" data-v="${p[0]}">${p[1]}</button>`).join('')}</div>
+  <h4 class="ngh">ジャンル</h4><div class="chips" id="smG">${SM_GENRE.map(g=>`<button class="chip keep" data-v="${g[0]}">${g[1]}</button>`).join('')}</div>
+  <h4 class="ngh">音の雰囲気（2つまで）</h4><div class="chips" id="smM">${SM_MOOD.slice(0,22).map(m=>`<button class="chip keep" data-v="${m[0]}">${m[1].split('・')[0]}</button>`).join('')}</div>
+  <div class="ctrl" id="smBK"><label>BPM</label><input id="smBpm" type="number" inputmode="numeric" min="50" max="220" placeholder="なし" class="sminp"><label>キー</label><select id="smKey"><option value="">なし</option>${SM_KEYJ.map((k,i)=>`<option value="${i}">${k}</option>`).join('')}</select><select id="smMode"><option value="min">マイナー</option><option value="maj">メジャー</option></select></div>
+  <div class="smout"><small>検索ワード</small><b id="smEn"></b><span id="smJa"></span><button class="btn primary keep" id="smCopy">コピー</button></div>
+  <h4 class="ngh">見つからないときは、パートをこの言葉に変えてみる</h4><div class="chips" id="smSyn"></div><p class="sub" id="smNote" style="margin-top:8px"></p></div>`}
+function smBuilderInit(sec){const paint=()=>{const Q=smQuery();
+  [['#smT','type'],['#smP','part'],['#smG','genre']].forEach(([id,k])=>sec.querySelectorAll(id+' .chip').forEach(b=>b.classList.toggle('sel',b.dataset.v===SMB[k])));
+  sec.querySelectorAll('#smM .chip').forEach(b=>b.classList.toggle('sel',SMB.mood.includes(b.dataset.v)));
+  sec.querySelector('#smEn').textContent=Q.en;sec.querySelector('#smJa').textContent=Q.ja;
+  sec.querySelector('#smSyn').innerHTML=Q.syn.map(s=>`<button class="chip keep" data-s="${s}">${s}</button>`).join('');
+  sec.querySelectorAll('#smSyn .chip').forEach(b=>b.onclick=()=>{const q=Q.en.replace(Q.P[2],b.dataset.s);sec.querySelector('#smEn').textContent=q});
+  const notes=[];if(SMB.type==='os'&&SMB.bpm)notes.push('ワンショットにはBPMがないので、BPMは検索ワードに入れていません。');if(SMB.key!==''&&!Q.P[4])notes.push('ドラムや効果音はキーで探さないのが普通なので、キーは入れていません。');
+  if(SMB.type==='os'&&/loop/.test(Q.P[2]))notes.push('ドラムループやトップループは、ループとして探します。');
+  sec.querySelector('#smNote').textContent=notes.join(' ')};
+  sec.querySelectorAll('#smT .chip').forEach(b=>b.onclick=()=>{SMB.type=b.dataset.v;paint()});
+  sec.querySelectorAll('#smP .chip').forEach(b=>b.onclick=()=>{SMB.part=b.dataset.v;if(/loop/.test(b.dataset.v))SMB.type='loop';paint()});
+  sec.querySelectorAll('#smG .chip').forEach(b=>b.onclick=()=>{SMB.genre=b.dataset.v;paint()});
+  sec.querySelectorAll('#smM .chip').forEach(b=>b.onclick=()=>{const v=b.dataset.v,i=SMB.mood.indexOf(v);if(i>=0)SMB.mood.splice(i,1);else{SMB.mood.push(v);if(SMB.mood.length>2)SMB.mood.shift()}paint()});
+  sec.querySelector('#smBpm').oninput=e=>{SMB.bpm=(e.target.value||'').replace(/\D/g,'');paint()};sec.querySelector('#smKey').onchange=e=>{SMB.key=e.target.value;paint()};sec.querySelector('#smMode').onchange=e=>{SMB.mode=e.target.value;paint()};
+  sec.querySelector('#smCopy').onclick=e=>smCopy(sec.querySelector('#smEn').textContent,e.target);paint()}
+function smCopy(txt,btn){const done=()=>{const o=btn.textContent;btn.textContent=vconv('コピーしました',curVoice());setTimeout(()=>btn.textContent=o,1800)};
+  try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,()=>{smCopyOld(txt);done()});return}}catch(e){}smCopyOld(txt);done()}
+function smCopyOld(txt){const t=document.createElement('textarea');t.value=txt;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy')}catch(e){}t.remove()}
+
+/* ファイル名デコーダー */
+const SM_DICT={
+ kick:['パート','キック'],kik:['パート','キック'],bd:['パート','キック'],snare:['パート','スネア'],snr:['パート','スネア'],sn:['パート','スネア'],rim:['パート','リムショット'],clap:['パート','クラップ'],clp:['パート','クラップ'],snap:['パート','スナップ（指パッチン）'],
+ hat:['パート','ハイハット'],hihat:['パート','ハイハット'],hh:['パート','ハイハット'],hats:['パート','ハイハット'],oh:['パート','オープンハイハット'],ch:['パート','クローズドハイハット'],closed:['音','閉じた（短い）'],open:['音','開いた（長い）'],ride:['パート','ライド'],crash:['パート','クラッシュ'],cym:['パート','シンバル'],
+ perc:['パート','パーカッション'],shaker:['パート','シェイカー'],tamb:['パート','タンバリン'],tom:['パート','タム'],conga:['パート','コンガ'],'808':['パート','808（重低音のベースドラム）'],sub:['パート','サブベース（超低音）'],bass:['パート','ベース'],reese:['パート','リースベース（うねるベース）'],
+ drum:['パート','ドラム'],drums:['パート','ドラム'],break:['パート','ブレイクビーツ（生ドラムのループ）'],top:['パート','トップ（キック抜きのドラム）'],groove:['パート','グルーヴ（リズムパターン）'],beat:['パート','ビート'],fill:['種類','フィル（つなぎのおかず）'],
+ keys:['パート','鍵盤'],piano:['パート','ピアノ'],rhodes:['パート','ローズ（エレピ）'],ep:['パート','エレピ'],organ:['パート','オルガン'],gtr:['パート','ギター'],guitar:['パート','ギター'],ag:['パート','アコギ'],eg:['パート','エレキギター'],
+ synth:['パート','シンセ'],syn:['パート','シンセ'],lead:['パート','リード（主旋律）'],pluck:['パート','プラック（はじく音）'],arp:['パート','アルペジオ'],pad:['パート','パッド（のばす和音）'],chord:['パート','コード'],chords:['パート','コード'],melody:['パート','メロディ'],mel:['パート','メロディ'],
+ strings:['パート','ストリングス'],str:['パート','ストリングス'],brass:['パート','ブラス'],bell:['パート','ベル'],bells:['パート','ベル'],flute:['パート','フルート'],choir:['パート','クワイア'],
+ vox:['パート','ボーカル'],vocal:['パート','ボーカル'],vocals:['パート','ボーカル'],vx:['パート','ボーカル'],chop:['加工','チョップ（切り刻んだ）'],chopped:['加工','チョップ（切り刻んだ）'],adlib:['パート','アドリブ（合いの手の声）'],phrase:['パート','フレーズ'],hook:['パート','フック（サビのフレーズ）'],
+ fx:['パート','効果音'],sfx:['パート','効果音'],riser:['パート','ライザー（上がる効果音）'],uplifter:['パート','ライザー'],downlifter:['パート','ダウンリフター（下がる効果音）'],impact:['パート','インパクト（ドーン）'],hit:['種類','ヒット（単発）'],sweep:['パート','スウィープ'],whoosh:['パート','ヒュッという効果音'],noise:['パート','ノイズ'],texture:['パート','テクスチャ（環境音・質感）'],atmos:['パート','アトモス（空気感）'],foley:['パート','フォーリー（生活音）'],
+ loop:['種類','ループ'],lp:['種類','ループ'],oneshot:['種類','ワンショット'],os:['種類','ワンショット'],shot:['種類','ワンショット'],one:['_one',''],stem:['種類','ステム（パート別に分けた音）'],stems:['種類','ステム'],full:['種類','フル（全部入り）'],kit:['種類','キット'],midi:['種類','MIDI'],preset:['種類','プリセット'],
+ wet:['加工','響きあり（エフェクト込み）'],dry:['加工','響きなし（素の音）'],rev:['加工','逆再生（またはリバーブ）'],reverse:['加工','逆再生'],reversed:['加工','逆再生'],pitched:['加工','ピッチを変えた'],processed:['加工','加工済み'],layered:['加工','重ねた'],tail:['加工','余韻あり'],long:['音','長め'],short:['音','短め'],
+ trap:['ジャンル','トラップ'],lofi:['ジャンル','ローファイ'],house:['ジャンル','ハウス'],edm:['ジャンル','EDM'],dnb:['ジャンル','ドラムンベース'],fb:['ジャンル','フューチャーベース'],hyperpop:['ジャンル','ハイパーポップ'],phonk:['ジャンル','フォンク'],rnb:['ジャンル','R&B'],pop:['ジャンル','ポップ'],rock:['ジャンル','ロック'],techno:['ジャンル','テクノ'],dubstep:['ジャンル','ダブステップ'],drill:['ジャンル','ドリル'],boombap:['ジャンル','ブーンバップ'],jazz:['ジャンル','ジャズ'],kawaii:['ジャンル','カワイイ系'],cinematic:['ジャンル','映画音楽風'],
+ dusty:['音','ほこりっぽい（古いレコード風）'],vinyl:['音','レコード風'],tape:['音','テープ風']};
+SM_MOOD.forEach(([k,v])=>{if(!SM_DICT[k])SM_DICT[k]=['音',v]});
+const SM_PCN={c:0,d:2,e:4,f:5,g:7,a:9,b:11};
+function smParseKey(tok,next){let m=tok.match(/^([A-Ga-g])(#|b|♯|♭)?(maj|major|min|minor|mi|M|m)?$/);if(!m)return null;
+  const up=m[1]===m[1].toUpperCase();let q=m[3]||'',used=1;
+  if(!q&&next&&/^(maj|major|min|minor)$/i.test(next)){q=next.toLowerCase();used=2}
+  if(!up&&!m[2]&&!/^(maj|major|min|minor)$/i.test(q))return null;
+  const pc=mod(SM_PCN[m[1].toLowerCase()]+(/^(#|♯)$/.test(m[2]||'')?1:/^(b|♭)$/.test(m[2]||'')?-1:0));
+  return {pc,min:/^(min|minor|mi|m)$/.test(q),used,guess:!m[2]&&!q}}
+function smDecode(name){const base=name.replace(/\.(wav|aif|aiff|mp3|flac|ogg|mid|midi)$/i,'');const toks=base.replace(/([a-z]{2,})([A-Z][a-z]{2,})/g,'$1 $2').split(/[\s_\-.,()\[\]]+/).filter(Boolean);
+  const out={type:[],part:[],bpm:null,key:null,genre:[],sound:[],proc:[],other:[]};
+  for(let i=0;i<toks.length;i++){const t=toks[i],lo=t.toLowerCase(),nx=toks[i+1];
+    let m=lo.match(/^(\d{2,3})(bpm)?$/);if(m&&(m[2]||(+m[1]>=60&&+m[1]<=200))){if(!out.bpm)out.bpm=+m[1];continue}
+    if(lo==='bpm')continue;m=lo.match(/^bpm(\d{2,3})$/);if(m){out.bpm=+m[1];continue}
+    if(lo==='one'&&nx&&/^shot$/i.test(nx)){out.type.push('ワンショット');i++;continue}
+    if(!out.key){const k=smParseKey(t,nx);if(k){out.key=k;i+=k.used-1;continue}}
+    if(/^(major|minor|maj|min)$/.test(lo))continue;
+    const d=SM_DICT[lo];if(d&&d[0]!=='_one'){({パート:out.part,種類:out.type,ジャンル:out.genre,音:out.sound,加工:out.proc})[d[0]].push(d[1]);continue}
+    if(/^\d+$/.test(lo)){out.other.push(t+'（番号）');continue}out.other.push(t)}
+  return out}
+function smDecodeHTML(o){const row=(k,arr)=>arr.length?`<div class="smrow"><small>${k}</small><div>${[...new Set(arr)].map(x=>`<span class="smtag">${x}</span>`).join('')}</div></div>`:'';
+  const kj=o.key?SM_KEYJ[o.key.pc]+(o.key.min?' マイナー':' メジャー')+(o.key.guess?'（キーかも？）':''):null;const hasT=o.type.some(x=>/ループ|ワンショット/.test(x));
+  return row('種類',hasT?o.type:[...o.type,o.bpm?'ループ（BPMがあるので）':'ワンショットかも（BPMなし）'])+row('パート',o.part)+(o.bpm?row('BPM',[o.bpm]):'')+(kj?row('キー',[kj]):'')+row('ジャンル',o.genre)+row('音の感じ',o.sound)+row('加工',o.proc)+row('その他（パック名など）',o.other)}
+function smFileHTML(){return `<div class="card" data-pane="sfile" id="smFile" data-open="1"><h3>ファイル名デコーダー</h3><p class="sub" style="margin:0 0 8px">素材のファイル名を貼ると、BPM・キー・パート・雰囲気を日本語で読み解きます。</p>
+  <input id="smFn" type="text" class="smtext" placeholder="例：LOFI_Keys_Loop_85bpm_Fmin_Dusty.wav" autocomplete="off" autocapitalize="off" spellcheck="false">
+  <div class="chips" style="margin-top:8px">${['LOFI_Keys_Loop_85bpm_Fmin_Dusty.wav','Trap_808_OS_C#_Long_02.wav','FB_Vocal_Chop_Loop_150_Ebmaj_Wet.wav','Hat_Closed_Tight_03.wav','DnB_Drum_Break_Full_174.wav'].map(x=>`<button class="chip keep" data-fn="${x}">${x}</button>`).join('')}</div>
+  <div id="smDec" class="smdec"></div><div class="ctrl" id="smToFit" hidden><button class="btn quiet keep" id="smFitGo">この素材のBPM・キーを「合わせる」に入れる</button></div></div>`}
+let SM_LAST=null;
+function smFileInit(sec){const inp=sec.querySelector('#smFn'),go=()=>{const v=inp.value.trim();const o=v?smDecode(v):null;SM_LAST=o;sec.querySelector('#smDec').innerHTML=o?smDecodeHTML(o):'';sec.querySelector('#smToFit').hidden=!(o&&(o.bpm||o.key))};
+  inp.oninput=go;sec.querySelectorAll('[data-fn]').forEach(b=>b.onclick=()=>{inp.value=b.dataset.fn;go()});
+  sec.querySelector('#smFitGo').onclick=()=>{if(!SM_LAST)return;const F=S.smFit||(S.smFit={});if(SM_LAST.bpm)F.lb=SM_LAST.bpm;F.lk=SM_LAST.key?SM_LAST.key.pc:'';F.lm=SM_LAST.key&&SM_LAST.key.min?'min':'maj';save();smFitLoad(sec);goTo('samples','sfit')}}
+
+/* キー・BPM合わせ */
+function smFitCalc(F){const r={};const lb=+F.lb,sb=+F.sb;
+  if(lb>0&&sb>0){const C=[[lb,'そのまま'],[lb*2,'倍のテンポとして'],[lb/2,'半分のテンポとして']].map(([b,n])=>({b,n,p:(sb/b-1)*100}));const best=C.sort((a,c)=>Math.abs(a.p)-Math.abs(c.p))[0];
+    const a=Math.abs(best.p);r.t={best,raw:(sb/lb-1)*100,lv:a<=3?0:a<=10?1:a<=20?2:3}}
+  if(F.lk!==''&&F.lk!=null&&F.sk!==''&&F.sk!=null){const lr=mod(+F.lk+(F.lm==='min'?3:0)),sr=mod(+F.sk+(F.sm==='min'?3:0));let s=mod(sr-lr);if(s>6)s-=12;r.k={s,rel:s===0&&F.lm!==F.sm,a:Math.abs(s)}}
+  return r}
+const SM_TLV=['ほぼそのまま使えます','自然に合わせられます','少し音質が変わります。ドラムなら目立ちにくいです','不自然になりやすいので、近いBPMの素材を探すほうがおすすめ'];
+function smFitHTML(){const opt=`<option value="">キーなし（ドラムなど）</option>`+SM_KEYJ.map((k,i)=>`<option value="${i}">${k}</option>`).join('');
+  return `<div class="card" data-pane="sfit" id="smFit" data-open="1"><h3>キー・BPM合わせ</h3><p class="sub" style="margin:0 0 8px">素材のBPM・キーと、あなたの曲のBPM・キーを入れると、どれだけ変えればいいかを計算します。</p>
+  <div class="smfit"><div><b>素材</b><label>BPM<input id="smLb" type="number" inputmode="numeric" class="sminp" placeholder="例：85"></label><label>キー<select id="smLk">${opt}</select></label><select id="smLm" aria-label="素材のメジャー・マイナー"><option value="maj">メジャー</option><option value="min">マイナー</option></select></div>
+  <div><b>あなたの曲</b><label>BPM<input id="smSb" type="number" inputmode="numeric" class="sminp" placeholder="例：90"></label><label>キー<select id="smSk">${opt.replace('キーなし（ドラムなど）','未定')}</select></label><select id="smSm" aria-label="曲のメジャー・マイナー"><option value="maj">メジャー</option><option value="min">マイナー</option></select></div></div>
+  <div id="smFitOut" class="smfo"></div></div>`}
+function smFitLoad(sec){const F=S.smFit||{};[['#smLb','lb'],['#smLk','lk'],['#smLm','lm'],['#smSb','sb'],['#smSk','sk'],['#smSm','sm']].forEach(([id,k])=>{const el=sec.querySelector(id);if(el&&F[k]!=null)el.value=F[k]});smFitPaint(sec)}
+function smFitPaint(sec){const F=S.smFit||{};const r=smFitCalc(F);let h='';
+  if(r.t){const {best,raw,lv}=r.t,sg=v=>(v>=0?'+':'')+v.toFixed(1)+'%';
+    h+=`<div class="smres l${lv}"><small>テンポ</small><b>${best.n==='そのまま'?`素材を ${sg(best.p)} 変える`:`${best.n}扱って ${sg(best.p)}`}</b><p>${SM_TLV[lv]}${best.n!=='そのまま'?`（そのまま合わせると ${sg(raw)}）`:''}</p></div>`}
+  else h+=`<div class="smres"><small>テンポ</small><p>素材と曲のBPMを入れてください。ワンショットならテンポ合わせはいりません。</p></div>`;
+  if(r.k){const {s,rel,a}=r.k,lv=a===0?0:a<=2?1:a<=4?2:3;
+    h+=`<div class="smres l${lv}"><small>キー</small><b>${s===0?(rel?'平行調なので、そのままでOK':'同じキーなので、そのままでOK'):`素材を ${s>0?'+':''}${s} 半音 ずらす`}</b><p>${s===0?(rel?'メジャーとマイナーの関係（平行調）で、使う音が同じです。':'そのまま重ねられます。'):a<=2?'ほとんど音色が変わらずに合わせられます。':a<=4?'ボーカルや生楽器だと、声のキャラが少し変わります。':'変化が大きいので、音色が不自然になりやすいです。近いキーの素材も探してみてください。'}${a===5?' 5度となりの関係なので、ずらさなくても1音ぶつかるだけで、なじむこともあります。':''}</p></div>`}
+  else h+=`<div class="smres"><small>キー</small><p>${F.lk===''||F.lk==null?'ドラムや効果音はキー合わせはいりません。ただし、キックやタムに音程がある素材は、曲のキーの音に近いものを選ぶとなじみます。':'曲のキーを選んでください。'}</p></div>`;
+  sec.querySelector('#smFitOut').innerHTML=h}
+function smFitInit(sec){[['#smLb','lb'],['#smLk','lk'],['#smLm','lm'],['#smSb','sb'],['#smSk','sk'],['#smSm','sm']].forEach(([id,k])=>{const el=sec.querySelector(id);const f=()=>{const F=S.smFit||(S.smFit={});F[k]=el.value;save();smFitPaint(sec)};el.oninput=f;el.onchange=f});smFitLoad(sec)}
+
+/* 図 */
+function smKindFig(){const W=320;let o='';const wv=(x,y,w,h,decay)=>{let d=`M${x} ${y}`;for(let i=0;i<=w;i+=2){const a=h*(decay?Math.exp(-i/(w*.25)):(.55+.45*Math.abs(Math.sin(i/7))))*Math.sin(i*.9);d+=` L${x+i} ${y+a}`}return `<path d="${d}" class="fa" style="fill:none"/>`};
+  o+=`<text x="0" y="14" class="ft sm">ワンショット</text><text x="0" y="28" class="fs">1回だけ鳴る音</text><rect x="92" y="4" width="70" height="34" rx="8" class="fbx fT"/>${wv(98,21,58,13,1)}<text x="172" y="25" class="fs">ドン！ で終わり</text>`;
+  o+=`<text x="0" y="66" class="ft sm">ループ</text><text x="0" y="80" class="fs">くり返せる長さ</text>`;for(let k=0;k<3;k++){o+=`<rect x="${92+k*72}" y="56" width="68" height="34" rx="8" class="fbx fD"${k?' style="fill-opacity:.4"':''}/>${wv(97+k*72,73,58,11,0)}`}
+  o+=`<path d="M300 92 Q300 104 230 104 Q120 104 100 96" class="fa" style="fill:none"/><text x="196" y="118" text-anchor="middle" class="fs">最後が最初につながる</text>`;return fsvg(W,124,o)}
+function smBandFig(){const W=320,L=78,R=W-6,lg=f=>L+(Math.log10(f)-Math.log10(20))/(3)*(R-L);let o='';
+  [20,100,1000,10000].forEach(f=>{const x=lg(f);o+=`<line x1="${x}" x2="${x}" y1="12" y2="226" class="btl"/><text x="${x}" y="9" text-anchor="middle" class="fs">${f>=1000?f/1000+'k':f}</text>`});
+  const B=[['キック',[[40,110],[2500,5000]],'fT'],['808',[[30,160]],'fD'],['ベース',[[50,350]],'fD'],['スネア',[[150,300],[2000,7000]],'fT'],['クラップ',[[800,6000]],'fT'],['ハイハット',[[5000,16000]],'fT'],['ピアノ',[[100,4000]],'fSD'],['パッド',[[150,8000]],'fSD'],['ボーカル',[[200,7000]],'fSD'],['ライザー',[[300,15000]],'']];
+  B.forEach(([n,rs,c],i)=>{const y=16+i*21;o+=`<text x="0" y="${y+12}" class="fs">${n}</text>`;rs.forEach(([a,b],j)=>o+=`<rect x="${lg(a)}" y="${y}" width="${lg(b)-lg(a)}" height="15" rx="6" class="fbx ${c}"${j?' style="fill-opacity:.4"':''}/>`)});
+  return fsvg(W,232,o)}
+const SM_SITES=[['サブスク（クレジット制）','毎月ポイントがもらえて、1つずつダウンロードします。必要な音だけ集めやすいです。','Splice など'],['サブスク（DAW連携型）','DAWの中で、曲を鳴らしながら試聴できるタイプ。','Loopcloud など'],['パックを買う','ジャンルやテーマごとのセットを買い切り。音のまとまりがよいです。','各レーベルのサイトなど'],['無料パック・無料ライブラリ','登録すれば無料でダウンロードできるパック。まずはここから試せます。','BandLab Sounds、Cymatics の無料パックなど'],['コミュニティ投稿','利用者が投稿した音。ライセンスが1つずつちがうので要注意です。','Freesound、Sample Focus など']];
+function renderSamples(){const sec=document.getElementById('samples');if(!sec||sec.dataset.done)return;sec.dataset.done=1;let h='';
+  h+=`<div class="card" data-pane="sbase"><h3>ワンショットとループ</h3>${fig(smKindFig(),'ワンショットは自分で並べて使う「部品」、ループは置くだけで鳴る「完成した数小節」です。')}
+   <dl class="ifacts"><div><dt>ワンショット</dt><dd>キック1発、スネア1発、ピアノ1音のような単発の音。ドラムを自分で打ち込むときや、音色をそろえたいときに使います。BPMは関係ありません。</dd></div><div><dt>ループ</dt><dd>1〜8小節くらいの、くり返せるフレーズ。BPMとキーが決まっているので、曲に合わせて使います。アイデアのきっかけにも便利です。</dd></div></dl></div>`;
+  h+=`<div class="card" data-pane="sbase"><h3>素材の種類の早見表</h3><div class="tblwrap"><table class="tbl mtbl"><thead><tr><th>種類</th><th>中身</th><th>使いどころ</th></tr></thead><tbody>${[['ワンショット','ドラム1発、808、楽器の1音、効果音','ドラムの打ち込み、音色の差し替え'],['ループ','ドラム、トップ、ベース、メロディ、コード、ボーカル','曲の土台、アイデア出し'],['MIDI','音の高さとリズムのデータ（音そのものは入っていない）','自分の音色で鳴らせる、キーやテンポを変えても劣化しない'],['プリセット','シンセの音色の設定','同じシンセで、その音を作れる'],['ステム・キット','1曲分をパートごとに分けた素材のセット','組み合わせて、すぐ曲の形にできる']].map(r=>`<tr><th>${r[0]}</th><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('')}</tbody></table></div></div>`;
+  h+=`<div class="card" data-pane="sbase"><h3>素材サイトのタイプ</h3><div class="nums">${SM_SITES.map(([n,d,e])=>`<div><small>${d}<br>例：${e}</small><b>${n}</b></div>`).join('')}</div><p class="prtip">料金や規約はよく変わります。使う前に、必ずそのサイトの最新の利用規約を確認してください（「規約」タブのチェックリストが便利です）。</p></div>`;
+  h+=smBuilderHTML();
+  h+=`<div class="card" data-pane="sword"><h3>音の雰囲気を表す英単語</h3><div class="smdict">${SM_MOOD.map(([k,v])=>`<div><b>${k}</b><span>${v}</span></div>`).join('')}</div></div>`;
+  h+=`<div class="card" data-pane="sword"><h3>パート別の英語の呼び方</h3><div class="tblwrap"><table class="tbl mtbl"><thead><tr><th>パート</th><th>検索ワード</th><th>似た言葉</th></tr></thead><tbody>${SM_PART.map(p=>`<tr><th>${p[1]}</th><td>${p[2]}</td><td>${p[3]}</td></tr>`).join('')}</tbody></table></div></div>`;
+  h+=`<div class="card" data-pane="sword"><h3>検索のコツ</h3><ul class="itips">${['英語で探す。日本語より、ずっと多く見つかります','「ジャンル＋雰囲気＋パート」の3語くらいが、ちょうどよい絞りこみ','ヒット数が少なすぎたら、雰囲気の言葉を1つ消す','ループはBPMとキーで絞りこむ。曲のBPMの半分・倍も候補に入れる','気に入った音があったら「似た音を探す」機能や、同じパックの中を見る','見つからない音は、ワンショットを自分で並べたほうが早いこともある'].map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+  h+=smFileHTML();
+  h+=`<div class="card" data-pane="sfile"><h3>ファイル名によくある書き方</h3><dl class="ifacts"><div><dt>BPM</dt><dd>140bpm、140_BPM、_140_ のように数字で入っています。数字だけのときは、60〜200くらいならたいていBPMです。</dd></div><div><dt>キー</dt><dd>Cmin・Cm・C_minor はCマイナー、Cmaj・C はCメジャー。C# は C♯、Eb は E♭ です。</dd></div><div><dt>種類</dt><dd>OS・One Shot はワンショット、Loop・LP はループ。Fill はつなぎのおかずです。</dd></div><div><dt>加工</dt><dd>Wet はリバーブなどのエフェクト込み、Dry は素の音。Rev は逆再生のことが多いです。</dd></div><div><dt>番号</dt><dd>01・02 のような番号は、同じ種類の音の通し番号です。</dd></div></dl></div>`;
+  h+=smFitHTML();
+  h+=`<div class="card" data-pane="sfit"><h3>テンポが合わないとき</h3><ul class="itips">${['素材のBPMが曲の半分や倍なら、そのまま使える（85と170、70と140など）','±10%くらいまでなら、DAWのタイムストレッチで自然に合わせられる','ドラムは「ビート」向きのモード、メロディやボーカルは「音程を保つ」モードを選ぶ','大きく変えるときは、テンポと一緒にピッチも変わるモード（リピッチ）で、わざとレコードっぽくするのもアリ'].map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+  h+=`<div class="card" data-pane="sfit"><h3>キーが合わないとき</h3><ul class="itips">${['±2半音くらいまでなら、音色をほとんど変えずにずらせる','マイナーのループは、3半音上のメジャーの曲（平行調）でもそのまま使える（Cマイナー ↔ E♭メジャー）','ボーカル素材は、大きくずらすと声のキャラが変わる。近いキーのものを探すほうがきれい','ドラムループは基本キーなし。ただし音程感のある808やタムは、曲のキーの音に合わせる'].map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+  h+=`<div class="card" data-pane="spick"><h3>試聴のコツ</h3><ul class="lcheck">${['自分の曲を鳴らしながら試聴する（単体でいい音でも、曲に入れると合わないことが多い）','音量をそろえて比べる（大きい音のほうが、よく聴こえてしまう）','候補を3つまで残して、最後に聴き比べる','ループは、最後から最初へのつなぎ目も聴く','ほかのパートと帯域がかぶっていないか確かめる','同じパックからそろえると、音のまとまりがよくなる'].map((t,i)=>`<li><label><input type="checkbox" data-smc="${i}"><span>${t}</span></label></li>`).join('')}</ul></div>`;
+  h+=`<div class="card" data-pane="spick"><h3>帯域のかぶりマップ</h3>${fig(smBandFig(),'横は音の高さ（周波数、Hz）です。同じ高さに重なる素材を同時に鳴らすと、音がにごったり埋もれたりします。かぶるときは、どちらかを選び直すか、EQで場所を分けます。')}</div>`;
+  h+=`<div class="card" data-pane="spick"><h3>素材を「自分の音」にする</h3><dl class="ifacts"><div><dt>切って並べ替える</dt><dd>ループを細かく切って、順番を入れ替えます（チョップ）。同じ素材でも、まったく別のフレーズになります。</dd></div><div><dt>一部だけ使う</dt><dd>4小節のループの、気に入った1拍だけを取り出してくり返します。</dd></div><div><dt>ピッチや向きを変える</dt><dd>1オクターブ下げる、逆再生する、だけで原形がわからなくなります。</dd></div><div><dt>重ねる</dt><dd>キックを2つ重ねて、低音用とアタック用に役割を分けます（レイヤー）。</dd></div><div><dt>エフェクトをかける</dt><dd>フィルターでこもらせる、リバーブで遠くする。曲の空気に合わせて加工します。</dd></div></dl></div>`;
+  h+=`<div class="card" data-pane="sorg"><h3>フォルダの分け方の例</h3><pre class="smtree">素材/
+├ 01_Drums/
+│  ├ Kick/
+│  ├ Snare_Clap/
+│  ├ HiHat/
+│  ├ Perc/
+│  └ Loops/
+├ 02_808_Bass/
+├ 03_Melodic/
+│  ├ Keys/
+│  ├ Synth/
+│  └ Loops/
+├ 04_Vocal/
+├ 05_FX/
+│  ├ Riser/
+│  └ Impact/
+└ 00_1軍/  ← よく使うお気に入り</pre><p class="sub">最初の番号で並び順が固定されるので、毎回同じ場所に目が行きます。</p></div>`;
+  h+=`<div class="card" data-pane="sorg"><h3>整理のルール</h3><ul class="itips">${['ダウンロードした素材は、まずパック名のフォルダのまま保存する','使った素材や、気に入った素材だけ「1軍」フォルダにコピーする','名前を変えるなら「パート_雰囲気_番号」（例：Kick_Punchy_01）','どのサイトのどのパックか、メモを残す（あとで規約を確かめられる）','月に1回、使わないパックを整理する'].map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+  h+=`<div class="card" data-pane="slic"><h3>使う前の確認リスト</h3><p class="sub" style="margin:0 0 8px">サイトやパックごとに規約がちがいます。投稿する前に確かめておくと安心です。</p><ul class="lcheck">${['商用利用（収益化する投稿や販売）でも使えるか','動画サイトへの投稿や、配信サービスでの配信が許されているか','クレジット表記（作者名やサイト名）が必要か','素材を単体で配ったり、素材集として再配布したりしていないか（ほぼどこでも禁止）','素材をほとんど加工せず、そのままメインに使っていないか（同じ素材を使った別の曲と似やすい）','動画サイトの自動判定（コンテンツID）で、まちがって申し立てが来たときの対処を確認したか','ダウンロードした場所と日付をメモしたか'].map((t,i)=>`<li><label><input type="checkbox" data-sml="${i}"><span>${t}</span></label></li>`).join('')}</ul></div>`;
+  h+=`<div class="card" data-pane="slic"><h3>よく見るライセンスの言葉</h3><dl class="ifacts"><div><dt>ロイヤリティフリー</dt><dd>一度手に入れれば、曲に使うたびに使用料を払わなくてよい、という意味。「何をしても自由」ではありません。</dd></div><div><dt>CC0</dt><dd>権利を放棄した素材。クレジットなしで、商用でも自由に使えます。</dd></div><div><dt>CC BY</dt><dd>作者名などのクレジットを書けば、商用でも使えます。</dd></div><div><dt>CC BY-NC</dt><dd>NC は非営利のみ。収益化する投稿や販売には使えません。</dd></div><div><dt>CC BY-SA ・ ND</dt><dd>SA は「同じライセンスで公開する」条件つき、ND は「改変しない」条件つき。曲の素材としては扱いにくいので注意します。</dd></div></dl><p class="prtip">わからないときは、その素材は使わないのがいちばん安全です。</p></div>`;
+  sec.insertAdjacentHTML('beforeend',h);smBuilderInit(sec);smFileInit(sec);smFitInit(sec);
+  [['smc','smChk'],['sml','smLic']].forEach(([a,k])=>{const ck=[...sec.querySelectorAll(`[data-${a}]`)];(S[k]||[]).forEach((v,i)=>{if(ck[i])ck[i].checked=!!v});ck.forEach(c=>c.onchange=()=>{S[k]=ck.map(x=>x.checked?1:0);save()})})}
+
 /* ===== 起動 ===== */
 paintMascots();
 applyTheme();
 renderTips();renderPagers();
 
-sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderMood();renderNG();renderClash();renderLyrics();renderPractice();renderTricks();renderArr();initLevels();foldPanes();
-setNavH();['sounds','tools','lyrics','practice','tricks',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
+sInitSounds();renderGenres();rhInit();renderDTM();renderFX();renderFX2();initTools();initMelHow();renderJissen();renderFigs();renderDeep();renderMood();renderNG();renderClash();renderLyrics();renderPractice();renderTricks();renderSamples();renderArr();initLevels();foldPanes();
+setNavH();['sounds','tools','lyrics','practice','tricks','samples',...SECS.map(x=>x.id)].forEach(id=>setupPanes(document.getElementById(id)));
 bInit();rInit();iInit();sInit();cInit();dInit();pInit();mInit();tInit();qInit();
 renderMissions();route();applyVoiceText();setTimeout(refreshFades,50);
 stopFns=[progStop,rStop,mStop,tClear,()=>{lenTimers.forEach(clearTimeout);lenTimers=[];$$('#lenLeds i').forEach(x=>x.classList.remove('on'))},rhStop,()=>{if(ctx)instStop()}];
